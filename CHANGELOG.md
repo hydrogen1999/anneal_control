@@ -39,14 +39,31 @@ numbers quoted below are software verification on 4–6 physical qubits.
   only **tighten** the declared h/J caps. It scales `H_Z` only; the driver and
   the runtime are untouched. Added `conservative_common_scale`.
 - `generation.synthetic_lift` accepts an optional `port_rng`.
+- `generation.compile_embedding` accepts an optional `coupling_rng`.
 
 ### Fixed
+
+Two random-stream confounds of the same shape, both found by building the
+intervention audit rather than by reading the code:
 
 - **`synthetic_lift` confounded chain shape with port placement.** Chain edges
   and boundary ports drew from one random stream, so a `random_tree` shape
   consumed draws a `path` did not and silently relocated the ports. Any
-  "geometry" intervention was therefore also a port intervention. Tests pin both
-  the fix and the original confound.
+  "geometry" intervention was therefore also a port intervention.
+- **`compile_embedding` confounded field allocation with coupler allocation.**
+  `field_distribution="concentrated"` consumes draws `"uniform"` does not, so
+  with `coupling_distribution="random"` a field intervention also re-allocated
+  the inter-chain couplers. Invisible at `ports: 1`, where a Dirichlet over one
+  element is always `[1.0]`.
+
+Tests pin both the fixes and the original confounds, so neither parameter can be
+removed as redundant.
+
+The coefficient audit also surfaced a scientific issue: `weighted_maxcut` and
+`planted_loops` have zero logical fields, so a `field_allocation` intervention on
+them is empty. Those pairs previously ran and contributed meaningless zero
+penalties to the aggregate; they are now skipped and counted (148 of 1208
+candidate pairs in `intervention_research.json`).
 
 ### Not in this release
 

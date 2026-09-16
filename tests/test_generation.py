@@ -374,3 +374,34 @@ def test_without_an_independent_port_stream_a_random_tree_shape_moves_the_ports(
     # This is the confound that port_rng exists to remove; asserting it keeps the
     # reason for the parameter visible if someone later "simplifies" it away.
     assert boundary("path") != boundary("random_tree")
+
+
+def test_independent_coupling_stream_keeps_coupler_allocation_fixed_when_only_fields_change():
+    problem = _pair_problem()
+    embedding = synthetic_lift(problem, np.array([3, 2, 1]), np.random.default_rng(6),
+                               shape="path", ports=2, port_rng=np.random.default_rng(7))
+
+    def compiled(field_distribution):
+        return compile_embedding(problem, embedding, 1.5, np.random.default_rng(3),
+                                 field_distribution=field_distribution,
+                                 coupling_distribution="random",
+                                 coupling_rng=np.random.default_rng(11))
+
+    uniform, concentrated = compiled("uniform"), compiled("concentrated")
+    assert np.allclose(uniform.problem_J, concentrated.problem_J)
+    assert not np.allclose(uniform.physical.h, concentrated.physical.h)
+
+
+def test_without_an_independent_coupling_stream_a_field_change_moves_the_couplers():
+    problem = _pair_problem()
+    embedding = synthetic_lift(problem, np.array([3, 2, 1]), np.random.default_rng(6),
+                               shape="path", ports=2, port_rng=np.random.default_rng(7))
+
+    def compiled(field_distribution):
+        return compile_embedding(problem, embedding, 1.5, np.random.default_rng(3),
+                                 field_distribution=field_distribution,
+                                 coupling_distribution="random")
+
+    # The confound coupling_rng exists to remove: "concentrated" consumes draws
+    # that "uniform" does not, shifting the stream before the Dirichlet allocation.
+    assert not np.allclose(compiled("uniform").problem_J, compiled("concentrated").problem_J)

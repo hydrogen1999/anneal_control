@@ -128,6 +128,14 @@ def _edge_sets(arm: InterventionArm) -> tuple[set, set]:
     return internal, boundary
 
 
+def _raw_coefficients(arm: InterventionArm) -> dict[str, np.ndarray]:
+    """Un-scale the compiled coefficients back to what was asked for."""
+    scale = arm.compiled.programmed_scale
+    return {"h": np.asarray(arm.compiled.physical.h) / scale,
+            "problem_J": np.asarray(arm.compiled.problem_J) / scale,
+            "chain_J": np.asarray(arm.compiled.chain_J) / scale}
+
+
 def _audit_single_factor(factor: str, a: InterventionArm, b: InterventionArm) -> dict:
     """Verify the physical graph moved in exactly the way the factor claims."""
     internal_a, boundary_a = _edge_sets(a)
@@ -151,6 +159,22 @@ def _audit_single_factor(factor: str, a: InterventionArm, b: InterventionArm) ->
         if not same_membership or internal_a != internal_b or boundary_a != boundary_b:
             raise ValueError(f"{factor} intervention changed the physical graph; "
                              "coefficient interventions must leave it identical")
+        # Compare raw coefficients, not compiled ones: the programmed scale is a
+        # legitimate consequence of a chain-strength change and must not be
+        # mistaken for the coefficient drift this audit looks for.
+        raw_a, raw_b = _raw_coefficients(a), _raw_coefficients(b)
+        moved = {name for name in raw_a if not np.allclose(raw_a[name], raw_b[name])}
+        expected = {"field_allocation": {"h"}, "chain_strength": {"chain_J"}}[factor]
+        unexpected = moved - expected
+        if unexpected:
+            raise ValueError(
+                f"{factor} intervention also moved {sorted(unexpected)} "
+                f"(problem coupler / field / penalty drift). A coefficient intervention must change "
+                f"only {sorted(expected)}; this usually means two allocations shared one random "
+                "stream. Pass independent streams, as build_pairs does.")
+        if not moved:
+            raise VacuousIntervention(f"{factor} intervention left every raw coefficient identical")
+        report["raw_coefficients_moved"] = sorted(moved)
     return report
 
 
@@ -207,7 +231,8 @@ def build_pairs(problem: IsingProblem, spec: Mapping[str, Any], *, lengths: Sequ
                                      np.random.default_rng(seed + 3),
                                      field_distribution=params["field_distribution"],
                                      coupling_distribution=params["coupling_distribution"],
-                                     h_limit=h_limit, j_limit=j_limit, scale_override=scale_override)
+                                     h_limit=h_limit, j_limit=j_limit, scale_override=scale_override,
+                                     coupling_rng=np.random.default_rng(seed + 4))
         if compiled.physical.n > max_qubits:
             raise ValueError(f"arm {label} has {compiled.physical.n} physical qubits, above the "
                              f"exact-enumeration cap {max_qubits}")

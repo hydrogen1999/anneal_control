@@ -46,6 +46,34 @@ shape consumed draws that a `path` did not — and changing the shape silently
 relocated the ports. `synthetic_lift` now accepts an independent `port_rng`, and
 `tests/test_generation.py` keeps both the fix and the original confound visible.
 
+### Coefficient interventions are audited on the coefficients, not just the graph
+
+`field_allocation` and `chain_strength` leave the physical graph untouched, so a
+graph check alone proves nothing about them. The audit therefore un-scales both
+arms' compiled coefficients by their programmed scale and checks that **only** the
+intended raw coefficient moved:
+
+| factor | must move | must not move |
+|---|---|---|
+| `field_allocation` | `h` | `problem_J`, `chain_J` |
+| `chain_strength` | `chain_J` | `h`, `problem_J` |
+
+This caught the second confound of the same shape as the port one:
+`field_distribution="concentrated"` consumes random draws that `"uniform"` does
+not, so with `coupling_distribution="random"` a field intervention also
+re-allocated the inter-chain couplers. `compile_embedding` now accepts an
+independent `coupling_rng`, and `build_pairs` passes one. The confound is
+invisible at `ports: 1` — a Dirichlet over one element is always `[1.0]` — which
+is exactly why the audit exists rather than a one-off test.
+
+It also caught something scientifically larger: `weighted_maxcut` and
+`planted_loops` generate **zero logical fields**. Redistributing zero changes
+nothing, so a `field_allocation` intervention on those families is empty. Before
+the audit those pairs ran anyway and contributed meaningless zero penalties to
+the aggregate; now they raise `VacuousIntervention`, are skipped, and are counted
+in `plan["vacuous_skipped"]`. On `configs/intervention_research.json` that is 148
+of 1208 candidate pairs.
+
 ### Vacuous versus confounded
 
 A `random_tree` can happen to reproduce the path on a short chain, and on a

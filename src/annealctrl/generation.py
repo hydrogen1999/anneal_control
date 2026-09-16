@@ -366,12 +366,19 @@ def conservative_common_scale(*instances: "CompiledInstance") -> float:
 def compile_embedding(problem: IsingProblem, embedding: Embedding, chain_strength: float,
                       rng: np.random.Generator, field_distribution: str = "uniform",
                       coupling_distribution: str = "uniform", h_limit: float = 2.,
-                      j_limit: float = 1., scale_override: float | None = None) -> CompiledInstance:
+                      j_limit: float = 1., scale_override: float | None = None,
+                      coupling_rng: np.random.Generator | None = None) -> CompiledInstance:
     """Compile each logical coefficient once, plus internal chain couplers.
 
     Limits are explicit symmetric *toy* hardware caps, not D-Wave autoscale.
     Sum raw chain/problem terms before applying the common coefficient scale.
     This scales HZ only: driver and runtime are NOT silently rescaled.
+
+    ``coupling_rng`` draws the inter-chain coupler allocation from a stream
+    independent of the field allocation. Without it, ``field_distribution``
+    "concentrated" consumes draws that "uniform" does not, so changing only the
+    field allocation silently re-allocates the couplers as well — the same class
+    of confound as ``synthetic_lift``'s ``port_rng``.
 
     ``scale_override`` replaces the natural cap-derived scale with a declared
     common one, so a paired intervention can hold the global H_Z scale fixed
@@ -385,6 +392,7 @@ def compile_embedding(problem: IsingProblem, embedding: Embedding, chain_strengt
         raise ValueError("logical graph and embedding disagree")
     if not np.all(np.isfinite([chain_strength, h_limit, j_limit])) or chain_strength <= 0 or min(h_limit, j_limit) <= 0:
         raise ValueError("positive finite chain strength and limits required")
+    coupling_stream = rng if coupling_rng is None else coupling_rng
     owner, edges = embedding.membership, embedding.hardware_edges
     h = np.zeros(len(owner))
     pJ, cJ = np.zeros(len(edges)), np.zeros(len(edges))
@@ -407,7 +415,7 @@ def compile_embedding(problem: IsingProblem, embedding: Embedding, chain_strengt
         if coupling_distribution == "uniform":
             weights = np.ones(len(cross)) / len(cross)
         elif coupling_distribution == "random":
-            weights = rng.dirichlet(np.ones(len(cross)))
+            weights = coupling_stream.dirichlet(np.ones(len(cross)))
         else:
             raise ValueError("unknown coupling distribution")
         pJ[cross] += coupling * weights
@@ -430,6 +438,7 @@ def compile_embedding(problem: IsingProblem, embedding: Embedding, chain_strengt
         "h_limit": h_limit, "j_limit": j_limit,
         "scale_override": None if scale_override is None else float(scale_override),
         "field_distribution": field_distribution, "coupling_distribution": coupling_distribution,
+        "independent_coupling_stream": coupling_rng is not None,
     })
     return CompiledInstance(problem, embedding, physical, alpha * pJ, alpha * cJ,
                             alpha, float(alpha * cJ.sum()), chain_strength)

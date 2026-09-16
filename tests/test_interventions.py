@@ -462,3 +462,34 @@ def test_penalty_inclusion_and_swap_denominators_are_distinct_populations():
     assert block["n_included_pairs"] == 2
     assert block["n_resolved_pairs"] == 1
     assert block["n_one_sided_pairs"] == 1
+
+
+def test_a_field_allocation_pair_changes_fields_only_even_with_random_couplers():
+    built = build_pairs(problem(), {"factor": "field_allocation",
+                                    "base": {**BASE, "ports": 2, "coupling_distribution": "random"},
+                                    "change": {"field_distribution": "concentrated"}},
+                        lengths=LENGTHS, runtime=2.0, seed=5)
+    a, b = built[0].arms
+    scale_a, scale_b = a.compiled.programmed_scale, b.compiled.programmed_scale
+    assert np.allclose(a.compiled.problem_J / scale_a, b.compiled.problem_J / scale_b)
+    assert np.allclose(a.compiled.chain_J / scale_a, b.compiled.chain_J / scale_b)
+    assert not np.allclose(a.compiled.physical.h / scale_a, b.compiled.physical.h / scale_b)
+
+
+def test_a_chain_strength_pair_changes_the_penalty_only():
+    a, b = pairs("chain_strength", {"chain_strength": 3.0})[0].arms
+    scale_a, scale_b = a.compiled.programmed_scale, b.compiled.programmed_scale
+    assert np.allclose(a.compiled.problem_J / scale_a, b.compiled.problem_J / scale_b)
+    assert np.allclose(a.compiled.physical.h / scale_a, b.compiled.physical.h / scale_b)
+    assert not np.allclose(a.compiled.chain_J / scale_a, b.compiled.chain_J / scale_b)
+
+
+def test_a_coefficient_intervention_that_moved_an_unrelated_coefficient_is_refused(monkeypatch):
+    from annealctrl import interventions
+
+    built = pairs("chain_strength", {"chain_strength": 3.0})[0]
+    a, b = built.arms
+    # Simulate a stream-drift confound: same graph, but the couplers moved too.
+    b.compiled.problem_J[:] = b.compiled.problem_J * 1.5
+    with pytest.raises(ValueError, match="problem coupler"):
+        interventions._audit_single_factor("chain_strength", a, b)
