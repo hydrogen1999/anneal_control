@@ -158,27 +158,37 @@ def apply_threshold(rule: Mapping[str, Any], rows: Sequence[Mapping[str, Any]]) 
     })
 
 
-def _sweep_rows(directory: str | Path) -> list[dict]:
-    from .sweeps import load_rows
-    rows = [row["result"] for row in load_rows(directory) if row.get("status") == "ok"]
+def _sweep_rows(directories: Sequence[str | Path] | str | Path) -> tuple[list[dict], list[Path]]:
+    """Successful rows from one sweep directory or several shards of one sweep."""
+    from .sweeps import ROWS, load_rows
+
+    paths = [Path(directories)] if isinstance(directories, (str, Path)) else [Path(p) for p in directories]
+    if not paths:
+        raise ValueError("at least one sweep directory is required")
+    rows: list[dict] = []
+    for path in paths:
+        if not (path / ROWS).exists():
+            raise ValueError(f"{path} is not a sweep directory: no {ROWS} in it")
+        rows.extend(row["result"] for row in load_rows(path) if row.get("status") == "ok")
     if not rows:
-        raise ValueError(f"{directory} contains no successful sweep rows")
-    return rows
+        raise ValueError(f"{[str(p) for p in paths]} contain no successful sweep rows")
+    return rows, paths
 
 
-def screen_records(fit_sweeps: Sequence[str | Path], apply_sweep: str | Path, *,
+def screen_records(fit_sweeps: Sequence[str | Path], apply_sweep: Sequence[str | Path] | str | Path, *,
                    quantity: str = "headroom", quantile: float = 0.75,
                    min_headroom: float | None = None) -> dict:
-    """Fit on one or more train/validation sweeps, then apply to another sweep."""
-    fit_sweeps = [Path(path) for path in fit_sweeps]
-    if not fit_sweeps:
-        raise ValueError("at least one fitting sweep directory is required")
-    fit_rows: list[dict] = []
-    for directory in fit_sweeps:
-        fit_rows.extend(_sweep_rows(directory))
-    rule = fit_threshold(fit_rows, quantity=quantity, quantile=quantile, min_headroom=min_headroom)
-    rule["fit_sweeps"] = [str(path) for path in fit_sweeps]
-    selection = apply_threshold(rule, _sweep_rows(apply_sweep))
-    selection["apply_sweep"] = str(apply_sweep)
+    """Fit on one or more train/validation sweeps, then apply to one or more sweeps.
+
+    Both sides accept several directories because a sharded campaign is several
+    directories; requiring a single one on the apply side would force a merge
+    step that has no scientific meaning.
+    """
+    fit, fit_paths = _sweep_rows(fit_sweeps)
+    rule = fit_threshold(fit, quantity=quantity, quantile=quantile, min_headroom=min_headroom)
+    rule["fit_sweeps"] = [str(path) for path in fit_paths]
+    applied, apply_paths = _sweep_rows(apply_sweep)
+    selection = apply_threshold(rule, applied)
+    selection["apply_sweep"] = [str(path) for path in apply_paths]
     return {"schema_version": 1, "rule": rule, "selection": selection,
             "scope": "screening is measured control gain only; it never consults a learned model"}

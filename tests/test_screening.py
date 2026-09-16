@@ -166,7 +166,7 @@ def test_screen_records_reads_sweep_directories_and_reports_the_full_rule(tmp_pa
     assert result["rule"]["threshold"] == pytest.approx(0.05)
     assert result["selection"]["selected_parent_ids"] == ["t1"]
     assert result["rule"]["fit_sweeps"] == [str(fit)]
-    assert result["selection"]["apply_sweep"] == str(target)
+    assert result["selection"]["apply_sweep"] == [str(target)]
     json.dumps(result)
 
 
@@ -174,3 +174,24 @@ def test_screen_records_refuses_a_test_sweep_as_the_fitting_source(tmp_path):
     bad = write_sweep(tmp_path, "test", [row("t0", 0.3, split="test"), row("t1", 0.4, split="test")])
     with pytest.raises(ValueError, match="test"):
         screen_records([bad], bad)
+
+
+def test_screen_records_applies_across_several_sharded_directories(tmp_path):
+    # A sharded sweep is many directories; screening must apply to all of them,
+    # exactly as it already fits across several.
+    fit_a = write_sweep(tmp_path, "train_a", fit_rows()[:3])
+    fit_b = write_sweep(tmp_path, "train_b", fit_rows()[3:])
+    apply_a = write_sweep(tmp_path, "val_a", [row("t0", 0.01), row("t1", 0.30)])
+    apply_b = write_sweep(tmp_path, "val_b", [row("t2", 0.40)])
+    result = screen_records([fit_a, fit_b], [apply_a, apply_b], quantile=0.5)
+
+    assert result["selection"]["unscreened_parents"] == 3
+    assert result["selection"]["selected_parent_ids"] == ["t1", "t2"]
+    assert result["selection"]["apply_sweep"] == [str(apply_a), str(apply_b)]
+
+
+def test_a_sweep_directory_without_rows_names_the_missing_file(tmp_path):
+    empty = tmp_path / "not_a_sweep"
+    empty.mkdir()
+    with pytest.raises(ValueError, match="rows.jsonl"):
+        screen_records([write_sweep(tmp_path, "fit", fit_rows())], empty)

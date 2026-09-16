@@ -146,7 +146,8 @@ def main(argv):
     screen = sub.add_parser("screen", help="G2: qualify a stress subset using train/validation headroom only")
     screen.add_argument("--fit-sweep", nargs="+", required=True,
                         help="train and/or validation control-sweep directories used to FIT the threshold")
-    screen.add_argument("--apply-sweep", required=True, help="sweep directory the rule is APPLIED to")
+    screen.add_argument("--apply-sweep", nargs="+", required=True,
+                        help="sweep directory (or shards of one) the rule is APPLIED to")
     screen.add_argument("--output", required=True)
     screen.add_argument("--quantile", type=float, default=0.75)
     screen.add_argument("--min-headroom", type=float)
