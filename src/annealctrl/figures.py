@@ -126,7 +126,10 @@ def figure_frontier(rows: Sequence[Mapping[str, Any]], stem: str | Path, *,
     right.set_xlabel("objective calls within family")
     right.set_ylabel("mean incumbent regret\nto best found")
     if traces:
-        right.legend(ncol=2, loc="best")
+        # Above the axes, never inside: an in-axes legend marker sits at a data
+        # coordinate and can be read as a measurement.
+        right.legend(ncol=2, loc="lower center", bbox_to_anchor=(0.5, 1.0),
+                     borderaxespad=0.0, handletextpad=0.4, columnspacing=1.2)
     fig.tight_layout()
     written = plot_utils.save(fig, stem)
     plt.close(fig)
@@ -189,7 +192,8 @@ def figure_interventions(rows: Sequence[Mapping[str, Any]], stem: str | Path, *,
     left.set_xlabel(f"intervened factor  ({len(censored)}/{len(rows)} pairs censored)")
     left.axhline(0.0, linewidth=0.6, linestyle=":", color="0.4")
     if arms:
-        left.legend(loc="best")
+        left.legend(ncol=len(arms), loc="lower center", bbox_to_anchor=(0.5, 1.0),
+                    borderaxespad=0.0, handletextpad=0.4, columnspacing=1.2)
 
     own, imported, was_censored = [], [], []
     for row in rows:
@@ -212,7 +216,8 @@ def figure_interventions(rows: Sequence[Mapping[str, Any]], stem: str | Path, *,
         if was_censored.any():
             right.plot(own[was_censored], imported[was_censored], "o", markersize=3.5,
                        markerfacecolor="none", label="censored")
-        right.legend(loc="best")
+        right.legend(ncol=3, loc="lower center", bbox_to_anchor=(0.5, 1.0),
+                     borderaxespad=0.0, handletextpad=0.4, columnspacing=1.0)
     right.set_xlabel("own best-found loss")
     right.set_ylabel("imported control's loss")
     fig.tight_layout()
