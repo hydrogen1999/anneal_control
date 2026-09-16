@@ -29,7 +29,11 @@ numbers quoted below are software verification on 4–6 physical qubits.
   `intervention-report`.
 - Configs: `frontier_{smoke,research}.json`, `intervention_{smoke,research}.json`.
 - Launchers: `scripts/run_campaign.sh`, `scripts/launch_apollo.sh` (no
-  scheduler), `scripts/launch_goose.slurm` (SLURM). No stage requires a GPU.
+  scheduler), `scripts/launch_goose.slurm` (SLURM, with job-array sharding).
+  No stage requires a GPU.
+- Sweep sharding (`--shard`, `--shard-count`) and multi-directory reporting, so
+  the ~411k-control research intervention plan can run as a SLURM array and be
+  merged afterwards. Merging shards computed under different settings is refused.
 - Docs: `SPEC.md`, `PLAN.md`, `docs/g2_headroom.md`, `docs/g3_interventions.md`,
   `docs/observability.md`, `docs/decisions/ADR-0001..0006`.
 

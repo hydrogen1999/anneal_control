@@ -133,8 +133,11 @@ def main(argv):
     sweep.add_argument("--allow-test-adaptation", action="store_true",
                        help="test-split search is ONLINE ADAPTATION and must be reported as such")
     sweep.add_argument("--report", action="store_true", help="aggregate immediately after the sweep")
+    sweep.add_argument("--shard", type=int, default=0, help="this task's index in a job array")
+    sweep.add_argument("--shard-count", type=int, default=1, help="number of array tasks")
     frontier = sub.add_parser("frontier-report", help="G2: aggregate a completed control-sweep")
-    frontier.add_argument("--sweep", required=True)
+    frontier.add_argument("--sweep", required=True, nargs="+",
+                          help="one or more sweep directories; shards of one settings hash may be merged")
     frontier.add_argument("--output")
     frontier.add_argument("--bootstrap-resamples", type=int, default=10000)
     frontier.add_argument("--seed", type=int, default=0)
@@ -156,8 +159,11 @@ def main(argv):
     inter.add_argument("--allow-test-parents", action="store_true",
                        help="intervention pairs on test parents share logical objectives with evaluation")
     inter.add_argument("--report", action="store_true")
+    inter.add_argument("--shard", type=int, default=0, help="this task's index in a job array")
+    inter.add_argument("--shard-count", type=int, default=1, help="number of array tasks")
     ireport = sub.add_parser("intervention-report", help="G3: aggregate a completed intervention-sweep")
-    ireport.add_argument("--sweep", required=True)
+    ireport.add_argument("--sweep", required=True, nargs="+",
+                         help="one or more sweep directories; shards of one settings hash may be merged")
     ireport.add_argument("--output")
     ireport.add_argument("--bootstrap-resamples", type=int, default=10000)
     ireport.add_argument("--seed", type=int, default=0)
@@ -242,7 +248,8 @@ def main(argv):
             settings["split"] = args.split
         result = sweep_control_frontier(args.data, output=args.output, resume=args.resume,
                                         dry_run=args.dry_run, record_ids=args.record_ids,
-                                        allow_test_adaptation=args.allow_test_adaptation, **settings)
+                                        allow_test_adaptation=args.allow_test_adaptation,
+                                        shard=args.shard, shard_count=args.shard_count, **settings)
         if args.report and not args.dry_run:
             result = {"sweep": result, "report": frontier_report(args.output, **report_settings)}
         print(json.dumps(result, indent=2))
@@ -252,11 +259,12 @@ def main(argv):
                                   bootstrap_resamples=args.bootstrap_resamples, seed=args.seed)
         print(json.dumps({key: summary[key] for key in
                           ("split", "n_records", "n_parents", "censored_fraction", "verdict")}, indent=2))
-        destination = Path(args.output or Path(args.sweep) / "report")
+        destination = Path(args.output or Path(args.sweep[0]) / "report")
         if args.figures:
             from .figures import figure_frontier
             from .sweeps import load_rows
-            rows = [row["result"] for row in load_rows(args.sweep) if row.get("status") == "ok"]
+            rows = [row["result"] for part in args.sweep for row in load_rows(part)
+                    if row.get("status") == "ok"]
             print(json.dumps(figure_frontier(rows, destination / "figure3_frontier", venue=args.venue), indent=2))
         print(f"Report: {destination / 'FRONTIER.md'}")
     elif args.command == "screen":
@@ -268,7 +276,8 @@ def main(argv):
         config = _json(args.config)
         pairs, plan = plan_intervention_pairs(config, allow_test_parents=args.allow_test_parents)
         result = sweep_interventions(pairs, output=args.output, resume=args.resume,
-                                     dry_run=args.dry_run, **dict(config.get("search") or {}))
+                                     dry_run=args.dry_run, shard=args.shard,
+                                     shard_count=args.shard_count, **dict(config.get("search") or {}))
         if not args.dry_run:
             write_json(Path(args.output) / "plan.json", plan)
             if args.report:
@@ -282,11 +291,12 @@ def main(argv):
                                       bootstrap_resamples=args.bootstrap_resamples, seed=args.seed)
         print(json.dumps({key: summary[key] for key in
                           ("n_pairs", "n_parents", "censored_fraction", "swap_rate", "verdict")}, indent=2))
-        destination = Path(args.output or Path(args.sweep) / "report")
+        destination = Path(args.output or Path(args.sweep[0]) / "report")
         if args.figures:
             from .figures import figure_interventions
             from .sweeps import load_rows
-            rows = [row["result"] for row in load_rows(args.sweep) if row.get("status") == "ok"]
+            rows = [row["result"] for part in args.sweep for row in load_rows(part)
+                    if row.get("status") == "ok"]
             print(json.dumps(figure_interventions(rows, destination / "figure4_interventions", venue=args.venue), indent=2))
         print(f"Report: {destination / 'INTERVENTIONS.md'}")
     elif args.command == "control-benchmark":

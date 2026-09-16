@@ -365,10 +365,13 @@ def test_frontier_report_counts_failed_units_in_the_summary(tmp_path):
     sweep_control_frontier(data, output=tmp_path / "sweep", split="train",
                            families=("linear", "one_window"), budget=3,
                            tolerance=5e-3, initial_steps=16, max_steps=512)
-    # A failed row from a later resumed attempt must remain visible.
+    # A failed row from a later resumed attempt must remain visible. It carries the
+    # run's real settings and source hashes, as a genuine failure row does.
+    manifest = json.loads((tmp_path / "sweep" / "manifest.json").read_text())
     with (tmp_path / "sweep" / "rows.jsonl").open("a") as handle:
         handle.write(json.dumps({"unit_id": "zzz", "unit_key": "k", "fingerprint": "f",
-                                 "settings_hash": "s", "source_hash": "h", "status": "failed",
+                                 "settings_hash": manifest["settings_hash"],
+                                 "source_hash": manifest["source_hash"], "status": "failed",
                                  "error_type": "ArithmeticError", "error": "gate"}) + "\n")
     summary = frontier_report(tmp_path / "sweep", bootstrap_resamples=100)
     assert summary["failed_units"] == 1
@@ -404,3 +407,31 @@ def test_sweep_names_the_missing_dataset_manifest(tmp_path):
         with pytest.raises(FileNotFoundError, match="manifest.json"):
             sweep_control_frontier(tmp_path / "absent", output=tmp_path / "sweep",
                                    split="train", families=("linear",), budget=1, dry_run=dry)
+
+
+def test_sharded_sweeps_cover_every_record_and_merge_in_the_report(tmp_path):
+    from annealctrl.headroom import frontier_report
+    data = dataset(tmp_path, parents=6, runtimes=(2.0, 8.0))
+    kwargs = dict(split="train", families=("linear", "one_window"), budget=2,
+                  tolerance=5e-3, initial_steps=16, max_steps=512)
+    shards = [sweep_control_frontier(data, output=tmp_path / f"shard{i}", shard=i,
+                                     shard_count=3, **kwargs) for i in range(3)]
+    whole = sweep_control_frontier(data, output=tmp_path / "whole", **kwargs)
+
+    assert sum(shard["completed"] for shard in shards) == whole["completed"]
+    merged = frontier_report([tmp_path / f"shard{i}" for i in range(3)],
+                             output=tmp_path / "merged", bootstrap_resamples=100)
+    single = frontier_report(tmp_path / "whole", bootstrap_resamples=100)
+    assert merged["n_records"] == single["n_records"]
+    assert merged["headroom"]["mean"] == pytest.approx(single["headroom"]["mean"])
+
+
+def test_merging_shards_with_different_settings_is_refused(tmp_path):
+    from annealctrl.headroom import frontier_report
+    data = dataset(tmp_path, parents=6)
+    base = dict(split="train", families=("linear", "one_window"),
+                tolerance=5e-3, initial_steps=16, max_steps=512)
+    sweep_control_frontier(data, output=tmp_path / "a", budget=2, **base)
+    sweep_control_frontier(data, output=tmp_path / "b", budget=3, **base)
+    with pytest.raises(ValueError, match="different settings"):
+        frontier_report([tmp_path / "a", tmp_path / "b"], output=tmp_path / "merged")

@@ -42,6 +42,40 @@ cd "$REPO"
 mkdir -p "$OUTPUT"
 echo "job ${SLURM_JOB_ID:-local} on $(hostname); output=$OUTPUT"
 
-PYTHON="$VENV/bin/python" bash scripts/run_campaign.sh --output "$OUTPUT" "${CAMPAIGN_ARGS:-}"
+if [ -n "${SLURM_ARRAY_TASK_ID:-}" ]; then
+    SHARD="$SLURM_ARRAY_TASK_ID"
+    COUNT="${SHARD_COUNT:-$(( ${SLURM_ARRAY_TASK_MAX:-0} + 1 ))}"
+    DIR="$OUTPUT/interventions_shard_$SHARD"
+    echo "array task $SHARD of $COUNT -> $DIR"
+    RESUME=""
+    [ -d "$DIR" ] && RESUME="--resume"
+    "$VENV/bin/python" -m annealctrl intervention-sweep \
+        --config "${INTERVENTION_CONFIG:-configs/intervention_research.json}" \
+        --output "$DIR" --shard "$SHARD" --shard-count "$COUNT" $RESUME
+    echo "shard done. Merge with:"
+    echo "  python -m annealctrl intervention-report --sweep $OUTPUT/interventions_shard_* --figures"
+else
+    PYTHON="$VENV/bin/python" bash scripts/run_campaign.sh --output "$OUTPUT" ${CAMPAIGN_ARGS:-}
+fi
 
 echo "done. Resubmit the same OUTPUT to resume after a time limit."
+
+# ---------------------------------------------------------------------------
+# Job array sharding
+# ---------------------------------------------------------------------------
+# configs/intervention_research.json plans ~411k propagation-scored controls and
+# the sweep driver is single-process, so one task will not finish inside a normal
+# time limit. Split it across an array, each task writing its own directory:
+#
+#   sbatch --array=0-15 \
+#          --export=ALL,OUTPUT=$HOME/runs/campaign_v1 \
+#          scripts/launch_goose.slurm
+#
+# and then merge the shards into one report (the reporter refuses to merge shards
+# computed under different settings):
+#
+#   python -m annealctrl intervention-report \
+#     --sweep $HOME/runs/campaign_v1/interventions_shard_* --figures
+#
+# The block below activates when SLURM_ARRAY_TASK_ID is set; without an --array
+# flag the plain campaign above runs instead.

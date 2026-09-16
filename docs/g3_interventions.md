@@ -176,9 +176,23 @@ python -m annealctrl intervention-sweep --config configs/intervention_research.j
 python -m annealctrl intervention-report --sweep runs/interventions --bootstrap-resamples 10000
 ```
 
-`configs/intervention_research.json` plans **96 parents, 1156 pairs, ~449k
-propagation-scored controls**. Profile before launching; this is a cluster job,
-not a laptop job.
+`configs/intervention_research.json` plans **96 parents, 1060 pairs, ~411k
+propagation-scored controls** (148 further candidate pairs are skipped as
+vacuous). Profile before launching; this is a cluster job, not a laptop job.
+
+The driver is single-process, so split that plan across a job array and merge
+afterwards:
+
+```bash
+sbatch --array=0-15 --export=ALL,OUTPUT=$HOME/runs/campaign_v1 scripts/launch_goose.slurm
+
+python -m annealctrl intervention-report \
+  --sweep $HOME/runs/campaign_v1/interventions_shard_* --figures
+```
+
+Shards are assigned by position in the id-sorted plan, so they are disjoint and
+cover everything regardless of the order each task enumerates the plan in.
+Merging shards computed under different settings is refused.
 
 ### Parents and splits
 

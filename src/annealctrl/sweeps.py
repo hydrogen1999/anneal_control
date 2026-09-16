@@ -106,6 +106,21 @@ def load_rows(output: str | Path) -> list[dict]:
     return rows
 
 
+def select_shard(units: Sequence[SweepUnit], index: int, count: int) -> list[SweepUnit]:
+    """One shard of a sweep, for a job array. Shards are disjoint and cover everything.
+
+    Assignment is by position in the id-sorted plan, so it does not depend on the
+    order the caller happened to build the units in — two array tasks that
+    enumerate the plan differently still agree on who owns what.
+    """
+    if isinstance(count, bool) or not isinstance(count, int) or count < 1:
+        raise ValueError("shard count must be a positive integer")
+    if isinstance(index, bool) or not isinstance(index, int) or not 0 <= index < count:
+        raise ValueError(f"shard index must satisfy 0 <= index < {count}")
+    ordered = sorted(units, key=lambda unit: unit.unit_id)
+    return ordered[index::count]
+
+
 def run_sweep(
     units: Sequence[SweepUnit],
     worker: Callable[[SweepUnit], Mapping[str, Any]],

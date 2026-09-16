@@ -234,3 +234,29 @@ def test_aborted_sweep_still_writes_a_manifest_marked_aborted(tmp_path):
     assert manifest["completed"] == 1 and manifest["failed"] == 1
     events = [json.loads(line) for line in (tmp_path / "out" / "telemetry.jsonl").read_text().splitlines()]
     assert events[-1]["event"] == "run_end" and events[-1]["status"] == "aborted"
+
+
+def test_shard_selects_a_disjoint_covering_subset(tmp_path):
+    from annealctrl.sweeps import select_shard
+    everything = units(tuple(f"u{i}" for i in range(10)))
+    shards = [select_shard(everything, index, 3) for index in range(3)]
+    assert sum(len(s) for s in shards) == 10
+    ids = [u.unit_id for shard in shards for u in shard]
+    assert sorted(ids) == sorted(u.unit_id for u in everything)
+    assert all(shard for shard in shards)
+
+
+def test_shard_is_stable_under_input_order(tmp_path):
+    from annealctrl.sweeps import select_shard
+    forward = units(("a", "b", "c", "d", "e"))
+    reversed_order = list(reversed(forward))
+    assert ([u.unit_id for u in select_shard(forward, 1, 2)]
+            == [u.unit_id for u in select_shard(reversed_order, 1, 2)])
+
+
+def test_shard_arguments_are_validated(tmp_path):
+    from annealctrl.sweeps import select_shard
+    everything = units()
+    for index, count in ((0, 0), (-1, 2), (2, 2), (3, 2)):
+        with pytest.raises(ValueError, match="shard"):
+            select_shard(everything, index, count)

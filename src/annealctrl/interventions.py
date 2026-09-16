@@ -535,7 +535,7 @@ def sweep_interventions(pairs: Sequence[InterventionPair], *, output: str | Path
                         backend: str = "numpy", tolerance: float = 5e-4,
                         initial_steps: int = 128, max_steps: int = 8192, max_ds_dtau: float = 4.0,
                         max_qubits: int = 20, resume: bool = False, dry_run: bool = False,
-                        on_error: str = "raise") -> dict:
+                        on_error: str = "raise", shard: int = 0, shard_count: int = 1) -> dict:
     """Run ``cross_control_matrix`` over constructed pairs through the sweep driver."""
     from .experiments import source_hash
 
@@ -551,6 +551,9 @@ def sweep_interventions(pairs: Sequence[InterventionPair], *, output: str | Path
         raise ValueError("pair ids must be unique within a sweep")
     units = [SweepUnit(unit_id=pair.pair_id, fingerprint=pair.fingerprint, payload=pair.pair_id)
              for pair in pairs]
+    if shard_count > 1:
+        from .sweeps import select_shard
+        units = select_shard(units, shard, shard_count)
 
     if dry_run:
         per_unit = 2 * sum(1 if name == "linear" else budget for name in families) + 2
@@ -660,8 +663,12 @@ def intervention_report(sweep_dir: str | Path, *, output: str | Path | None = No
     from .pipeline import write_json
     from .sweeps import load_rows
 
-    root = Path(sweep_dir)
-    rows = load_rows(root)
+    roots = [Path(part) for part in ([sweep_dir] if isinstance(sweep_dir, (str, Path)) else sweep_dir)]
+    root = roots[0]
+    rows = [row for part in roots for row in load_rows(part)]
+    hashes = {row.get("settings_hash") for row in rows}
+    if len(hashes) > 1:
+        raise ValueError(f"refusing to aggregate shards computed under different settings: {sorted(hashes)}")
     successful = [row["result"] for row in rows if row.get("status") == "ok"]
     recovered = {row["unit_id"] for row in rows if row.get("status") == "ok"}
     outstanding = [row for row in rows if row.get("status") == "failed" and row["unit_id"] not in recovered]

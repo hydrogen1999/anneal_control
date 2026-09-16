@@ -233,6 +233,7 @@ def sweep_control_frontier(
     max_ds_dtau: float = 4.0, teacher_methods: Sequence[str] = (),
     resume: bool = False, dry_run: bool = False, on_error: str = "raise",
     retain_full_trials: bool = True, record_ids: Sequence[str] | None = None,
+    shard: int = 0, shard_count: int = 1,
 ) -> dict:
     """Measure the control-complexity frontier over one split of a dataset.
 
@@ -294,6 +295,9 @@ def sweep_control_frontier(
     by_id = {str(np.asarray(r["record_id"]).item()): r for r in records}
     units = [SweepUnit(unit_id=key, fingerprint=str(np.asarray(value["fingerprint"]).item()),
                        payload=key) for key, value in by_id.items()]
+    if shard_count > 1:
+        from .sweeps import select_shard
+        units = select_shard(units, shard, shard_count)
 
     def worker(unit: SweepUnit) -> dict:
         record = by_id[unit.payload]
@@ -380,8 +384,12 @@ def frontier_report(sweep_dir: str | Path, *, output: str | Path | None = None,
     from .pipeline import write_json
     from .sweeps import load_rows
 
-    root = Path(sweep_dir)
-    rows = load_rows(root)
+    roots = [Path(part) for part in ([sweep_dir] if isinstance(sweep_dir, (str, Path)) else sweep_dir)]
+    root = roots[0]
+    rows = [row for part in roots for row in load_rows(part)]
+    hashes = {row.get("settings_hash") for row in rows}
+    if len(hashes) > 1:
+        raise ValueError(f"refusing to aggregate shards computed under different settings: {sorted(hashes)}")
     successful = [row["result"] for row in rows if row.get("status") == "ok"]
     failed = [row for row in rows if row.get("status") == "failed"]
     # A unit that failed and later succeeded on resume is not an exclusion.
