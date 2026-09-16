@@ -69,11 +69,29 @@ them is empty. Those pairs previously ran and contributed meaningless zero
 penalties to the aggregate; they are now skipped and counted (148 of 1208
 candidate pairs in `intervention_research.json`).
 
+### Campaign
+
+Executed on `apollo` (32 cores, RTX PRO 6000 Blackwell, CUDA 13.0), 12 concurrent
+shards, **zero failed units**. Reports and figures in
+`reports/campaign_2026-09-16/`, numbers in `reports/CAMPAIGN_G2_G3_RESULTS.md`.
+
+- **G2**: headroom mean 0.106 (validation, 48 parents, CI [0.095, 0.117]) and
+  0.102 (train, 144 parents). Linear wins 0 of 3456 records. Restricting to
+  `two_window` costs 0.003; `eight_bin` is worse at equal budget.
+- **G3**: 610 of 1060 pairs (57.5%) show a decisive preference reversal. The
+  scale-controlled arm gives a 2.6x larger transfer penalty than the total
+  compiled effect, so reporting only the latter would understate chain strength's
+  causal role by more than half.
+- **GPU**: 1.08x at 10 physical qubits with 1.22e-15 outcome parity; CuPy is
+  capped at one worker, so CPU shards win. The host suite is 512 passed, 0
+  skipped - the CuPy/CUDA parity tests recorded as never executed in
+  `reports/V02_VERIFICATION.md` now run and pass.
+
 ### Not in this release
 
-No results, no hardness claim, no speedup, no hardware or QPU work, no changes to
-the training contract (`learning.py` and `models.py` are untouched), and no
-paper-scale campaign. Existing datasets remain valid.
+No hardness claim, no speedup claim, no hardware or QPU work, no changes to the
+training contract (`learning.py` and `models.py` are untouched), and no learned
+model evaluated against these measurements. Existing datasets remain valid.
 
 ### Verification
 

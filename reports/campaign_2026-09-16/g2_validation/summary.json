@@ -1,0 +1,232 @@
+{
+  "schema_version": 1,
+  "split": "validation",
+  "n_records": 864,
+  "n_parents": 48,
+  "n_resolved_records": 859,
+  "n_censored_records": 5,
+  "censored_fraction": 0.005787037037037037,
+  "low_headroom_reference_fraction": 0.03587962962962963,
+  "headroom": {
+    "n_parents": 48,
+    "mean": 0.10612699734694726,
+    "std": 0.0388519173440243,
+    "min": 0.03638745895876769,
+    "max": 0.19343404132248343,
+    "quantiles": {
+      "p10": 0.06493922762926856,
+      "p25": 0.07324170135306153,
+      "p50": 0.11251098748173974,
+      "p75": 0.12735938863614676,
+      "p90": 0.1553947937943677
+    },
+    "parent_bootstrap_ci": {
+      "low": 0.09532021371760178,
+      "high": 0.11716475418540372,
+      "confidence": 0.95,
+      "resamples": 10000,
+      "unit_of_independence": "logical_parent",
+      "status": "ok",
+      "includes_training_seed_uncertainty": false
+    },
+    "parents": [
+      "parent_0004",
+      "parent_0007",
+      "parent_0009",
+      "parent_0010",
+      "parent_0018",
+      "parent_0019",
+      "parent_0020",
+      "parent_0025",
+      "parent_0032",
+      "parent_0036",
+      "parent_0070",
+      "parent_0072",
+      "parent_0074",
+      "parent_0076",
+      "parent_0085",
+      "parent_0091",
+      "parent_0093",
+      "parent_0101",
+      "parent_0102",
+      "parent_0107",
+      "parent_0110",
+      "parent_0123",
+      "parent_0130",
+      "parent_0137",
+      "parent_0139",
+      "parent_0140",
+      "parent_0147",
+      "parent_0150",
+      "parent_0153",
+      "parent_0157",
+      "parent_0158",
+      "parent_0167",
+      "parent_0168",
+      "parent_0169",
+      "parent_0176",
+      "parent_0183",
+      "parent_0185",
+      "parent_0189",
+      "parent_0197",
+      "parent_0202",
+      "parent_0203",
+      "parent_0207",
+      "parent_0208",
+      "parent_0215",
+      "parent_0220",
+      "parent_0222",
+      "parent_0228",
+      "parent_0230"
+    ]
+  },
+  "linear_loss": {
+    "n_parents": 48,
+    "mean": 0.5655154042495102,
+    "std": 0.2139025631775531,
+    "min": 0.08704894918194848,
+    "max": 0.8526129617727152,
+    "quantiles": {
+      "p10": 0.21578969974602571,
+      "p25": 0.4510563315524918,
+      "p50": 0.6318972579589264,
+      "p75": 0.7239193932990496,
+      "p90": 0.7972610907173135
+    }
+  },
+  "best_found_loss": {
+    "n_parents": 48,
+    "mean": 0.45938840690256294,
+    "std": 0.21108056177636408,
+    "min": 0.0506614902231808,
+    "max": 0.7910627784194165,
+    "quantiles": {
+      "p10": 0.14302856357389648,
+      "p25": 0.3061087871871765,
+      "p50": 0.5155593207058864,
+      "p75": 0.6360701753085662,
+      "p90": 0.6955222477611596
+    }
+  },
+  "family_restriction_loss": {
+    "eight_bin": {
+      "n_parents": 48,
+      "mean": 0.012955114496468759,
+      "std": 0.008191427184286771,
+      "min": 0.0038767443177055716,
+      "max": 0.04207044581658977,
+      "quantiles": {
+        "p10": 0.005133794678448474,
+        "p25": 0.0070966759735220115,
+        "p50": 0.01063443614782976,
+        "p75": 0.01686406144323817,
+        "p90": 0.024508525047360622
+      }
+    },
+    "linear": {
+      "n_parents": 48,
+      "mean": 0.10612699734694726,
+      "std": 0.0388519173440243,
+      "min": 0.03638745895876769,
+      "max": 0.19343404132248343,
+      "quantiles": {
+        "p10": 0.06493922762926856,
+        "p25": 0.07324170135306153,
+        "p50": 0.11251098748173974,
+        "p75": 0.12735938863614676,
+        "p90": 0.1553947937943677
+      }
+    },
+    "one_window": {
+      "n_parents": 48,
+      "mean": 0.0096214988317391,
+      "std": 0.00682509941782364,
+      "min": 0.000711984962166697,
+      "max": 0.027959374763733273,
+      "quantiles": {
+        "p10": 0.0021880575355380408,
+        "p25": 0.003803430592134252,
+        "p50": 0.008759527386570511,
+        "p75": 0.01333437120338827,
+        "p90": 0.018318815602106544
+      }
+    },
+    "pause": {
+      "n_parents": 48,
+      "mean": 0.019927303811041925,
+      "std": 0.013802325920748832,
+      "min": 0.0008057336374209431,
+      "max": 0.055866454280980804,
+      "quantiles": {
+        "p10": 0.004524508592944678,
+        "p25": 0.008124047379046496,
+        "p50": 0.017841377909745083,
+        "p75": 0.029386790910111316,
+        "p90": 0.035412869631643334
+      }
+    },
+    "two_window": {
+      "n_parents": 48,
+      "mean": 0.0033942621909694216,
+      "std": 0.0030076523576124847,
+      "min": 0.00020542102857693903,
+      "max": 0.016003034006268863,
+      "quantiles": {
+        "p10": 0.0009572215348473042,
+        "p25": 0.0015183430377328174,
+        "p50": 0.0024534637993418595,
+        "p75": 0.004368119462379888,
+        "p90": 0.006174662199212453
+      }
+    }
+  },
+  "best_family_counts": {
+    "eight_bin": 68,
+    "one_window": 136,
+    "pause": 312,
+    "two_window": 343
+  },
+  "records_with_audit_failures": 0,
+  "audit_failure_reasons": {},
+  "records_with_inconsistent_linear_reference": 0,
+  "total_objective_calls": 222048,
+  "total_integrator_steps": 254561145,
+  "verdict": "resolved_headroom_present",
+  "scope": "finite-budget best-found reference; headroom is a lower bound on control gain and censored rows are excluded from every headroom statistic above",
+  "failed_units": 0,
+  "failed_unit_ids": [],
+  "failure_reasons": {},
+  "sweep": {
+    "command": "control-sweep",
+    "settings": {
+      "split": "validation",
+      "families": [
+        "linear",
+        "one_window",
+        "two_window",
+        "eight_bin",
+        "pause"
+      ],
+      "budget": 64,
+      "seed": 0,
+      "ambiguity_margin": 1.0,
+      "reference_floor": 0.01,
+      "allow_test_adaptation": false,
+      "backend": "numpy",
+      "tolerance": 0.0002,
+      "initial_steps": 128,
+      "max_steps": 16384,
+      "max_ds_dtau": 4.0,
+      "teacher_methods": [
+        "gap_inverse_square",
+        "d2"
+      ],
+      "retain_full_trials": true
+    },
+    "settings_hash": "920000a3f5d256aadce39cb682f816d6d2939306a96936359056ea0cc21d7536",
+    "source_hash": "c36af7f09ed26e2617902080dd74bb09d61108f14cdaee914eb7461a3f15247b",
+    "status": "ok",
+    "data_dir": "/home/nguyencongt/runs/g2_data",
+    "requested_objective_calls_per_unit": 257
+  }
+}

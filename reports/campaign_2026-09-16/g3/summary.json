@@ -1,0 +1,253 @@
+{
+  "schema_version": 1,
+  "n_pairs": 1060,
+  "n_parents": 96,
+  "n_censored_pairs": 254,
+  "censored_fraction": 0.23962264150943396,
+  "n_one_sided_pairs": 196,
+  "decisive_reversals": 610,
+  "decisive_reversal_rate": 0.5754716981132075,
+  "decisive_reversal_denominator": 1060,
+  "swap_consistency_check": 1.0,
+  "swap_consistency_holds": true,
+  "identical_waveform_pairs": 239,
+  "pairs_with_negative_direction": 187,
+  "negative_direction_fraction": 0.17641509433962263,
+  "physical_size_matched": true,
+  "by_scale_arm": {
+    "scale_controlled": {
+      "transfer_penalty": {
+        "n_parents": 96,
+        "mean": 0.05146407795919337,
+        "std": 0.025933969469770314,
+        "min": 0.007033760538384268,
+        "max": 0.11430172134645844,
+        "quantiles": {
+          "p10": 0.017552756181666337,
+          "p25": 0.030355781501185907,
+          "p50": 0.05188620154496655,
+          "p75": 0.07203580763912709,
+          "p90": 0.08090876016845813
+        },
+        "parent_bootstrap_ci": {
+          "low": 0.046471421256210114,
+          "high": 0.05663857504644884,
+          "confidence": 0.95,
+          "resamples": 10000,
+          "unit_of_independence": "logical_parent",
+          "status": "ok",
+          "includes_training_seed_uncertainty": false
+        },
+        "n_pairs": 248,
+        "n_included_pairs": 237,
+        "n_resolved_pairs": 219,
+        "n_one_sided_pairs": 18,
+        "inclusion_rule": "decisive in at least one direction; censored pairs excluded"
+      },
+      "decisive_reversals": 219,
+      "decisive_reversal_rate": 0.8830645161290323,
+      "decisive_reversal_denominator": 248
+    },
+    "total_compiled_effect": {
+      "transfer_penalty": {
+        "n_parents": 96,
+        "mean": 0.02010250264200633,
+        "std": 0.015442721242065019,
+        "min": 0.0019884363402371402,
+        "max": 0.07240920524784293,
+        "quantiles": {
+          "p10": 0.00625586713096492,
+          "p25": 0.009102584093733237,
+          "p50": 0.016547895256408523,
+          "p75": 0.02511596335784546,
+          "p90": 0.04291650365947381
+        },
+        "parent_bootstrap_ci": {
+          "low": 0.017184329252803558,
+          "high": 0.023338173729346344,
+          "confidence": 0.95,
+          "resamples": 10000,
+          "unit_of_independence": "logical_parent",
+          "status": "ok",
+          "includes_training_seed_uncertainty": false
+        },
+        "n_pairs": 812,
+        "n_included_pairs": 569,
+        "n_resolved_pairs": 391,
+        "n_one_sided_pairs": 178,
+        "inclusion_rule": "decisive in at least one direction; censored pairs excluded"
+      },
+      "decisive_reversals": 391,
+      "decisive_reversal_rate": 0.4815270935960591,
+      "decisive_reversal_denominator": 812
+    }
+  },
+  "by_factor": {
+    "chain_strength": {
+      "transfer_penalty": {
+        "n_parents": 96,
+        "mean": 0.04644411941103105,
+        "std": 0.02138464187950608,
+        "min": 0.009395048100453704,
+        "max": 0.12569349050492398,
+        "quantiles": {
+          "p10": 0.021121067056892706,
+          "p25": 0.02875828337194385,
+          "p50": 0.04542289046049613,
+          "p75": 0.06287882447523738,
+          "p90": 0.07145537986835768
+        },
+        "parent_bootstrap_ci": {
+          "low": 0.0422739296665273,
+          "high": 0.050807867955653827,
+          "confidence": 0.95,
+          "resamples": 10000,
+          "unit_of_independence": "logical_parent",
+          "status": "ok",
+          "includes_training_seed_uncertainty": false
+        },
+        "n_pairs": 384,
+        "n_included_pairs": 358,
+        "n_resolved_pairs": 315,
+        "n_one_sided_pairs": 43,
+        "inclusion_rule": "decisive in at least one direction; censored pairs excluded"
+      },
+      "decisive_reversals": 315,
+      "decisive_reversal_rate": 0.8203125,
+      "decisive_reversal_denominator": 384
+    },
+    "field_allocation": {
+      "transfer_penalty": {
+        "n_parents": 16,
+        "mean": 0.0012435564716390887,
+        "std": 0.0013543435180186734,
+        "min": -0.0001466505098465798,
+        "max": 0.0049665731401484225,
+        "quantiles": {
+          "p10": 0.00016888493753258738,
+          "p25": 0.00022998274515774464,
+          "p50": 0.0006839221480551549,
+          "p75": 0.001967074434812366,
+          "p90": 0.0025100932640830242
+        },
+        "parent_bootstrap_ci": {
+          "low": 0.0006721649447136584,
+          "high": 0.0019369357128146021,
+          "confidence": 0.95,
+          "resamples": 10000,
+          "unit_of_independence": "logical_parent",
+          "status": "ok",
+          "includes_training_seed_uncertainty": false
+        },
+        "n_pairs": 96,
+        "n_included_pairs": 18,
+        "n_resolved_pairs": 3,
+        "n_one_sided_pairs": 15,
+        "inclusion_rule": "decisive in at least one direction; censored pairs excluded"
+      },
+      "decisive_reversals": 3,
+      "decisive_reversal_rate": 0.03125,
+      "decisive_reversal_denominator": 96
+    },
+    "geometry": {
+      "transfer_penalty": {
+        "n_parents": 86,
+        "mean": 0.0063013891765971355,
+        "std": 0.0073678806627149596,
+        "min": -0.003507868199642439,
+        "max": 0.03482596762894111,
+        "quantiles": {
+          "p10": 0.0005855817859787376,
+          "p25": 0.0011039038361709181,
+          "p50": 0.0034015763496740292,
+          "p75": 0.008705783261615432,
+          "p90": 0.018408896485457044
+        },
+        "parent_bootstrap_ci": {
+          "low": 0.004819309017974427,
+          "high": 0.00787804562164415,
+          "confidence": 0.95,
+          "resamples": 10000,
+          "unit_of_independence": "logical_parent",
+          "status": "ok",
+          "includes_training_seed_uncertainty": false
+        },
+        "n_pairs": 332,
+        "n_included_pairs": 231,
+        "n_resolved_pairs": 149,
+        "n_one_sided_pairs": 82,
+        "inclusion_rule": "decisive in at least one direction; censored pairs excluded"
+      },
+      "decisive_reversals": 149,
+      "decisive_reversal_rate": 0.44879518072289154,
+      "decisive_reversal_denominator": 332
+    },
+    "ports": {
+      "transfer_penalty": {
+        "n_parents": 90,
+        "mean": 0.01456273350836223,
+        "std": 0.019466751166038784,
+        "min": -0.0030775318804742158,
+        "max": 0.08545972728366417,
+        "quantiles": {
+          "p10": 0.0003032674530849766,
+          "p25": 0.0012986455501674543,
+          "p50": 0.005745879215759753,
+          "p75": 0.01862587169460721,
+          "p90": 0.04503746621930186
+        },
+        "parent_bootstrap_ci": {
+          "low": 0.010737745619338948,
+          "high": 0.018682111195723824,
+          "confidence": 0.95,
+          "resamples": 10000,
+          "unit_of_independence": "logical_parent",
+          "status": "ok",
+          "includes_training_seed_uncertainty": false
+        },
+        "n_pairs": 248,
+        "n_included_pairs": 199,
+        "n_resolved_pairs": 143,
+        "n_one_sided_pairs": 56,
+        "inclusion_rule": "decisive in at least one direction; censored pairs excluded"
+      },
+      "decisive_reversals": 143,
+      "decisive_reversal_rate": 0.5766129032258065,
+      "decisive_reversal_denominator": 248
+    }
+  },
+  "factor_counts": {
+    "chain_strength": 384,
+    "field_allocation": 96,
+    "geometry": 332,
+    "ports": 248
+  },
+  "total_objective_calls": 411280,
+  "verdict": "preference_changes_measured",
+  "scope": "paired interventions inside the declared closed-system simulator; transfer penalties are signed and unclipped, and scale arms are reported separately",
+  "failed_units": 0,
+  "failed_unit_ids": [],
+  "sweep": {
+    "command": "intervention-sweep",
+    "settings": {
+      "families": [
+        "linear",
+        "one_window",
+        "two_window",
+        "eight_bin"
+      ],
+      "budget": 64,
+      "seed": 0,
+      "ambiguity_margin": 1.0,
+      "backend": "numpy",
+      "tolerance": 0.0002,
+      "initial_steps": 128,
+      "max_steps": 16384,
+      "max_ds_dtau": 4.0,
+      "max_qubits": 10
+    },
+    "settings_hash": "b2a4a65786c00673f1d5e916817bf932390d4805bfc78b267a333a3d2098636e",
+    "source_hash": "c36af7f09ed26e2617902080dd74bb09d61108f14cdaee914eb7461a3f15247b",
+    "status": "ok"
+  }
+}

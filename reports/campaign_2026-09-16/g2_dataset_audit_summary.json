@@ -1,0 +1,62 @@
+{
+  "split_scope": "all",
+  "n_records": 4320,
+  "n_parents": 240,
+  "parents_per_split": {
+    "train": 144,
+    "validation": 48,
+    "test": 48
+  },
+  "family_record_counts": {
+    "spin_glass": 1080,
+    "weighted_maxcut": 1080,
+    "planted_loops": 1080,
+    "weak_field": 1080
+  },
+  "logical_size_record_counts": {
+    "3": 1440,
+    "4": 1440,
+    "5": 1440
+  },
+  "physical_size_record_counts": {
+    "3": 540,
+    "4": 846,
+    "6": 810,
+    "5": 936,
+    "8": 396,
+    "9": 180,
+    "7": 576,
+    "10": 36
+  },
+  "resolved_response_fraction": 0.0,
+  "state_error_diagnostic": {
+    "count": 34560,
+    "min": 4.460193740713635e-06,
+    "median": 7.22754309624332e-05,
+    "p90": 0.00015858787070941306,
+    "max": 0.00019998503693670802,
+    "mean": 7.945103217678205e-05
+  },
+  "finite_bank_headroom": {
+    "count": 4320,
+    "min": 0.0,
+    "median": 0.04410913179474962,
+    "p90": 0.13651718508341684,
+    "max": 0.3593652851440259,
+    "mean": 0.05865558229640892
+  },
+  "headroom_fraction_above_0p01": 0.8208333333333333,
+  "best_candidate_counts": {
+    "2": 2110,
+    "3": 1277,
+    "5": 107,
+    "0": 348,
+    "7": 328,
+    "6": 85,
+    "4": 42,
+    "1": 23
+  },
+  "generation_seconds": 105.60601799935102,
+  "warning": "Descriptive audit within split_scope. Do not choose hyperparameters from test headroom. Finite bank != control optimum.",
+  "note": "per-record rows removed; regenerate with: annealctrl audit --data <dataset> --output <file>"
+}
