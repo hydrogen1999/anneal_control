@@ -14,7 +14,8 @@ from .pipeline import environment, load_records, write_json
 
 COMMANDS = {"run", "tune", "report", "audit", "doctor", "train-config", "infer",
             "control-benchmark", "export-hardware", "ingest-hardware", "simulate-open", "profile-generation",
-            "control-sweep", "frontier-report", "screen"}
+            "control-sweep", "frontier-report", "screen",
+            "intervention-sweep", "intervention-report"}
 
 
 def _json(path):
@@ -144,6 +145,20 @@ def main(argv):
     screen.add_argument("--output", required=True)
     screen.add_argument("--quantile", type=float, default=0.75)
     screen.add_argument("--min-headroom", type=float)
+    inter = sub.add_parser("intervention-sweep",
+                           help="G3: paired single-factor embedding interventions and cross-control matrices")
+    inter.add_argument("--config", required=True, help="plan JSON; see configs/intervention_smoke.json")
+    inter.add_argument("--output", required=True)
+    inter.add_argument("--resume", action="store_true")
+    inter.add_argument("--dry-run", action="store_true")
+    inter.add_argument("--allow-test-parents", action="store_true",
+                       help="intervention pairs on test parents share logical objectives with evaluation")
+    inter.add_argument("--report", action="store_true")
+    ireport = sub.add_parser("intervention-report", help="G3: aggregate a completed intervention-sweep")
+    ireport.add_argument("--sweep", required=True)
+    ireport.add_argument("--output")
+    ireport.add_argument("--bootstrap-resamples", type=int, default=10000)
+    ireport.add_argument("--seed", type=int, default=0)
     opened = sub.add_parser("simulate-open", help="small independent Lindblad model, not a calibrated QPU")
     opened.add_argument("--record", required=True)
     opened.add_argument("--schedule", required=True)
@@ -238,6 +253,26 @@ def main(argv):
         from .screening import screen_records
         _save(args.output, screen_records(args.fit_sweep, args.apply_sweep,
                                           quantile=args.quantile, min_headroom=args.min_headroom))
+    elif args.command == "intervention-sweep":
+        from .interventions import intervention_report, plan_intervention_pairs, sweep_interventions
+        config = _json(args.config)
+        pairs, plan = plan_intervention_pairs(config, allow_test_parents=args.allow_test_parents)
+        result = sweep_interventions(pairs, output=args.output, resume=args.resume,
+                                     dry_run=args.dry_run, **dict(config.get("search") or {}))
+        if not args.dry_run:
+            write_json(Path(args.output) / "plan.json", plan)
+            if args.report:
+                result = {"sweep": result, "report": intervention_report(args.output)}
+        print(json.dumps({"plan": {k: plan[k] for k in ("n_parents", "n_pairs", "factors",
+                                                        "scale_arm_counts", "splits")},
+                          "sweep": result}, indent=2))
+    elif args.command == "intervention-report":
+        from .interventions import intervention_report
+        summary = intervention_report(args.sweep, output=args.output,
+                                      bootstrap_resamples=args.bootstrap_resamples, seed=args.seed)
+        print(json.dumps({key: summary[key] for key in
+                          ("n_pairs", "n_parents", "censored_fraction", "swap_rate", "verdict")}, indent=2))
+        print(f"Report: {Path(args.output or Path(args.sweep) / 'report') / 'INTERVENTIONS.md'}")
     elif args.command == "control-benchmark":
         from .benchmarking import benchmark_record_controls
         _save(args.output, benchmark_record_controls(_record(args), budget_per_family=args.budget, seed=args.seed,

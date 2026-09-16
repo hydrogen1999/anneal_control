@@ -1,0 +1,24 @@
+{
+  "seed": 20260916,
+  "parents": 12,
+  "families": ["spin_glass", "weighted_maxcut"],
+  "logical_qubits": 3,
+  "logical_support": {"kind": "complete"},
+  "chain_lengths": [3, 2, 1],
+  "runtimes": [2.0],
+  "splits": ["train", "validation"],
+  "base": {"shape": "path", "ports": 1, "field_distribution": "uniform",
+           "coupling_distribution": "uniform", "chain_strength": 1.5},
+  "interventions": [
+    {"factor": "geometry", "change": {"shape": "star"}},
+    {"factor": "ports", "change": {"ports": 2}},
+    {"factor": "field_allocation", "change": {"field_distribution": "concentrated"}},
+    {"factor": "chain_strength", "change": {"chain_strength": 3.0}}
+  ],
+  "search": {"families": ["linear", "one_window", "two_window"], "budget": 8, "seed": 0,
+             "ambiguity_margin": 1.0, "backend": "numpy", "tolerance": 0.0005,
+             "initial_steps": 64, "max_steps": 4096, "max_ds_dtau": 4.0,
+             "max_qubits": 8, "on_error": "raise"},
+  "max_physical_qubits": 8,
+  "allow_size_change": false
+}

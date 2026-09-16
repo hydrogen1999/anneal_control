@@ -271,3 +271,106 @@ def test_synthetic_lift_rejects_unknown_shape_even_for_singleton_chains():
     with pytest.raises(ValueError, match="shape"):
         synthetic_lift(problem, np.ones(problem.n, dtype=int), np.random.default_rng(0),
                        shape="not_a_shape")
+
+
+# --- scale_override: the geometry/allocation control arm of a paired intervention ---
+
+def _pair_problem():
+    return IsingProblem(np.array([0.4, -0.3, 0.2]), np.array([[0, 1], [1, 2], [0, 2]]),
+                        np.array([0.9, -0.6, 0.5]))
+
+
+def test_scale_override_replaces_the_natural_programmed_scale():
+    problem = _pair_problem()
+    embedding = synthetic_lift(problem, np.array([2, 1, 1]), np.random.default_rng(0))
+    natural = compile_embedding(problem, embedding, 3.0, np.random.default_rng(1))
+    overridden = compile_embedding(problem, embedding, 3.0, np.random.default_rng(1),
+                                   scale_override=natural.programmed_scale / 2)
+
+    assert overridden.programmed_scale == pytest.approx(natural.programmed_scale / 2)
+    assert np.allclose(overridden.physical.h, natural.physical.h / 2)
+    assert np.allclose(overridden.physical.J, natural.physical.J / 2)
+
+
+def test_scale_override_preserves_the_compilation_identity_exhaustively():
+    problem = _pair_problem()
+    embedding = synthetic_lift(problem, np.array([2, 1, 1]), np.random.default_rng(0))
+    compiled = compile_embedding(problem, embedding, 3.0, np.random.default_rng(1), scale_override=0.25)
+    report = validate_compilation(compiled)
+
+    assert report["aligned_energy_max_error"] < 1e-9
+    for z in all_spins(problem.n):
+        expected = compiled.programmed_scale * problem.energy(z[None])[0] + compiled.aligned_offset
+        assert compiled.physical.energy(z[embedding.membership][None])[0] == pytest.approx(expected)
+
+
+def test_scale_override_above_the_declared_caps_is_refused():
+    problem = _pair_problem()
+    embedding = synthetic_lift(problem, np.array([2, 1, 1]), np.random.default_rng(0))
+    with pytest.raises(ValueError, match="cap"):
+        compile_embedding(problem, embedding, 3.0, np.random.default_rng(1), scale_override=1.0)
+
+
+def test_nonpositive_or_nonfinite_scale_override_is_refused():
+    problem = _pair_problem()
+    embedding = synthetic_lift(problem, np.array([2, 1, 1]), np.random.default_rng(0))
+    for bad in (0.0, -0.5, float("nan"), float("inf")):
+        with pytest.raises(ValueError, match="scale_override"):
+            compile_embedding(problem, embedding, 3.0, np.random.default_rng(1), scale_override=bad)
+
+
+def test_scale_override_is_recorded_in_the_coefficient_metadata():
+    problem = _pair_problem()
+    embedding = synthetic_lift(problem, np.array([2, 1, 1]), np.random.default_rng(0))
+    compiled = compile_embedding(problem, embedding, 3.0, np.random.default_rng(1), scale_override=0.2)
+    assert compiled.physical.metadata["scale_override"] == pytest.approx(0.2)
+    assert compiled.physical.metadata["coefficient_rule"].endswith("_explicit_scale_override")
+
+
+def test_conservative_common_scale_is_the_smallest_natural_scale():
+    from annealctrl.generation import conservative_common_scale
+    problem = _pair_problem()
+    embedding = synthetic_lift(problem, np.array([2, 1, 1]), np.random.default_rng(0))
+    weak = compile_embedding(problem, embedding, 1.0, np.random.default_rng(1))
+    strong = compile_embedding(problem, embedding, 4.0, np.random.default_rng(1))
+    common = conservative_common_scale(weak, strong)
+
+    assert common == pytest.approx(min(weak.programmed_scale, strong.programmed_scale))
+    # It must be feasible for BOTH arms, which is the point of choosing the minimum.
+    for strength in (1.0, 4.0):
+        compile_embedding(problem, embedding, strength, np.random.default_rng(1), scale_override=common)
+
+
+def test_conservative_common_scale_requires_at_least_two_instances():
+    from annealctrl.generation import conservative_common_scale
+    problem = _pair_problem()
+    embedding = synthetic_lift(problem, np.array([2, 1, 1]), np.random.default_rng(0))
+    with pytest.raises(ValueError, match="two"):
+        conservative_common_scale(compile_embedding(problem, embedding, 1.0, np.random.default_rng(1)))
+
+
+def test_independent_port_stream_keeps_ports_fixed_when_only_the_shape_changes():
+    problem = _pair_problem()
+    lengths = np.array([3, 2, 2])
+
+    def boundary(shape):
+        embedding = synthetic_lift(problem, lengths, np.random.default_rng(7), shape=shape,
+                                   ports=1, port_rng=np.random.default_rng(99))
+        owner = embedding.membership
+        return {tuple(e) for e in embedding.hardware_edges.tolist() if owner[e[0]] != owner[e[1]]}
+
+    assert boundary("path") == boundary("random_tree") == boundary("star")
+
+
+def test_without_an_independent_port_stream_a_random_tree_shape_moves_the_ports():
+    problem = _pair_problem()
+    lengths = np.array([3, 2, 2])
+
+    def boundary(shape):
+        embedding = synthetic_lift(problem, lengths, np.random.default_rng(7), shape=shape, ports=1)
+        owner = embedding.membership
+        return {tuple(e) for e in embedding.hardware_edges.tolist() if owner[e[0]] != owner[e[1]]}
+
+    # This is the confound that port_rng exists to remove; asserting it keeps the
+    # reason for the parameter visible if someone later "simplifies" it away.
+    assert boundary("path") != boundary("random_tree")

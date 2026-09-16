@@ -233,8 +233,15 @@ class Embedding:
 
 
 def synthetic_lift(problem: IsingProblem, lengths: np.ndarray,
-                   rng: np.random.Generator, shape: str = "path", ports: int = 1) -> Embedding:
-    """Construct a toy physical graph, NOT an embedding on a commercial topology."""
+                   rng: np.random.Generator, shape: str = "path", ports: int = 1,
+                   port_rng: np.random.Generator | None = None) -> Embedding:
+    """Construct a toy physical graph, NOT an embedding on a commercial topology.
+
+    ``port_rng`` draws the boundary ports from a stream independent of the chain
+    construction. Without it, a ``random_tree`` shape consumes draws that a
+    ``path`` shape does not, so changing only the shape would silently relocate
+    the ports too — turning a single-factor intervention into a confounded one.
+    """
     original_lengths = np.asarray(lengths)
     if not np.all(np.isfinite(original_lengths)) or not np.all(original_lengths == np.floor(original_lengths)):
         raise ValueError("chain lengths must be finite integers")
@@ -257,13 +264,15 @@ def synthetic_lift(problem: IsingProblem, lengths: np.ndarray,
             else:
                 raise ValueError("shape must be path/star/random_tree")
             hardware.add(tuple(sorted((int(chain[parent]), int(chain[k])))))
+    port_stream = rng if port_rng is None else port_rng
     for v, w in problem.edges:
         possible = [(int(i), int(j)) for i in chains[v] for j in chains[w]]
-        chosen = rng.choice(len(possible), size=min(ports, len(possible)), replace=False)
+        chosen = port_stream.choice(len(possible), size=min(ports, len(possible)), replace=False)
         for idx in chosen:
             hardware.add(tuple(sorted(possible[idx])))
     return Embedding(membership, np.array(sorted(hardware), dtype=int).reshape(-1, 2),
                      {"route": "synthetic_lift", "shape": shape, "ports": ports,
+                      "independent_port_stream": port_rng is not None,
                       "is_commercial_hardware": False, "lengths": lengths.tolist(),
                       "target_lengths": lengths.tolist(), "achieved_lengths": lengths.tolist(),
                       "target_met": True})
@@ -339,15 +348,36 @@ class CompiledInstance:
         return hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
 
 
+def conservative_common_scale(*instances: "CompiledInstance") -> float:
+    """Smallest natural programmed scale among the given arms.
+
+    A chain-strength intervention moves the natural scale, because the penalty
+    enters the same coefficient cap as the problem couplers. Compiling both arms
+    at the minimum of their natural scales keeps every coefficient inside the
+    declared caps while holding the global scale of H_Z fixed, which is the
+    scale-controlled arm required by
+    ``docs/decisions/ADR-0003-single-factor-interventions-with-scale-control.md``.
+    """
+    if len(instances) < 2:
+        raise ValueError("a common scale needs at least two compiled instances")
+    return float(min(instance.programmed_scale for instance in instances))
+
+
 def compile_embedding(problem: IsingProblem, embedding: Embedding, chain_strength: float,
                       rng: np.random.Generator, field_distribution: str = "uniform",
                       coupling_distribution: str = "uniform", h_limit: float = 2.,
-                      j_limit: float = 1.) -> CompiledInstance:
+                      j_limit: float = 1., scale_override: float | None = None) -> CompiledInstance:
     """Compile each logical coefficient once, plus internal chain couplers.
 
     Limits are explicit symmetric *toy* hardware caps, not D-Wave autoscale.
     Sum raw chain/problem terms before applying the common coefficient scale.
     This scales HZ only: driver and runtime are NOT silently rescaled.
+
+    ``scale_override`` replaces the natural cap-derived scale with a declared
+    common one, so a paired intervention can hold the global H_Z scale fixed
+    while the intervened factor moves. It may only *tighten*: an override that
+    would push a coefficient past ``h_limit``/``j_limit`` is refused, since the
+    caps are the compiled program's feasibility contract, not a preference.
     """
     if field_distribution not in {"uniform", "concentrated"} or coupling_distribution not in {"uniform", "random"}:
         raise ValueError("unknown field/coupling distribution")
@@ -385,9 +415,20 @@ def compile_embedding(problem: IsingProblem, embedding: Embedding, chain_strengt
     divisor = max(1., float(np.max(np.abs(h), initial=0)) / h_limit,
                   float(np.max(np.abs(total), initial=0)) / j_limit)
     alpha = 1 / divisor
+    rule = "symmetric_caps_v1_not_vendor_autoscale"
+    if scale_override is not None:
+        if not np.isfinite(scale_override) or scale_override <= 0:
+            raise ValueError("scale_override must be finite and positive")
+        if scale_override > alpha * (1 + 1e-12):
+            raise ValueError(
+                f"scale_override {scale_override!r} exceeds the cap-feasible scale {alpha!r}; "
+                "an override may only tighten the declared h/J caps, never relax them")
+        alpha = float(scale_override)
+        rule += "_explicit_scale_override"
     physical = IsingProblem(alpha * h, edges.copy(), alpha * total, "compiled", {
-        "coefficient_rule": "symmetric_caps_v1_not_vendor_autoscale",
+        "coefficient_rule": rule,
         "h_limit": h_limit, "j_limit": j_limit,
+        "scale_override": None if scale_override is None else float(scale_override),
         "field_distribution": field_distribution, "coupling_distribution": coupling_distribution,
     })
     return CompiledInstance(problem, embedding, physical, alpha * pJ, alpha * cJ,
