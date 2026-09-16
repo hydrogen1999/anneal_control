@@ -131,20 +131,28 @@ control beat this arm's own best found, which says the equal-budget search on
 this arm was the weaker of the two — information about the search that clipping
 to zero would hide.
 
-### When is it a swap?
+### When is it a decisive reversal?
 
-A swap requires **both** directions to be decisive against their own numerical
-ambiguity, using the same censoring rule as G2 headroom:
+A **decisive reversal** requires both directions to be decisive against their own
+numerical ambiguity, using the same censoring rule as G2 headroom:
 
-| `resolution_status` | condition | counts as a swap? |
+| `resolution_status` | condition | counts as a reversal? |
 |---|---|---|
-| `resolved` | both penalties exceed `margin × combined ambiguity` | yes, unless the two selected waveforms are identical |
+| `resolved` | both penalties exceed `margin × combined ambiguity` | yes — this is the decisive reversal |
 | `one_sided` | exactly one direction is decisive | no — reported separately |
 | `censored_numerical` | neither is | no |
 
 This is tie-aware without needing near-optimal set machinery: if importing the
 other arm's control costs nothing measurable on one side, the two controls are
 effectively tied there, and no clean preference reversal exists.
+
+**Quote the reversal rate against all pairs, never against the resolved ones.**
+`P(reversal | resolved)` is 1 by construction — both penalties exceeding their
+ambiguity already implies each arm's own control wins on its own arm — so the
+conditional ratio is a tautology. It is retained only as
+`swap_consistency_check`, which must be 1.0 and indicates a bug otherwise. The
+first research run reported "100% swap rate over 610 resolved pairs"; the honest
+statement is 610 of 1060 pairs, 57.5%.
 
 ### Three different populations
 

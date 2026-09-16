@@ -290,7 +290,8 @@ def main(argv):
         summary = intervention_report(args.sweep, output=args.output,
                                       bootstrap_resamples=args.bootstrap_resamples, seed=args.seed)
         print(json.dumps({key: summary[key] for key in
-                          ("n_pairs", "n_parents", "censored_fraction", "swap_rate", "verdict")}, indent=2))
+                          ("n_pairs", "n_parents", "censored_fraction",
+                           "decisive_reversals", "decisive_reversal_rate", "verdict")}, indent=2))
         destination = Path(args.output or Path(args.sweep[0]) / "report")
         if args.figures:
             from .figures import figure_interventions
