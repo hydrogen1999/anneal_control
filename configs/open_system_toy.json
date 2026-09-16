@@ -1,0 +1,5 @@
+{
+  "dephasing_rates": 0.01,
+  "relaxation_rates": 0.0,
+  "rates_unit": "1/dimensionless"
+}

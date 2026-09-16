@@ -1,0 +1,310 @@
+"""Shared best-found teacher banks and strictly accounted local search.
+
+None of the routines certifies a globally optimal control. Keep every outcome;
+candidate bank definitions, seeds, families and budgets are experiment metadata.
+"""
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+from time import perf_counter
+from typing import Callable, Sequence
+
+import numpy as np
+from scipy.special import ndtri
+from scipy.stats import qmc
+
+from .schedules import Schedule, decode_durations, pause_schedule, slow_window_schedule, window_schedule
+
+
+@dataclass(frozen=True)
+class Candidate:
+    candidate_id: str
+    family: str
+    schedule: Schedule
+    parameters: dict = field(default_factory=dict)
+
+
+@dataclass(frozen=True)
+class EvaluationRecord:
+    candidate: Candidate
+    loss: float
+    evaluation_index: int
+    elapsed_seconds: float
+
+
+@dataclass(frozen=True)
+class SearchResult:
+    records: tuple[EvaluationRecord, ...]
+    split: str
+    online_adaptation: bool
+    reference_status: str = "best_found_within_evaluated_candidates"
+
+    @property
+    def best(self) -> EvaluationRecord:
+        if not self.records:
+            raise ValueError("no candidates evaluated")
+        return min(self.records, key=lambda r: r.loss)
+
+    @property
+    def n_evaluations(self) -> int:
+        return len(self.records)
+
+    @property
+    def elapsed_seconds(self) -> float:
+        return sum(record.elapsed_seconds for record in self.records)
+
+
+def shared_candidate_bank(
+    n: int = 64,
+    n_segments: int = 8,
+    *,
+    seed: int = 0,
+    runtime: float = 1.0,
+    max_slope: float = 10.0,
+    include_pauses: bool = True,
+) -> list[Candidate]:
+    """A fixed deterministic control bank shared across instances at a runtime.
+
+    Prefix: linear, three one-window controls, two two-window controls, and two
+    true pauses if requested/feasible. Remaining slots use scrambled Sobol points
+    mapped to zero-mean normal duration logits. A small n truncates this prefix.
+    Physics-derived candidates can be appended by callers, who must charge their
+    spectrum construction and all resulting outcome evaluations separately.
+    """
+    if not isinstance(n, int) or n < 1 or not isinstance(n_segments, int) or n_segments < 1:
+        raise ValueError("n and n_segments must be positive integers")
+    decode_durations([0.0], runtime=runtime, max_slope=max_slope)
+    result = [Candidate("linear", "linear", Schedule.linear())]
+    for i, (a, b, q) in enumerate([(0.2, 0.45, 0.7), (0.4, 0.65, 0.7), (0.65, 0.9, 0.7)]):
+        result.append(Candidate(f"one_window_{i}", "one_window", slow_window_schedule(a, b, q, runtime=runtime, max_slope=max_slope), {"a": a, "b": b, "q": q}))
+    for i, windows in enumerate([[(0.2, 0.35), (0.65, 0.8)], [(0.35, 0.45), (0.8, 0.9)]]):
+        result.append(Candidate(f"two_window_{i}", "two_window", window_schedule(windows, [0.4, 0.4], runtime=runtime, max_slope=max_slope), {"windows": windows, "weights": [0.4, 0.4]}))
+    spare_fraction = max(0.0, 1 - 1 / (runtime * max_slope))
+    if include_pauses and spare_fraction > 1e-14:
+        for i, location in enumerate([0.45, 0.7]):
+            fraction = min(0.2, 0.5 * spare_fraction)
+            result.append(Candidate(f"pause_{i}", "pause", pause_schedule(location, fraction, runtime=runtime, max_slope=max_slope), {"location": location, "pause_fraction": fraction}))
+    remaining = max(0, n - len(result))
+    if remaining:
+        points = qmc.Sobol(n_segments, scramble=True, seed=seed).random_base2(int(np.ceil(np.log2(remaining))))[:remaining]
+        logits_bank = 1.5 * ndtri(np.clip(points, 1e-12, 1 - 1e-12))
+        logits_bank -= logits_bank.mean(axis=1, keepdims=True)
+        for i, logits in enumerate(logits_bank):
+            result.append(Candidate(f"sobol_{i:04d}", "duration_logits", decode_durations(logits, runtime=runtime, max_slope=max_slope), {"logits": logits.tolist()}))
+    return result[:n]
+
+
+def _check_split(split: str) -> None:
+    if split not in {"train", "validation", "test"}:
+        raise ValueError("split must be train, validation, or test")
+
+
+def _evaluate(loss_fn: Callable[[Schedule], float], candidate: Candidate, index: int) -> EvaluationRecord:
+    start = perf_counter()
+    loss = float(loss_fn(candidate.schedule))
+    elapsed = perf_counter() - start
+    if not np.isfinite(loss):
+        raise ValueError(f"nonfinite loss for {candidate.candidate_id}")
+    return EvaluationRecord(candidate, loss, index, elapsed)
+
+
+def evaluate_candidates(
+    loss_fn: Callable[[Schedule], float],
+    candidates: Sequence[Candidate],
+    *,
+    budget: int | None = None,
+    split: str = "train",
+    online_adaptation: bool = False,
+) -> SearchResult:
+    """Evaluate a prefix once, retaining every loss and its measured wall time.
+
+    Test-bank evaluation is permitted as a *reference* (online_adaptation=False).
+    Selecting among it to deploy a method on that test instance is online search:
+    callers must set online_adaptation=True and charge all evaluations. This API
+    does not perform across-instance fitting or validation-set hyperparameter
+    selection; test records must never be reused as training examples.
+    """
+    _check_split(split)
+    if not candidates:
+        raise ValueError("candidate sequence must be nonempty")
+    if budget is None:
+        budget = len(candidates)
+    if not isinstance(budget, int) or budget < 1 or budget > len(candidates):
+        raise ValueError("budget must be an integer in [1, number of candidates]")
+    ids = [candidate.candidate_id for candidate in candidates[:budget]]
+    if len(set(ids)) != len(ids):
+        raise ValueError("candidate IDs must be unique")
+    records = tuple(_evaluate(loss_fn, candidate, i) for i, candidate in enumerate(candidates[:budget]))
+    return SearchResult(records, split, online_adaptation)
+
+
+def equal_budget_refinement(
+    loss_fn: Callable[[Schedule], float],
+    initial_logits: Sequence[float],
+    *,
+    budget: int,
+    s_knots: Sequence[float] | None = None,
+    runtime: float = 1.0,
+    max_slope: float = 10.0,
+    seed: int = 0,
+    step_scale: float = 0.75,
+    split: str = "train",
+    allow_test_adaptation: bool = False,
+) -> SearchResult:
+    """Simple fixed-budget stochastic hill-climbing baseline in feasible logits.
+
+    The initial evaluation consumes one unit, so ``budget`` is TOTAL objective
+    calls, not extra calls after a free seed evaluation. Rejected trials also
+    count. This is random local search, not a Bayesian-optimization baseline.
+    Test-instance refinement requires explicit opt-in and is always marked as
+    online adaptation. Do not fit global model/hyperparameters on its results.
+    """
+    _check_split(split)
+    if split == "test" and not allow_test_adaptation:
+        raise ValueError("test refinement must be explicitly charged as online adaptation")
+    if not isinstance(budget, int) or budget < 1 or not np.isfinite(step_scale) or step_scale <= 0:
+        raise ValueError("positive integer budget and positive finite step_scale required")
+    best_logits = np.asarray(initial_logits, dtype=float).copy()
+    initial = decode_durations(best_logits, s_knots, runtime=runtime, max_slope=max_slope)
+    best_logits -= best_logits.mean()
+    first = Candidate("refine_0000", "duration_logits", initial, {"logits": best_logits.tolist()})
+    records = [_evaluate(loss_fn, first, 0)]
+    best_loss = records[0].loss
+    rng = np.random.default_rng(seed)
+    for i in range(1, budget):
+        direction = rng.normal(size=best_logits.shape)
+        direction -= direction.mean()
+        proposal = best_logits + step_scale * direction
+        schedule = decode_durations(proposal, s_knots, runtime=runtime, max_slope=max_slope)
+        record = _evaluate(loss_fn, Candidate(f"refine_{i:04d}", "duration_logits", schedule, {"logits": proposal.tolist()}), i)
+        records.append(record)
+        if record.loss < best_loss:
+            best_logits, best_loss = proposal, record.loss
+    return SearchResult(tuple(records), split, split == "test")
+
+
+CONTROL_FAMILIES = ("linear", "one_window", "two_window", "eight_bin", "pause")
+
+
+def optimize_control_family(
+    loss_fn: Callable[[Schedule], float], family: str, *, budget: int = 32,
+    runtime: float = 1.0, max_slope: float = 4.0, seed: int = 0,
+    split: str = "train", allow_test_adaptation: bool = False,
+) -> SearchResult:
+    """Exact-waveform Sobol exploration plus incumbent-centered random search.
+
+    All tunable families get exactly ``budget`` objective calls, including their
+    linear incumbent. Odd trials explore a fixed Sobol sequence; even trials
+    perturb the best parameters found so far. This is a reproducible classical
+    baseline, not Bayesian optimization or a certificate of family optimality.
+    Linear has no free parameters and is evaluated ONCE (never padded with fake
+    optimization calls). Returned controls retain their actual switching knots;
+    they are NOT resampled onto the learned policy's nine-point representation.
+    """
+    _check_split(split)
+    if split == "test" and not allow_test_adaptation:
+        raise ValueError("test control search requires explicit allow_test_adaptation=True")
+    if family not in CONTROL_FAMILIES:
+        raise ValueError(f"unknown control family {family!r}")
+    if isinstance(budget, bool) or not isinstance(budget, int) or budget < 1:
+        raise ValueError("budget must be a positive integer")
+    decode_durations([0.0], runtime=runtime, max_slope=max_slope)
+    dimension = {"linear": 0, "one_window": 3, "two_window": 6, "eight_bin": 8, "pause": 2}[family]
+    first = _evaluate(loss_fn, Candidate(f"{family}_0000", family, Schedule.linear(),
+                                      {"initial_incumbent": "linear"}), 0)
+    if family == "linear" or budget == 1:
+        return SearchResult((first,), split, split == "test")
+    rng = np.random.default_rng(seed)
+    points = qmc.Sobol(dimension, scramble=True, seed=seed).random_base2(
+        int(np.ceil(np.log2(budget - 1))))[:budget - 1]
+    best_parameters, best_loss = None, first.loss
+    records = [first]
+
+    def decode(parameters):
+        p = np.clip(parameters, 1e-6, 1 - 1e-6)
+        if family == "eight_bin":
+            return decode_durations(2 * ndtri(p), runtime=runtime, max_slope=max_slope)
+        if family == "pause":
+            spare = max(0., 1 - 1 / (runtime * max_slope))
+            return pause_schedule(float(p[0]), float(p[1] * spare), runtime=runtime, max_slope=max_slope)
+        if family == "one_window":
+            a = 0.98 * p[0]
+            b = a + (1 - a) * (0.01 + 0.99 * p[1])
+            return slow_window_schedule(a, b, p[2], runtime=runtime, max_slope=max_slope)
+        windows = []
+        for k in (0, 2):
+            a = 0.98 * p[k]
+            windows.append((a, a + (1 - a) * (0.01 + 0.99 * p[k + 1])))
+        # Third stick is the uniform residual; overlap is allowed and explicit.
+        weights = [p[4], (1 - p[4]) * p[5]]
+        return window_schedule(windows, weights, runtime=runtime, max_slope=max_slope)
+
+    for index in range(1, budget):
+        # The linear closure incumbent has no interior parameter vector for
+        # window/pause families. Explore until a genuine parameter incumbent
+        # exists, instead of pretending arbitrary 0.5 coordinates encode it.
+        exploratory = index % 2 == 1 or best_parameters is None
+        parameters = points[index - 1] if exploratory else np.clip(
+            best_parameters + rng.normal(0., 0.15, dimension), 1e-6, 1 - 1e-6)
+        schedule = decode(parameters)
+        schedule.validate_slope(runtime=runtime, max_slope=max_slope)
+        candidate = Candidate(f"{family}_{index:04d}", family, schedule,
+                              {"unit_parameters": parameters.tolist(),
+                               "proposal": "sobol" if exploratory else "incumbent_local"})
+        record = _evaluate(loss_fn, candidate, index)
+        records.append(record)
+        if record.loss < best_loss:
+            best_parameters, best_loss = parameters.copy(), record.loss
+    return SearchResult(tuple(records), split, split == "test")
+
+
+@dataclass(frozen=True)
+class InterventionLabels:
+    baseline_logits: np.ndarray
+    baseline_schedule: Schedule
+    directions: np.ndarray
+    derivatives: np.ndarray
+    plus_losses: np.ndarray
+    minus_losses: np.ndarray
+    epsilon: float
+    n_evaluations: int
+    elapsed_seconds: float
+    runtime: float
+    max_slope: float
+
+
+def finite_difference_interventions(
+    loss_fn: Callable[[Schedule], float],
+    baseline_logits: Sequence[float],
+    *,
+    directions: np.ndarray | None = None,
+    epsilon: float = 1e-3,
+    s_knots: Sequence[float] | None = None,
+    runtime: float = 1.0,
+    max_slope: float = 10.0,
+) -> InterventionLabels:
+    """Central differences along feasible controls; labels retain their baseline.
+
+    Default directions are centered coordinate vectors, removing the irrelevant
+    common-logit offset. Every plus/minus propagation is charged: 2*directions.
+    Derivatives are finite-difference labels, not global-optimality certificates.
+    Repeat at epsilon/2 to estimate discretization error before sharp supervision.
+    """
+    logits = np.asarray(baseline_logits, dtype=float).copy()
+    baseline = decode_durations(logits, s_knots, runtime=runtime, max_slope=max_slope)
+    if not np.isfinite(epsilon) or epsilon <= 0:
+        raise ValueError("epsilon must be finite and positive")
+    if directions is None:
+        directions = np.eye(len(logits)) - np.ones((len(logits), len(logits))) / len(logits)
+    directions = np.asarray(directions, dtype=float)
+    if directions.ndim != 2 or directions.shape[1] != len(logits) or len(directions) < 1 or not np.isfinite(directions).all():
+        raise ValueError("directions must have shape (n_directions, n_logits) and be finite")
+    plus, minus = [], []
+    start = perf_counter()
+    for direction in directions:
+        plus.append(float(loss_fn(decode_durations(logits + epsilon * direction, s_knots, runtime=runtime, max_slope=max_slope))))
+        minus.append(float(loss_fn(decode_durations(logits - epsilon * direction, s_knots, runtime=runtime, max_slope=max_slope))))
+    plus, minus = np.asarray(plus), np.asarray(minus)
+    if not np.isfinite(plus).all() or not np.isfinite(minus).all():
+        raise ValueError("nonfinite intervention loss")
+    return InterventionLabels(logits, baseline, directions.copy(), (plus - minus) / (2 * epsilon), plus, minus, epsilon, 2 * len(directions), perf_counter() - start, runtime, max_slope)

@@ -1,0 +1,19 @@
+{
+  "experiment": {
+    "schema_version": 1,
+    "dataset": {
+      "seed": 20260916, "parents": 6, "families": ["spin_glass"], "logical_qubits": 3,
+      "chain_lengths": [1, 1, 1],
+      "variants": [{"shape": "path", "ports": 1, "field_distribution": "uniform"}],
+      "chain_strengths": [1.5], "runtimes": [2.0], "candidates": 4,
+      "spectral_points": 3, "steps": 16, "max_steps": 1024,
+      "label_state_tolerance": 0.001, "max_physical_qubits": 3
+    },
+    "seeds": [0],
+    "methods": [{"name": "hierarchy", "model": {"width": 16}}],
+    "training": {"epochs": 2, "patience": 2},
+    "execution": {"device": "cpu", "threads": 1}
+  },
+  "search_space": {"training.learning_rate": [0.001, 0.0003]},
+  "max_trials": 2
+}

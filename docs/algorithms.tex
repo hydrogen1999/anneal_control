@@ -1,0 +1,781 @@
+\documentclass[10pt]{article}
+\usepackage[margin=0.82in]{geometry}
+\usepackage{amsmath,amssymb,booktabs,array}
+\usepackage[T1]{fontenc}
+\usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue]{hyperref}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\setlength{\emergencystretch}{2em}
+\newcommand{\code}[1]{\texttt{\detokenize{#1}}}
+\newcommand{\ket}[1]{\lvert #1\rangle}
+\newcommand{\bra}[1]{\langle #1\rvert}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\softmax}{\operatorname{softmax}}
+\newcommand{\loss}{\mathcal L}
+\newcommand{\R}{\mathbb R}
+\newenvironment{algsteps}[1]{\par\smallskip\noindent\textbf{Algorithm #1}\begin{enumerate}\setlength{\itemsep}{2pt}\setlength{\parskip}{1pt}}{\end{enumerate}\smallskip}
+\title{Algorithms and Implementation Contract\\for Embedded Annealing Control}
+\author{Research software specification}
+\date{September 2026}
+\begin{document}
+\maketitle
+\vspace{-1.1em}
+\begin{abstract}
+This note formalizes the algorithms implemented in the accompanying research
+code: coefficient generation, connected embeddings, Hamiltonian compilation,
+batched matrix-free propagation, adaptive spectral auxiliary labels, feasible
+controls, four neural encoder variants, resumable training, and an experiment
+runner. Offline calibration, Lindblad checks, and hardware interchange are
+separate explicit interfaces. It distinguishes an endpoint certificate from dynamical
+hardness, a numerical diagnostic from a rigorous error bound, and finite-bank
+selection from direct policy evaluation. These algorithms are a reproducible
+starting point, not evidence of a conference-level performance advantage.
+\end{abstract}
+
+\section{Hamiltonians from parts, with provenance}
+
+Let $n$ denote the number of logical variables, $N$ the number of active physical
+qubits, and $D=2^N$. A logical instance is
+\begin{equation}
+ E_L(z)=\sum_{v=1}^{n}h_vz_v+\sum_{(v,w)\in E_L}J_{vw}z_vz_w,
+ \qquad z_v\in\{-1,1\}.
+\end{equation}
+An embedding assigns a disjoint, nonempty connected set $C_v$ to each variable;
+$\pi(i)=v$ records membership. Every logical interaction must have a physical
+edge between its two chains. For field and coupling allocations choose
+\begin{equation}
+ \sum_{i\in C_v}\omega_{vi}=1,\qquad
+ \sum_{(i,j)\in E_P(C_v,C_w)}\eta_{vw,ij}=1.
+\end{equation}
+The compiler stores the problem and chain components separately before adding:
+\begin{align}
+ h_i^{\rm raw}&=\omega_{\pi(i),i}h_{\pi(i)},\\
+ J_{ij}^{\rm raw}&=J_{ij}^{\rm problem}+J_{ij}^{\rm chain},\qquad
+ J_{ij}^{\rm chain}=-\kappa\,\mathbf 1\{\pi(i)=\pi(j)\}.
+\end{align}
+The pilot's symmetric coefficient caps define
+\begin{equation}
+ \alpha^{-1}=\max\!\left\{1,\frac{\|h^{\rm raw}\|_\infty}{h_{\max}},
+                \frac{\|J^{\rm raw}\|_\infty}{J_{\max}}\right\},\qquad
+ (h^P,J^P)=\alpha(h^{\rm raw},J^{\rm raw}).
+\end{equation}
+This is an explicit toy scaling rule, not a reproduction of vendor autoscaling.
+It rescales $H_Z$ only. Neither the transverse driver nor runtime is implicitly
+rescaled. With unbroken chains $z_i=z_{\pi(i)}$,
+\begin{equation}
+ E_P(z\circ\pi)=\alpha E_L(z)+c_{\rm align},\qquad
+ c_{\rm align}=\alpha\sum_{(i,j)}J_{ij}^{\rm chain}.
+ \label{eq:compile}
+\end{equation}
+The programmed operator is assembled as
+\begin{align}
+ H(s)&=a(s)H_X+b(s)H_Z+c(s)H_{XX},\\
+ H_X&=-\sum_iX_i,\quad
+ H_Z=\sum_i h_i^P Z_i+\sum_{(i,j)}J_{ij}^PZ_iZ_j,\quad
+ H_{XX}=\sum_{(i,j)\in E_{XX}}K_{ij}X_iX_j.
+\end{align}
+The physics API supports $a=\gamma(1-s)$, $b=\gamma s$ and
+$c=4\gamma\lambda s(1-s)$. Here $\gamma$ scales the \emph{whole} path and is
+distinct from $\alpha$. The end-to-end ML pilot uses $\gamma=1,\lambda=0$.
+No native hardware implementation of arbitrary $XX$ couplers is assumed.
+
+\textbf{Source:} \code{generation.compile_embedding},
+\code{generation.validate_compilation}, \code{physics.HamiltonianTerms},
+\code{physics.AnnealPath}. Exhaustive pilot checks verify
+Eq.~\eqref{eq:compile} and report whether an aligned configuration attains the
+physical ground energy. They do not assert that every physical ground state is
+aligned or that every chosen $\kappa$ is sufficiently strong.
+
+\newpage
+\section{Two planting operations with different guarantees}
+
+\subsection{A certified classical endpoint from frustrated cycles}
+Choose a planted configuration $z^\star$. For a simple cycle $C$ of length
+$\ell_C$, choose one distinguished edge $e_C$ and a positive weight $w_C$.
+Define a component with zero fields and
+\begin{equation}
+ J_{ij}^{(C)}=w_C z_i^\star z_j^\star
+ \begin{cases}
+ +1,&(i,j)=e_C,\\[-2pt]
+ -1,&(i,j)\in C\setminus\{e_C\}.
+ \end{cases}
+\end{equation}
+Exactly one edge is unsatisfied by $z^\star$. The product of edge preferences
+around this cycle is inconsistent, so no spin assignment satisfies all edges.
+Consequently $E_C(z)\ge w_C(2-\ell_C)$ for every $z$, and $z^\star$ attains
+the lower bound. Even when cycles overlap and their coefficients cancel,
+\begin{equation}
+ E(z)=\sum_C E_C(z)\ge\sum_Cw_C(2-\ell_C)=E(z^\star).
+ \label{eq:plant}
+\end{equation}
+Thus the endpoint optimum is certified without solving a new optimization
+problem. This statement says nothing about spectral gaps, runtime, degeneracy,
+finite-time success, or hardness for a classical or quantum solver.
+
+\begin{algsteps}{1: \code{planted_loops(n, edges, rng, num_loops)}}
+\item Check that the support contains a cycle; sample $z^\star\in\{-1,1\}^n$.
+\item Construct a cycle basis for generation; initialize all supported $J$ to zero.
+\item For each component, sample a cycle, $w_C>0$, and its distinguished edge.
+       Accumulate the signed contributions above into the shared edge array.
+\item Store the cycle list, weights, planted spins, and bound in Eq.~\eqref{eq:plant}.
+\item Check $E(z^\star)$ against that bound; fail on a mismatch.
+\end{algsteps}
+The implementation samples a basis of cycles, not every simple cycle uniformly.
+The node-order-dependent basis is used only for generation, not as an asserted
+permutation-invariant neural feature. Weighted Max-Cut, random spin glasses,
+and weak-field families are additional generators with different guarantees.
+
+\subsection{Connected hardware growth: an embedding certificate}
+For a fixed hardware graph $G_H=(V_H,E_H)$, seed $n$ disjoint chains and request
+lengths $\ell_v\ge1$. Their frontiers contain unused neighbors:
+\begin{equation}
+ F_v=\{u\in V_H:\ u\text{ is unused and }(u,i)\in E_H
+          \text{ for some }i\in C_v\}.
+\end{equation}
+Adding one vertex from $F_v$ preserves connectivity and disjointness. The
+quotient graph has edge $(v,w)$ exactly when at least one hardware edge joins
+$C_v$ to $C_w$. Generating a logical problem on that quotient therefore yields
+a known feasible embedding.
+
+\begin{algsteps}{2: \code{grow_hardware_partition(H, target_lengths, rng)}}
+\item Sample distinct seeds; set every chain size to one and mark other sites unused.
+\item Recompute frontiers of non-full chains. If none is available, terminate.
+\item Uniformly choose an eligible chain, then one of its unused frontier sites.
+       Assign that site to the chain and return to Step 2.
+\item Return active membership and active hardware edges. Preserve original IDs,
+       requested and achieved lengths, unused-site count, and a target-met flag.
+\end{algsteps}
+Growth can jam before reaching the requested lengths. Therefore sampling
+$\ell_v$ from a truncated power law does \emph{not} imply that the achieved
+lengths follow that law. Report both distributions and rejection/jamming rates.
+The current recomputation is a transparent pilot, not an optimized frontier
+data structure; a conservative bound is
+$O(|V_H|\,n(|V_H|+|E_H|))$ work and $O(|V_H|+|E_H|)$ storage.
+
+\textbf{Controlled alternative.} \code{synthetic_lift} holds the logical
+instance fixed while changing chain shape, lengths, and cross-chain ports.
+Its topology is synthetic, not a claim of embeddability on a commercial device.
+These two routes answer different questions: quotient growth guarantees a
+realization; controlled lifts isolate physical-representation interventions.
+
+\newpage
+\section{Matrix-free simulation and convergence checks}
+
+The basis index $x\in\{0,\ldots,D-1\}$ uses bit $i$ as the least-significant
+index convention; bit zero represents spin $+1$. Define
+\begin{equation}
+ z_i(x)=1-2\operatorname{bit}_i(x),\qquad
+ d_x=\sum_i h_i^Pz_i(x)+\sum_{(i,j)}J_{ij}^Pz_i(x)z_j(x).
+\end{equation}
+Only this diagonal and work vectors are materialized. Pauli flips use bitwise
+XOR, denoted $\oplus$, giving the exact matrix-vector action
+\begin{equation}
+ [H(s)\psi]_x=b(s)d_x\psi_x
+ -a(s)\sum_i\psi_{x\oplus 2^i}
+ +c(s)\sum_{(i,j)\in E_{XX}}K_{ij}\psi_{x\oplus 2^i\oplus 2^j}.
+ \label{eq:matvec}
+\end{equation}
+The derivative action uses the same routine with $(a',b',c')$.
+Precomputation costs $O((N+|E_{ZZ}|)D)$; each subsequent action costs
+$O((1+N+|E_{XX}|)D)$ and uses $O(D)$ work storage. This avoids $O(D^2)$
+dense storage but does not remove exponential dependence on \emph{physical}
+qubits. An approximate memory guard is enforced before allocation.
+
+\subsection{Midpoint Strang propagation}
+In dimensionless time $t$, solve $i\partial_t\psi=H(s(t/T))\psi$ with
+runtime $T$. For the canonical start, $\psi(0)=\ket{+}^{\otimes N}$.
+Let $\Delta t=T/M$ and evaluate the path at
+$s_k=s((k+1/2)/M)$. Define $D_k=b(s_k)H_Z$ and
+$A_k=a(s_k)H_X+c(s_k)H_{XX}$. One update is
+\begin{equation}
+ \psi_{k+1}=e^{-i\Delta tD_k/2}
+             e^{-i\Delta tA_k}
+             e^{-i\Delta tD_k/2}\psi_k.
+ \label{eq:strang}
+\end{equation}
+All $X_i$ and $X_iX_j$ terms commute, so the middle factor is a product of
+exact single-Pauli-string rotations. For $P^2=I$,
+\begin{equation}
+ e^{-i\vartheta P}\psi=\cos\vartheta\,\psi-i\sin\vartheta\,P\psi.
+\end{equation}
+Use $\vartheta=-\Delta t\,a(s_k)$ for an $X_i$ rotation and
+$\vartheta=\Delta t\,c(s_k)K_{ij}$ for an $X_iX_j$ rotation. Each diagonal
+half-step multiplies component $x$ by $\exp[-i\Delta t\,b(s_k)d_x/2]$.
+
+\begin{algsteps}{3: \code{propagate(terms, schedule, runtime, steps, ...)}}
+\item Validate the state dimension, normalization, path endpoints, and memory estimate.
+\item Precompute $d$; initialize the state without renormalizing user input.
+\item For $k=0,\ldots,M-1$, apply Eq.~\eqref{eq:strang} at the midpoint.
+\item If requested, independently repeat with $2M$ steps and return the finer state.
+\item Report $|\|\psi\|_2^2-1|$, actual step count, backend, and
+       $\delta_M=\|\psi_{2M}-\psi_M\|_2/3$.
+\end{algsteps}
+For adequately resolved smooth paths this is a second-order method, with
+$O(M(N+|E_{XX}|)D)$ work. The factor $1/3$ uses the asymptotic second-order
+error model. It is a \emph{diagnostic}, not a rigorous bound, especially near
+unresolved switches. The common nine-knot pilot uses continuous piecewise-linear
+controls. Independent dense DOP853 propagation checks a small subset; states
+are never silently renormalized to conceal integration error.
+
+\textbf{Implementation and limits.} In \code{physics.py}, the operator is
+\code{HamiltonianOperator}; propagation uses \code{propagate}, with an independent
+\code{dense_reference_propagate} check. NumPy is the CPU backend; CuPy implements the corresponding device
+array operations. GPU execution and speedups are not established by CPU tests.
+The full-spectrum label teacher remains a separate CPU bottleneck, even when
+propagation uses a GPU. The simulator is closed-system and ideal; bath dynamics,
+measured calibration, and vendor waveforms are not silently approximated.
+
+\subsection{Batched execution with row-wise numerical gates}
+\code{propagate_batch} stores $B$ state vectors sharing Hamiltonian terms and
+path, while accepting separate controls, runtimes, and initial states. The
+diagonal and commuting $X/XX$ rotations act across batch rows; coefficient
+tables are sampled on the host and transferred once. There is no scalar
+host/device synchronization inside the integration loop. Storage is
+$O(B2^N)$, not polynomial in $N$. Explicit workspace estimates precede allocation;
+CuPy also checks available device memory and never silently falls back to CPU.
+
+Each row receives its own norm error, step-doubling diagnostic, and acceptance
+flag. The generation caller's \code{candidate_batch_size} controls this path;
+failed rows are retried at finer resolution within the declared budget. Batch
+wall time is divided among its active rows for candidate accounting, with that
+allocation rule recorded. This is not a measured per-candidate isolated latency.
+CPU parent workers and GPU candidate batches are different knobs; CuPy generation
+uses one process to avoid implicit oversubscription. Neither implementation
+availability nor a skipped optional CUDA test establishes GPU speedup.
+
+\newpage
+\section{Projector-aware spectral auxiliaries}
+
+At a query $s$, diagonalize $H(s)=U\operatorname{diag}(E)U^\dagger$ with sorted
+energies and set $V=\partial_sH(s)$. Choose a low-energy band of rank $r$,
+$P=\sum_{a<r}\ket a\bra a$. Its complement is $Q=I-P$. The pilot diagnostic
+uses a \emph{uniform mixture} $P/r$, not the actual evolving state population.
+For $a<r$ and $b\ge r$ define
+\begin{equation}
+ \Delta_{ba}=E_b-E_a,\qquad
+ w_{ba}=\frac{|\bra bV\ket a|^2}{r}.
+\end{equation}
+The three auxiliary targets are
+\begin{equation}
+ \mu_0=\sum_{a,b}w_{ba},\qquad
+ g_{ss}=\sum_{a,b}\frac{w_{ba}}{\Delta_{ba}^2},\qquad
+ D_2=\left(\sum_{a,b}\frac{w_{ba}}{\Delta_{ba}^4}\right)^{1/2}.
+ \label{eq:moments}
+\end{equation}
+An independent sum-rule check uses
+\begin{equation}
+ \mu_0=\frac{\|VU_P\|_F^2-\|U_P^\dagger VU_P\|_F^2}{r},
+ \qquad U_P=[\ket0,\ldots,\ket{r-1}].
+ \label{eq:sumrule}
+\end{equation}
+Removing the entire in-band block avoids the arbitrary choice of one vector
+inside an exactly degenerate subspace. Summed transition mass is invariant to
+basis rotations within exactly degenerate energy blocks. A merely
+near-degenerate band is not silently declared exactly degenerate; its spread
+and rank are retained. Profiles with changing band rank must be interpreted
+with that discontinuity in mind.
+
+\begin{algsteps}{4: \code{spectral_teacher(terms, s, ...)} }
+\item Enforce the dense physical-qubit cap; construct $H(s)$ and $V$.
+\item Diagonalize and record eigenpair residuals and orthogonality error.
+       Set numerical resolution to the maximum of a residual-based threshold
+       and a floating-point energy-scale threshold.
+\item Use an explicit rank, or collect eigenvalues inside the declared
+       ground-energy tolerance. Record band spread and near-degeneracy status.
+\item Compute all cross-band $(\Delta_{ba},w_{ba})$ and audit Eq.~\eqref{eq:sumrule}.
+\item Assign mass to fixed frequency bins; separately retain underflow,
+       overflow, unresolved-frequency mass, and unresolved transition count.
+\item Return Eq.~\eqref{eq:moments} only when inverse moments are resolved.
+       Otherwise mark the relevant labels unresolved; do not substitute
+       a clipped denominator and call the result exact.
+\end{algsteps}
+A regularized diagnostic is also available,
+\begin{equation}
+ D_{2,\varepsilon}=\left[\sum_{a,b}
+       \frac{w_{ba}}{(\Delta_{ba}^2+\varepsilon^2)^2}\right]^{1/2},
+\end{equation}
+but its regularization parameter is explicit, and it does not replace unresolved
+unregularized labels. The accessible gap uses transitions above a declared
+relative brightness threshold; it differs from the smallest energy gap.
+Even these response moments are auxiliary information, not a sufficient
+statistic for every finite-time control objective.
+
+\subsection{Cost and approximation boundary}
+The full teacher uses $O(D^2)$ storage and $O(D^3)$ diagonalization work at
+each of $Q_s$ query points. Both fixed-grid and adaptive profiles are implemented.
+The dense teacher remains capped at ten physical qubits; reducing the query
+count does not make its eigenproblem scalable.
+
+\begin{algsteps}{4b: \code{adaptive_spectral_profile}}
+\item Reserve the requested independent audit queries from the total query budget.
+\item Evaluate the initial grid. For each interval, compare the exact midpoint
+      response vector with endpoint interpolation, normalized by absolute and
+      relative tolerances. Include gap, moments, and resolved/unresolved bin mass.
+\item Refine discrepancies above one, ground-band rank changes, unresolved
+      inverse moments, and near-degenerate bands. Prioritize unchecked intervals
+      and then unresolved or largest-discrepancy intervals.
+\item Stop at the declared budget or minimum width even if checks fail; retain
+      the stop reason, unchecked intervals, and numerical failures.
+\item After adaptation, evaluate independent random coordinates against the
+      final interpolant. Never add these held-out checks back into refinement.
+\end{algsteps}
+Residual/orthogonality failures mask inverse moments rather than certify an
+approximate basis. Passing sampled midpoint and random audits is a numerical
+diagnostic, not a uniform guarantee: narrow unsampled peaks remain possible.
+\code{uniform_certificate} is always false. Audit queries and their costs are
+included in the total budget, with unresolved values serialized as missing.
+
+\code{sparse_low_energy} provides matrix-free Lanczos eigenpairs with
+$O(n_{\rm cv}D)$ basis storage and explicit residuals. It reports truncation,
+an uncertified ground band, and unresolved full response. A few low-lying states
+can omit bright transitions; small eigenpair residuals do not establish a small
+omitted inverse moment. This API therefore does not automatically create
+complete $D_2$ labels. CPU tests and GPU capability are distinct verification
+claims.
+
+\textbf{Source:} \code{spectral.py}; the generated record keeps moments,
+masks, bin masses, gaps, ranks, and residual diagnostics rather than just a
+single difficulty value.
+
+\newpage
+\section{Feasible controls: two non-equivalent decoders}
+
+The schedule object stores a continuous, piecewise-linear $s(\tau)$,
+$\tau=t/T\in[0,1]$, with strictly increasing time knots and nondecreasing
+path knots. Equal adjacent path values represent a pause. These are monotone
+controls, not an implementation of an ordered bang--anneal--bang action space.
+
+\subsection{Fixed path knots, learned physical durations}
+Given $0=s_0\le\cdots\le s_K=1$ and per-segment physical bounds
+$v_k>0$ on $ds/dt$, set
+\begin{equation}
+ m_k=\frac{s_k-s_{k-1}}{v_k},\qquad
+ R=T-\sum_km_k,\qquad
+ \Delta t_k=m_k+R\,\softmax(u)_k.
+ \label{eq:duration}
+\end{equation}
+Reject $R<0$. Otherwise $\sum_k\Delta t_k=T$ and
+$(s_k-s_{k-1})/\Delta t_k\le v_k$ whenever the duration is positive.
+For a pause segment, $s_k=s_{k-1}$ and residual time can give a genuine dwell.
+Zero-duration pause segments are removed, not turned into invalid time knots.
+
+\begin{algsteps}{5: \code{decode_durations(logits, s_knots, runtime, max_slope)}}
+\item Validate the knots, runtime, bounds, and finite logits.
+\item Compute the minimum traversal durations $m_k$ and available residual $R$.
+\item Allocate residual time by a stabilized softmax using Eq.~\eqref{eq:duration}.
+\item Form $\tau_k=T^{-1}\sum_{j\le k}\Delta t_j$; remove empty pauses and
+       reject nonzero traversals below floating-point time resolution.
+\item Return \code{Schedule(tau_knots, s_knots)}.
+\end{algsteps}
+The NumPy implementation supplies a feasible search parameterization. Explicit
+slow-window and pause constructors, plus an inverse-density baseline, are
+available. The inverse-density baseline requires separate slope validation.
+
+\subsection{Fixed time knots, learned path increments}
+The differentiable neural policy instead uses uniform $\tau_j=j/K$ and learns
+increments $p_j=s_j-s_{j-1}$. For a normalized slope cap $S\ge1$ it enforces
+\begin{equation}
+ \sum_{j=1}^Kp_j=1,\qquad 0\le p_j\le S/K,\qquad
+ s_j=\sum_{k\le j}p_k.
+ \label{eq:sampled}
+\end{equation}
+The cap is on $ds/d\tau$, not $ds/dt$: the physical bound is $S/T$.
+The controller's default is $K=8$, $S=4$.
+
+\begin{algsteps}{6: \code{monotone_samples(logits, max_ds_dtau)}}
+\item Form positive weights from stabilized, lower-clipped relative logits.
+\item Initialize the saturated set $A=\varnothing$, with cap $q=\min(S/K,1)$.
+\item For each free index set
+       $p_j=(1-q|A|)w_j/\sum_{k\notin A}w_k$; set $p_j=q$ for $j\in A$.
+\item Add free indices with $p_j>q$ to $A$. Repeat until no new cap is active.
+\item Cumulatively sum the increments and set the endpoints exactly to zero and one.
+\end{algsteps}
+At most $K$ passes are needed; the small implementation costs $O(K^2)$ and is
+differentiable away from active-set changes. Positive weights ordinarily
+produce strictly positive free increments, so a separately parameterized exact
+pause policy is not implied. The case $S=1$ is the linear schedule.
+
+Equations~\eqref{eq:duration} and \eqref{eq:sampled} are different control
+families. Comparing them requires measuring family restriction, not only
+optimization error. In the ML benchmark, every search candidate is first
+resampled to the same nine time knots and then \emph{that reconstructed waveform
+is simulated}. Its critic features therefore describe the actual executed
+control. Original off-grid kinks are not secretly retained when assigning labels.
+
+\textbf{Source:} \code{schedules.py}, \code{models.monotone_samples}, and
+the candidate canonicalization in \code{pipeline.py}. Device point limits,
+time quantization, real driver calibration, and submission validation remain
+separate deployment requirements.
+
+\newpage
+\section{Dataset construction: split, verify, then record}
+
+The unit of statistical independence is the \emph{logical parent}, not an
+embedding or a waveform. All descendants---chain strengths, field allocations,
+embeddings, runtimes, and future gauge variants---inherit the parent's split.
+Let $\sigma(p)\in\{\mathrm{train},\mathrm{validation},\mathrm{test}\}$ be
+assigned before generating descendants. The implementation stratifies parents
+by family/size and supports declared held-out families or logical sizes.
+Exact labelled logical coefficients are fingerprinted before descendants are
+generated, preventing duplicate coefficient arrays under different parent IDs.
+This does not certify uniqueness under graph isomorphism or arbitrary gauge
+equivalence. All such stronger equivalence claims require a separate audit.
+
+\begin{algsteps}{7: end-to-end pilot record generation}
+\item Validate configuration, endpoint/state memory budgets, and teacher-specific
+       qubit limits. Lock the output and hash configuration, source, schema, and
+       conventions; create a manifest marked in progress.
+\item Generate unique logical parents with recorded independent random streams,
+       size/support choices, and fixed or sampled chain lengths. Assign the
+       declared parent splits before descendant coefficient/runtime variants.
+\item For each compiled path, verify chain connectivity and the aligned energy
+       identity. Record the aligned-ground compatibility flag; do not silently
+       remove low-strength failures from an intervention study.
+\item Obtain fixed-grid or adaptive spectral labels once per compiled path;
+       retain unresolved masks and audit diagnostics in a verified reusable
+       cache. In explicit outcome-only mode, store false response masks rather
+       than inventing zero-valued spectral labels.
+\item Construct a common candidate bank independently of the test instance's
+       spectrum. Resample to nine common time knots and simulate those exact
+       piecewise-linear waveforms.
+\item Increase propagation steps until the configured step-doubling diagnostic
+       is acceptable, subject to a maximum-step limit. Abort on a norm or
+       convergence-gate failure rather than saving a falsely resolved label.
+\item On a declared small subset, compare with independent dense DOP853
+       propagation. Record the comparison instead of inferring correctness
+       solely from norm preservation.
+\item Atomically save each NPZ record and its payload digest. A coordinating
+       writer tracks independent parent workers. Resume only when source,
+       schema, configuration, instance, and payload fingerprints agree.
+\end{algsteps}
+
+\subsection{Outputs and objective semantics}
+For every final physical bit string $x$, decode each chain by majority vote;
+the current deterministic tie rule chooses $+1$. Let $d(x)$ be the resulting
+logical spin assignment and $E_L^\star$ its exhaustive pilot reference. Define
+\begin{align}
+ A(x)&=\mathbf 1\{E_L(d(x))=E_L^\star\},\\
+ p_{\rm succ}(\theta)&=\sum_x|\psi_\theta(x)|^2A(x),\qquad
+ \loss(\theta)=1-p_{\rm succ}(\theta).
+\end{align}
+Equality is evaluated using a declared numerical tolerance. The data also
+retain expected decoded energy, probability of any broken chain, and expected
+broken-chain fraction. These are different observables: lower energy does not
+automatically imply higher success or fewer broken chains.
+
+\begin{center}
+\small
+\begin{tabular}{p{0.25\linewidth}p{0.68\linewidth}}
+\toprule
+Record group & Required information \\
+\midrule
+Lineage and provenance & Parent/record IDs, family, split, seed/config hashes, decoder and path conventions \\
+Programmed system & Logical and physical $h,J$, membership, separate problem/chain $J$, scaling and chain strength \\
+Control labels & Common time grid, every candidate waveform and loss, success and chain-break observables \\
+Spectral labels & Query positions, moments and masks, fixed bins, gap/rank and residual diagnostics \\
+Numerical cost & Actual propagation steps, norm errors, step-doubling diagnostics, timings and reference checks \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The full endpoint enumeration is exponential, and the spectral teacher costs
+$O(Q_sD^3)$ per compiled path. With $B$ candidates, $R_T$ runtimes, and $M$
+propagation steps, state-vector label work is approximately
+$O(R_TBM(N+|E_{XX}|)D)$, before refinement and audit costs.
+GPU propagation cannot remove the dense-teacher bottleneck.
+
+\textbf{Implemented scope:} \code{pipeline.py} supports synthetic lifts and
+fixed-hardware growth/quotient construction, multiple logical sizes/supports,
+fixed or truncated-distribution chain targets, and explicit family/size holdouts.
+Conditioning length draws on a physical-qubit budget changes their distribution;
+requested/achieved lengths and rejections are metadata. A quotient route fixes
+the grown embedding for that parent, not multiple re-embeddings of one objective.
+The ordinary generator is closed-system. Full teachers are capped at $N\le10$;
+outcome-only generation permits explicit caps up to $N=20$ with guarded chunked
+endpoint enumeration and state memory. These are allocation limits, not measured
+throughput or guarantees that a workload fits a particular GPU. Real-hardware
+acceptance rates, calibrated data, and scientific superiority remain unmeasured.
+
+\newpage
+\section{Three-head learning without an oracle bottleneck}
+
+The signed encoder sees programmed graph data and runtime/scale context, not
+spectral labels or outcomes. Its physical messages keep signed $J$ explicitly,
+including when every field is zero. For hidden physical states $x_i$, a chain
+token is constructed from
+\begin{equation}
+ c_v=\operatorname{MLP}\!\left(
+       \sum_{i\in C_v}x_i,\;
+       |C_v|^{-1}\sum_{i\in C_v}x_i,\;|C_v|\right).
+\end{equation}
+Logical messages combine these tokens with logical fields/couplings. The token
+bank $\mathcal Z$ retains physical, chain, and logical tokens; type embeddings
+identify these three roles, never arbitrary qubit IDs. Sum/count readouts
+preserve size information. The default uses width 64, three physical and two
+logical message layers.
+
+\begin{align}
+ \widehat R(s)&=f_{\rm aux}(\mathcal Z;s,a,b,c,a',b',c'),\\
+ \{\widehat\theta_j,\ell_j\}_{j=1}^{P}
+      &=f_{\rm pol}(\mathcal Z;T,\alpha),\\
+ \widehat\loss(\theta)&=f_{\rm critic}(\mathcal Z;\theta,T,\alpha).
+\end{align}
+The auxiliary head is positive; the direct head emits $P=3$ monotone proposals
+and mixture logits; the critic attends to tokens using waveform samples and
+segment slopes. Policy and critic have a direct graph path and do not consume
+oracle response values. The initial input helper rejects nonzero catalysts:
+an $XX$ driver-graph feature extension is required before training that regime.
+Nonunit whole-path scaling is also rejected by that helper. Adaptive query
+coordinates are auxiliary-training locations: neither the policy nor the critic
+consumes them through its structural encoding. Deployment may use fixed public
+queries; an expensive adaptive query search must not be disguised as free input.
+
+\subsection{Selectable information ablations}
+The \code{encoder_variant} switch implements four independently trained variants
+with common head architecture: \code{hierarchical}, flat \code{physical},
+\code{logical}, and \code{summary}. Logical-only inference excludes all physical
+features, chain information, physical sizes, and programmed scale; it retains
+logical coefficients, size, and runtime. The flat physical variant still sees
+the public same-chain edge channel, so it is not embedding-blind. The summary
+variant uses declared feature moments/counts and chain-length aggregates without
+message passing. Modules unused by an encoder are not instantiated. Report
+parameter counts and tuning cost: equal width does not imply equal capacity.
+
+\subsection{Multimodal soft labels and the implemented surrogate}
+For stored candidate losses $L_b$ use
+\begin{equation}
+ p_b^\star=\frac{\exp[-(L_b-L_{\min})/\tau_{\rm lab}]}
+                     {\sum_c\exp[-(L_c-L_{\min})/\tau_{\rm lab}]}.
+\end{equation}
+The negative sign is essential: smaller loss has greater probability.
+For proposal waveforms $u_j$ and mixture weights
+$\pi_j=\softmax(\ell)_j$, the pilot evaluates a kernel mixture on bank waveform
+$w_b$:
+\begin{equation}
+ q_b\ \propto\ \sum_j\pi_j
+       \exp\!\left[-\frac{\|w_b-u_j\|_2^2}{2\sigma^2(K+1)}\right],
+ \qquad L_{\rm pol}=-\sum_bp_b^\star\log q_b.
+\end{equation}
+This can preserve separated modes instead of regressing their mean. It is still
+a waveform-space surrogate, not a differentiable physical terminal loss or a
+guarantee against mode collapse. Bandwidth is a validation hyperparameter.
+The implemented training objective is
+\begin{equation}
+ L_{\rm train}=L_{\rm Huber\ outcome}
+       +\lambda_{\rm rank}L_{\rm pair}
+       +\lambda_{\rm pol}L_{\rm pol}
+       +\lambda_{\rm aux}L_{\rm masked\ log1p\ response}.
+\end{equation}
+Pairwise ranking ignores differences below numerical ambiguity thresholds.
+If only a step-doubling state diagnostic $\delta$ is available, $2\delta+\delta^2$
+is used as a bounded-success-loss ambiguity indicator, not a certified bound
+on the unknown exact loss. Inverse-moment labels marked unresolved never
+become zero-valued exact targets through masking.
+
+\begin{algsteps}{8: \code{fit_records(train_records, validation_records, ...)}}
+\item Reject missing split metadata or shared logical parents across train/validation.
+\item Fit affine feature statistics on training graphs only; preserve explicit
+       recoverable runtime and energy-scale channels.
+\item Seed before constructing the chosen encoder. Train with AdamW, configurable
+       graph accumulation, and one gradient clip per optimizer update. Normalize
+       a final short accumulation group by its actual cardinality. Retain all
+       bank losses and valid auxiliary labels.
+\item Select the best epoch by validation \emph{finite-bank critic regret}; never
+       use test records or test outcomes for early stopping.
+\item Atomically save best-validation and latest-epoch checkpoints, both including
+       resume state, current/best optimizer and model states, RNGs, history,
+       early-stopping state, normalization, and actual ordered-data digests.
+\end{algsteps}
+\code{resume_from} restores epoch-boundary continuation, rejecting changed
+training settings, architecture, data contents/order, and declared dataset
+fingerprints. Increasing the total epoch target is permitted; changing devices
+does not promise bitwise equality. An already-triggered early stop remains
+stopped. Best checkpoints are for test evaluation; latest snapshots are for
+resume. Accumulation is memory-bounded sequential graph processing, not fused
+graph batching, DDP, or mixed precision.
+\textbf{Limits.} The network is permutation-invariant but not exactly
+gauge-invariant. Signed sensitivity is not proof of arbitrary long-loop
+expressivity. Outcome-only ablations set auxiliary/policy weights to zero.
+Gauge-consistency training, an intervention head, uncertainty ensembles,
+device likelihood adaptation, and end-to-end differentiable propagation are
+not implemented by these losses. Sources: \code{models.py}, \code{learning.py}.
+
+\newpage
+\section{Evaluation, budget accounting, and publication boundaries}
+
+\subsection{Two evaluation modes that must not be conflated}
+For a common bank $\mathcal B$ chosen without a test instance's privileged
+labels, the critic selects
+\begin{equation}
+ \widehat\theta_{\mathcal B}=\arg\min_{\theta\in\mathcal B}
+              \widehat\loss(\theta),\qquad
+ r_{\mathcal B}=\loss(\widehat\theta_{\mathcal B})-\min_{\theta\in\mathcal B}\loss(\theta).
+\end{equation}
+\code{evaluate_records} measures this fixed-bank task. The second term is the
+best evaluated bank action, not a continuous-control optimum. The deployment
+selection does not access those true losses; they are used only for scoring.
+
+\code{benchmarking.evaluate_checkpoint}, used by the CLI, checks best-checkpoint
+and dataset lineage and compares common-bank IDs, knots, and actual waveforms
+across splits. The global baseline is selected from validation parent means
+only; the linear waveform is recognized by its values, not its index.
+Its direct mode chooses among policy proposals using the critic, converts
+the chosen samples into the executed schedule, validates its physical
+slope, and runs the true simulator for an offline score. It does not use a
+nearest-candidate label or interpolate unknown outcomes. Its reference-bank
+difference can be negative if the new proposal beats that finite reference;
+the value is not clipped. Offline scoring cost is recorded separately from
+inference. If the simulator is instead queried to improve or choose the action,
+those queries constitute online search and must be charged.
+
+\code{benchmark_record_controls} separately evaluates exact switching-knot
+linear, one-window, two-window, eight-bin, and genuine-pause families. It alternates
+Sobol exploration with local perturbation; every tunable family receives the same
+declared objective-call budget including its linear incumbent and rejected trials.
+Linear alone costs one call rather than budget-padding repeats. Segment-aligned
+propagation preserves switches and pauses without the model's resampling.
+Independent convergence/norm gates and all attempts are recorded. The default
+normalized slew bound must be converted to $T v_{\max}$ when comparing different
+runtimes at a fixed physical bound. Optional gap-inverse-square and $D_2$ controls
+are explicitly privileged baselines with separate teacher/search costs, not
+members of a supposedly equal-cost zero-shot comparison. None of these searches
+certifies a continuous optimum or implements Bayesian optimization.
+
+\subsection{Equal budgets and local interventions}
+The simple refinement baseline perturbs duration logits in a centered direction,
+decodes a feasible waveform, evaluates it, and accepts an improvement. Its
+budget includes the initial evaluation and rejected proposals. It is random
+local search, not a faithful Bayesian optimization implementation. Test-instance
+refinement requires explicit opt-in and remains online adaptation.
+
+Finite-difference intervention labels use a feasible decoder:
+\begin{equation}
+ \widehat{\partial_d\loss}(u)=
+ \frac{\loss(\operatorname{Decode}(u+\varepsilon d))
+       -\loss(\operatorname{Decode}(u-\varepsilon d))}{2\varepsilon}.
+\end{equation}
+Directions are centered to remove the irrelevant common-softmax-logit shift.
+Each direction costs two true evaluations. This utility is implemented;
+intervention-head training and adjoint gradients are separate future modules.
+
+\subsection{Parent-level paired estimates}
+For method-minus-baseline difference $\Delta_{pv}$ on variant $v$ of parent $p$,
+the reported equal-parent estimand is
+\begin{equation}
+ \widehat\Delta=\frac1{P_0}\sum_{p=1}^{P_0}\overline\Delta_p,
+ \qquad \overline\Delta_p=\frac1{|V_p|}\sum_{v\in V_p}\Delta_{pv}.
+\end{equation}
+Resample parents with replacement and take percentile intervals of the resampled
+means. Do not resample correlated variants as independent instances. This
+bootstrap does not include neural training-seed uncertainty; analyze seeds
+separately or prespecify a multilevel procedure. A negative paired difference
+favors the proposed method under this loss convention.
+
+For $M_{\rm deploy}$ new instances, separate amortized cost as
+\begin{equation}
+ C_{\rm amort}=\frac{C_{\rm data}+C_{\rm train}}{M_{\rm deploy}}
+ +C_{\rm infer}+C_{\rm online\ search}+C_{\rm embed}
+ +C_{\rm program}+C_{\rm execute}.
+\end{equation}
+Components must not double-count simulator or hardware calls. Report offline
+teacher cost, time per new instance, and number of objective evaluations. The
+hardware TTS utility uses binomial confidence intervals, assumes independent
+trials, and leaves zero-success observations censored rather than inventing a
+finite value via a pseudocount.
+
+\subsection{Frozen experiment execution and validation-only tuning}
+\code{experiments.py} resolves a dataset configuration into an explicit local
+experiment containing declared methods, seeds, training settings, execution
+settings, evaluation settings, and reporting options. A dry plan reports workload
+counts without claiming completed labels or launching jobs. The run locks its
+output and records configuration/source hashes and environment before executing
+\code{generate}, \code{train}, \code{evaluate}, and \code{report} stages.
+Stage completion is recorded only after its artifacts are saved. Resume rejects
+changed experiment configuration/source; failures remain explicit in the manifest.
+
+Training loads train/validation records only, records its content fingerprints,
+and can resume the latest checkpoint. Held-out evaluation loads the best
+checkpoint and its lineage. Reports require every predeclared method/seed result;
+missing or failed runs are not silently replaced by zeros. The separate tuning
+runner enumerates a capped Cartesian grid over model/training keys and selects
+the equal-seed mean validation bank regret. It does not evaluate test results.
+Generating a held-out dataset during preparation is not permission to inspect
+its outcomes while choosing hyperparameters.
+
+\code{reporting.py} checks that method/seed records and reference outcomes match,
+averages seeds per record and variants per parent, and produces JSON/Markdown,
+a LaTeX table, and optional plots. Parent-bootstrap intervals condition on the
+observed training seeds; seed standard deviation is reported separately, not
+presented as a joint uncertainty interval. These artifacts support a reproducible
+experiment, not automatic selection of a scientifically valid claim.
+
+\newpage
+\section{Explicit offline calibration and hardware interfaces}
+
+\code{adapters.CalibratedPath} interpolates a supplied table of $a,b,c$ with
+mandatory component factors, units, and provenance. For GHz coefficients
+interpreted as $H/h$ and time in microseconds, conversion to angular units is
+$2\pi\times1000$; dimensionless values and radians per microsecond follow their
+separately declared conventions. No vendor $1/2$ factor, calibration, or
+microsecond conversion is inferred from a toy simulation runtime.
+
+\code{simulate_lindblad} independently constructs dense Kronecker operators and
+integrates
+\begin{equation}
+ \dot\rho=-i[H,\rho]+\sum_k
+ \left(L_k\rho L_k^\dagger-\tfrac12\{L_k^\dagger L_k,\rho\}\right)
+\end{equation}
+with SciPy DOP853. Local channels are explicitly
+$L_i=\sqrt{\gamma_{\phi,i}}Z_i$ and
+$L_i=\sqrt{\gamma_{1,i}}\ket0\bra1_i$.
+The latter is computational-basis relaxation, not a detailed-balance bath or
+instantaneous interacting-ground-state relaxation. The solver checks initial
+physicality, trace, Hermiticity, and positivity at declared sample times and
+waveform knots without renormalization or clipping. Storage is $O(4^N)$, with
+default cap six and absolute cap eight qubits. This standalone pathway neither
+silently changes ordinary training labels nor certifies commercial-device fidelity.
+QuTiP and CUDA-Q are not implemented adapters or dependencies of this solver.
+
+\code{hardware.export_program} accepts explicit active device IDs/edges,
+coefficient limits, time units/ranges, point and slew limits, and optional exact
+quantization. It validates the compiled graph, gauge-transformed coefficients,
+physical mapping, decoder, and exact waveform; unsupported catalysts fail.
+No rounding, vendor autoscaling, network call, or QPU submission is performed.
+The output carries source/program hashes and is an offline handoff only.
+
+\code{hardware.ingest_samples} accepts user-supplied spin or explicitly mapped
+binary samples with variable ordering, counts, program hash, and energy
+convention. It verifies energies, un-gauges before majority decoding, applies the
+declared tie rule, and reports decoded energies, chain breaks, success counts,
+and binomial intervals when a suitable ground reference exists. Rejected ties
+count as success failures. A matching hash establishes internal consistency, not
+authentic QPU origin. Live authorization, vendor acceptance, measured calibration,
+programming-cycle drift, and hardware-transfer experiments remain external evidence.
+
+\begin{center}
+\small
+\begin{tabular}{p{0.27\linewidth}p{0.65\linewidth}}
+\toprule
+Source module & Implemented role / boundary \\
+\midrule
+\code{generation.py} & Logical families, cycle certificate, connected growth, compilation and decoded observables \\
+\code{physics.py} & XOR operator, single/batched CPU/CuPy propagation and independent dense reference \\
+\code{spectral.py} & Capped fixed/adaptive teacher, independent sampled audits, incomplete Lanczos diagnostics \\
+\code{schedules.py}, \code{search.py} & Feasible controls, common bank, charged refinement and finite differences \\
+\code{pipeline.py} & Source/payload-verified caches, parent workers, generation routes, masks and convergence gates \\
+\code{models.py}, \code{learning.py} & Four encoders, train-only statistics, accumulation and epoch-boundary resume \\
+\code{benchmarking.py} & Held-out direct/bank scoring, exact-waveform family search and privileged baselines \\
+\code{experiments.py}, \code{reporting.py} & Frozen stages, validation-only tuning, method/seed reports and plots \\
+\code{adapters.py}, \code{hardware.py} & Supplied calibration, Lindblad diagnostics and offline export/ingestion \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Publication claim gate.} Correct software and small smoke tests do not
+establish representation advantage, quantum advantage, hardware transfer, GPU
+speedup, or A* acceptance. Those claims require independent parents, several
+training seeds, faithful equal-budget baselines, controlled physical
+interventions, numerical audits, and measured deployment costs. The current
+source deliberately exposes these missing experiments rather than manufacturing
+a result from its architecture.
+\end{document}

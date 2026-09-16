@@ -1,0 +1,20 @@
+{
+  "qubits": 8,
+  "steps": 128,
+  "backend": "numpy",
+  "environment": {
+    "python": "3.12.14",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+    "packages": {
+      "numpy": "2.3.5",
+      "scipy": "1.17.0",
+      "networkx": "3.6.1",
+      "torch": "2.14.0+cpu",
+      "pytest": "9.1.1"
+    }
+  },
+  "warning": "single propagation microbenchmark, not accepted spectral labels/sec",
+  "elapsed_seconds": 0.04329852200044115,
+  "norm_error": 4.440892098500626e-16,
+  "step_doubling_error": 1.940654198449614e-05
+}

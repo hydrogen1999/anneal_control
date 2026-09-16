@@ -1,0 +1,120 @@
+{
+  "records": [
+    {
+      "record_id": "parent_0000_e0_k0_t0",
+      "parent_id": "parent_0000",
+      "split": "train",
+      "family": "spin_glass",
+      "logical_n": 3,
+      "physical_n": 3,
+      "runtime": 2.0,
+      "scale": 1.0,
+      "chain_lengths": [
+        1,
+        1,
+        1
+      ],
+      "linear_loss": 0.7922079798594602,
+      "best_bank_loss": 0.7621858749342038,
+      "best_candidate": 2,
+      "headroom_vs_linear": 0.030022104925256476
+    },
+    {
+      "record_id": "parent_0003_e0_k0_t0",
+      "parent_id": "parent_0003",
+      "split": "train",
+      "family": "spin_glass",
+      "logical_n": 3,
+      "physical_n": 3,
+      "runtime": 2.0,
+      "scale": 1.0,
+      "chain_lengths": [
+        1,
+        1,
+        1
+      ],
+      "linear_loss": 0.7591485447036288,
+      "best_bank_loss": 0.7071490129632545,
+      "best_candidate": 2,
+      "headroom_vs_linear": 0.051999531740374305
+    },
+    {
+      "record_id": "parent_0004_e0_k0_t0",
+      "parent_id": "parent_0004",
+      "split": "train",
+      "family": "spin_glass",
+      "logical_n": 3,
+      "physical_n": 3,
+      "runtime": 2.0,
+      "scale": 0.7790965743802793,
+      "chain_lengths": [
+        1,
+        1,
+        1
+      ],
+      "linear_loss": 0.6266186081849767,
+      "best_bank_loss": 0.5365531638555772,
+      "best_candidate": 2,
+      "headroom_vs_linear": 0.09006544432939956
+    },
+    {
+      "record_id": "parent_0005_e0_k0_t0",
+      "parent_id": "parent_0005",
+      "split": "train",
+      "family": "spin_glass",
+      "logical_n": 3,
+      "physical_n": 3,
+      "runtime": 2.0,
+      "scale": 0.9044821058090646,
+      "chain_lengths": [
+        1,
+        1,
+        1
+      ],
+      "linear_loss": 0.7266632107483476,
+      "best_bank_loss": 0.6756888453669332,
+      "best_candidate": 2,
+      "headroom_vs_linear": 0.05097436538141442
+    }
+  ],
+  "split_scope": "train",
+  "n_records": 4,
+  "n_parents": 4,
+  "parents_per_split": {
+    "train": 4,
+    "validation": 0,
+    "test": 0
+  },
+  "family_record_counts": {
+    "spin_glass": 4
+  },
+  "logical_size_record_counts": {
+    "3": 4
+  },
+  "physical_size_record_counts": {
+    "3": 4
+  },
+  "resolved_response_fraction": 1.0,
+  "state_error_diagnostic": {
+    "count": 16,
+    "min": 0.00017272241359557724,
+    "median": 0.00038109993266329065,
+    "p90": 0.0007533130585368048,
+    "max": 0.0008224573596377873,
+    "mean": 0.0004435381140097029
+  },
+  "finite_bank_headroom": {
+    "count": 4,
+    "min": 0.030022104925256476,
+    "median": 0.05148694856089436,
+    "p90": 0.07864567055269199,
+    "max": 0.09006544432939956,
+    "mean": 0.05576536159411119
+  },
+  "headroom_fraction_above_0p01": 1.0,
+  "best_candidate_counts": {
+    "2": 4
+  },
+  "generation_seconds": 0.27048567899964837,
+  "warning": "Descriptive audit within split_scope. Do not choose hyperparameters from test headroom. Finite bank != control optimum."
+}

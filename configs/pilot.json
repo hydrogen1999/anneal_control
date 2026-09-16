@@ -1,0 +1,19 @@
+{
+  "seed": 20260911,
+  "parents": 120,
+  "families": ["weighted_maxcut", "spin_glass", "planted_loops", "weak_field"],
+  "logical_qubits": 3,
+  "chain_lengths": [2, 3, 3],
+  "variants": [
+    {"shape": "path", "ports": 1, "field_distribution": "uniform"},
+    {"shape": "path", "ports": 2, "field_distribution": "uniform"}
+  ],
+  "chain_strengths": [1.0, 2.5],
+  "runtimes": [2.0, 8.0, 32.0],
+  "candidates": 64,
+  "spectral_points": 33,
+  "steps": 256,
+  "max_steps": 8192,
+  "label_state_tolerance": 0.00001,
+  "max_physical_qubits": 10
+}

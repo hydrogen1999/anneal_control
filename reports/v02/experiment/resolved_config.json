@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "dataset": {
+    "seed": 20260916,
+    "parents": 12,
+    "families": [
+      "spin_glass",
+      "weighted_maxcut"
+    ],
+    "logical_sizes": [
+      3,
+      4
+    ],
+    "logical_support": {
+      "kind": "complete"
+    },
+    "chain_distribution": {
+      "distribution": "power_law",
+      "low": 1,
+      "high": 2,
+      "exponent": 2.0
+    },
+    "variants": [
+      {
+        "shape": "path",
+        "ports": 1,
+        "field_distribution": "uniform"
+      }
+    ],
+    "chain_strengths": [
+      1.5
+    ],
+    "runtimes": [
+      2.0,
+      5.0
+    ],
+    "candidates": 8,
+    "candidate_batch_size": 4,
+    "spectral_points": 5,
+    "teacher": {
+      "mode": "adaptive",
+      "max_queries": 17,
+      "audit_points": 3,
+      "relative_tolerance": 0.15
+    },
+    "steps": 32,
+    "max_steps": 2048,
+    "label_state_tolerance": 0.0005,
+    "max_physical_qubits": 8
+  },
+  "seeds": [
+    0,
+    1
+  ],
+  "methods": [
+    {
+      "name": "summary",
+      "model": {
+        "encoder_variant": "summary",
+        "width": 16
+      },
+      "training": {
+        "response_weight": 0.0
+      }
+    },
+    {
+      "name": "logical",
+      "model": {
+        "encoder_variant": "logical",
+        "width": 16
+      },
+      "training": {
+        "response_weight": 0.0
+      }
+    },
+    {
+      "name": "physical",
+      "model": {
+        "encoder_variant": "physical",
+        "width": 16
+      },
+      "training": {
+        "response_weight": 0.0
+      }
+    },
+    {
+      "name": "hierarchy_outcome",
+      "model": {
+        "encoder_variant": "hierarchical",
+        "width": 16
+      },
+      "training": {
+        "response_weight": 0.0
+      }
+    },
+    {
+      "name": "hierarchy_physics",
+      "model": {
+        "encoder_variant": "hierarchical",
+        "width": 16
+      },
+      "training": {
+        "response_weight": 0.05
+      }
+    }
+  ],
+  "training": {
+    "epochs": 3,
+    "patience": 3,
+    "learning_rate": 0.001,
+    "batch_size": 2,
+    "accumulation_steps": 1
+  },
+  "execution": {
+    "device": "cpu",
+    "backend": "numpy",
+    "threads": 1,
+    "workers": 1
+  },
+  "evaluation": {
+    "direct": true,
+    "tolerance": 0.0005,
+    "initial_steps": 64,
+    "max_steps": 4096,
+    "n_resamples": 300
+  },
+  "report": {
+    "plots": true,
+    "bootstrap_resamples": 300
+  }
+}

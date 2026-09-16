@@ -1,0 +1,159 @@
+{
+  "schema_version": 1,
+  "status": "offline_plan_not_submitted_or_qpu_validated",
+  "source_record": {
+    "record_id": "parent_0000_e0_k0_t0",
+    "fingerprint": "80196806442932aedd897814046c7e73d956d606ef17087ed5bc63a746967858",
+    "physical_h": [
+      0.12243262405865041,
+      0.014053020129044858,
+      -0.38822874055456497
+    ],
+    "physical_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        2
+      ]
+    ],
+    "physical_J": [
+      0.11871443856123305,
+      -0.5143451210435089,
+      0.011507577219390932
+    ],
+    "logical_h": [
+      0.12243262405865041,
+      0.014053020129044858,
+      -0.38822874055456497
+    ],
+    "logical_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        2
+      ]
+    ],
+    "logical_J": [
+      0.11871443856123305,
+      -0.5143451210435089,
+      0.011507577219390932
+    ],
+    "membership": [
+      0,
+      1,
+      2
+    ]
+  },
+  "source_parameter_hash": "9f4bfb8689be74b84b9ece31417e6b05019ccad6fb1d2a40b69018e7f1a79ed1",
+  "device_constraints": {
+    "device_id": "TOY_NOT_A_QPU",
+    "hardware_nodes": [
+      0,
+      1,
+      2
+    ],
+    "hardware_edges": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        0,
+        2
+      ]
+    ],
+    "h_range": [
+      -2.0,
+      2.0
+    ],
+    "J_range": [
+      -1.0,
+      1.0
+    ],
+    "runtime_range": [
+      1.0,
+      100.0
+    ],
+    "time_unit": "us",
+    "max_schedule_points": 12,
+    "max_slope": 1.0,
+    "coefficient_unit": "dimensionless_ising",
+    "time_resolution": null,
+    "s_resolution": null
+  },
+  "physical_ids": [
+    0,
+    1,
+    2
+  ],
+  "h": [
+    0.12243262405865041,
+    0.014053020129044858,
+    -0.38822874055456497
+  ],
+  "edges": [
+    [
+      0,
+      1
+    ],
+    [
+      0,
+      2
+    ],
+    [
+      1,
+      2
+    ]
+  ],
+  "J": [
+    0.11871443856123305,
+    -0.5143451210435089,
+    0.011507577219390932
+  ],
+  "coefficient_unit": "dimensionless_ising",
+  "coefficient_scale": 1.0,
+  "autoscale": false,
+  "energy_convention": "sum_h_z_plus_sum_J_zz_no_offset",
+  "schedule": [
+    [
+      0.0,
+      0.0
+    ],
+    [
+      20.0,
+      1.0
+    ]
+  ],
+  "runtime": 20.0,
+  "time_unit": "us",
+  "source_simulation_runtime": 2.0,
+  "time_mapping": "hardware_runtime_explicitly_selected_not_inferred_from_simulation",
+  "gauge": [
+    1,
+    1,
+    1
+  ],
+  "gauge_convention": "z_programmed=gauge*z_original",
+  "tie_policy": "plus",
+  "logical_ground_energy": -0.9244162734490924,
+  "logical_ground_energy_source": "exact_enumeration",
+  "program_hash": "c86aadedb24d73ab2c669b2c28e1bd6a94479f98cdc0df9af8398513aa458fe4"
+}

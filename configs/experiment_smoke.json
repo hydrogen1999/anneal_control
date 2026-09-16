@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "dataset": "data_smoke_v2.json",
+  "seeds": [0, 1],
+  "methods": [
+    {"name": "summary", "model": {"encoder_variant": "summary", "width": 16}, "training": {"response_weight": 0.0}},
+    {"name": "logical", "model": {"encoder_variant": "logical", "width": 16}, "training": {"response_weight": 0.0}},
+    {"name": "physical", "model": {"encoder_variant": "physical", "width": 16}, "training": {"response_weight": 0.0}},
+    {"name": "hierarchy_outcome", "model": {"encoder_variant": "hierarchical", "width": 16}, "training": {"response_weight": 0.0}},
+    {"name": "hierarchy_physics", "model": {"encoder_variant": "hierarchical", "width": 16}, "training": {"response_weight": 0.05}}
+  ],
+  "training": {"epochs": 3, "patience": 3, "learning_rate": 0.001, "batch_size": 2, "accumulation_steps": 1},
+  "execution": {"device": "cpu", "backend": "numpy", "threads": 1, "workers": 1},
+  "evaluation": {"direct": true, "tolerance": 0.0005, "initial_steps": 64, "max_steps": 4096, "n_resamples": 300},
+  "report": {"plots": true, "bootstrap_resamples": 300}
+}

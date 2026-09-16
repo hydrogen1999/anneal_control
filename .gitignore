@@ -1,0 +1,21 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+runs/
+data/
+*.pt
+*.aux
+*.log
+*.out
+
+
+# Experiment artifacts (regenerate from configs; never commit results as source)
+runs/
+logs/
+*.jsonl
+
+# Environment
+.venv/
+.DS_Store

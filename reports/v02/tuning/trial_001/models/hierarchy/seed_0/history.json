@@ -1,0 +1,34 @@
+{
+  "history": [
+    {
+      "epoch": 0,
+      "train_loss": 0.7905830442905426,
+      "train_outcome_loss": 0.4103059023618698,
+      "train_policy_loss": 1.478895366191864,
+      "train_ranking_loss": 0.6905969232320786,
+      "train_response_loss": 0.30876761861145496,
+      "validation_bank_regret": 0.0717233419418335,
+      "validation_mean_loss": 0.7051371335983276,
+      "optimizer_updates": 4
+    },
+    {
+      "epoch": 1,
+      "train_loss": 0.7580708116292953,
+      "train_outcome_loss": 0.37829868495464325,
+      "train_policy_loss": 1.4763548970222473,
+      "train_ranking_loss": 0.6913289427757263,
+      "train_response_loss": 0.3073647730052471,
+      "validation_bank_regret": 0.0717233419418335,
+      "validation_mean_loss": 0.7051371335983276,
+      "optimizer_updates": 4
+    }
+  ],
+  "method": "hierarchy",
+  "seed": 0,
+  "training_cost_complete": true,
+  "observed_training_seconds": 0.3515314709993618,
+  "trained": true,
+  "best_epoch": 0,
+  "training_seconds": 0.3515314709993618,
+  "checkpoint": "models/hierarchy/seed_0/best.pt"
+}

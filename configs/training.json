@@ -1,0 +1,8 @@
+{
+  "model": {"encoder_variant": "hierarchical", "width": 64, "physical_layers": 3, "logical_layers": 2,
+    "proposals": 3, "schedule_points": 9, "max_ds_dtau": 4.0},
+  "training": {"epochs": 200, "patience": 25, "learning_rate": 0.001, "batch_size": 8,
+    "accumulation_steps": 1, "response_weight": 0.05, "policy_weight": 0.2, "ranking_weight": 0.1,
+    "weight_decay": 0.0001, "max_grad_norm": 1.0, "deterministic": true},
+  "execution": {"device": "cpu", "threads": 1}
+}

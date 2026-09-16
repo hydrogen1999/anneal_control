@@ -1,0 +1,109 @@
+{
+  "membership": [
+    1,
+    0,
+    1,
+    0,
+    2,
+    2
+  ],
+  "active_hardware_edges": [
+    [
+      0,
+      1
+    ],
+    [
+      2,
+      3
+    ],
+    [
+      4,
+      5
+    ],
+    [
+      0,
+      2
+    ],
+    [
+      1,
+      3
+    ]
+  ],
+  "physical_h": [
+    0.02843620687124796,
+    0.1100681539407258,
+    0.02843620687124796,
+    0.1100681539407258,
+    0.06119908292906624,
+    0.06119908292906624
+  ],
+  "physical_J": [
+    -0.1642048883549649,
+    -0.1642048883549649,
+    -1.0,
+    -1.0,
+    -1.0
+  ],
+  "problem_J": [
+    -0.1642048883549649,
+    -0.1642048883549649,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "chain_J": [
+    0.0,
+    0.0,
+    -1.0,
+    -1.0,
+    -1.0
+  ],
+  "logical_h": [
+    0.33020446182217744,
+    0.08530862061374389,
+    0.18359724878719874
+  ],
+  "logical_edges": [
+    [
+      0,
+      1
+    ]
+  ],
+  "logical_J": [
+    -0.49261466506489476
+  ],
+  "programmed_scale": 0.6666666666666666,
+  "metadata": {
+    "route": "fixed_hardware_growth",
+    "original_physical_ids": [
+      2,
+      3,
+      6,
+      7,
+      8,
+      9
+    ],
+    "target_lengths": [
+      2,
+      2,
+      2
+    ],
+    "achieved_lengths": [
+      2,
+      2,
+      2
+    ],
+    "target_met": true,
+    "unused_qubits": 6,
+    "warning": "quotient support is generated, not guaranteed hard or representative"
+  },
+  "note": "valid embedding construction, no quantum-hardness certificate",
+  "validation": {
+    "aligned_energy_max_error": 4.440892098500626e-16,
+    "logical_ground_energy": -1.091724996288015,
+    "physical_ground_energy": -3.7278166641920096,
+    "aligned_ground_energy": -3.7278166641920096,
+    "has_aligned_physical_ground_state": true,
+    "logical_ground_degeneracy": 1
+  }
+}

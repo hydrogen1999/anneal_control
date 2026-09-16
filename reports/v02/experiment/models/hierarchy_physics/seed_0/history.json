@@ -1,0 +1,45 @@
+{
+  "history": [
+    {
+      "epoch": 0,
+      "train_loss": 0.9582182243466377,
+      "train_outcome_loss": 0.39481364004313946,
+      "train_policy_loss": 2.2976735532283783,
+      "train_ranking_loss": 0.7176263853907585,
+      "train_response_loss": 0.6421445347368717,
+      "validation_bank_regret": 0.14560040459036827,
+      "validation_mean_loss": 0.6818962059915066,
+      "optimizer_updates": 4
+    },
+    {
+      "epoch": 1,
+      "train_loss": 0.8655277714133263,
+      "train_outcome_loss": 0.3034170735627413,
+      "train_policy_loss": 2.28567174077034,
+      "train_ranking_loss": 0.7330405041575432,
+      "train_response_loss": 0.6334454715251923,
+      "validation_bank_regret": 0.14560040459036827,
+      "validation_mean_loss": 0.6818962059915066,
+      "optimizer_updates": 4
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.7865869030356407,
+      "train_outcome_loss": 0.22748782858252525,
+      "train_policy_loss": 2.264864832162857,
+      "train_ranking_loss": 0.749224342405796,
+      "train_response_loss": 0.6240733526647091,
+      "validation_bank_regret": 0.14560040459036827,
+      "validation_mean_loss": 0.6818962059915066,
+      "optimizer_updates": 4
+    }
+  ],
+  "method": "hierarchy_physics",
+  "seed": 0,
+  "training_cost_complete": true,
+  "observed_training_seconds": 0.8775909429996318,
+  "trained": true,
+  "best_epoch": 0,
+  "training_seconds": 0.8775909429996318,
+  "checkpoint": "models/hierarchy_physics/seed_0/best.pt"
+}

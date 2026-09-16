@@ -1,0 +1,19 @@
+{
+  "seed": 20260916,
+  "parents": 12,
+  "families": ["spin_glass", "weighted_maxcut"],
+  "logical_sizes": [3, 4],
+  "logical_support": {"kind": "complete"},
+  "chain_distribution": {"distribution": "power_law", "low": 1, "high": 2, "exponent": 2.0},
+  "variants": [{"shape": "path", "ports": 1, "field_distribution": "uniform"}],
+  "chain_strengths": [1.5],
+  "runtimes": [2.0, 5.0],
+  "candidates": 8,
+  "candidate_batch_size": 4,
+  "spectral_points": 5,
+  "teacher": {"mode": "adaptive", "max_queries": 17, "audit_points": 3, "relative_tolerance": 0.15},
+  "steps": 32,
+  "max_steps": 2048,
+  "label_state_tolerance": 0.0005,
+  "max_physical_qubits": 8
+}

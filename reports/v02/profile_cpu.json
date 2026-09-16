@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "status": "complete",
+  "config": {
+    "seed": 20260916,
+    "parents": 12,
+    "families": [
+      "spin_glass",
+      "weighted_maxcut"
+    ],
+    "logical_sizes": [
+      3,
+      4
+    ],
+    "logical_support": {
+      "kind": "complete"
+    },
+    "chain_distribution": {
+      "distribution": "power_law",
+      "low": 1,
+      "high": 2,
+      "exponent": 2.0
+    },
+    "variants": [
+      {
+        "shape": "path",
+        "ports": 1,
+        "field_distribution": "uniform"
+      }
+    ],
+    "chain_strengths": [
+      1.5
+    ],
+    "runtimes": [
+      2.0,
+      5.0
+    ],
+    "candidates": 8,
+    "candidate_batch_size": 4,
+    "spectral_points": 5,
+    "teacher": {
+      "mode": "adaptive",
+      "max_queries": 17,
+      "audit_points": 3,
+      "relative_tolerance": 0.15
+    },
+    "steps": 32,
+    "max_steps": 2048,
+    "label_state_tolerance": 0.0005,
+    "max_physical_qubits": 8
+  },
+  "config_hash": "dd39e49eea96da3b41410878f152a13911c085c4b2b56ab63401728620e9578b",
+  "source_fingerprint": "7ac72e2b8325a86a75c70a2f95be07255b3ec3649a3dd959cc72fa3df373f4b1",
+  "environment": {
+    "python": "3.12.14",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+    "packages": {
+      "numpy": "2.3.5",
+      "scipy": "1.17.0",
+      "networkx": "3.6.1",
+      "torch": "2.14.0+cpu",
+      "pytest": "9.1.1"
+    }
+  },
+  "requested_backends": [
+    "numpy"
+  ],
+  "workers": 1,
+  "backends": {
+    "numpy": {
+      "status": "complete",
+      "dataset": "/workspace/scratch/a2db4882ba16/anneal_control/runs/v2_profile/numpy",
+      "device_before": {
+        "backend": "numpy",
+        "device": "cpu",
+        "free_device_bytes": null,
+        "total_device_bytes": null,
+        "numpy_version": "2.3.5"
+      },
+      "records": 24,
+      "physical_paths": 12,
+      "accepted_candidate_labels": 192,
+      "generation_wall_seconds": 3.3590987190000305,
+      "accepted_labels_per_second": 57.15818916365651,
+      "timing_scope": "entire generate_dataset call: initialization, assembly, endpoint labels, spectral teacher/audit, convergence retries, independent dense dynamics audit and disk writes",
+      "cost_components": {
+        "spectral_including_random_audit_worker_seconds": 0.3871537810027803,
+        "propagation_shared_cost_worker_seconds": 2.3511946060025366,
+        "independent_dynamics_audit_worker_seconds": 0.2334326330001204,
+        "worker_seconds_not_additive_wall_time": false,
+        "component_note": "Observed logged components; may exclude overhead. Runtime-shared teacher costs counted once per physical path."
+      },
+      "max_state_error_diagnostic": 0.0004991448197654748,
+      "max_norm_error": 1.887379141862766e-14,
+      "max_independent_dense_state_error": 0.0004906769422123596,
+      "max_accepted_integration_steps": 256,
+      "all_candidate_labels_pass_numerical_gate": true,
+      "state_error_is_certificate": false,
+      "adaptive_paths_with_failed_sampled_checks": 12,
+      "memory": {
+        "estimated_numeric_work_peak_per_worker_bytes": 2178048,
+        "estimated_numeric_work_all_workers_bytes": 2178048,
+        "max_endpoint_workspace_bytes": 80896,
+        "max_state_workspace_bytes": 163840,
+        "max_dense_teacher_workspace_bytes": 2097152,
+        "active_worker_upper_bound": 1,
+        "measured_peak_memory": false,
+        "scope": "Analytical numeric-array estimate; excludes Python/process overhead, coordinator dataset residency and allocator pools. Dense teacher estimate uses 128*(2**N)**2 bytes and remains CPU-only."
+      },
+      "config_hash": "eb7326a61740f6a4b24e09100d023c8ee131d19785dcfd4fce22c5ba42cac4d1",
+      "dataset_fingerprint": "fa29d921f1407c8b2b3259bad74fe0efa86fe4427950d1afedbefdd4c854b218",
+      "device_after": {
+        "backend": "numpy",
+        "device": "cpu",
+        "free_device_bytes": null,
+        "total_device_bytes": null,
+        "numpy_version": "2.3.5"
+      }
+    }
+  },
+  "cpu_gpu_comparison": null,
+  "notes": [
+    "No CPU fallback; unavailable requested backends fail explicitly.",
+    "Complete spectral teacher and independent dense audit remain CPU-based even with CuPy propagation.",
+    "Backend-dependent dataset fingerprints are expected. IDs, programmed physics and executed waveforms must agree.",
+    "One fresh run per backend in declared order; device probes precede timing and can initialize the runtime. Generation-time allocation/JIT and thermal effects remain. Repeat profiles for speed claims.",
+    "Adaptive audit seeds can differ with backend fingerprints; audits have identical configured budgets, not necessarily identical coordinates."
+  ],
+  "recovery": "Artifacts remain intact after failure. Use a NEW output for a comparable complete profile; incomplete datasets can be resumed independently with matching generate configuration/source, but that recovery is not fresh-run timing."
+}

@@ -1,0 +1,10 @@
+{
+  "seed": 20260916, "parents": 12, "families": ["spin_glass", "weighted_maxcut"],
+  "logical_qubits": 3, "chain_lengths": [2, 2, 2],
+  "generation_route": "hardware_growth",
+  "hardware": {"n_qubits": 12, "edges": [[0,1],[1,2],[2,3],[4,5],[5,6],[6,7],[8,9],[9,10],[10,11],[0,4],[1,5],[2,6],[3,7],[4,8],[5,9],[6,10],[7,11]]},
+  "variants": [{"field_distribution": "uniform", "coupling_distribution": "uniform"}],
+  "chain_strengths": [1.5], "runtimes": [2.0], "candidates": 8, "candidate_batch_size": 4,
+  "spectral_points": 5, "teacher": {"mode": "exact"}, "steps": 32, "max_steps": 2048,
+  "label_state_tolerance": 0.0005, "max_physical_qubits": 6
+}

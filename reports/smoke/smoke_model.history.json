@@ -1,0 +1,43 @@
+{
+  "history": [
+    {
+      "epoch": 0,
+      "train_loss": 0.6597373895347118,
+      "validation_bank_regret": 0.0700137063395232
+    },
+    {
+      "epoch": 1,
+      "train_loss": 0.6162320636212826,
+      "validation_bank_regret": 0.0700137063395232
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.5850415900349617,
+      "validation_bank_regret": 0.0700137063395232
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.5659124366939068,
+      "validation_bank_regret": 0.0700137063395232
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.5584536492824554,
+      "validation_bank_regret": 0.0700137063395232
+    }
+  ],
+  "best_epoch": 0,
+  "training_seconds": 3.534057904999827,
+  "environment": {
+    "python": "3.12.14",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+    "packages": {
+      "numpy": "2.3.5",
+      "scipy": "1.17.0",
+      "networkx": "3.6.1",
+      "torch": "2.14.0+cpu",
+      "pytest": "9.1.1"
+    }
+  },
+  "warning": "research scaffold fit, not an A-star benchmark result"
+}

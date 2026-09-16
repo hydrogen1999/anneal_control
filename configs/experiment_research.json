@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "dataset": "data_research.json",
+  "seeds": [0, 1, 2, 3, 4],
+  "methods": [
+    {"name": "summary", "model": {"encoder_variant": "summary", "width": 64}, "training": {"response_weight": 0.0}},
+    {"name": "logical", "model": {"encoder_variant": "logical", "width": 64}, "training": {"response_weight": 0.0}},
+    {"name": "physical", "model": {"encoder_variant": "physical", "width": 64}, "training": {"response_weight": 0.0}},
+    {"name": "hierarchy_outcome", "model": {"encoder_variant": "hierarchical", "width": 64}, "training": {"response_weight": 0.0}},
+    {"name": "hierarchy_physics", "model": {"encoder_variant": "hierarchical", "width": 64}, "training": {"response_weight": 0.05}}
+  ],
+  "training": {"epochs": 200, "patience": 25, "learning_rate": 0.001, "batch_size": 8,
+    "accumulation_steps": 2, "weight_decay": 0.0001, "policy_weight": 0.2, "ranking_weight": 0.1},
+  "execution": {"device": "cuda", "backend": "cupy", "threads": 1, "workers": 1},
+  "evaluation": {"direct": true, "tolerance": 0.0002, "initial_steps": 128, "max_steps": 16384, "n_resamples": 10000},
+  "report": {"plots": true, "bootstrap_resamples": 10000}
+}

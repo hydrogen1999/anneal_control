@@ -1,0 +1,287 @@
+{
+  "schema_version": 1,
+  "status": "complete",
+  "config": {
+    "schema_version": 1,
+    "dataset": {
+      "seed": 20260916,
+      "parents": 12,
+      "families": [
+        "spin_glass",
+        "weighted_maxcut"
+      ],
+      "logical_sizes": [
+        3,
+        4
+      ],
+      "logical_support": {
+        "kind": "complete"
+      },
+      "chain_distribution": {
+        "distribution": "power_law",
+        "low": 1,
+        "high": 2,
+        "exponent": 2.0
+      },
+      "variants": [
+        {
+          "shape": "path",
+          "ports": 1,
+          "field_distribution": "uniform"
+        }
+      ],
+      "chain_strengths": [
+        1.5
+      ],
+      "runtimes": [
+        2.0,
+        5.0
+      ],
+      "candidates": 8,
+      "candidate_batch_size": 4,
+      "spectral_points": 5,
+      "teacher": {
+        "mode": "adaptive",
+        "max_queries": 17,
+        "audit_points": 3,
+        "relative_tolerance": 0.15
+      },
+      "steps": 32,
+      "max_steps": 2048,
+      "label_state_tolerance": 0.0005,
+      "max_physical_qubits": 8
+    },
+    "seeds": [
+      0,
+      1
+    ],
+    "methods": [
+      {
+        "name": "summary",
+        "model": {
+          "encoder_variant": "summary",
+          "width": 16
+        },
+        "training": {
+          "response_weight": 0.0
+        }
+      },
+      {
+        "name": "logical",
+        "model": {
+          "encoder_variant": "logical",
+          "width": 16
+        },
+        "training": {
+          "response_weight": 0.0
+        }
+      },
+      {
+        "name": "physical",
+        "model": {
+          "encoder_variant": "physical",
+          "width": 16
+        },
+        "training": {
+          "response_weight": 0.0
+        }
+      },
+      {
+        "name": "hierarchy_outcome",
+        "model": {
+          "encoder_variant": "hierarchical",
+          "width": 16
+        },
+        "training": {
+          "response_weight": 0.0
+        }
+      },
+      {
+        "name": "hierarchy_physics",
+        "model": {
+          "encoder_variant": "hierarchical",
+          "width": 16
+        },
+        "training": {
+          "response_weight": 0.05
+        }
+      }
+    ],
+    "training": {
+      "epochs": 3,
+      "patience": 3,
+      "learning_rate": 0.001,
+      "batch_size": 2,
+      "accumulation_steps": 1
+    },
+    "execution": {
+      "device": "cpu",
+      "backend": "numpy",
+      "threads": 1,
+      "workers": 1
+    },
+    "evaluation": {
+      "direct": true,
+      "tolerance": 0.0005,
+      "initial_steps": 64,
+      "max_steps": 4096,
+      "n_resamples": 300
+    },
+    "report": {
+      "plots": true,
+      "bootstrap_resamples": 300
+    }
+  },
+  "config_hash": "1275733d7baa56b799bd3e0f9039ab12c87c894cef9fcc480ecf7c00c420a62e",
+  "source_hash": "7ac72e2b8325a86a75c70a2f95be07255b3ec3649a3dd959cc72fa3df373f4b1",
+  "environment": {
+    "python": "3.12.14",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+    "packages": {
+      "numpy": "2.3.5",
+      "scipy": "1.17.0",
+      "networkx": "3.6.1",
+      "torch": "2.14.0+cpu",
+      "pytest": "9.1.1"
+    }
+  },
+  "stages": {
+    "generate": {
+      "seconds": 4.2895049429998835,
+      "record_count": 24
+    },
+    "report": true
+  },
+  "runs": {
+    "summary/seed_0": {
+      "method": "summary",
+      "seed": 0,
+      "training_cost_complete": true,
+      "observed_training_seconds": 2.9037337400004617,
+      "trained": true,
+      "best_epoch": 1,
+      "training_seconds": 2.9037337400004617,
+      "checkpoint": "models/summary/seed_0/best.pt",
+      "evaluated": true,
+      "evaluation_seconds": 0.6325350350007284,
+      "evaluation": "evaluations/summary__seed_0.json"
+    },
+    "summary/seed_1": {
+      "method": "summary",
+      "seed": 1,
+      "training_cost_complete": true,
+      "observed_training_seconds": 0.5697608130003573,
+      "trained": true,
+      "best_epoch": 0,
+      "training_seconds": 0.5697608130003573,
+      "checkpoint": "models/summary/seed_1/best.pt",
+      "evaluated": true,
+      "evaluation_seconds": 0.44492044400067243,
+      "evaluation": "evaluations/summary__seed_1.json"
+    },
+    "logical/seed_0": {
+      "method": "logical",
+      "seed": 0,
+      "training_cost_complete": true,
+      "observed_training_seconds": 0.49239826400025777,
+      "trained": true,
+      "best_epoch": 0,
+      "training_seconds": 0.49239826400025777,
+      "checkpoint": "models/logical/seed_0/best.pt",
+      "evaluated": true,
+      "evaluation_seconds": 0.5093869260008432,
+      "evaluation": "evaluations/logical__seed_0.json"
+    },
+    "logical/seed_1": {
+      "method": "logical",
+      "seed": 1,
+      "training_cost_complete": true,
+      "observed_training_seconds": 0.6929225860003498,
+      "trained": true,
+      "best_epoch": 0,
+      "training_seconds": 0.6929225860003498,
+      "checkpoint": "models/logical/seed_1/best.pt",
+      "evaluated": true,
+      "evaluation_seconds": 0.4572479360003854,
+      "evaluation": "evaluations/logical__seed_1.json"
+    },
+    "physical/seed_0": {
+      "method": "physical",
+      "seed": 0,
+      "training_cost_complete": true,
+      "observed_training_seconds": 0.6307764830007727,
+      "trained": true,
+      "best_epoch": 0,
+      "training_seconds": 0.6307764830007727,
+      "checkpoint": "models/physical/seed_0/best.pt",
+      "evaluated": true,
+      "evaluation_seconds": 0.6819344100003946,
+      "evaluation": "evaluations/physical__seed_0.json"
+    },
+    "physical/seed_1": {
+      "method": "physical",
+      "seed": 1,
+      "training_cost_complete": true,
+      "observed_training_seconds": 0.6697852389997934,
+      "trained": true,
+      "best_epoch": 0,
+      "training_seconds": 0.6697852389997934,
+      "checkpoint": "models/physical/seed_1/best.pt",
+      "evaluated": true,
+      "evaluation_seconds": 0.7478912870001295,
+      "evaluation": "evaluations/physical__seed_1.json"
+    },
+    "hierarchy_outcome/seed_0": {
+      "method": "hierarchy_outcome",
+      "seed": 0,
+      "training_cost_complete": true,
+      "observed_training_seconds": 0.7469657150004423,
+      "trained": true,
+      "best_epoch": 0,
+      "training_seconds": 0.7469657150004423,
+      "checkpoint": "models/hierarchy_outcome/seed_0/best.pt",
+      "evaluated": true,
+      "evaluation_seconds": 0.6305142439996416,
+      "evaluation": "evaluations/hierarchy_outcome__seed_0.json"
+    },
+    "hierarchy_outcome/seed_1": {
+      "method": "hierarchy_outcome",
+      "seed": 1,
+      "training_cost_complete": true,
+      "observed_training_seconds": 0.711602700000185,
+      "trained": true,
+      "best_epoch": 2,
+      "training_seconds": 0.711602700000185,
+      "checkpoint": "models/hierarchy_outcome/seed_1/best.pt",
+      "evaluated": true,
+      "evaluation_seconds": 0.671357154999896,
+      "evaluation": "evaluations/hierarchy_outcome__seed_1.json"
+    },
+    "hierarchy_physics/seed_0": {
+      "method": "hierarchy_physics",
+      "seed": 0,
+      "training_cost_complete": true,
+      "observed_training_seconds": 0.8775909429996318,
+      "trained": true,
+      "best_epoch": 0,
+      "training_seconds": 0.8775909429996318,
+      "checkpoint": "models/hierarchy_physics/seed_0/best.pt",
+      "evaluated": true,
+      "evaluation_seconds": 0.6335252660001061,
+      "evaluation": "evaluations/hierarchy_physics__seed_0.json"
+    },
+    "hierarchy_physics/seed_1": {
+      "method": "hierarchy_physics",
+      "seed": 1,
+      "training_cost_complete": true,
+      "observed_training_seconds": 0.8497215729994423,
+      "trained": true,
+      "best_epoch": 2,
+      "training_seconds": 0.8497215729994423,
+      "checkpoint": "models/hierarchy_physics/seed_1/best.pt",
+      "evaluated": true,
+      "evaluation_seconds": 0.804817451999952,
+      "evaluation": "evaluations/hierarchy_physics__seed_1.json"
+    }
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "status": "in_progress",
+  "config": {
+    "schema_version": 1,
+    "dataset": {
+      "seed": 20260916,
+      "parents": 6,
+      "families": [
+        "spin_glass"
+      ],
+      "logical_qubits": 3,
+      "chain_lengths": [
+        1,
+        1,
+        1
+      ],
+      "variants": [
+        {
+          "shape": "path",
+          "ports": 1,
+          "field_distribution": "uniform"
+        }
+      ],
+      "chain_strengths": [
+        1.5
+      ],
+      "runtimes": [
+        2.0
+      ],
+      "candidates": 4,
+      "spectral_points": 3,
+      "steps": 16,
+      "max_steps": 1024,
+      "label_state_tolerance": 0.001,
+      "max_physical_qubits": 3
+    },
+    "seeds": [
+      0
+    ],
+    "methods": [
+      {
+        "name": "hierarchy",
+        "model": {
+          "width": 16
+        },
+        "training": {
+          "learning_rate": 0.001
+        }
+      }
+    ],
+    "training": {
+      "epochs": 2,
+      "patience": 2
+    },
+    "execution": {
+      "device": "cpu",
+      "threads": 1
+    }
+  },
+  "config_hash": "cc9406874ecc2ba9e3b13f423893f9dd5b0c36c8049b30d88628effdf026f7be",
+  "source_hash": "7ac72e2b8325a86a75c70a2f95be07255b3ec3649a3dd959cc72fa3df373f4b1",
+  "environment": {
+    "python": "3.12.14",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+    "packages": {
+      "numpy": "2.3.5",
+      "scipy": "1.17.0",
+      "networkx": "3.6.1",
+      "torch": "2.14.0+cpu",
+      "pytest": "9.1.1"
+    }
+  },
+  "stages": {
+    "generate": {
+      "seconds": 0.33395631100029277,
+      "record_count": 6,
+      "reused_from": "shared_generation/data",
+      "additional_generation_seconds": 0.0
+    }
+  },
+  "runs": {
+    "hierarchy/seed_0": {
+      "method": "hierarchy",
+      "seed": 0,
+      "training_cost_complete": true,
+      "observed_training_seconds": 2.2321625639997364,
+      "trained": true,
+      "best_epoch": 0,
+      "training_seconds": 2.2321625639997364,
+      "checkpoint": "models/hierarchy/seed_0/best.pt"
+    }
+  }
+}

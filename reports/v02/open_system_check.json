@@ -1,0 +1,47 @@
+{
+  "probabilities": [
+    0.1693481845311171,
+    0.12014289095201756,
+    0.2058220159667563,
+    0.10162807058232276,
+    0.04501784158320389,
+    0.16190609284320506,
+    0.056584992875638104,
+    0.13954991066573894
+  ],
+  "diagnostics": {
+    "method": "scipy_DOP853_density_matrix",
+    "time_unit": "dimensionless",
+    "runtime": 2.0,
+    "rates_unit": "1/dimensionless",
+    "dephasing_rates": [
+      0.01,
+      0.01,
+      0.01
+    ],
+    "relaxation_rates": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "rhs_evaluations": 821,
+    "checked_states": 17,
+    "max_trace_error": 4.440892098500626e-16,
+    "max_hermiticity_error": 0.0,
+    "minimum_eigenvalue": -1.7702986483555944e-16,
+    "physicality_passed": true,
+    "rtol": 1e-09,
+    "atol": 1e-11,
+    "physical_tolerance": 1e-07,
+    "calibration_id": null,
+    "calibration_source": null,
+    "calibration_input_unit": "dimensionless",
+    "calibration_component_factors": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "scope": "phenomenological_local_noise_not_device_or_thermal_calibration",
+    "state_repaired": false
+  }
+}

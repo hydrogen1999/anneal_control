@@ -1,0 +1,501 @@
+{
+  "selection_mode": "finite_bank_critic",
+  "n_records": 16,
+  "mean_loss": 0.5592128727730596,
+  "mean_bank_regret": 0.049979877348960144,
+  "records": [
+    {
+      "parent_id": "parent_0005",
+      "selected_index": 10,
+      "candidate_count": 12,
+      "selected_loss": 0.8940781354904175,
+      "best_bank_loss": 0.8774647116661072,
+      "bank_regret": 0.016613423824310303
+    },
+    {
+      "parent_id": "parent_0005",
+      "selected_index": 10,
+      "candidate_count": 12,
+      "selected_loss": 0.8428102135658264,
+      "best_bank_loss": 0.7456450462341309,
+      "bank_regret": 0.09716516733169556
+    },
+    {
+      "parent_id": "parent_0005",
+      "selected_index": 10,
+      "candidate_count": 12,
+      "selected_loss": 0.8904100656509399,
+      "best_bank_loss": 0.8723413944244385,
+      "bank_regret": 0.018068671226501465
+    },
+    {
+      "parent_id": "parent_0005",
+      "selected_index": 10,
+      "candidate_count": 12,
+      "selected_loss": 0.836215078830719,
+      "best_bank_loss": 0.7412535548210144,
+      "bank_regret": 0.09496152400970459
+    },
+    {
+      "parent_id": "parent_0006",
+      "selected_index": 10,
+      "candidate_count": 12,
+      "selected_loss": 0.07016583532094955,
+      "best_bank_loss": 0.05983305349946022,
+      "bank_regret": 0.010332781821489334
+    },
+    {
+      "parent_id": "parent_0006",
+      "selected_index": 10,
+      "candidate_count": 12,
+      "selected_loss": 0.03105306439101696,
+      "best_bank_loss": 0.0007577028591185808,
+      "bank_regret": 0.03029536153189838
+    },
+    {
+      "parent_id": "parent_0006",
+      "selected_index": 10,
+      "candidate_count": 12,
+      "selected_loss": 0.01402118057012558,
+      "best_bank_loss": 0.01402118057012558,
+      "bank_regret": 0.0
+    },
+    {
+      "parent_id": "parent_0006",
+      "selected_index": 10,
+      "candidate_count": 12,
+      "selected_loss": 0.0011559000704437494,
+      "best_bank_loss": 7.95575906522572e-05,
+      "bank_regret": 0.0010763424797914922
+    },
+    {
+      "parent_id": "parent_0008",
+      "selected_index": 10,
+      "candidate_count": 12,
+      "selected_loss": 0.6795766353607178,
+      "best_bank_loss": 0.6753448247909546,
+      "bank_regret": 0.004231810569763184
+    },
+    {
+      "parent_id": "parent_0008",
+      "selected_index": 10,
+      "candidate_count": 12,
+      "selected_loss": 0.598921537399292,
+      "best_bank_loss": 0.5045216083526611,
+      "bank_regret": 0.09439992904663086
+    },
+    {
+      "parent_id": "parent_0008",
+      "selected_index": 10,
+      "candidate_count": 12,
+      "selected_loss": 0.6725165247917175,
+      "best_bank_loss": 0.6686579585075378,
+      "bank_regret": 0.0038585662841796875
+    },
+    {
+      "parent_id": "parent_0008",
+      "selected_index": 10,
+      "candidate_count": 12,
+      "selected_loss": 0.5774347186088562,
+      "best_bank_loss": 0.46469563245773315,
+      "bank_regret": 0.11273908615112305
+    },
+    {
+      "parent_id": "parent_0011",
+      "selected_index": 10,
+      "candidate_count": 12,
+      "selected_loss": 0.7365316152572632,
+      "best_bank_loss": 0.6998932957649231,
+      "bank_regret": 0.03663831949234009
+    },
+    {
+      "parent_id": "parent_0011",
+      "selected_index": 10,
+      "candidate_count": 12,
+      "selected_loss": 0.6697807312011719,
+      "best_bank_loss": 0.5538276433944702,
+      "bank_regret": 0.11595308780670166
+    },
+    {
+      "parent_id": "parent_0011",
+      "selected_index": 10,
+      "candidate_count": 12,
+      "selected_loss": 0.7492386102676392,
+      "best_bank_loss": 0.7033586502075195,
+      "bank_regret": 0.04587996006011963
+    },
+    {
+      "parent_id": "parent_0011",
+      "selected_index": 10,
+      "candidate_count": 12,
+      "selected_loss": 0.6834961175918579,
+      "best_bank_loss": 0.5660321116447449,
+      "bank_regret": 0.11746400594711304
+    }
+  ],
+  "bank_inference_seconds": 0.047110525999414676,
+  "paired_loss_difference_vs_linear": {
+    "mean_difference": 0.006840195507650346,
+    "ci_low": -0.0007593713242030134,
+    "ci_high": 0.016282806620444214,
+    "confidence": 0.95,
+    "n_parents": 4,
+    "n_observations": 16,
+    "n_resamples": 10000,
+    "weighting": "equal_parent_mean"
+  },
+  "global_validation_candidate_index": 2,
+  "mean_global_candidate_loss": 0.5412804478901172,
+  "paired_loss_difference_vs_global": {
+    "mean_difference": 0.017932424882942548,
+    "ci_low": 0.00865740455877255,
+    "ci_high": 0.023777028577562274,
+    "confidence": 0.95,
+    "n_parents": 4,
+    "n_observations": 16,
+    "n_resamples": 10000,
+    "weighting": "equal_parent_mean"
+  },
+  "mean_linear_loss": 0.5523726772654093,
+  "n_test_parents": 4,
+  "training_seed": 0,
+  "scope": "held-out synthetic pilot; no quantum advantage or conference-readiness claim",
+  "offline_reference_cost_note": "true test-bank losses are for scoring only; model selects using predictions",
+  "read_budget_at_deployment": 0,
+  "direct_policy": {
+    "selection": "critic_selected_among_policy_proposals_then_true_simulator_scored",
+    "records": [
+      {
+        "parent_id": "parent_0005",
+        "selected_proposal": 2,
+        "loss": 0.9021523211433312,
+        "reference_bank_regret": 0.024687592631234212,
+        "state_error_diagnostic": 2.7837407662943416e-05,
+        "inference_seconds": 0.0067117689995939145,
+        "offline_scoring_seconds": 0.026494840999475855,
+        "waveform": [
+          0.0,
+          0.19030848145484924,
+          0.375825434923172,
+          0.5242553949356079,
+          0.6059268116950989,
+          0.7683768272399902,
+          0.829766035079956,
+          0.8940325975418091,
+          1.0
+        ]
+      },
+      {
+        "parent_id": "parent_0005",
+        "selected_proposal": 2,
+        "loss": 0.7727309156027321,
+        "reference_bank_regret": 0.02708584335205122,
+        "state_error_diagnostic": 0.00013805182481457304,
+        "inference_seconds": 0.005897129999539175,
+        "offline_scoring_seconds": 0.0829387260000658,
+        "waveform": [
+          0.0,
+          0.18801356852054596,
+          0.37249916791915894,
+          0.5202045440673828,
+          0.6029824018478394,
+          0.766403317451477,
+          0.8286958336830139,
+          0.8941001296043396,
+          1.0
+        ]
+      },
+      {
+        "parent_id": "parent_0005",
+        "selected_proposal": 2,
+        "loss": 0.8986624436122373,
+        "reference_bank_regret": 0.026321058130911124,
+        "state_error_diagnostic": 2.7394523540549582e-05,
+        "inference_seconds": 0.0050065799996446,
+        "offline_scoring_seconds": 0.02878394399976969,
+        "waveform": [
+          0.0,
+          0.1816755086183548,
+          0.36460572481155396,
+          0.511113166809082,
+          0.597474992275238,
+          0.7569276094436646,
+          0.8229296207427979,
+          0.8918909430503845,
+          1.0
+        ]
+      },
+      {
+        "parent_id": "parent_0005",
+        "selected_proposal": 2,
+        "loss": 0.775084913274471,
+        "reference_bank_regret": 0.03383134184699643,
+        "state_error_diagnostic": 0.00013526981886021074,
+        "inference_seconds": 0.005288416000439611,
+        "offline_scoring_seconds": 0.07758301300054882,
+        "waveform": [
+          0.0,
+          0.1798010766506195,
+          0.3616907000541687,
+          0.5072397589683533,
+          0.59458327293396,
+          0.7550162672996521,
+          0.8218740224838257,
+          0.8919059038162231,
+          1.0
+        ]
+      },
+      {
+        "parent_id": "parent_0006",
+        "selected_proposal": 1,
+        "loss": 0.079524767504485,
+        "reference_bank_regret": 0.019691713978599257,
+        "state_error_diagnostic": 2.480262527141971e-05,
+        "inference_seconds": 0.0054958549999355455,
+        "offline_scoring_seconds": 0.027633087000140222,
+        "waveform": [
+          0.0,
+          0.1458532065153122,
+          0.3087834119796753,
+          0.4245220422744751,
+          0.5319253206253052,
+          0.6165216565132141,
+          0.7471458911895752,
+          0.8421225547790527,
+          1.0
+        ]
+      },
+      {
+        "parent_id": "parent_0006",
+        "selected_proposal": 1,
+        "loss": 0.005246769373638216,
+        "reference_bank_regret": 0.004489066520999119,
+        "state_error_diagnostic": 0.00014838000485011815,
+        "inference_seconds": 0.0051325469994480954,
+        "offline_scoring_seconds": 0.08251327899961325,
+        "waveform": [
+          0.0,
+          0.14538204669952393,
+          0.3076482117176056,
+          0.4241549074649811,
+          0.5314555168151855,
+          0.6169555187225342,
+          0.7470970749855042,
+          0.842664897441864,
+          1.0
+        ]
+      },
+      {
+        "parent_id": "parent_0006",
+        "selected_proposal": 1,
+        "loss": 0.026799184357169326,
+        "reference_bank_regret": 0.012778003915734581,
+        "state_error_diagnostic": 3.8938042403451944e-05,
+        "inference_seconds": 0.005167387000255985,
+        "offline_scoring_seconds": 0.026761174999592185,
+        "waveform": [
+          0.0,
+          0.14198771119117737,
+          0.29453256726264954,
+          0.41333335638046265,
+          0.5289044380187988,
+          0.6181110739707947,
+          0.7413053512573242,
+          0.8371642827987671,
+          1.0
+        ]
+      },
+      {
+        "parent_id": "parent_0006",
+        "selected_proposal": 1,
+        "loss": 0.00011586708948974067,
+        "reference_bank_regret": 3.630950166899627e-05,
+        "state_error_diagnostic": 0.0002562426119560762,
+        "inference_seconds": 0.005861281999386847,
+        "offline_scoring_seconds": 0.08021519199974136,
+        "waveform": [
+          0.0,
+          0.14137551188468933,
+          0.294217050075531,
+          0.41311854124069214,
+          0.5285379886627197,
+          0.6186859011650085,
+          0.7416151165962219,
+          0.8379474878311157,
+          1.0
+        ]
+      },
+      {
+        "parent_id": "parent_0008",
+        "selected_proposal": 1,
+        "loss": 0.6978578761026406,
+        "reference_bank_regret": 0.022513042953582918,
+        "state_error_diagnostic": 2.6842487315843696e-05,
+        "inference_seconds": 0.005662845000188099,
+        "offline_scoring_seconds": 0.02681677300006413,
+        "waveform": [
+          0.0,
+          0.14460738003253937,
+          0.32019853591918945,
+          0.43124091625213623,
+          0.5317339897155762,
+          0.6113946437835693,
+          0.7510733604431152,
+          0.8425902724266052,
+          1.0
+        ]
+      },
+      {
+        "parent_id": "parent_0008",
+        "selected_proposal": 1,
+        "loss": 0.5459790473409527,
+        "reference_bank_regret": 0.04145742033867372,
+        "state_error_diagnostic": 0.00016148127877012894,
+        "inference_seconds": 0.005386558999816771,
+        "offline_scoring_seconds": 0.08273482299955504,
+        "waveform": [
+          0.0,
+          0.14436082541942596,
+          0.31900185346603394,
+          0.431194007396698,
+          0.531632125377655,
+          0.6123104095458984,
+          0.7510809898376465,
+          0.8431551456451416,
+          1.0
+        ]
+      },
+      {
+        "parent_id": "parent_0008",
+        "selected_proposal": 1,
+        "loss": 0.6956523255201619,
+        "reference_bank_regret": 0.026994395738287436,
+        "state_error_diagnostic": 2.6377879960480647e-05,
+        "inference_seconds": 0.005303695000293374,
+        "offline_scoring_seconds": 0.026344470999902114,
+        "waveform": [
+          0.0,
+          0.13992159068584442,
+          0.3208504319190979,
+          0.4305766820907593,
+          0.5347150564193726,
+          0.6169739365577698,
+          0.7566818594932556,
+          0.8491696119308472,
+          1.0
+        ]
+      },
+      {
+        "parent_id": "parent_0008",
+        "selected_proposal": 1,
+        "loss": 0.5162905662168671,
+        "reference_bank_regret": 0.05159494773893125,
+        "state_error_diagnostic": 0.00015320500462706008,
+        "inference_seconds": 0.00970757999948546,
+        "offline_scoring_seconds": 0.11683848099983152,
+        "waveform": [
+          0.0,
+          0.1394338458776474,
+          0.3196598291397095,
+          0.43035727739334106,
+          0.5344107151031494,
+          0.6178199052810669,
+          0.7565898895263672,
+          0.8495783805847168,
+          1.0
+        ]
+      },
+      {
+        "parent_id": "parent_0011",
+        "selected_proposal": 2,
+        "loss": 0.7682215431188462,
+        "reference_bank_regret": 0.06832825262332898,
+        "state_error_diagnostic": 2.78557103462204e-05,
+        "inference_seconds": 0.007592756000121881,
+        "offline_scoring_seconds": 0.03696393799964426,
+        "waveform": [
+          0.0,
+          0.19046609103679657,
+          0.372243195772171,
+          0.5176565647125244,
+          0.6045248508453369,
+          0.7563266754150391,
+          0.8221541047096252,
+          0.8912564516067505,
+          1.0
+        ]
+      },
+      {
+        "parent_id": "parent_0011",
+        "selected_proposal": 2,
+        "loss": 0.6270162926738798,
+        "reference_bank_regret": 0.07318864197889785,
+        "state_error_diagnostic": 0.00013591141811058858,
+        "inference_seconds": 0.00548207999963779,
+        "offline_scoring_seconds": 0.08480839900039427,
+        "waveform": [
+          0.0,
+          0.18806850910186768,
+          0.3687695860862732,
+          0.5136940479278564,
+          0.6016697883605957,
+          0.7543610334396362,
+          0.821108877658844,
+          0.8913577198982239,
+          1.0
+        ]
+      },
+      {
+        "parent_id": "parent_0011",
+        "selected_proposal": 2,
+        "loss": 0.77966311809545,
+        "reference_bank_regret": 0.07630448712514315,
+        "state_error_diagnostic": 2.754706592501028e-05,
+        "inference_seconds": 0.005110046000481816,
+        "offline_scoring_seconds": 0.028869994999695336,
+        "waveform": [
+          0.0,
+          0.18285781145095825,
+          0.3686622977256775,
+          0.5115336179733276,
+          0.6001963019371033,
+          0.7527436017990112,
+          0.8203064203262329,
+          0.8907055854797363,
+          1.0
+        ]
+      },
+      {
+        "parent_id": "parent_0011",
+        "selected_proposal": 2,
+        "loss": 0.6505533428718624,
+        "reference_bank_regret": 0.08452120363858684,
+        "state_error_diagnostic": 0.00013372008291570491,
+        "inference_seconds": 0.00720756899954722,
+        "offline_scoring_seconds": 0.08073281799988763,
+        "waveform": [
+          0.0,
+          0.1807967722415924,
+          0.3654302954673767,
+          0.5076003074645996,
+          0.597283124923706,
+          0.7506183385848999,
+          0.8190736174583435,
+          0.8906719088554382,
+          1.0
+        ]
+      }
+    ],
+    "mean_loss": 0.5463469558686385,
+    "paired_vs_linear": {
+      "mean_difference": -0.006025721396770885,
+      "ci_low": -0.010571994032128426,
+      "ci_high": -0.0013209377675298464,
+      "confidence": 0.95,
+      "n_parents": 4,
+      "n_observations": 16,
+      "n_resamples": 10000,
+      "weighting": "equal_parent_mean"
+    }
+  }
+}

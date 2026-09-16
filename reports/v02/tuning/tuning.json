@@ -1,0 +1,22 @@
+{
+  "config_hash": "15d92c41509ab0a88a639cf1a41e86ef7b3bdc00d4050951f101c5b042f780c9",
+  "selection": "validation_only_equal_seed_mean_bank_regret",
+  "trials": [
+    {
+      "trial": 0,
+      "mean_validation_regret": 0.0717233419418335,
+      "seed_regrets": [
+        0.0717233419418335
+      ]
+    },
+    {
+      "trial": 1,
+      "mean_validation_regret": 0.0717233419418335,
+      "seed_regrets": [
+        0.0717233419418335
+      ]
+    }
+  ],
+  "selected_trial": 0,
+  "test_evaluated": false
+}
