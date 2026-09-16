@@ -261,6 +261,13 @@ def sweep_control_frontier(
                 "retain_full_trials": retain_full_trials}
 
     if dry_run:
+        # The plan reports the real record count, so it needs the real dataset. A
+        # plan derived from a guessed count would be fiction, so say what is
+        # missing instead of inventing a number.
+        if not (Path(data_dir) / "manifest.json").exists():
+            raise FileNotFoundError(
+                f"no dataset manifest at {Path(data_dir) / 'manifest.json'}; a frontier plan counts "
+                "actual records, so generate the dataset first (annealctrl generate)")
         records = load_records(data_dir, split)
         if record_ids is not None:
             records = [r for r in records if str(np.asarray(r["record_id"]).item()) in set(record_ids)]
@@ -271,6 +278,8 @@ def sweep_control_frontier(
                 "settings": settings,
                 "note": "requested workload only; no control was evaluated and no output written"}
 
+    if not (Path(data_dir) / "manifest.json").exists():
+        raise FileNotFoundError(f"no dataset manifest at {Path(data_dir) / 'manifest.json'}")
     records = load_records(data_dir, split)
     if record_ids is not None:
         wanted = set(record_ids)

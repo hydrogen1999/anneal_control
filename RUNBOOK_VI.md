@@ -202,3 +202,95 @@ tensor-network large-scale teacher, DDP hay tự động QPU submission.
 
 Trong scope hiện tại, các bước nối pipeline đã có code. Công việc còn lại là
 cấu hình, chạy thực nghiệm, đo trên server và kiểm tra giả thuyết bằng evidence thật.
+
+## 11. Gate G2 và G3: hai bộ đo quyết định claim (v0.3)
+
+v0.2 sinh dữ liệu, train năm ablation và đánh giá held-out. Nó **không** trả lời
+được hai câu quyết định paper có contribution hay không. v0.3 thêm đúng hai bộ đo
+đó. Nó không thêm kết quả nào; mọi số chạy trên laptop là kiểm chứng phần mềm.
+
+### G2 — có headroom điều khiển thật không?
+
+```bash
+python -m annealctrl control-sweep --data runs/research_v1/data \
+  --config configs/frontier_research.json --output runs/frontier_val --report
+```
+
+`headroom = loss(linear cùng runtime) − loss(best found)` trên các control family
+với **cùng budget** và **waveform đúng** (không resample 9 knots).
+
+Điều quan trọng nhất: headroom nhỏ hơn chính sai số của integrator bị **censor**,
+không được báo là hiệu ứng dương nhỏ. `score_schedule` trả
+`loss_ambiguity_indicator`; nếu `headroom ≤ margin × (ambiguity_linear +
+ambiguity_best)` thì record được đánh `censored_numerical`, giữ nguyên trong file
+nhưng loại khỏi mọi thống kê headroom. Nếu toàn bộ population bị censor,
+`verdict = no_resolved_headroom` — đó là **một kết quả**, không phải lỗi. Cách xử
+lý đúng là đổi distribution hoặc siết tolerance, **không** hạ `ambiguity_margin`.
+
+Báo cáo dùng quantile và đuôi phân phối, không chỉ mean, và bootstrap theo
+logical parent. Ba audit được ghi rõ: linear reference có nhất quán giữa các
+family không, family nào vứt bỏ chính incumbent linear của nó, và những task có
+linear reference quá nhỏ (tỉ lệ tương đối bị giữ lại `null`).
+
+Test split cần `--allow-test-adaptation`; cờ này **chỉ có trên dòng lệnh**, config
+không bật được, vì đó là online adaptation và phải báo cáo đúng như vậy.
+
+### G2b — screening: độ khó là thứ đo được
+
+```bash
+python -m annealctrl screen --fit-sweep runs/frontier_train runs/frontier_val \
+  --apply-sweep runs/frontier_test --quantile 0.75 --output runs/screen.json
+```
+
+Ngưỡng chỉ được fit trên parent train/validation (fit trên test sẽ raise), và đại
+lượng screening bị giới hạn ở control gain đo được. Subset chọn ra là
+**conditional stress benchmark**, không phải mẫu đại diện cho deployment.
+
+### G3 — embedding có đổi control được ưa thích không?
+
+```bash
+python -m annealctrl intervention-sweep \
+  --config configs/intervention_research.json --output runs/interventions --report
+```
+
+Mỗi pair đổi **đúng một** yếu tố đã khai báo (`geometry`, `ports`,
+`field_allocation`, `chain_strength`, hoặc `chain_length` khi khai báo đổi size).
+Sau khi dựng, code kiểm tra graph vật lý có đổi đúng như khai báo không: pair
+`geometry` mà ports bị dịch sẽ bị từ chối, không phải cảnh báo.
+
+κ đi vào cùng cap hệ số với problem coupler nên nó kéo theo α. Vì vậy mọi pair
+`chain_strength` (và bất kỳ pair nào làm α đổi) sinh **hai arm**:
+`total_compiled_effect` (mỗi bên dùng α của nó) và `scale_controlled` (cả hai
+dùng một α chung bảo thủ). Cả hai đều được báo; aggregation từ chối gộp chúng.
+
+Bằng chứng là **cross-control matrix 2×2**: control tốt nhất của A chạy trên B và
+ngược lại. Transfer penalty giữ nguyên dấu, không clip. Một "swap" đòi hỏi **cả
+hai chiều** đều vượt ambiguity của chính nó; chỉ một chiều thì báo `one_sided`,
+không gọi là đảo ưu tiên.
+
+### Chạy nguyên campaign trên server
+
+```bash
+# apollo — không có scheduler, chạy nền bằng nohup
+bash scripts/launch_apollo.sh ~/runs/campaign_v1
+
+# goose — SLURM (sửa --partition/--account trước khi submit lần đầu)
+sbatch --export=ALL,OUTPUT=$HOME/runs/campaign_v1 scripts/launch_goose.slurm
+
+# lập kế hoạch ngân sách trước
+bash scripts/run_campaign.sh --output ~/runs/campaign_v1 --skip-data --dry-run
+```
+
+Không stage nào cần GPU: G2 và G3 là công việc propagation trên CPU. Chạy lại
+cùng OUTPUT sẽ **resume**, không làm lại từ đầu. Đổi budget hay tolerance giữa
+hai lần chạy sẽ bị từ chối — hai run đó không so sánh được, hãy dùng thư mục mới.
+
+Theo dõi tiến trình:
+
+```bash
+jq -c 'select(.event=="unit_end") | {unit, wall_seconds}' runs/*/telemetry.jsonl | tail
+jq '{planned, completed, skipped, failed, status}' runs/frontier_val/manifest.json
+```
+
+Chi tiết: `docs/g2_headroom.md`, `docs/g3_interventions.md`,
+`docs/observability.md`, và các quyết định kiến trúc trong `docs/decisions/`.

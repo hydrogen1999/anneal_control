@@ -397,3 +397,10 @@ def test_frontier_config_fills_declared_defaults():
     assert sweep["families"] == list(("linear", "one_window", "two_window", "eight_bin", "pause"))
     assert sweep["ambiguity_margin"] == 1.0
     assert report["bootstrap_resamples"] == 10000
+
+
+def test_sweep_names_the_missing_dataset_manifest(tmp_path):
+    for dry in (True, False):
+        with pytest.raises(FileNotFoundError, match="manifest.json"):
+            sweep_control_frontier(tmp_path / "absent", output=tmp_path / "sweep",
+                                   split="train", families=("linear",), budget=1, dry_run=dry)

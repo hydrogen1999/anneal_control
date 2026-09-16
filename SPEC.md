@@ -123,7 +123,7 @@ src/annealctrl/
   interventions.py    NEW  G3: paired embeddings + cross-control matrices
   figures.py          NEW  Type-3-free Figure 3 / Figure 4 rendering
   sweeps.py           NEW  resumable record-level sweep driver shared by G2/G3
-  generation.py       EDIT one optional `scale_override` argument, default None
+  generation.py       EDIT two optional arguments, both default None (see below)
   workflow_cli.py     EDIT five new subcommands
 tests/
   test_telemetry.py test_headroom.py test_screening.py
@@ -138,9 +138,19 @@ scripts/
   launch_apollo.sh launch_goose.slurm                            NEW
 ```
 
-`generation.py` is the only pre-existing science module touched, and only by an
-additive optional keyword. `physics.py`, `spectral.py`, `learning.py`,
+`generation.py` is the only pre-existing science module touched, and only by
+additive optional keywords. `physics.py`, `spectral.py`, `learning.py`,
 `models.py`, `pipeline.py` are **not** modified.
+
+**Revision 2026-09-16, during T4.2.** The spec originally declared `scale_override`
+as the single edit to `generation.py`. Building the geometry intervention exposed
+a second, unrelated confound: `synthetic_lift` drew the chain edges and the
+boundary ports from one random stream, so a `random_tree` shape consumed draws a
+`path` did not and silently relocated the ports — making every "geometry"
+intervention also a port intervention. `synthetic_lift` therefore gained an
+optional `port_rng`, on the same additive terms. A second addition,
+`scripts/run_campaign.sh`, factors the campaign stages out of the two launchers so
+the sequence lives in one place.
 
 ---
 

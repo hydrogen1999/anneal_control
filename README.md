@@ -33,6 +33,39 @@ seeds. Three epochs exercise the pipeline; they are not research hyperparameters
 | `evaluations/` | Bank/direct selections, true simulator scores and costs |
 | `paper/` | Markdown/LaTeX tables, JSON values, editable SVG/PNG figures |
 
+## Measurement gates G2 and G3 (v0.3)
+
+Two instruments decide whether the research claims survive, and both are built so
+that "no measurable effect" is a reachable, reportable outcome.
+
+```bash
+# G2: does instance-specific control choice buy anything above the numerics?
+python -m annealctrl control-sweep --data runs/my_smoke/data \
+  --config configs/frontier_smoke.json --output runs/frontier_val --report
+
+# G2b: qualify a stress subset from train/validation headroom only.
+python -m annealctrl screen --fit-sweep runs/frontier_train runs/frontier_val \
+  --apply-sweep runs/frontier_test --output runs/screen.json
+
+# G3: does changing one embedding factor change the PREFERRED control?
+python -m annealctrl intervention-sweep \
+  --config configs/intervention_smoke.json --output runs/interventions --report
+
+# Whole campaign, resumable, on a remote host.
+bash scripts/launch_apollo.sh ~/runs/campaign_v1            # no scheduler
+sbatch --export=ALL,OUTPUT=$HOME/runs/campaign_v1 scripts/launch_goose.slurm
+```
+
+Headroom smaller than the integrator's own loss ambiguity is **censored**, not
+reported as a small positive effect. A swap of the preferred control requires
+both transfer directions to be decisive. Chain-strength interventions always
+report a scale-controlled arm beside the total compiled effect, because chain
+strength moves the programmed scale as well as the penalty.
+
+Read `docs/g2_headroom.md`, `docs/g3_interventions.md` and `docs/observability.md`
+before launching a campaign; `SPEC.md`, `PLAN.md` and `docs/decisions/` record
+what was built and why.
+
 ## Configurations and stages
 
 Edit `configs/data_research.json` for distributions/physics/label budgets and

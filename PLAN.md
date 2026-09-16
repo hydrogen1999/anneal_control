@@ -127,7 +127,9 @@ generation.py scale_override ──► interventions.py
 ## Phase 4 — G3: paired embedding interventions
 
 - [x] **T4.1** `generation.py` additive `scale_override` on `compile_embedding`,
-  plus `conservative_common_scale(...)` helper.
+  plus `conservative_common_scale(...)` helper, **and** an additive `port_rng` on
+  `synthetic_lift` (see the SPEC revision note: without it a geometry change also
+  relocates the ports).
   - Acceptance: with an override, `E_phys(z∘π) = α E_logical(z) + C_chain` still
     holds exhaustively on small instances; an override that breaches the declared
     caps is refused; driver and runtime untouched.
@@ -189,8 +191,9 @@ generation.py scale_override ──► interventions.py
 
 ## Phase 6 — Campaign runner and launchers
 
-- [x] **T6.1** `scripts/launch_apollo.sh` (no scheduler; `nohup`, pinned threads,
-  `doctor` precheck, resumable stages) and `scripts/launch_goose.slurm` (SLURM,
+- [x] **T6.1** `scripts/run_campaign.sh` (shared stage sequence),
+  `scripts/launch_apollo.sh` (no scheduler; `nohup`, pinned threads, `doctor`
+  precheck, resumable stages) and `scripts/launch_goose.slurm` (SLURM,
   partition/account left as required edits).
   - Acceptance: both refuse to start without an explicit output directory; both
     run `doctor` first; neither assumes CUDA.
