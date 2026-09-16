@@ -138,6 +138,8 @@ def main(argv):
     frontier.add_argument("--output")
     frontier.add_argument("--bootstrap-resamples", type=int, default=10000)
     frontier.add_argument("--seed", type=int, default=0)
+    frontier.add_argument("--figures", action="store_true", help="also render Figure 3 (Type-3-free)")
+    frontier.add_argument("--venue", default="neurips", help="figure column geometry")
     screen = sub.add_parser("screen", help="G2: qualify a stress subset using train/validation headroom only")
     screen.add_argument("--fit-sweep", nargs="+", required=True,
                         help="train and/or validation control-sweep directories used to FIT the threshold")
@@ -159,6 +161,8 @@ def main(argv):
     ireport.add_argument("--output")
     ireport.add_argument("--bootstrap-resamples", type=int, default=10000)
     ireport.add_argument("--seed", type=int, default=0)
+    ireport.add_argument("--figures", action="store_true", help="also render Figure 4 (Type-3-free)")
+    ireport.add_argument("--venue", default="neurips", help="figure column geometry")
     opened = sub.add_parser("simulate-open", help="small independent Lindblad model, not a calibrated QPU")
     opened.add_argument("--record", required=True)
     opened.add_argument("--schedule", required=True)
@@ -248,7 +252,13 @@ def main(argv):
                                   bootstrap_resamples=args.bootstrap_resamples, seed=args.seed)
         print(json.dumps({key: summary[key] for key in
                           ("split", "n_records", "n_parents", "censored_fraction", "verdict")}, indent=2))
-        print(f"Report: {Path(args.output or Path(args.sweep) / 'report') / 'FRONTIER.md'}")
+        destination = Path(args.output or Path(args.sweep) / "report")
+        if args.figures:
+            from .figures import figure_frontier
+            from .sweeps import load_rows
+            rows = [row["result"] for row in load_rows(args.sweep) if row.get("status") == "ok"]
+            print(json.dumps(figure_frontier(rows, destination / "figure3_frontier", venue=args.venue), indent=2))
+        print(f"Report: {destination / 'FRONTIER.md'}")
     elif args.command == "screen":
         from .screening import screen_records
         _save(args.output, screen_records(args.fit_sweep, args.apply_sweep,
@@ -272,7 +282,13 @@ def main(argv):
                                       bootstrap_resamples=args.bootstrap_resamples, seed=args.seed)
         print(json.dumps({key: summary[key] for key in
                           ("n_pairs", "n_parents", "censored_fraction", "swap_rate", "verdict")}, indent=2))
-        print(f"Report: {Path(args.output or Path(args.sweep) / 'report') / 'INTERVENTIONS.md'}")
+        destination = Path(args.output or Path(args.sweep) / "report")
+        if args.figures:
+            from .figures import figure_interventions
+            from .sweeps import load_rows
+            rows = [row["result"] for row in load_rows(args.sweep) if row.get("status") == "ok"]
+            print(json.dumps(figure_interventions(rows, destination / "figure4_interventions", venue=args.venue), indent=2))
+        print(f"Report: {destination / 'INTERVENTIONS.md'}")
     elif args.command == "control-benchmark":
         from .benchmarking import benchmark_record_controls
         _save(args.output, benchmark_record_controls(_record(args), budget_per_family=args.budget, seed=args.seed,
