@@ -277,14 +277,15 @@ def intervention_row(parent, penalty_a, penalty_b, *, factor="geometry",
             "physical_size_matched": True, "scale_moved": False}
 
 
-def test_aggregate_reports_swap_rate_over_resolved_pairs_only():
+def test_aggregate_reports_the_reversal_rate_against_every_pair():
     rows = [intervention_row("p0", 0.10, 0.12),
             intervention_row("p1", 0.08, 0.09),
             intervention_row("p2", 1e-9, 1e-9, status="censored_numerical", swapped=False)]
     summary = aggregate_interventions(rows)
     assert summary["censored_fraction"] == pytest.approx(1 / 3)
-    assert summary["swap_rate"] == pytest.approx(1.0)
-    assert summary["swap_rate_denominator"] == 2
+    assert summary["decisive_reversals"] == 2
+    assert summary["decisive_reversal_rate"] == pytest.approx(2 / 3)
+    assert summary["decisive_reversal_denominator"] == 3
 
 
 def test_aggregate_separates_scale_arms_and_never_pools_them():
@@ -319,7 +320,7 @@ def test_aggregate_of_a_fully_censored_population_says_no_swap_measured():
             for i in range(3)]
     summary = aggregate_interventions(rows)
     assert summary["verdict"] == "no_resolved_preference_change"
-    assert summary["swap_rate"] is None
+    assert summary["decisive_reversal_rate"] == pytest.approx(0.0)
 
 
 def test_aggregate_refuses_to_pool_size_matched_and_size_changed_pairs():
@@ -425,6 +426,7 @@ def test_intervention_report_writes_markdown_with_the_scale_arms_separated(tmp_p
     text = (tmp_path / "sweep" / "report" / "INTERVENTIONS.md").read_text()
     assert "scale_controlled" in text and "total_compiled_effect" in text
     assert "closed-system simulator" in text
+    assert "1 by construction" in text, "the tautology must be stated where it is reported"
     assert set(summary["by_scale_arm"]) == {"total_compiled_effect", "scale_controlled"}
 
 
@@ -515,3 +517,35 @@ def test_pair_ids_stay_filesystem_safe_for_numeric_and_list_changes():
     for pair in [*built, *lengths]:
         assert "/" not in pair.pair_id and " " not in pair.pair_id
         assert all(c.isalnum() or c in "_-." for c in pair.pair_id)
+
+
+def test_swap_rate_conditional_on_resolved_is_one_by_construction():
+    # 'resolved' means BOTH transfer penalties exceed their ambiguity, which can
+    # only happen when each arm's own control beats the imported one - that IS a
+    # swap. So P(swap | resolved) == 1 identically, and quoting it as a headline
+    # would present a tautology as a finding.
+    rows = [intervention_row(f"p{i}", 0.1, 0.1, status="resolved", swapped=True) for i in range(4)]
+    rows += [intervention_row(f"q{i}", 0.1, 1e-9, status="one_sided", swapped=False) for i in range(3)]
+    rows += [intervention_row(f"r{i}", 1e-9, 1e-9, status="censored_numerical", swapped=False)
+             for i in range(3)]
+    summary = aggregate_interventions(rows)
+
+    assert summary["swap_consistency_check"] == pytest.approx(1.0)
+    assert summary["swap_consistency_holds"] is True
+    # The reportable quantity is unconditional: 4 decisive reversals out of 10 pairs.
+    assert summary["decisive_reversal_rate"] == pytest.approx(0.4)
+    assert summary["decisive_reversal_denominator"] == 10
+
+
+def test_a_resolved_pair_that_is_not_swapped_breaks_the_consistency_check():
+    rows = [intervention_row("p0", 0.1, 0.1, status="resolved", swapped=True),
+            intervention_row("p1", 0.1, 0.1, status="resolved", swapped=False)]
+    summary = aggregate_interventions(rows)
+    assert summary["swap_consistency_holds"] is False
+
+
+def test_verdict_uses_the_unconditional_reversal_rate():
+    censored = [intervention_row(f"p{i}", 1e-9, 1e-9, status="censored_numerical", swapped=False)
+                for i in range(3)]
+    assert aggregate_interventions(censored)["verdict"] == "no_resolved_preference_change"
+    assert aggregate_interventions(censored)["decisive_reversal_rate"] == pytest.approx(0.0)

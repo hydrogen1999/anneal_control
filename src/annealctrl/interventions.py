@@ -610,12 +610,25 @@ def _penalty_block(rows: Sequence[Mapping[str, Any]], *, bootstrap_resamples: in
     return block
 
 
-def _swap_stats(rows: Sequence[Mapping[str, Any]]) -> tuple[float | None, int]:
-    eligible = [row for row in rows if row.get("resolution_status") == "resolved"]
-    if not eligible:
-        return None, 0
-    swaps = sum(1 for row in eligible if row.get("preferred_control_swapped"))
-    return swaps / len(eligible), len(eligible)
+def _reversal_stats(rows: Sequence[Mapping[str, Any]]) -> dict:
+    """Unconditional decisive-reversal rate, plus a consistency check.
+
+    ``resolution_status == 'resolved'`` already means both transfer penalties
+    exceed their own ambiguity, and that can only happen when each arm's own
+    control beats the imported one — which *is* a preference reversal. So
+    P(swap | resolved) is 1 by construction, and quoting it would present a
+    tautology as a finding. The reportable quantity is therefore the fraction of
+    **all** pairs that reach a decisive reversal; the conditional ratio is kept
+    only as an internal check that should always be 1.0.
+    """
+    resolved = [row for row in rows if row.get("resolution_status") == "resolved"]
+    swaps = sum(1 for row in resolved if row.get("preferred_control_swapped"))
+    conditional = None if not resolved else swaps / len(resolved)
+    return {"decisive_reversals": len(resolved),
+            "decisive_reversal_rate": (len(resolved) / len(rows)) if rows else None,
+            "decisive_reversal_denominator": len(rows),
+            "swap_consistency_check": conditional,
+            "swap_consistency_holds": conditional is None or abs(conditional - 1.0) < 1e-12}
 
 
 def aggregate_interventions(rows: Sequence[Mapping[str, Any]], *, bootstrap_resamples: int = 2000,
@@ -639,7 +652,7 @@ def aggregate_interventions(rows: Sequence[Mapping[str, Any]], *, bootstrap_resa
         raise ValueError(f"unknown resolution_status values: {sorted(statuses - allowed)}")
 
     censored = [row for row in rows if row["resolution_status"] == "censored_numerical"]
-    swap_rate, denominator = _swap_stats(rows)
+    reversal = _reversal_stats(rows)
     arms = sorted({str(row.get("scale_arm")) for row in rows})
     factors = sorted({str(row.get("factor")) for row in rows})
 
@@ -650,23 +663,27 @@ def aggregate_interventions(rows: Sequence[Mapping[str, Any]], *, bootstrap_resa
         "n_censored_pairs": len(censored),
         "censored_fraction": len(censored) / len(rows),
         "n_one_sided_pairs": sum(1 for row in rows if row["resolution_status"] == "one_sided"),
-        "swap_rate": swap_rate, "swap_rate_denominator": denominator,
+        **reversal,
         "identical_waveform_pairs": sum(1 for row in rows if row.get("selected_waveform_identical")),
         "physical_size_matched": sizes.pop(),
         "by_scale_arm": {arm: {"transfer_penalty": _penalty_block(
             [row for row in rows if row.get("scale_arm") == arm],
             bootstrap_resamples=bootstrap_resamples, seed=seed),
-            "swap_rate": _swap_stats([row for row in rows if row.get("scale_arm") == arm])[0]}
+            **{k: v for k, v in _reversal_stats(
+                [row for row in rows if row.get("scale_arm") == arm]).items()
+               if k in {"decisive_reversals", "decisive_reversal_rate", "decisive_reversal_denominator"}}}
             for arm in arms},
         "by_factor": {factor: {"transfer_penalty": _penalty_block(
             [row for row in rows if row.get("factor") == factor],
             bootstrap_resamples=bootstrap_resamples, seed=seed),
-            "swap_rate": _swap_stats([row for row in rows if row.get("factor") == factor])[0]}
+            **{k: v for k, v in _reversal_stats(
+                [row for row in rows if row.get("factor") == factor]).items()
+               if k in {"decisive_reversals", "decisive_reversal_rate", "decisive_reversal_denominator"}}}
             for factor in factors},
         "factor_counts": dict(sorted(Counter(str(row.get("factor")) for row in rows).items())),
         "total_objective_calls": int(sum(int(row.get("objective_calls", 0)) for row in rows)),
-        "verdict": "no_resolved_preference_change" if swap_rate is None else
-                   ("preference_changes_measured" if swap_rate > 0 else "no_preference_change_at_resolution"),
+        "verdict": ("no_resolved_preference_change" if not reversal["decisive_reversals"]
+                    else "preference_changes_measured"),
         "scope": ("paired interventions inside the declared closed-system simulator; transfer penalties "
                   "are signed and unclipped, and scale arms are reported separately"),
     }
@@ -727,48 +744,53 @@ def _intervention_markdown(summary: Mapping[str, Any]) -> str:
         f"({summary['censored_fraction']:.1%})",
         f"- One-sided (decisive in a single direction): {summary['n_one_sided_pairs']}",
         f"- Identical selected waveform on both arms: {summary['identical_waveform_pairs']}",
-        f"- Preferred-control swap rate: {_rate(summary['swap_rate'])} "
-        f"over {summary['swap_rate_denominator']} resolved pairs",
+        f"- Decisive preference reversals: {summary['decisive_reversals']} of "
+        f"{summary['decisive_reversal_denominator']} pairs "
+        f"({_rate(summary['decisive_reversal_rate'])})",
         f"- Failed units excluded: {summary.get('failed_units', 0)}",
         f"- Verdict: **{summary['verdict']}**",
         "",
         "## Transfer penalty by scale arm",
         "",
-        "| scale arm | pairs | incl. | swaps / resolved | mean | p50 | p90 | bootstrap CI |",
+        "| scale arm | pairs | incl. | reversals | mean | p50 | p90 | bootstrap CI |",
         "|---|---:|---:|---:|---:|---:|---:|---|",
     ]
     for arm, block in summary["by_scale_arm"].items():
         penalty = block["transfer_penalty"]
         ci = penalty["parent_bootstrap_ci"]
-        rate = block["swap_rate"]
-        swaps = "n/a" if rate is None else f"{round(rate * penalty['n_resolved_pairs'])}/{penalty['n_resolved_pairs']}"
+        reversals = (f"{block['decisive_reversals']}/{block['decisive_reversal_denominator']} "
+                     f"({_rate(block['decisive_reversal_rate'])})")
         lines.append(
-            f"| `{arm}` | {penalty['n_pairs']} | {penalty['n_included_pairs']} | {swaps} | "
+            f"| `{arm}` | {penalty['n_pairs']} | {penalty['n_included_pairs']} | {reversals} | "
             f"{_cell(penalty['mean'])} | {_cell(penalty['quantiles']['p50'])} | "
             f"{_cell(penalty['quantiles']['p90'])} | "
             f"[{_cell(ci['low'], 4)}, {_cell(ci['high'], 4)}] |")
     lines += ["", "## Transfer penalty by factor", "",
-              "| factor | pairs | incl. | swaps / resolved | mean | p90 |",
+              "| factor | pairs | incl. | reversals | mean | p90 |",
               "|---|---:|---:|---:|---:|---:|"]
     for factor, block in summary["by_factor"].items():
         penalty = block["transfer_penalty"]
-        rate = block["swap_rate"]
-        swaps = "n/a" if rate is None else f"{round(rate * penalty['n_resolved_pairs'])}/{penalty['n_resolved_pairs']}"
-        lines.append(f"| `{factor}` | {penalty['n_pairs']} | {penalty['n_included_pairs']} | {swaps} | "
+        reversals = (f"{block['decisive_reversals']}/{block['decisive_reversal_denominator']} "
+                     f"({_rate(block['decisive_reversal_rate'])})")
+        lines.append(f"| `{factor}` | {penalty['n_pairs']} | {penalty['n_included_pairs']} | {reversals} | "
                      f"{_cell(penalty['mean'])} | {_cell(penalty['quantiles']['p90'])} |")
     lines += [
         "",
         "## Reading this table",
         "",
-        "- A **swap** requires both directions to be decisive: importing B's control into A "
-        "must cost more than A's own numerical ambiguity, and vice versa. A pair decisive in "
-        "only one direction is reported as `one_sided`, not as a preference reversal.",
+        "- A **decisive reversal** requires both directions to be decisive: importing B's "
+        "control into A must cost more than A's own numerical ambiguity, and vice versa. A pair "
+        "decisive in only one direction is reported as `one_sided`, not as a reversal.",
+        "- The reversal rate is quoted against **all** pairs. The conditional ratio "
+        "P(reversal | resolved) is 1 by construction - both penalties exceeding their ambiguity "
+        "already implies each arm's own control wins on its own arm - so it is kept only as an "
+        "internal consistency check and never reported as a finding.",
         "- `total_compiled_effect` uses each arm's own programmed scale, as a device would. "
         "`scale_controlled` compiles both arms at one conservative common scale so the "
         "intervened factor moves and the global H_Z scale does not. They answer different "
         "questions and are never pooled.",
         "- **pairs** is every pair; **incl.** is those decisive in at least one direction, which is the population behind the penalty statistics; **swaps / resolved** counts pairs decisive in BOTH directions. The three columns are different populations and the swap fraction must be read against its own denominator, not against `incl.`.",
-        "- A zero swap rate with a well-resolved population is a result: it says the "
+        "- A zero reversal rate with a well-resolved population is a result: it says the "
         "intervention does not change which control is preferred on this distribution.",
         "",
         f"Total objective calls charged: {summary['total_objective_calls']}.",
