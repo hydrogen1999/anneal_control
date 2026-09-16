@@ -58,9 +58,25 @@ class Schedule:
         return np.diff(self.s_knots) / (runtime * np.diff(self.tau_knots))
 
     def validate_slope(self, runtime: float, max_slope: float) -> None:
+        """Reject a schedule that exceeds ds/dt by more than floats can resolve.
+
+        The tolerance is per segment and conditioning-aware. A segment's slope is
+        ``Delta_s / (T * Delta_tau)``, and the knots are built by cumulative
+        summation, so ``Delta_tau`` carries an absolute error of a few machine
+        epsilons regardless of how small it is. Its relative error is therefore
+        ``~eps / Delta_tau``, and a fixed 1e-12 gate rejects a narrow segment for
+        being *unrepresentable* rather than infeasible.
+
+        This is not hypothetical: a fixed gate aborted 9 of 3456 frontier units
+        on a real run, on window schedules whose final segment had
+        ``Delta_tau ~ 1e-7`` and exceeded the bound by 1.2e-9. Wide segments keep
+        an essentially exact gate (a 1% violation still fails at ``Delta_tau=0.5``).
+        """
         if not np.isfinite(max_slope) or max_slope <= 0:
             raise ValueError("max_slope must be finite and positive")
-        if np.any(self.slopes(runtime) > max_slope * (1 + 1e-12)):
+        widths = np.diff(self.tau_knots)
+        allowance = 1e-12 + 8 * np.finfo(float).eps / widths
+        if np.any(self.slopes(runtime) > max_slope * (1 + allowance)):
             raise ValueError("schedule violates maximum ds/dt")
 
     def to_dict(self) -> dict:

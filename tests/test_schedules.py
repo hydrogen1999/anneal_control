@@ -81,3 +81,45 @@ def test_inverse_density():
     np.testing.assert_allclose(scaled.tau_knots, schedule.tau_knots)
     with pytest.raises(ValueError):
         inverse_density_schedule([0, 0.5, 1], [1, 0, 1])
+
+
+# --- slope validation must not demand more precision than floats provide ------
+
+# Captured verbatim from a real apollo failure: 9 of 3456 frontier units aborted
+# with "schedule violates maximum ds/dt". window_schedule produced this waveform;
+# its final segment has tau-width 1.36e-7 built by cumsum, so tau[-2] carries
+# ~5*eps of accumulated rounding and the segment slope inherits a relative error
+# of ~8e-9. The observed overshoot is 1.22e-9 -- inside roundoff, not infeasible.
+APOLLO_TAU = [0.0, 0.003889687944180784, 0.11229256430685695,
+              0.5465917713734281, 0.9999998636691809, 1.0]
+APOLLO_S = [0.0, 0.015558751776676464, 0.4491684070849781,
+            0.7186552148337207, 0.999999454676723, 1.0]
+
+
+def test_the_real_apollo_waveform_is_accepted():
+    schedule = Schedule(APOLLO_TAU, APOLLO_S)
+    overshoot = schedule.slopes(4.0).max() / 1.0 - 1.0
+    assert 0 < overshoot < 1e-8, "this is the roundoff regime the gate must tolerate"
+    schedule.validate_slope(runtime=4.0, max_slope=1.0)
+
+
+def test_a_genuinely_over_slope_schedule_still_raises():
+    schedule = Schedule([0.0, 0.5, 1.0], [0.0, 0.9, 1.0])
+    with pytest.raises(ValueError, match="maximum ds/dt"):
+        schedule.validate_slope(runtime=1.0, max_slope=1.0)
+
+
+def test_the_slope_gate_stays_tight_on_well_conditioned_segments():
+    # A wide segment carries no conditioning excuse: 1% over the bound must fail.
+    schedule = Schedule([0.0, 0.5, 1.0], [0.0, 0.505, 1.0])
+    with pytest.raises(ValueError, match="maximum ds/dt"):
+        schedule.validate_slope(runtime=1.0, max_slope=1.0)
+
+
+def test_a_narrow_segment_still_fails_when_it_is_genuinely_infeasible():
+    # Same tiny width as the apollo case, but 10% over the bound rather than 1e-9.
+    width = 1.363308190782675e-07
+    schedule = Schedule([0.0, 1.0 - width, 1.0],
+                        [0.0, 1.0 - 1.1 * 4.0 * width, 1.0])
+    with pytest.raises(ValueError, match="maximum ds/dt"):
+        schedule.validate_slope(runtime=4.0, max_slope=1.0)
