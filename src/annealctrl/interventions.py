@@ -652,6 +652,9 @@ def aggregate_interventions(rows: Sequence[Mapping[str, Any]], *, bootstrap_resa
         raise ValueError(f"unknown resolution_status values: {sorted(statuses - allowed)}")
 
     censored = [row for row in rows if row["resolution_status"] == "censored_numerical"]
+    negative = sum(1 for row in rows
+                   if min(float(row.get("transfer_penalty_on_A", 0.0)),
+                          float(row.get("transfer_penalty_on_B", 0.0))) < 0)
     reversal = _reversal_stats(rows)
     arms = sorted({str(row.get("scale_arm")) for row in rows})
     factors = sorted({str(row.get("factor")) for row in rows})
@@ -665,6 +668,11 @@ def aggregate_interventions(rows: Sequence[Mapping[str, Any]], *, bootstrap_resa
         "n_one_sided_pairs": sum(1 for row in rows if row["resolution_status"] == "one_sided"),
         **reversal,
         "identical_waveform_pairs": sum(1 for row in rows if row.get("selected_waveform_identical")),
+        # A negative direction means the imported control beat this arm's own best
+        # found, i.e. the equal-budget search on that arm was the weaker of the
+        # two. Reported because it bounds how much of the effect is search noise.
+        "pairs_with_negative_direction": negative,
+        "negative_direction_fraction": negative / len(rows),
         "physical_size_matched": sizes.pop(),
         "by_scale_arm": {arm: {"transfer_penalty": _penalty_block(
             [row for row in rows if row.get("scale_arm") == arm],
@@ -744,6 +752,8 @@ def _intervention_markdown(summary: Mapping[str, Any]) -> str:
         f"({summary['censored_fraction']:.1%})",
         f"- One-sided (decisive in a single direction): {summary['n_one_sided_pairs']}",
         f"- Identical selected waveform on both arms: {summary['identical_waveform_pairs']}",
+        f"- Pairs with a negative direction (search asymmetry, kept unclipped): "
+        f"{summary['pairs_with_negative_direction']} ({_rate(summary['negative_direction_fraction'])})",
         f"- Decisive preference reversals: {summary['decisive_reversals']} of "
         f"{summary['decisive_reversal_denominator']} pairs "
         f"({_rate(summary['decisive_reversal_rate'])})",

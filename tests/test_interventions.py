@@ -549,3 +549,16 @@ def test_verdict_uses_the_unconditional_reversal_rate():
                 for i in range(3)]
     assert aggregate_interventions(censored)["verdict"] == "no_resolved_preference_change"
     assert aggregate_interventions(censored)["decisive_reversal_rate"] == pytest.approx(0.0)
+
+
+def test_aggregate_counts_pairs_whose_search_was_asymmetric():
+    # A negative penalty in some direction means the imported control beat this
+    # arm's own best found: the equal-budget search on that arm was the weaker of
+    # the two. The count bounds how much of the measured effect is search noise
+    # rather than a property of the intervention.
+    rows = [intervention_row("p0", 0.10, 0.12),
+            intervention_row("p1", -0.03, 0.20),
+            intervention_row("p2", 0.05, -0.01)]
+    summary = aggregate_interventions(rows)
+    assert summary["pairs_with_negative_direction"] == 2
+    assert summary["negative_direction_fraction"] == pytest.approx(2 / 3)
