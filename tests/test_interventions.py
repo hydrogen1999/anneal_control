@@ -484,7 +484,7 @@ def test_a_chain_strength_pair_changes_the_penalty_only():
     assert not np.allclose(a.compiled.chain_J / scale_a, b.compiled.chain_J / scale_b)
 
 
-def test_a_coefficient_intervention_that_moved_an_unrelated_coefficient_is_refused(monkeypatch):
+def test_a_coefficient_intervention_that_moved_an_unrelated_coefficient_is_refused():
     from annealctrl import interventions
 
     built = pairs("chain_strength", {"chain_strength": 3.0})[0]

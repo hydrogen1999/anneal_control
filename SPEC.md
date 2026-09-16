@@ -135,7 +135,7 @@ docs/
   g2_headroom.md g3_interventions.md observability.md            NEW
   decisions/ADR-0001..0006.md                                    NEW
 scripts/
-  launch_apollo.sh launch_goose.slurm                            NEW
+  run_campaign.sh launch_apollo.sh launch_goose.slurm            NEW
 ```
 
 `generation.py` is the only pre-existing science module touched, and only by
