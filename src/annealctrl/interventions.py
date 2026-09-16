@@ -120,6 +120,19 @@ class InterventionPair:
 # Pair construction
 # --------------------------------------------------------------------------
 
+def _slug(value: Any) -> str:
+    """Filesystem-safe rendering of a changed value, for use in a pair id."""
+    if isinstance(value, (list, tuple, np.ndarray)):
+        return "-".join(_slug(item) for item in np.asarray(value).tolist())
+    if isinstance(value, bool):
+        return str(value).lower()
+    if isinstance(value, (int, np.integer)):
+        return str(int(value))
+    if isinstance(value, float):
+        return f"{value:g}".replace(".", "p").replace("-", "m")
+    return "".join(c if c.isalnum() or c in "_-" else "_" for c in str(value))
+
+
 def _edge_sets(arm: InterventionArm) -> tuple[set, set]:
     owner = arm.compiled.embedding.membership
     edges = arm.compiled.embedding.hardware_edges.tolist()
@@ -261,7 +274,10 @@ def build_pairs(problem: IsingProblem, spec: Mapping[str, Any], *, lengths: Sequ
                  "causal_scope": "inside the declared closed-system simulator only",
                  "is_commercial_hardware": False}
 
-    pair_id = f"{parent_id}__{factor}__t{runtime:g}"
+    # The factor alone is not a unique key: a config may declare two changes to
+    # the same factor (star and random_tree geometry, say), and identically named
+    # pairs would collide in the sweep plan and on disk.
+    pair_id = f"{parent_id}__{factor}_{_slug(change[expected])}__t{runtime:g}"
     built = [InterventionPair(pair_id=pair_id, parent_id=parent_id, factor=factor,
                               scale_arm="total_compiled_effect", runtime=float(runtime),
                               arms=(arm_a, arm_b), held_fixed=HELD_FIXED,

@@ -493,3 +493,25 @@ def test_a_coefficient_intervention_that_moved_an_unrelated_coefficient_is_refus
     b.compiled.problem_J[:] = b.compiled.problem_J * 1.5
     with pytest.raises(ValueError, match="problem coupler"):
         interventions._audit_single_factor("chain_strength", a, b)
+
+
+def test_two_interventions_on_the_same_factor_get_distinct_pair_ids():
+    from annealctrl.interventions import plan_intervention_pairs
+    # intervention_research.json declares both star and random_tree geometry
+    # changes; a pair id keyed on the factor alone collides between them.
+    built, _ = plan_intervention_pairs(plan_config(
+        chain_lengths=[5, 2, 1],
+        interventions=[{"factor": "geometry", "change": {"shape": "star"}},
+                       {"factor": "geometry", "change": {"shape": "random_tree"}}]))
+    ids = [pair.pair_id for pair in built]
+    assert len(set(ids)) == len(ids), "pair ids must distinguish two changes to one factor"
+    assert any("star" in pair_id for pair_id in ids)
+    assert any("random_tree" in pair_id for pair_id in ids)
+
+
+def test_pair_ids_stay_filesystem_safe_for_numeric_and_list_changes():
+    built = pairs("chain_strength", {"chain_strength": 3.5})
+    lengths = pairs("chain_length", {"chain_lengths": [3, 2, 2]}, allow_size_change=True)
+    for pair in [*built, *lengths]:
+        assert "/" not in pair.pair_id and " " not in pair.pair_id
+        assert all(c.isalnum() or c in "_-." for c in pair.pair_id)
