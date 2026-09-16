@@ -330,3 +330,70 @@ def test_aggregate_of_an_entirely_censored_population_reports_no_signal():
 def test_aggregate_of_an_empty_row_set_is_refused():
     with pytest.raises(ValueError, match="nonempty"):
         aggregate_frontier([])
+
+
+# --- report ------------------------------------------------------------------
+
+def test_frontier_report_writes_summary_json_and_markdown(tmp_path):
+    from annealctrl.headroom import frontier_report
+    data = dataset(tmp_path, parents=6, runtimes=(2.0, 8.0))
+    sweep_control_frontier(data, output=tmp_path / "sweep", split="train",
+                           families=("linear", "one_window"), budget=4,
+                           tolerance=5e-3, initial_steps=16, max_steps=512)
+    summary = frontier_report(tmp_path / "sweep", bootstrap_resamples=200)
+
+    assert (tmp_path / "sweep" / "report" / "summary.json").exists()
+    text = (tmp_path / "sweep" / "report" / "FRONTIER.md").read_text()
+    assert "censored" in text.lower()
+    assert "not a global control optimum" in text
+    assert summary["n_records"] >= 1
+
+
+def test_frontier_report_refuses_a_sweep_with_no_successful_rows(tmp_path):
+    from annealctrl.headroom import frontier_report
+    from annealctrl.sweeps import run_sweep, SweepUnit
+    run_sweep([SweepUnit("a", "fp")], lambda unit: (_ for _ in ()).throw(ArithmeticError("x")),
+              output=tmp_path / "sweep", settings={}, command="control-sweep",
+              source_hash="src", on_error="record")
+    with pytest.raises(ValueError, match="no successful"):
+        frontier_report(tmp_path / "sweep")
+
+
+def test_frontier_report_counts_failed_units_in_the_summary(tmp_path):
+    from annealctrl.headroom import frontier_report
+    data = dataset(tmp_path, parents=6)
+    sweep_control_frontier(data, output=tmp_path / "sweep", split="train",
+                           families=("linear", "one_window"), budget=3,
+                           tolerance=5e-3, initial_steps=16, max_steps=512)
+    # A failed row from a later resumed attempt must remain visible.
+    with (tmp_path / "sweep" / "rows.jsonl").open("a") as handle:
+        handle.write(json.dumps({"unit_id": "zzz", "unit_key": "k", "fingerprint": "f",
+                                 "settings_hash": "s", "source_hash": "h", "status": "failed",
+                                 "error_type": "ArithmeticError", "error": "gate"}) + "\n")
+    summary = frontier_report(tmp_path / "sweep", bootstrap_resamples=100)
+    assert summary["failed_units"] == 1
+    assert summary["failed_unit_ids"] == ["zzz"]
+
+
+# --- configuration -----------------------------------------------------------
+
+def test_frontier_config_rejects_unknown_keys():
+    from annealctrl.headroom import load_frontier_config
+    with pytest.raises(ValueError, match="unknown"):
+        load_frontier_config({"split": "validation", "budgett": 4})
+
+
+def test_frontier_config_refuses_to_enable_test_adaptation():
+    from annealctrl.headroom import load_frontier_config
+    with pytest.raises(ValueError, match="allow_test_adaptation"):
+        load_frontier_config({"allow_test_adaptation": True})
+
+
+def test_frontier_config_fills_declared_defaults():
+    from annealctrl.headroom import load_frontier_config
+    sweep, report = load_frontier_config({"budget": 8})
+    assert sweep["budget"] == 8
+    assert sweep["split"] == "validation"
+    assert sweep["families"] == list(("linear", "one_window", "two_window", "eight_bin", "pause"))
+    assert sweep["ambiguity_margin"] == 1.0
+    assert report["bootstrap_resamples"] == 10000

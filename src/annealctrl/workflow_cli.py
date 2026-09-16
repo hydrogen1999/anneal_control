@@ -13,7 +13,8 @@ from .pipeline import environment, load_records, write_json
 
 
 COMMANDS = {"run", "tune", "report", "audit", "doctor", "train-config", "infer",
-            "control-benchmark", "export-hardware", "ingest-hardware", "simulate-open", "profile-generation"}
+            "control-benchmark", "export-hardware", "ingest-hardware", "simulate-open", "profile-generation",
+            "control-sweep", "frontier-report", "screen"}
 
 
 def _json(path):
@@ -119,6 +120,30 @@ def main(argv):
     ingest.add_argument("--program", required=True)
     ingest.add_argument("--samples", required=True)
     ingest.add_argument("--output", required=True)
+    sweep = sub.add_parser("control-sweep", help="G2: equal-budget control-complexity frontier over a split")
+    sweep.add_argument("--data", required=True)
+    sweep.add_argument("--config", required=True, help="frontier JSON; see configs/frontier_smoke.json")
+    sweep.add_argument("--output", required=True)
+    sweep.add_argument("--split", choices=["train", "validation", "test"],
+                       help="override the configured split")
+    sweep.add_argument("--record-ids", nargs="+", help="restrict the sweep to these record ids")
+    sweep.add_argument("--resume", action="store_true")
+    sweep.add_argument("--dry-run", action="store_true")
+    sweep.add_argument("--allow-test-adaptation", action="store_true",
+                       help="test-split search is ONLINE ADAPTATION and must be reported as such")
+    sweep.add_argument("--report", action="store_true", help="aggregate immediately after the sweep")
+    frontier = sub.add_parser("frontier-report", help="G2: aggregate a completed control-sweep")
+    frontier.add_argument("--sweep", required=True)
+    frontier.add_argument("--output")
+    frontier.add_argument("--bootstrap-resamples", type=int, default=10000)
+    frontier.add_argument("--seed", type=int, default=0)
+    screen = sub.add_parser("screen", help="G2: qualify a stress subset using train/validation headroom only")
+    screen.add_argument("--fit-sweep", nargs="+", required=True,
+                        help="train and/or validation control-sweep directories used to FIT the threshold")
+    screen.add_argument("--apply-sweep", required=True, help="sweep directory the rule is APPLIED to")
+    screen.add_argument("--output", required=True)
+    screen.add_argument("--quantile", type=float, default=0.75)
+    screen.add_argument("--min-headroom", type=float)
     opened = sub.add_parser("simulate-open", help="small independent Lindblad model, not a calibrated QPU")
     opened.add_argument("--record", required=True)
     opened.add_argument("--schedule", required=True)
@@ -191,6 +216,28 @@ def main(argv):
             "selected_proposal": index, "predicted_losses": predicted.cpu().tolist(),
             "inference_seconds": perf_counter() - began, "true_outcome_observed": False,
             "note": "Predicted loss is not a probability certificate; no simulator/hardware calls"})
+    elif args.command == "control-sweep":
+        from .headroom import frontier_report, load_frontier_config, sweep_control_frontier
+        settings, report_settings = load_frontier_config(args.config)
+        if args.split:
+            settings["split"] = args.split
+        result = sweep_control_frontier(args.data, output=args.output, resume=args.resume,
+                                        dry_run=args.dry_run, record_ids=args.record_ids,
+                                        allow_test_adaptation=args.allow_test_adaptation, **settings)
+        if args.report and not args.dry_run:
+            result = {"sweep": result, "report": frontier_report(args.output, **report_settings)}
+        print(json.dumps(result, indent=2))
+    elif args.command == "frontier-report":
+        from .headroom import frontier_report
+        summary = frontier_report(args.sweep, output=args.output,
+                                  bootstrap_resamples=args.bootstrap_resamples, seed=args.seed)
+        print(json.dumps({key: summary[key] for key in
+                          ("split", "n_records", "n_parents", "censored_fraction", "verdict")}, indent=2))
+        print(f"Report: {Path(args.output or Path(args.sweep) / 'report') / 'FRONTIER.md'}")
+    elif args.command == "screen":
+        from .screening import screen_records
+        _save(args.output, screen_records(args.fit_sweep, args.apply_sweep,
+                                          quantile=args.quantile, min_headroom=args.min_headroom))
     elif args.command == "control-benchmark":
         from .benchmarking import benchmark_record_controls
         _save(args.output, benchmark_record_controls(_record(args), budget_per_family=args.budget, seed=args.seed,

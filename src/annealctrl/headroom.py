@@ -187,6 +187,43 @@ def _requested_calls(families: Sequence[str], budget: int) -> int:
     return sum(1 if name == "linear" else budget for name in families)
 
 
+FRONTIER_DEFAULTS: dict[str, Any] = {
+    "split": "validation", "families": list(CONTROL_FAMILIES), "budget": 32, "seed": 0,
+    "ambiguity_margin": 1.0, "reference_floor": 0.01, "backend": "numpy",
+    "tolerance": 5e-4, "initial_steps": 128, "max_steps": 8192, "max_ds_dtau": 4.0,
+    "teacher_methods": [], "retain_full_trials": True, "on_error": "raise",
+}
+REPORT_DEFAULTS: dict[str, Any] = {"bootstrap_resamples": 10000, "seed": 0}
+
+
+def load_frontier_config(config: Mapping[str, Any] | str | Path) -> tuple[dict, dict]:
+    """Validate a frontier configuration into (sweep kwargs, report kwargs).
+
+    ``allow_test_adaptation`` is deliberately **not** a configuration key: online
+    adaptation on the test split must be a visible command-line act, not
+    something a copied config file can turn on silently.
+    """
+    if isinstance(config, (str, Path)):
+        import json as _json
+        config = _json.loads(Path(config).read_text(encoding="utf-8"))
+    if not isinstance(config, Mapping):
+        raise ValueError("frontier configuration must be a mapping or a path to one")
+    if "allow_test_adaptation" in config:
+        raise ValueError("allow_test_adaptation is a command-line flag, not a configuration key; "
+                         "test-split search must be an explicit act at the call site")
+    unknown = set(config) - set(FRONTIER_DEFAULTS) - {"report"}
+    if unknown:
+        raise ValueError(f"unknown frontier configuration keys: {sorted(unknown)}")
+    report = dict(config.get("report") or {})
+    unknown_report = set(report) - set(REPORT_DEFAULTS)
+    if unknown_report:
+        raise ValueError(f"unknown frontier report keys: {sorted(unknown_report)}")
+    sweep = {**FRONTIER_DEFAULTS, **{k: v for k, v in config.items() if k != "report"}}
+    sweep["families"] = list(sweep["families"])
+    sweep["teacher_methods"] = list(sweep["teacher_methods"])
+    return sweep, {**REPORT_DEFAULTS, **report}
+
+
 def sweep_control_frontier(
     data_dir: str | Path, *, output: str | Path, split: str = "validation",
     families: Sequence[str] = CONTROL_FAMILIES, budget: int = 32, seed: int = 0,
@@ -321,6 +358,115 @@ def _bootstrap(values: np.ndarray, *, n_resamples: int, seed: int, confidence: f
     return {"low": float(low), "high": float(high), "confidence": confidence,
             "resamples": n_resamples, "unit_of_independence": "logical_parent",
             "status": "ok", "includes_training_seed_uncertainty": False}
+
+
+def frontier_report(sweep_dir: str | Path, *, output: str | Path | None = None,
+                    bootstrap_resamples: int = 2000, seed: int = 0) -> dict:
+    """Aggregate a completed ``control-sweep`` and write JSON plus Markdown.
+
+    Failed units stay visible in the summary: a frontier computed only over the
+    instances that converged is a conditional statement, and hiding the
+    exclusions would make it look unconditional.
+    """
+    from .pipeline import write_json
+    from .sweeps import load_rows
+
+    root = Path(sweep_dir)
+    rows = load_rows(root)
+    successful = [row["result"] for row in rows if row.get("status") == "ok"]
+    failed = [row for row in rows if row.get("status") == "failed"]
+    # A unit that failed and later succeeded on resume is not an exclusion.
+    recovered = {row["unit_id"] for row in rows if row.get("status") == "ok"}
+    outstanding = [row for row in failed if row["unit_id"] not in recovered]
+    if not successful:
+        raise ValueError(f"{root} contains no successful rows to aggregate")
+
+    summary = aggregate_frontier(successful, bootstrap_resamples=bootstrap_resamples, seed=seed)
+    summary["failed_units"] = len(outstanding)
+    summary["failed_unit_ids"] = sorted({row["unit_id"] for row in outstanding})
+    summary["failure_reasons"] = dict(sorted(Counter(row.get("error_type", "unknown")
+                                                     for row in outstanding).items()))
+    manifest_path = root / "manifest.json"
+    if manifest_path.exists():
+        import json as _json
+        manifest = _json.loads(manifest_path.read_text())
+        summary["sweep"] = {key: manifest.get(key) for key in
+                            ("command", "settings", "settings_hash", "source_hash", "status",
+                             "data_dir", "requested_objective_calls_per_unit")}
+
+    destination = Path(output) if output is not None else root / "report"
+    write_json(destination / "summary.json", summary)
+    (destination / "FRONTIER.md").write_text(_frontier_markdown(summary), encoding="utf-8")
+    return summary
+
+
+def _cell(value, digits=6):
+    return "n/a" if value is None else f"{float(value):.{digits}f}"
+
+
+def _frontier_markdown(summary: Mapping[str, Any]) -> str:
+    headroom = summary["headroom"]
+    quantiles = headroom["quantiles"]
+    lines = [
+        "# Control-complexity frontier (G2)",
+        "",
+        "Software output of `annealctrl control-sweep`. Every quantity below is a "
+        "**finite-budget best-found** reference, not a global control optimum, and the "
+        "search family, seed and budget are part of its definition.",
+        "",
+        f"- Split: `{summary['split']}`",
+        f"- Records: {summary['n_records']} over {summary['n_parents']} independent logical parents",
+        f"- Censored by numerical resolution: {summary['n_censored_records']} "
+        f"({summary['censored_fraction']:.1%})",
+        f"- Low-headroom linear reference: {summary['low_headroom_reference_fraction']:.1%} of records",
+        f"- Records with audit failures: {summary['records_with_audit_failures']}",
+        f"- Failed units excluded: {summary.get('failed_units', 0)}",
+        f"- Verdict: **{summary['verdict']}**",
+        "",
+        "## Headroom (linear loss − best found), parent-averaged",
+        "",
+        "| n parents | mean | p10 | p25 | p50 | p75 | p90 | max |",
+        "|---:|---:|---:|---:|---:|---:|---:|---:|",
+        f"| {headroom['n_parents']} | {_cell(headroom['mean'])} | {_cell(quantiles['p10'])} | "
+        f"{_cell(quantiles['p25'])} | {_cell(quantiles['p50'])} | {_cell(quantiles['p75'])} | "
+        f"{_cell(quantiles['p90'])} | {_cell(headroom['max'])} |",
+        "",
+    ]
+    ci = headroom["parent_bootstrap_ci"]
+    lines += [
+        f"Parent bootstrap {ci['confidence']:.0%} CI: [{_cell(ci['low'])}, {_cell(ci['high'])}] "
+        f"over {ci['resamples']} resamples, unit of independence = logical parent. "
+        "This interval does **not** include training-seed uncertainty.",
+        "",
+        "## Family restriction loss (family best − overall best), parent-averaged",
+        "",
+        "| family | n parents | mean | p50 | p90 | wins |",
+        "|---|---:|---:|---:|---:|---:|",
+    ]
+    wins = summary.get("best_family_counts", {})
+    for name, stats in summary["family_restriction_loss"].items():
+        lines.append(f"| `{name}` | {stats['n_parents']} | {_cell(stats['mean'])} | "
+                     f"{_cell(stats['quantiles']['p50'])} | {_cell(stats['quantiles']['p90'])} | "
+                     f"{wins.get(name, 0)} |")
+    lines += [
+        "",
+        "## Reading this table",
+        "",
+        "- Censored records are excluded from every headroom statistic above and counted "
+        "separately. A fully censored population means the distribution offers no control "
+        "signal above the integrator's own resolution, which is a result, not a bug.",
+        "- Families are nested **only** through the linear incumbent that each search "
+        "evaluates first. A one-window waveform is not exactly representable in the "
+        "eight-bin duration parameterisation, so the restriction losses above compare "
+        "family outcomes at equal budget rather than positions on a nesting ladder.",
+        "- Increasing the budget can only lower the reference, so headroom is a lower "
+        "bound; it is not a global control optimum.",
+        "",
+        f"Total objective calls charged: {summary['total_objective_calls']}. "
+        f"Total integrator steps: {summary['total_integrator_steps']}.",
+        "",
+    ]
+    return "\n".join(lines)
 
 
 def aggregate_frontier(rows: Sequence[Mapping[str, Any]], *, bootstrap_resamples: int = 2000,
