@@ -90,14 +90,14 @@ def figure_frontier(rows: Sequence[Mapping[str, Any]], stem: str | Path, *,
     families = sorted({name for row in rows for name in (row.get("family_restriction_loss") or {})})
 
     width = plot_utils.use_venue(venue, column)
-    fig, (left, right) = plt.subplots(1, 2, figsize=(width, width * 0.38))
+    fig, (left, right) = plt.subplots(1, 2, figsize=(width, width * 0.50))
 
     data, labels = [], []
     for name in families:
         values = _parent_mean(resolved, lambda row, name=name: (row.get("family_restriction_loss") or {}).get(name))
         if values.size:
             data.append(values)
-            labels.append(name.replace("_", "\n"))
+            labels.append(name.replace("_", " "))
     if data:
         parts = left.boxplot(data, tick_labels=labels, widths=0.6, showfliers=False,
                              medianprops={"linewidth": 1.2})
@@ -107,6 +107,9 @@ def figure_frontier(rows: Sequence[Mapping[str, Any]], stem: str | Path, *,
         del parts
     left.set_ylabel("family restriction loss")
     left.set_xlabel(f"control family  ({len(censored)}/{len(rows)} records censored)")
+    left.tick_params(axis="x", labelrotation=22)
+    for label in left.get_xticklabels():
+        label.set_horizontalalignment("right")
     left.axhline(0.0, linewidth=0.6, linestyle=":", color="0.4")
 
     traces = 0
@@ -129,7 +132,8 @@ def figure_frontier(rows: Sequence[Mapping[str, Any]], stem: str | Path, *,
         # Above the axes, never inside: an in-axes legend marker sits at a data
         # coordinate and can be read as a measurement.
         right.legend(ncol=2, loc="lower center", bbox_to_anchor=(0.5, 1.0),
-                     borderaxespad=0.0, handletextpad=0.4, columnspacing=1.2)
+                     borderaxespad=0.0, handletextpad=0.3, columnspacing=0.8,
+                     fontsize="small")
     fig.tight_layout()
     written = plot_utils.save(fig, stem)
     plt.close(fig)
@@ -169,7 +173,7 @@ def figure_interventions(rows: Sequence[Mapping[str, Any]], stem: str | Path, *,
     arms = sorted({str(row.get("scale_arm")) for row in rows})
 
     width = plot_utils.use_venue(venue, column)
-    fig, (left, right) = plt.subplots(1, 2, figsize=(width, width * 0.38))
+    fig, (left, right) = plt.subplots(1, 2, figsize=(width, width * 0.50))
 
     offsets = np.linspace(-0.18, 0.18, max(len(arms), 1))
     for arm_index, arm in enumerate(arms):
@@ -187,13 +191,13 @@ def figure_interventions(rows: Sequence[Mapping[str, Any]], stem: str | Path, *,
             left.errorbar(centres, values, yerr=spreads, fmt="o", capsize=2,
                           label=arm.replace("_", " "))
     left.set_xticks(range(len(factors)))
-    left.set_xticklabels([f.replace("_", "\n") for f in factors])
+    left.set_xticklabels([f.replace("_", " ") for f in factors], rotation=22, ha="right")
     left.set_ylabel("transfer penalty")
     left.set_xlabel(f"intervened factor  ({len(censored)}/{len(rows)} pairs censored)")
     left.axhline(0.0, linewidth=0.6, linestyle=":", color="0.4")
     if arms:
-        left.legend(ncol=len(arms), loc="lower center", bbox_to_anchor=(0.5, 1.0),
-                    borderaxespad=0.0, handletextpad=0.4, columnspacing=1.2)
+        left.legend(ncol=1, loc="upper left", bbox_to_anchor=(0.0, 1.02),
+                    borderaxespad=0.0, handletextpad=0.3, fontsize="small")
 
     own, imported, was_censored = [], [], []
     for row in rows:
