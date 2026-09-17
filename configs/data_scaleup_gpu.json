@@ -1,0 +1,25 @@
+{
+  "_comment": "G2 scale-up ladder: 12/14/16 physical qubits, outcome-only. Measured on apollo, CuPy holds ~9 accepted labels/s flat across this range while NumPy falls from 2.77 to 0.09 (103x at 16 qubits), so this config is meant to be generated with --backend cupy. A full spectral teacher is impossible here (capped at 10) and is not needed: the frontier instrument re-searches controls from scratch.",
+  "seed": 20260917,
+  "parents": 96,
+  "families": ["spin_glass", "weighted_maxcut", "planted_loops", "weak_field"],
+  "logical_sizes": [6, 7, 8],
+  "logical_support": {"kind": "connected_erdos_renyi", "edge_probability": 0.45},
+  "chain_lengths": 2,
+  "variants": [
+    {"shape": "path", "ports": 1, "field_distribution": "uniform"}
+  ],
+  "chain_strengths": [1.5],
+  "runtimes": [4.0, 12.0],
+  "candidates": 8,
+  "candidate_batch_size": 8,
+  "spectral_points": 3,
+  "teacher": {"mode": "none"},
+  "steps": 64,
+  "max_steps": 16384,
+  "label_state_tolerance": 0.0002,
+  "max_physical_qubits": 16,
+  "endpoint_max_qubits": 16,
+  "endpoint_memory_mb": 8192,
+  "state_memory_mb": 16384
+}

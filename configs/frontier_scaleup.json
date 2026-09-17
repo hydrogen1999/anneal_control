@@ -1,0 +1,17 @@
+{
+  "split": "validation",
+  "families": ["linear", "one_window", "two_window", "eight_bin"],
+  "budget": 32,
+  "seed": 0,
+  "ambiguity_margin": 1.0,
+  "reference_floor": 0.01,
+  "backend": "cupy",
+  "tolerance": 0.0002,
+  "initial_steps": 128,
+  "max_steps": 16384,
+  "max_ds_dtau": 4.0,
+  "teacher_methods": [],
+  "retain_full_trials": true,
+  "on_error": "record",
+  "report": {"bootstrap_resamples": 10000, "seed": 0}
+}
