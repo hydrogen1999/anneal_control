@@ -80,6 +80,18 @@ def main(argv=None) -> int:
 
     root = Path(args.root)
     before = census()
+    # A driver running at a high nice value is in the same starved position as the
+    # NumPy arm it is timing. Inheriting nice 19 from the shell that reniced the
+    # rest of the jobs is an easy way to produce a measurement that looks careful
+    # and is not, so it is checked rather than assumed.
+    own_nice = __import__("os").nice(0)
+    before["driver_nice"] = own_nice
+    if own_nice > 0 and not args.force:
+        print(f"refusing to measure: this driver is running at nice {own_nice}. It would be "
+              "starved exactly like the NumPy arm it is timing.", file=sys.stderr)
+        print("Launch it from a shell that was not reniced (a fresh session), or pass --force.",
+              file=sys.stderr)
+        return 1
     if before["self_competing_cpu_percent"] > args.max_self_competing_cpu and not args.force:
         print(f"refusing to measure: this user's own processes below nice 10 are consuming "
               f"{before['self_competing_cpu_percent']}% CPU, above the "
@@ -106,7 +118,10 @@ def main(argv=None) -> int:
             continue
         runs = []
         for repeat in range(args.repeats):
-            out = workdir / f"profile_{size}q_r{repeat}.json"
+            # profile-generation treats --output as a directory root and writes its
+            # report to <output>/profile.json beside the generated datasets.
+            out = workdir / f"profile_{size}q_r{repeat}"
+            report_file = out / "profile.json"
             started = perf_counter()
             done = subprocess.run(
                 [str(root / ".venv" / "bin" / "python"), "-m", "annealctrl.workflow_cli",
@@ -114,12 +129,12 @@ def main(argv=None) -> int:
                  "--backends", "numpy", "cupy", "--workers", "1"],
                 capture_output=True, text=True)
             entry = {"repeat": repeat, "wall_seconds": perf_counter() - started,
-                     "returncode": done.returncode, "artifact": str(out),
+                     "returncode": done.returncode, "artifact": str(report_file),
                      "census": census()}
             if done.returncode != 0:
                 entry["stderr_tail"] = done.stderr.strip().splitlines()[-4:]
-            elif out.exists():
-                payload = json.loads(out.read_text())
+            elif report_file.exists():
+                payload = json.loads(report_file.read_text())
                 entry["status"] = payload.get("status")
                 for backend in ("numpy", "cupy"):
                     block = payload.get("backends", {}).get(backend, {})
