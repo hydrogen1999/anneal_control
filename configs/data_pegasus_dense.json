@@ -1,0 +1,26 @@
+{
+  "_comment": "Pegasus at high realised connectivity. Measured on P16, 12 seeds: the patch size, not the chain length, controls the degree of the induced subgraph on active qubits. patch_sites=96 gives max degree 3.7; patch_sites=24 gives 7.4-10.0 and 2.5x the quotient edges, at the cost of growth jamming more often (target_met 58-67%, reported per record). A 14-qubit sub-instance cannot reproduce the device's mean degree of 14.4 over 5640 qubits - most neighbours lie outside it - so this is the densest honest approximation at simulable size, not a full-device instance.",
+  "seed": 20260917,
+  "parents": 96,
+  "families": ["spin_glass", "weighted_maxcut", "planted_loops", "weak_field"],
+  "logical_sizes": [4, 5, 6],
+  "generation_route": "hardware_growth",
+  "hardware": {"topology": "pegasus", "m": 16, "patch_sites": 24},
+  "chain_lengths": 3,
+  "variants": [
+    {"field_distribution": "uniform", "coupling_distribution": "uniform"}
+  ],
+  "chain_strengths": [1.5],
+  "runtimes": [4.0, 12.0],
+  "candidates": 8,
+  "candidate_batch_size": 8,
+  "spectral_points": 3,
+  "teacher": {"mode": "none"},
+  "steps": 64,
+  "max_steps": 16384,
+  "label_state_tolerance": 0.0002,
+  "max_physical_qubits": 18,
+  "endpoint_max_qubits": 18,
+  "endpoint_memory_mb": 8192,
+  "state_memory_mb": 16384
+}
