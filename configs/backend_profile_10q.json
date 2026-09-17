@@ -46,5 +46,5 @@
   "max_physical_qubits": 10,
   "endpoint_memory_mb": 1024,
   "state_memory_mb": 4096,
-  "_note": "Backend crossover point at 10 physical qubits (5 logical x chain length 2). teacher.mode=none so the measurement is propagation throughput, not teacher throughput."
+  "_note": "Backend crossover at 10 physical qubits (5 logical x chain length 2), 12 parents x 64 candidates = 768 labels. teacher.mode=none, so this measures propagation throughput, not teacher throughput. Label counts shrink with size deliberately: NumPy cost grows exponentially and a fixed workload would take hours at 16 qubits. Throughput is per label, so the sizes stay comparable -- but with few labels CuPy's fixed startup is amortised over less work, which biases the measured ratio DOWN, against the GPU. That is the conservative direction and is preferred to the opposite."
 }
