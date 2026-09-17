@@ -1,4 +1,33 @@
-# Evidence audit of upstream main at 2d48229
+# Evidence audit of upstream main through 100f6b0
+
+## Update: newly published 100f6b0
+
+Main advanced again during review. Commit
+[`100f6b0`](https://github.com/hydrogen1999/anneal_control/commit/100f6b0b00861197057f42a3dbcf305b786520b8)
+adds the Pegasus validation and crossover summary artifacts that were absent
+from the earlier inspected tree. The earlier audit below is explicitly a
+snapshot of 2d48229.
+
+Pegasus validation now reports 24 records, 12 logical parents, zero censored
+records and positive headroom at 10, 12 and 14 physical qubits. Mean headroom is
+0.136183, 0.164887 and 0.131242 respectively, with four parents per size.
+This establishes control-search headroom on those simulated topology instances;
+it does not demonstrate learned-controller OOD transfer or hardware execution.
+The broad, overlapping size intervals do not establish absence of degradation.
+Also, `best_family_counts` sums to 24 records: two_window's count of 12 is a
+record count, so it cannot justify the narrative claim of winning on 12/12
+parents. The archived raw summary is retained without rewriting history.
+
+The new `reports/backend_2026-09-17/crossover.json` records two successful
+12-qubit repeats and a CuPy/NumPy ratio of 2.8313. Thus this is now an archived
+timing summary, not merely a commit-message claim. Its per-run
+`max_candidate_loss_difference` fields are null, and the referenced individual
+profile files are not archived here, so precision parity cannot be verified
+from that summary. It records a known census-identity defect and the author's
+separate assertion of intended execution conditions. The larger-size entries
+are failed runs, not 14/16-qubit speedup measurements.
+
+## Initial audit: 2d48229
 
 The upstream main branch advanced while the controlled-acquisition revision was
 being developed. These results and the new 60-parent pilot use different recipes
