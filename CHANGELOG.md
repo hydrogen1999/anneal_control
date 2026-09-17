@@ -1,3 +1,72 @@
+## 2026-09-17 — Baselines, corrections, and one held-out table
+
+### The comparison table
+
+Every method on the **same 864 held-out records over 48 parents**, grouped by
+what it consumes and ordered only within a group. `reports/comparison_2026-09-17/`.
+
+| cost class | method | loss | vs linear |
+|---|---|---:|---:|
+| fixed | linear / global | 0.6009 / 0.5654 | — / −0.0355 |
+| privileged spectrum | `d2` (n=846) / `gap_inverse_square` (n=432) | 0.5913 / 0.7750 | −0.0041 / +0.0328 |
+| amortised | summary bank / best direct | **0.5447** / 0.5898 | −0.0563 / −0.0111 |
+| online adaptation | search, 257 calls per instance | 0.5074 | −0.0936 |
+
+The amortised learned selector beats both privileged spectral oracles while
+needing nothing at deployment beyond a forward pass, and beats the best single
+fixed schedule by 0.021. Search still leads by 0.037; that gap is printed, not
+hidden. There is no global rank in the artifact, the report or the figure.
+
+### The privileged baselines are not the ceiling
+
+`gap_inverse_square` is the local-adiabatic rule and it had been computed for
+every G2 record since 2026-09-16 without ever being aggregated. Over 3447 units
+it **loses to a 64-candidate search by 0.110 and to a linear ramp by 0.0230**,
+and the runtime stratification (+0.0063, +0.0625, −0.0001 at runtimes 1, 4, 12)
+shows the adiabatic theorem behaving as advertised rather than a broken
+implementation. This reframes the motivation: the spectral schedule is not a
+ceiling the learner chases, it is a reference the search already passes.
+
+### Architecture is not supported; information is
+
+Holm-corrected parent-paired contrasts over all ten comparisons: every
+separation in bank mode is the embedding-blind encoder losing to an
+embedding-aware one, and **no aware encoder separates from any other**.
+Embedding-aware against blind is −0.00782 [−0.01109, −0.00447]. `summary`, the
+cheapest aware encoder, ranks first. The paper claims the information, not the
+architecture.
+
+### Dataset aggregation, against a matched control
+
+One DAgger round moves the direct policy from 0.588815 to 0.554681 on held-out
+parents. Aggregation changes the bank's size *and* its source at once, so a
+`BANKEXT` arm grows the bank identically using the next points of the same Sobol
+sequence: **43% of the gain is bank size**. Attributable to aggregation:
+−0.0195 (seed 0) and −0.0238 (seed 1). A `CONTROL` arm retrained on the original
+bank reproduced the shipped checkpoint to every printed digit, so retrain noise
+is zero.
+
+### Corrections
+
+- The G3 **2.6x** scale-arm ratio was a composition artefact; the matched value
+  is **1.52x** (ADR-0008). Its point estimate had also been pair-weighted while
+  its interval was parent-weighted, putting the estimate outside its own CI.
+- The **12/14/16-qubit GPU ratios** were withheld: they existed only in a commit
+  message, with no artifact and no record of host load. A loaded host starves the
+  NumPy arm and inflates the ratio toward "the GPU wins", so
+  `scripts/backend_crossover.py` censuses the machine, refuses to run at nonzero
+  nice, and repeats each size to bound timing noise.
+- **CI was red** (605 passed, 10 failed) because `plot_utils.py` lives outside the
+  repository, so nobody else could regenerate the figures either. Vendored to
+  `src/annealctrl/_vendor/` with upstream path and sha256 recorded (ADR-0007).
+  Skipping the tests was rejected: it greens the badge by testing less.
+
+### Verification
+
+Full suite **692 passed, 2 skipped**; CI green on a clean checkout.
+
+---
+
 # Changelog
 
 ## [0.3.0] - 2026-09-16 — G2/G3 measurement instruments
@@ -79,9 +148,11 @@ shards, **zero failed units**. Reports and figures in
   0.102 (train, 144 parents). Linear wins 0 of 3456 records. Restricting to
   `two_window` costs 0.003; `eight_bin` is worse at equal budget.
 - **G3**: 610 of 1060 pairs (57.5%) show a decisive preference reversal. The
-  scale-controlled arm gives a 2.6x larger transfer penalty than the total
-  compiled effect, so reporting only the latter would understate chain strength's
-  causal role by more than half.
+  scale-controlled arm gives a larger transfer penalty than the total compiled
+  effect. *(Corrected 2026-09-17: this originally read "2.6x larger", computed by
+  dividing the two arms' marginal means. Those arms have different factor
+  compositions and the ratio is a composition artefact. On 214 matched pairs the
+  effect is **1.52x**, +0.0199 [0.0132, 0.0267]. See ADR-0008.)*
 - **GPU**: 1.08x at 10 physical qubits with 1.22e-15 outcome parity; CuPy is
   capped at one worker, so CPU shards win. The host suite is 512 passed, 0
   skipped - the CuPy/CUDA parity tests recorded as never executed in
