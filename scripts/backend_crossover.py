@@ -30,6 +30,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -157,10 +158,21 @@ def main(argv=None) -> int:
             if not config.exists():
                 invalid[size] = "no config file"
                 continue
+            payload = json.loads(config.read_text())
             try:
-                _validate_config(json.loads(config.read_text()))
+                _validate_config(payload)
             except Exception as error:                       # noqa: BLE001
                 invalid[size] = str(error)
+                continue
+            # generation.parent_splits needs three logical parents per family so
+            # train/validation/test are each nonempty. _validate_config does not
+            # know this -- it only checks the global minimum of three -- so the
+            # failure surfaces at generation time, after the measurement has
+            # already been paid for. Check it here instead.
+            families = len(payload.get("families") or [])
+            if families and payload.get("parents", 0) < 3 * families:
+                invalid[size] = (f"needs >=3 parents per family: {payload['parents']} parents "
+                                 f"over {families} families, minimum {3 * families}")
     if invalid and not args.force:
         print("refusing to measure: these configurations are invalid.", file=sys.stderr)
         for size, reason in sorted(invalid.items()):
@@ -190,6 +202,11 @@ def main(argv=None) -> int:
             # report to <output>/profile.json beside the generated datasets.
             out = workdir / f"profile_{size}q_r{repeat}"
             report_file = out / "profile.json"
+            # profile-generation refuses to write into an existing directory, so a
+            # repeat that inherits one from an abandoned attempt dies on
+            # FileExistsError and is recorded as a failed measurement. Clear it.
+            if out.exists():
+                shutil.rmtree(out)
             started = perf_counter()
             done = subprocess.run(
                 [str(root / ".venv" / "bin" / "python"), "-m", "annealctrl.workflow_cli",

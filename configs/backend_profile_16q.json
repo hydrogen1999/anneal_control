@@ -1,6 +1,6 @@
 {
   "seed": 20260916,
-  "parents": 3,
+  "parents": 6,
   "families": [
     "spin_glass",
     "weighted_maxcut"
@@ -50,5 +50,5 @@
   "endpoint_memory_mb": 4096,
   "state_memory_mb": 16384,
   "endpoint_max_qubits": 16,
-  "_note": "Backend crossover at 16 physical qubits (8 logical x chain length 2), 3 parents x 8 candidates = 24 labels. teacher.mode=none, so this measures propagation throughput. Label counts shrink with size because NumPy cost grows exponentially; throughput is per label so sizes stay comparable. With fewer labels CuPy's fixed startup is amortised over less work, which biases the measured ratio DOWN, against the GPU -- the conservative direction."
+  "_note": "Backend crossover at 16 physical qubits, 6 parents x 8 candidates = 48 labels over 2 families. Parents must be at least three per family (6 here) or generation.parent_splits cannot fill train/validation/test. teacher.mode=none, so this measures propagation throughput. Fewer labels at large sizes amortise CuPy's fixed startup over less work, biasing the ratio DOWN against the GPU -- the conservative direction."
 }
