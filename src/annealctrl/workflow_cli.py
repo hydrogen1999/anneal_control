@@ -16,7 +16,7 @@ COMMANDS = {"run", "tune", "report", "audit", "doctor", "train-config", "infer",
             "control-benchmark", "export-hardware", "ingest-hardware", "simulate-open", "profile-generation",
             "control-sweep", "frontier-report", "screen",
             "intervention-sweep", "intervention-report",
-            "model-intervention-sweep", "model-intervention-report"}
+            "model-intervention-sweep", "model-intervention-report", "cost-report"}
 
 
 def _json(path):
@@ -194,6 +194,15 @@ def main(argv):
     mir.add_argument("--swap-pairs-only", action="store_true",
                      help="restrict to pairs whose preferred control demonstrably reverses")
     mir.add_argument("--bootstrap-resamples", type=int, default=10000)
+    cost = sub.add_parser("cost-report",
+                          help="G5: C(M) per method against a non-amortisable search reference")
+    cost.add_argument("--run", required=True, help="finished experiment directory")
+    cost.add_argument("--reference-sweep", nargs="+", required=True,
+                      help="control-sweep directories giving the equal-budget search cost")
+    cost.add_argument("--output", required=True)
+    cost.add_argument("--deployments", nargs="+", type=int,
+                      default=[1, 10, 100, 1000, 10000],
+                      help="deployment counts; must include 1 so the unamortised cost is shown")
     opened = sub.add_parser("simulate-open", help="small independent Lindblad model, not a calibrated QPU")
     opened.add_argument("--record", required=True)
     opened.add_argument("--schedule", required=True)
@@ -368,6 +377,20 @@ def main(argv):
                           "restricted_to_swap_pairs": summary["restricted_to_swap_pairs"],
                           "blindness_violations": summary["blindness_violations"],
                           "decision_value": summary["decision_value"]}, indent=2))
+    elif args.command == "cost-report":
+        from .costs import compare_amortized, experiment_costs, search_reference_cost
+        result = compare_amortized(experiment_costs(args.run),
+                                   search_reference_cost(args.reference_sweep),
+                                   deployments=args.deployments)
+        _save(args.output, result)
+        for name, block in sorted(result["methods"].items(),
+                                  key=lambda kv: kv[1]["unamortised_seconds"]):
+            print("%-20s unamortised %10.1fs  online %8.4fs  crossover M=%s" % (
+                name, block["unamortised_seconds"], block["online_seconds_per_instance"],
+                block["crossover_deployments"]))
+        print("reference (never amortises): %.4f s per instance, %.0f objective calls" % (
+            result["reference"]["online_seconds_per_instance"],
+            result["reference"]["objective_calls_per_instance"]))
     elif args.command == "control-benchmark":
         from .benchmarking import benchmark_record_controls
         _save(args.output, benchmark_record_controls(_record(args), budget_per_family=args.budget, seed=args.seed,

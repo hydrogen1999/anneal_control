@@ -197,3 +197,24 @@ def test_compare_refuses_a_deployment_list_that_hides_the_unamortised_point(tmp_
         compare_amortized(experiment_costs(write_experiment(tmp_path)),
                           search_reference_cost([frontier_sweep(tmp_path)]),
                           deployments=[100, 1000])
+
+
+def test_cost_report_cli_runs_end_to_end(tmp_path, capsys):
+    from annealctrl.workflow_cli import main
+    run = write_experiment(tmp_path)
+    sweep = frontier_sweep(tmp_path)
+    main(["cost-report", "--run", str(run), "--reference-sweep", str(sweep),
+          "--output", str(tmp_path / "cost.json"), "--deployments", "1", "100"])
+    result = json.loads((tmp_path / "cost.json").read_text())
+    assert result["shows_unamortised_cost"] is True
+    assert set(result["methods"]) == {"summary", "physical"}
+    assert "crossover" in capsys.readouterr().out
+
+
+def test_cost_report_cli_refuses_a_deployment_list_without_one(tmp_path):
+    from annealctrl.workflow_cli import main
+    run = write_experiment(tmp_path)
+    sweep = frontier_sweep(tmp_path)
+    with pytest.raises(ValueError, match="M=1"):
+        main(["cost-report", "--run", str(run), "--reference-sweep", str(sweep),
+              "--output", str(tmp_path / "c.json"), "--deployments", "100"])
