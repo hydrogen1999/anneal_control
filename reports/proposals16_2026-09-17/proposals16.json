@@ -1,0 +1,72 @@
+{
+ "schema_version": 1,
+ "comparison": "direct-policy loss, 3 proposals vs 16, paired on the logical parent",
+ "n_parents": 48,
+ "mean_difference": -0.0038007207193242257,
+ "ci_low": -0.008345591814431218,
+ "ci_high": 0.0003176564022521484,
+ "parents_favouring_16": 26,
+ "resamples": 20000,
+ "unit_of_independence": "logical_parent",
+ "by_method": {
+  "hierarchy_outcome": {
+   "seeds": [
+    0,
+    1,
+    2
+   ],
+   "n_parents": 48,
+   "mean_3": 0.5901755966179918,
+   "mean_16": 0.5883352810297302,
+   "mean_difference": -0.0018403155882616192,
+   "parents_favouring_16": 24
+  },
+  "hierarchy_physics": {
+   "seeds": [
+    0
+   ],
+   "n_parents": 48,
+   "mean_3": 0.5958756706402779,
+   "mean_16": 0.5899066125276189,
+   "mean_difference": -0.005969058112658982,
+   "parents_favouring_16": 30
+  },
+  "logical": {
+   "seeds": [
+    0,
+    1,
+    2
+   ],
+   "n_parents": 48,
+   "mean_3": 0.5872900659412802,
+   "mean_16": 0.5869869265159966,
+   "mean_difference": -0.00030313942528361503,
+   "parents_favouring_16": 27
+  },
+  "physical": {
+   "seeds": [
+    0,
+    1,
+    2
+   ],
+   "n_parents": 48,
+   "mean_3": 0.5991402279099067,
+   "mean_16": 0.5865989045355872,
+   "mean_difference": -0.01254132337431956,
+   "parents_favouring_16": 36
+  },
+  "summary": {
+   "seeds": [
+    0,
+    1,
+    2
+   ],
+   "n_parents": 48,
+   "mean_3": 0.5934819076928404,
+   "mean_16": 0.595132140596743,
+   "mean_difference": 0.0016502329039026484,
+   "parents_favouring_16": 23
+  }
+ },
+ "scope": "matched training seeds only; bank-mode selection is unaffected by proposal count and is not compared here"
+}
