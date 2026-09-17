@@ -27,7 +27,8 @@ annealctrl comparison-table \
 | amortised | physical / bank | 0.5462 | [0.4797, 0.6096] | −0.0547 | 864 |
 | amortised | logical / bank | 0.5532 | [0.4859, 0.6175] | −0.0477 | 864 |
 | amortised | best direct proposal | 0.5898–0.5978 | — | −0.0111…−0.0032 | 864 |
-| online adaptation | search (best found) | 0.5074 | [0.4391, 0.5728] | −0.0936 | 864 |
+| online adaptation | search, **Bayesian** | 0.5055 | [0.4374, 0.5709] | −0.0955 | 864 |
+| online adaptation | search, quasi-random (`sobol_local`) | 0.5074 | [0.4391, 0.5728] | −0.0936 | 864 |
 
 There is deliberately **no global rank**. A linear ramp, an oracle whose
 construction is exponential in the number of qubits, a network that consults no
@@ -47,10 +48,20 @@ is the paper's central positive result, and it holds on held-out parents.
 selection is 0.5447. Choosing per instance is worth 0.021 more than choosing one
 good schedule for everything.
 
-**Online adaptation still wins, and by how much is stated.** Search reaches
-0.5074, which is 0.037 better than the best amortised method. That gap is the
-honest price of not consulting outcomes at deployment. It is not hidden, and no
-amortised row is described as matching search.
+**Online adaptation still wins, and by how much is stated.** The better of the
+two search strategies reaches 0.5055, which is 0.039 better than the best
+amortised method. That gap is the honest price of not consulting outcomes at
+deployment. It is not hidden, and no amortised row is described as matching
+search.
+
+**The search baseline is not a straw man.** `sobol_local` is a quasi-random local
+search written for this project, so it was checked against Bayesian optimisation
+— a Gaussian process with a Matérn 5/2 kernel and expected improvement — run at
+the *same* 257-call budget on the same records. BO wins by **0.0019**, on 47 of
+48 parents. The direction is consistent and the size is small: a standard
+derivative-free optimiser, given the same budget, finds essentially what the
+quasi-random search finds. Both rows are reported; the Bayesian one is the
+stronger baseline and is the one the amortised methods should be read against.
 
 **Which encoder does not matter; seeing the embedding does.** The four
 embedding-aware encoders land within 0.0015 of each other — inside their own

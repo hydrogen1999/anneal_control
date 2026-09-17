@@ -657,6 +657,41 @@
    },
    "note": "online adaptation: true outcomes are consulted per instance",
    "objective_calls_per_instance": 257.0
+  },
+  {
+   "method": "search_bayesian",
+   "cost_class": "online_adaptation",
+   "consults_true_outcomes": true,
+   "n_records": 864,
+   "n_parents": 48,
+   "measured_on_full_population": true,
+   "mean_loss": 0.505460025093317,
+   "std_parent_loss": 0.23854054377756703,
+   "parent_bootstrap_ci": {
+    "low": 0.43744009132773903,
+    "high": 0.5708802637705505,
+    "confidence": 0.95,
+    "resamples": 20000,
+    "unit_of_independence": "logical_parent",
+    "status": "ok",
+    "includes_training_seed_uncertainty": false
+   },
+   "vs_linear": {
+    "mean_difference": -0.09546946616487785,
+    "parent_bootstrap_ci": {
+     "low": -0.10683472711754893,
+     "high": -0.08524764169941017,
+     "confidence": 0.95,
+     "resamples": 20000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "reference": "linear_loss",
+    "sign_convention": "negative means this method is better"
+   },
+   "note": "online adaptation, bayesian strategy at the same budget",
+   "objective_calls_per_instance": 257.0
   }
  ],
  "ranked_within_cost_class": {
@@ -681,6 +716,7 @@
    "physical/direct"
   ],
   "online_adaptation": [
+   "search_bayesian",
    "search_best_found"
   ]
  },
