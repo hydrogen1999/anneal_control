@@ -1,0 +1,161 @@
+"""The single comparison table: every method on the same records, with its cost class.
+
+A table that puts a linear ramp, an exponentially expensive spectral oracle, an
+amortised network and a 257-evaluation per-instance search in one column ordered
+by loss is not a comparison, it is a ranking of things that are not comparable.
+Each row therefore carries what it had to consume to produce its number, and the
+assembler refuses to emit a row whose cost class it does not know.
+"""
+import json
+
+import numpy as np
+import pytest
+
+from annealctrl.paper_table import COST_CLASSES, assemble_comparison
+
+
+def ml_row(record, parent, method, mode, loss, *, linear=0.60, glob=0.58):
+    return {"record_id": record, "parent_id": parent, "method": method, "mode": mode,
+            "split": "test", "loss": loss, "linear_loss": linear, "global_loss": glob,
+            "runtime": 4.0, "family": "spin_glass", "logical_n": 4, "physical_n": 8}
+
+
+def frontier_row(record, parent, *, linear=0.60, best=0.50, gap=0.63, d2=0.61,
+                 gap_status="sampled_point_audit_passed"):
+    return {"record_id": record, "parent_id": parent, "split": "test", "runtime": 4.0,
+            "linear_loss": linear, "best_found_loss": best, "online_adaptation": True,
+            "total_objective_calls": 257,
+            "privileged_teachers": {
+                "gap_inverse_square": {"status": gap_status, "loss": gap, "teacher_seconds": 0.02},
+                "d2": {"status": "sampled_point_audit_passed", "loss": d2, "teacher_seconds": 0.02}}}
+
+
+def paired(n=12, **kwargs):
+    ml = [ml_row(f"r{i}", f"p{i}", "summary", "bank", 0.545, **kwargs) for i in range(n)]
+    ml += [ml_row(f"r{i}", f"p{i}", "summary", "direct", 0.590, **kwargs) for i in range(n)]
+    frontier = [frontier_row(f"r{i}", f"p{i}") for i in range(n)]
+    return ml, frontier
+
+
+# --- the join ----------------------------------------------------------------
+
+def test_every_method_is_measured_on_the_same_records():
+    ml, frontier = paired()
+    table = assemble_comparison(ml, frontier, bootstrap_resamples=500)
+    counts = {row["method"]: row["n_records"] for row in table["rows"]}
+    assert len(set(counts.values())) == 1, counts
+    assert table["n_records"] == 12
+    assert table["n_parents"] == 12
+
+
+def test_records_missing_from_either_source_are_excluded_and_counted():
+    ml, frontier = paired(n=10)
+    frontier = frontier[:7]
+    table = assemble_comparison(ml, frontier, bootstrap_resamples=500)
+    assert table["n_records"] == 7
+    assert table["n_dropped_no_frontier_row"] == 3
+    assert all(row["n_records"] == 7 for row in table["rows"])
+
+
+def test_refuses_a_join_with_no_overlap():
+    ml = [ml_row("a", "pa", "summary", "bank", 0.5)]
+    frontier = [frontier_row("b", "pb")]
+    with pytest.raises(ValueError, match="no records in common"):
+        assemble_comparison(ml, frontier, bootstrap_resamples=100)
+
+
+def test_refuses_ml_rows_outside_the_test_split():
+    ml, frontier = paired()
+    ml[0] = {**ml[0], "split": "validation"}
+    with pytest.raises(ValueError, match="test"):
+        assemble_comparison(ml, frontier, bootstrap_resamples=100)
+
+
+# --- cost classes ------------------------------------------------------------
+
+def test_each_row_declares_what_it_consumed():
+    ml, frontier = paired()
+    table = assemble_comparison(ml, frontier, bootstrap_resamples=500)
+    by_method = {row["method"]: row for row in table["rows"]}
+    assert by_method["linear"]["cost_class"] == "fixed"
+    assert by_method["global"]["cost_class"] == "fixed"
+    assert by_method["gap_inverse_square"]["cost_class"] == "privileged_spectrum"
+    assert by_method["summary/bank"]["cost_class"] == "amortised"
+    assert by_method["search_best_found"]["cost_class"] == "online_adaptation"
+    for row in table["rows"]:
+        assert row["cost_class"] in COST_CLASSES
+
+
+def test_online_adaptation_rows_report_their_per_instance_budget():
+    ml, frontier = paired()
+    table = assemble_comparison(ml, frontier, bootstrap_resamples=500)
+    search = next(row for row in table["rows"] if row["method"] == "search_best_found")
+    assert search["objective_calls_per_instance"] == pytest.approx(257.0)
+    assert search["consults_true_outcomes"] is True
+
+
+def test_amortised_and_fixed_rows_consult_no_outcome():
+    ml, frontier = paired()
+    table = assemble_comparison(ml, frontier, bootstrap_resamples=500)
+    for row in table["rows"]:
+        if row["cost_class"] in ("fixed", "amortised", "privileged_spectrum"):
+            assert row["consults_true_outcomes"] is False
+
+
+def test_the_table_refuses_to_rank_across_cost_classes():
+    ml, frontier = paired()
+    table = assemble_comparison(ml, frontier, bootstrap_resamples=500)
+    assert "rank" not in table
+    # Ordering is within a class, and the class is part of the key.
+    assert set(table["ranked_within_cost_class"]) <= set(COST_CLASSES)
+    assert table["scope"].count("cost class") >= 1
+
+
+# --- the numbers -------------------------------------------------------------
+
+def test_losses_are_parent_level_with_intervals():
+    ml, frontier = paired()
+    table = assemble_comparison(ml, frontier, bootstrap_resamples=2000)
+    bank = next(row for row in table["rows"] if row["method"] == "summary/bank")
+    assert bank["mean_loss"] == pytest.approx(0.545)
+    assert bank["parent_bootstrap_ci"]["unit_of_independence"] == "logical_parent"
+    assert bank["vs_linear"]["mean_difference"] == pytest.approx(-0.055)
+
+
+def test_an_unresolved_teacher_shrinks_only_its_own_row():
+    ml, frontier = paired(n=10)
+    frontier[0] = frontier_row("r0", "p0", gap=None, gap_status="unresolved_spectral_points")
+    table = assemble_comparison(ml, frontier, bootstrap_resamples=500)
+    by_method = {row["method"]: row for row in table["rows"]}
+    assert by_method["gap_inverse_square"]["n_records"] == 9
+    assert by_method["gap_inverse_square"]["measured_on_full_population"] is False
+    assert by_method["summary/bank"]["n_records"] == 10
+    assert by_method["summary/bank"]["measured_on_full_population"] is True
+
+
+def test_table_is_json_serialisable():
+    ml, frontier = paired()
+    table = assemble_comparison(ml, frontier, bootstrap_resamples=200)
+    assert json.loads(json.dumps(table))["n_records"] == 12
+
+
+def test_comparison_table_cli_runs_end_to_end(tmp_path, capsys):
+    from annealctrl.workflow_cli import main
+
+    ml, frontier = paired(n=10)
+    records = tmp_path / "heldout.json"
+    records.write_text(json.dumps({"record_means": ml}))
+    sweep = tmp_path / "sweep"
+    sweep.mkdir()
+    with (sweep / "rows.jsonl").open("w") as handle:
+        for index, row in enumerate(frontier):
+            handle.write(json.dumps({
+                "unit_id": f"u{index}", "unit_key": f"k{index}", "fingerprint": f"f{index}",
+                "settings_hash": "s", "source_hash": "h", "status": "ok", "result": row}) + "\n")
+
+    main(["comparison-table", "--records", str(records), "--reference-sweep", str(sweep),
+          "--output", str(tmp_path / "table.json"), "--bootstrap-resamples", "500"])
+    result = json.loads((tmp_path / "table.json").read_text())
+    assert result["n_records"] == 10
+    out = capsys.readouterr().out
+    assert "online_adaptation" in out and "privileged_spectrum" in out
