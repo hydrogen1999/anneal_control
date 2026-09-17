@@ -38,9 +38,20 @@ kernel-launch overhead dominates. CuPy generation is additionally restricted to
 **one** parent worker while NumPy runs many, so in deployment terms *N* CPU
 shards beat one GPU process by roughly *N*. The campaign therefore ran on CPU.
 
-This says nothing about larger systems. The crossover where the GPU wins has not
-been measured, and `teacher.mode=none` would be required to reach the sizes where
-it plausibly does. That is G4 work, not G2/G3 work.
+This says nothing about larger systems, and the crossover where the GPU wins is
+**not yet admissible evidence**. Figures for 12, 14 and 16 physical qubits
+(ratios 3.22x, 10.67x, 103.57x) appear in the message of commit `eb9de9f` and
+nowhere else: there is no committed artifact, no config hash and no record of
+what else the host was running. They are withheld here rather than quoted.
+
+The measurement is also easy to get wrong in a self-serving direction. A loaded
+host starves the NumPy arm while CuPy, which is launch-bound, barely notices, so
+timing under load inflates the ratio in favour of the GPU. The 10-qubit number
+above was taken with `teacher.mode=none` on a quiet host and stands;
+`scripts/backend_crossover.sh` reproduces the full curve and **refuses to run**
+above a load threshold, writing one `profile-generation` artifact per size to
+`configs/backend_profile_{10,12,14,16}q.json`. Until those artifacts exist, the
+only backend claim this project makes is the 1.08x at 10 qubits.
 
 ## 3. What was run
 
