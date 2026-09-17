@@ -353,3 +353,92 @@ def figure_representation(rows, stem: str | Path, *, baseline: str = "logical",
             "blindness_violations": summary["blindness_violations"],
             "files": [str(path) for path in written],
             "note": "excess loss is against a finite-budget best-found reference, not a global optimum"}
+
+
+def figure_teacher_baselines(summary: Mapping[str, Any], stem: str | Path, *,
+                             venue: str = "neurips", column: str = "double") -> dict:
+    """Figure: the privileged spectral schedule is not the ceiling it is assumed to be.
+
+    Left panel: each privileged baseline's paired difference against a linear
+    ramp, stratified by runtime, with parent bootstrap intervals. Zero is drawn
+    plainly; a rule that loses sits above the line. The monotone approach to zero
+    with runtime is the adiabatic theorem behaving as advertised, and drawing it
+    is more honest than quoting a single pooled number that hides it.
+
+    Right panel: mean loss per method on the same records, so the gap between
+    both oracles and the equal-budget search is visible at once. The resolution
+    rate is printed on the axis because ``gap_inverse_square`` is measured on the
+    subset where its first gap resolves, which is not a random subset.
+    """
+    _check_venue(venue)
+    methods = dict(summary.get("methods") or {})
+    usable = {name: block for name, block in methods.items() if block.get("mean_loss") is not None}
+    if not usable:
+        raise ValueError("figure_teacher_baselines requires at least one resolved baseline")
+    plot_utils = load_plot_utils()
+    import matplotlib.pyplot as plt
+
+    width = plot_utils.use_venue(venue, column)
+    fig, (left, right) = plt.subplots(1, 2, figsize=(width, width * 0.38))
+
+    for offset, (name, block) in enumerate(sorted(usable.items())):
+        by_runtime = block.get("by_runtime") or {}
+        runtimes = sorted(by_runtime, key=float)
+        if not runtimes:
+            continue
+        x = np.arange(len(runtimes), dtype=float) + 0.16 * (offset - 0.5)
+        centres, low, high = [], [], []
+        for runtime in runtimes:
+            entry = by_runtime[runtime]["vs_linear"]
+            interval = entry.get("parent_bootstrap_ci") or {}
+            centre = float(entry["mean_difference"])
+            centres.append(centre)
+            low.append(centre - float(interval["low"]) if interval.get("low") is not None else 0.0)
+            high.append(float(interval["high"]) - centre if interval.get("high") is not None else 0.0)
+        left.errorbar(x, centres, yerr=[low, high], marker="o", linestyle="-",
+                      capsize=2, label=name)
+        left.set_xticks(np.arange(len(runtimes), dtype=float))
+        left.set_xticklabels([f"{float(r):g}" for r in runtimes])
+
+    left.axhline(0.0, linewidth=0.8, linestyle="--", color="0.35")
+    left.set_xlabel("runtime")
+    left.set_ylabel("loss vs linear ramp\n(positive = oracle is worse)")
+    left.legend(loc="best")
+
+    # Each baseline is drawn beside ITS OWN linear and search references. The two
+    # baselines resolve on different subsets -- d2 on almost everything,
+    # gap_inverse_square on under half -- so a single shared "linear" bar would
+    # compare one baseline's loss against another baseline's population. That is
+    # the same composition error the G3 scale-arm ratio made, and it is not worth
+    # repeating in a figure because the bars happen to look tidier.
+    ordered = sorted(usable.items())
+    group = np.arange(len(ordered), dtype=float)
+    series = [("linear", lambda b: float(b["mean_linear_loss"])),
+              ("privileged teacher", lambda b: float(b["mean_loss"])),
+              ("search (equal budget)", lambda b: float(b["mean_best_found_loss"]))]
+    bar_width = 0.26
+    peak = 0.0
+    for index, (label, extract) in enumerate(series):
+        values = [extract(block) for _, block in ordered]
+        peak = max(peak, max(values))
+        right.bar(group + (index - 1) * bar_width, values, width=bar_width, label=label)
+    for index, (name, block) in enumerate(ordered):
+        counted = block.get("n_audit_passed", block.get("n_resolved"))
+        right.annotate(f"{100 * block['resolution_rate']:.0f}% resolved\n(n={counted})",
+                       (group[index], peak * 1.04), ha="center", fontsize=6)
+    right.set_xticks(group)
+    right.set_xticklabels([name for name, _ in ordered], rotation=12, ha="right")
+    right.set_ylabel("mean loss (lower is better)")
+    right.set_xlabel("each baseline against its own population")
+    right.set_ylim(0.0, peak * 1.42)
+    right.legend(loc="upper center", ncol=3, fontsize=5.5, columnspacing=1.0,
+                 handlelength=1.2, borderaxespad=0.2)
+
+    fig.tight_layout()
+    written = plot_utils.save(fig, stem)
+    plt.close(fig)
+    return {"figure": "teacher_baselines", "files": [str(path) for path in written],
+            "methods": sorted(usable),
+            "vendored_plot_utils": bool(getattr(plot_utils, "__annealctrl_vendored__", False)),
+            "scope": ("privileged spectral baselines against linear and against the equal-budget "
+                      "search; resolution rates are drawn because the resolved subset is not random")}

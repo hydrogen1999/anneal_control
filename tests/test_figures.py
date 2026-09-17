@@ -1,5 +1,8 @@
 """Figure rendering must be camera-ready: TrueType, never Type 3 (ADR-0006)."""
 import sys
+from pathlib import Path
+
+import numpy as np
 
 import pytest
 
@@ -231,3 +234,69 @@ def test_the_vendored_copy_records_its_upstream_provenance():
     assert "Upstream:" in header
     assert "sha256" in header
     assert "Do not edit this copy" in header
+
+
+# --- the teacher baseline figure ---------------------------------------------
+
+def teacher_summary():
+    def block(name, mean, rate, per_runtime):
+        return {"method": name, "mean_loss": mean, "mean_linear_loss": 0.70,
+                "mean_best_found_loss": 0.61, "resolution_rate": rate, "n_rows": 3447,
+                "n_resolved": int(3447 * rate),
+                "by_runtime": {
+                    runtime: {"vs_linear": {
+                        "mean_difference": difference,
+                        "parent_bootstrap_ci": {"low": difference - 0.01, "high": difference + 0.01}}}
+                    for runtime, difference in per_runtime.items()}}
+    return {"methods": {
+        "gap_inverse_square": block("gap_inverse_square", 0.7159, 0.447,
+                                    {"1.0": 0.0063, "4.0": 0.0625, "12.0": -0.0001}),
+        "d2": block("d2", 0.5569, 0.981, {"1.0": 0.0057, "4.0": 0.0232, "12.0": -0.0341})}}
+
+
+def test_teacher_baseline_figure_renders_truetype(tmp_path):
+    from annealctrl.figures import figure_teacher_baselines
+
+    result = figure_teacher_baselines(teacher_summary(), tmp_path / "figure_teachers")
+    assert result["methods"] == ["d2", "gap_inverse_square"]
+    assert any(str(path).endswith(".pdf") for path in result["files"])
+    for path in result["files"]:
+        assert Path(path).exists()
+
+
+def test_teacher_baseline_figure_refuses_when_nothing_resolved():
+    from annealctrl.figures import figure_teacher_baselines
+
+    empty = {"methods": {"gap_inverse_square": {"mean_loss": None, "status": "no_audited_waveforms"}}}
+    with pytest.raises(ValueError, match="at least one resolved"):
+        figure_teacher_baselines(empty, "unused")
+
+
+def test_teacher_figure_never_compares_across_populations(tmp_path, monkeypatch):
+    """Each baseline must be drawn against its own linear/search, not a shared one."""
+    from annealctrl import figures
+
+    summary = teacher_summary()
+    # Give the two baselines deliberately different references; if the figure
+    # shared one, the drawn bars could not reproduce both.
+    summary["methods"]["d2"]["mean_linear_loss"] = 0.5667
+    summary["methods"]["d2"]["mean_best_found_loss"] = 0.4641
+    summary["methods"]["d2"]["n_audit_passed"] = 2946
+    summary["methods"]["gap_inverse_square"]["mean_linear_loss"] = 0.7013
+    summary["methods"]["gap_inverse_square"]["mean_best_found_loss"] = 0.6116
+    summary["methods"]["gap_inverse_square"]["n_audit_passed"] = 1381
+
+    drawn = []
+    real_bar = None
+
+    def record_bar(self, x, height, **kwargs):
+        drawn.extend(float(v) for v in np.atleast_1d(height))
+        return real_bar(self, x, height, **kwargs)
+
+    import matplotlib.axes
+    real_bar = matplotlib.axes.Axes.bar
+    monkeypatch.setattr(matplotlib.axes.Axes, "bar", record_bar)
+    figures.figure_teacher_baselines(summary, tmp_path / "fig")
+
+    for expected in (0.5667, 0.4641, 0.7013, 0.6116):
+        assert any(abs(value - expected) < 1e-9 for value in drawn), (expected, drawn)
