@@ -30,9 +30,9 @@ directory; every caveat is load-bearing, not decoration.
 | | |
 |---|---|
 | **Claim** | The local-adiabatic rule, given the exact instantaneous gap, loses to a 64-candidate search by 0.110 and to a linear ramp by 0.023. |
-| **Evidence** | 3447 units, 192 parents. `gap_inverse_square` 0.7159 vs linear 0.7013 vs search 0.6116. Runtime trend +0.0063, +0.0625, −0.0001 at runtimes 1, 4, 12 — the adiabatic theorem behaving as advertised. |
+| **Evidence** | 3447 units, 192 parents. `gap_inverse_square` 0.7159 vs linear 0.7013 vs search 0.6116. Against **search** the gap is +0.0540, +0.1671, +0.1105 at runtimes 1, 4, 12 — every interval excludes zero and the gap at 12 is twice the gap at 1. The oracle beats search on 0.7% of records (`d2`: 3.8%). Against **linear** it does catch up, reaching parity at runtime 12. |
 | **Artifact** | `teacher_baselines_2026-09-17/` |
-| **Does not cover** | **Cannot extend above 10 physical qubits at all**: a full spectral teacher needs the Hamiltonian diagonalised at every path point and is exponentially capped. `gap_inverse_square` resolves on only 44.7% of instances, and that subset is harder than the rest (linear 0.7085 vs 0.4565), so it is conditional. For `d2`, including audit failures flips its sign against linear. |
+| **Does not cover** | **Cannot extend above 10 physical qubits at all**: a full spectral teacher needs the Hamiltonian diagonalised at every path point and is exponentially capped. The gap to search is **non-monotonic** in runtime, peaking at 4, so nothing here extrapolates beyond runtime 12 in either direction; a ladder at 12/36/108 is running to test it. `gap_inverse_square` resolves on only 44.7% of instances, and that subset is harder than the rest (linear 0.7085 vs 0.4565), so it is conditional. For `d2`, including audit failures flips its sign against linear. |
 
 ## 4. An amortised selector beats the privileged oracles
 

@@ -1,0 +1,30 @@
+{
+  "split": "validation",
+  "families": [
+    "linear",
+    "one_window",
+    "two_window",
+    "eight_bin",
+    "pause"
+  ],
+  "budget": 64,
+  "seed": 0,
+  "ambiguity_margin": 1.0,
+  "reference_floor": 0.01,
+  "backend": "numpy",
+  "tolerance": 0.0002,
+  "initial_steps": 128,
+  "max_steps": 262144,
+  "max_ds_dtau": 4.0,
+  "teacher_methods": [
+    "gap_inverse_square",
+    "d2"
+  ],
+  "retain_full_trials": true,
+  "on_error": "record",
+  "report": {
+    "bootstrap_resamples": 10000,
+    "seed": 0
+  },
+  "_scope_note": "Runtime-ladder arm. Same families, same budget 64 per tunable family and the same two privileged teachers as the main campaign, so the oracle-versus-search gap is measured the same way at every runtime and the only thing that moves is the runtime. max_steps is raised because a schedule at runtime 108 is nine times flatter than at 12 and the integrator has to follow it for nine times as long; leaving it at 16384 would abort the long-runtime arm and look like a physics result."
+}
