@@ -1,6 +1,6 @@
 {
   "seed": 20260916,
-  "parents": 2,
+  "parents": 3,
   "families": [
     "spin_glass",
     "weighted_maxcut"
@@ -37,8 +37,8 @@
   "runtimes": [
     4.0
   ],
-  "candidates": 16,
-  "candidate_batch_size": 16,
+  "candidates": 8,
+  "candidate_batch_size": 8,
   "spectral_points": 3,
   "teacher": {
     "mode": "none"
@@ -47,7 +47,8 @@
   "max_steps": 16384,
   "label_state_tolerance": 0.0002,
   "max_physical_qubits": 16,
-  "endpoint_memory_mb": 1024,
+  "endpoint_memory_mb": 4096,
   "state_memory_mb": 16384,
-  "_note": "Backend crossover at 16 physical qubits (8 logical x chain length 2), 2 parents x 16 candidates = 32 labels. teacher.mode=none, so this measures propagation throughput, not teacher throughput. Label counts shrink with size deliberately: NumPy cost grows exponentially and a fixed workload would take hours at 16 qubits. Throughput is per label, so the sizes stay comparable -- but with few labels CuPy's fixed startup is amortised over less work, which biases the measured ratio DOWN, against the GPU. That is the conservative direction and is preferred to the opposite."
+  "endpoint_max_qubits": 16,
+  "_note": "Backend crossover at 16 physical qubits (8 logical x chain length 2), 3 parents x 8 candidates = 24 labels. teacher.mode=none, so this measures propagation throughput. Label counts shrink with size because NumPy cost grows exponentially; throughput is per label so sizes stay comparable. With fewer labels CuPy's fixed startup is amortised over less work, which biases the measured ratio DOWN, against the GPU -- the conservative direction."
 }

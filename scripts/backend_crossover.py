@@ -101,7 +101,36 @@ def main(argv=None) -> int:
               file=sys.stderr)
         return 1
 
+    # Validate every configuration before measuring any of them. The first run of
+    # this script spent forty minutes measuring 10q and then failed 12q, 14q and
+    # 16q on config errors that a validator would have named in a second: a
+    # missing endpoint_max_qubits above ten qubits, and a parent count below the
+    # minimum of three. Preflight turns that into an immediate, complete list.
+    sys.path.insert(0, str(root / "src"))
+    try:
+        from annealctrl.pipeline import _validate_config  # noqa: PLC0415
+    except ImportError:
+        _validate_config = None
+    invalid = {}
+    if _validate_config is not None:
+        for size in args.sizes:
+            config = root / "configs" / f"backend_profile_{size}q.json"
+            if not config.exists():
+                invalid[size] = "no config file"
+                continue
+            try:
+                _validate_config(json.loads(config.read_text()))
+            except Exception as error:                       # noqa: BLE001
+                invalid[size] = str(error)
+    if invalid and not args.force:
+        print("refusing to measure: these configurations are invalid.", file=sys.stderr)
+        for size, reason in sorted(invalid.items()):
+            print(f"  {size}q: {reason}", file=sys.stderr)
+        print("Fix them, or pass --force to measure only the valid sizes.", file=sys.stderr)
+        return 1
+
     report = {"schema_version": 1, "sizes": {}, "repeats": args.repeats,
+              "preflight_invalid": {str(k): v for k, v in invalid.items()},
               "tolerance": args.tolerance, "guard_overridden": bool(args.force),
               "census_before": before,
               "scope": ("NumPy against CuPy on a shared host; repeats bound the timing noise and "
