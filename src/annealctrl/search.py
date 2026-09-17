@@ -186,10 +186,14 @@ def equal_budget_refinement(
 CONTROL_FAMILIES = ("linear", "one_window", "two_window", "eight_bin", "pause")
 
 
+STRATEGIES = ("sobol_local", "bayesian")
+
+
 def optimize_control_family(
     loss_fn: Callable[[Schedule], float], family: str, *, budget: int = 32,
     runtime: float = 1.0, max_slope: float = 4.0, seed: int = 0,
     split: str = "train", allow_test_adaptation: bool = False,
+    strategy: str = "sobol_local",
 ) -> SearchResult:
     """Exact-waveform Sobol exploration plus incumbent-centered random search.
 
@@ -206,6 +210,8 @@ def optimize_control_family(
         raise ValueError("test control search requires explicit allow_test_adaptation=True")
     if family not in CONTROL_FAMILIES:
         raise ValueError(f"unknown control family {family!r}")
+    if strategy not in STRATEGIES:
+        raise ValueError(f"unknown search strategy {strategy!r}; available: {list(STRATEGIES)}")
     if isinstance(budget, bool) or not isinstance(budget, int) or budget < 1:
         raise ValueError("budget must be a positive integer")
     decode_durations([0.0], runtime=runtime, max_slope=max_slope)
@@ -238,6 +244,30 @@ def optimize_control_family(
         # Third stick is the uniform residual; overlap is allowed and explicit.
         weights = [p[4], (1 - p[4]) * p[5]]
         return window_schedule(windows, weights, runtime=runtime, max_slope=max_slope)
+
+    if strategy == "bayesian":
+        # The linear incumbent is already charged as trial 0; the optimiser gets
+        # the rest of the budget and never sees the loss before it proposes.
+        from .bayesopt import minimise
+
+        index = [1]
+
+        def objective(parameters: np.ndarray) -> float:
+            schedule = decode(np.clip(parameters, 1e-6, 1 - 1e-6))
+            schedule.validate_slope(runtime=runtime, max_slope=max_slope)
+            position = index[0]
+            index[0] += 1
+            candidate = Candidate(f"{family}_{position:04d}", family, schedule,
+                                  {"unit_parameters": np.asarray(parameters).tolist(),
+                                   "proposal": "bayesian_design" if position <= design_marker[0]
+                                   else "expected_improvement"})
+            record = _evaluate(loss_fn, candidate, position)
+            records.append(record)
+            return record.loss
+
+        design_marker = [min(max(4, 2 * dimension), budget - 1)]
+        minimise(objective, dimension=dimension, budget=budget - 1, seed=seed)
+        return SearchResult(tuple(records), split, split == "test")
 
     for index in range(1, budget):
         # The linear closure incumbent has no interior parameter vector for

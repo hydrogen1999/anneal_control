@@ -192,6 +192,7 @@ FRONTIER_DEFAULTS: dict[str, Any] = {
     "ambiguity_margin": 1.0, "reference_floor": 0.01, "backend": "numpy",
     "tolerance": 5e-4, "initial_steps": 128, "max_steps": 8192, "max_ds_dtau": 4.0,
     "teacher_methods": [], "retain_full_trials": True, "on_error": "raise",
+    "strategy": "sobol_local",
 }
 REPORT_DEFAULTS: dict[str, Any] = {"bootstrap_resamples": 10000, "seed": 0}
 
@@ -231,6 +232,7 @@ def sweep_control_frontier(
     allow_test_adaptation: bool = False, backend: str = "numpy",
     tolerance: float = 5e-4, initial_steps: int = 128, max_steps: int = 8192,
     max_ds_dtau: float = 4.0, teacher_methods: Sequence[str] = (),
+    strategy: str = "sobol_local",
     resume: bool = False, dry_run: bool = False, on_error: str = "raise",
     retain_full_trials: bool = True, record_ids: Sequence[str] | None = None,
     shard: int = 0, shard_count: int = 1,
@@ -259,7 +261,7 @@ def sweep_control_frontier(
                 "allow_test_adaptation": allow_test_adaptation, "backend": backend,
                 "tolerance": tolerance, "initial_steps": initial_steps, "max_steps": max_steps,
                 "max_ds_dtau": max_ds_dtau, "teacher_methods": list(teacher_methods),
-                "retain_full_trials": retain_full_trials}
+                "strategy": strategy, "retain_full_trials": retain_full_trials}
 
     if dry_run:
         # The plan reports the real record count, so it needs the real dataset. A
@@ -305,7 +307,7 @@ def sweep_control_frontier(
             record, budget_per_family=budget, families=families, seed=seed,
             allow_test_adaptation=allow_test_adaptation, backend=backend, tolerance=tolerance,
             initial_steps=initial_steps, max_steps=max_steps, max_ds_dtau=max_ds_dtau,
-            teacher_methods=tuple(teacher_methods))
+            teacher_methods=tuple(teacher_methods), strategy=strategy)
         if retain_full_trials:
             # Reviewers need every evaluated control; rows stay streamable by
             # keeping the full trajectory beside the sweep instead of inside it.

@@ -476,3 +476,21 @@ def test_size_strata_carry_their_own_bootstrap_interval():
     strata = aggregate_frontier(rows, bootstrap_resamples=200)["by_physical_size"]
     ci = strata["12"]["headroom"]["parent_bootstrap_ci"]
     assert ci["unit_of_independence"] == "logical_parent" and ci["resamples"] == 200
+
+
+def test_frontier_config_carries_the_search_strategy():
+    from annealctrl.headroom import load_frontier_config
+    sweep, _ = load_frontier_config({"strategy": "bayesian"})
+    assert sweep["strategy"] == "bayesian"
+    assert load_frontier_config({})[0]["strategy"] == "sobol_local"
+
+
+def test_the_benchmark_records_which_strategy_produced_it(tmp_path):
+    from annealctrl.benchmarking import benchmark_record_controls
+    data = dataset(tmp_path, parents=4)
+    from annealctrl.pipeline import load_records
+    record = load_records(data, "train")[0]
+    result = benchmark_record_controls(record, budget_per_family=4, families=("linear", "one_window"),
+                                       seed=0, tolerance=5e-3, initial_steps=16, max_steps=512,
+                                       strategy="bayesian")
+    assert result["search_strategy"] == "bayesian"

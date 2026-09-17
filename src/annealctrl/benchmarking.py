@@ -386,7 +386,7 @@ def benchmark_record_controls(record, *, budget_per_family=32, families=CONTROL_
                               seed=0, allow_test_adaptation=False, backend="numpy", tolerance=5e-4,
                               initial_steps=128, max_steps=8192, norm_tolerance=1e-9,
                               teacher_methods=(), max_ds_dtau=4., teacher_grid_points=33,
-                              teacher_gap_epsilon=0.):
+                              teacher_gap_epsilon=0., strategy="sobol_local"):
     """Equal objective-call family comparison; every trial's true waveform saved.
 
     Teacher baselines are privileged and separately charged, never folded into
@@ -425,7 +425,8 @@ def benchmark_record_controls(record, *, budget_per_family=32, families=CONTROL_
         search = optimize_control_family(objective, family, budget=budget_per_family,
                                          runtime=runtime, max_slope=max_ds_dtau / runtime,
                                          seed=seed + CONTROL_FAMILIES.index(family) * 1009, split=split,
-                                         allow_test_adaptation=allow_test_adaptation)
+                                         allow_test_adaptation=allow_test_adaptation,
+                                         strategy=strategy)
         incumbent = float("inf")
         records = []
         for trial, outcome in zip(search.records, outcomes):
@@ -461,6 +462,7 @@ def benchmark_record_controls(record, *, budget_per_family=32, families=CONTROL_
     return _json_safe({"schema_version": 2, **_identity(record), "seed": seed,
                        "families": family_results, "privileged_teachers": teacher_results,
                        "budget_per_tunable_family": budget_per_family,
+                       "search_strategy": strategy,
                        "test_adaptation_explicitly_allowed": allow_test_adaptation,
                        "total_objective_calls": sum(x["n_evaluations"] for x in family_results.values()),
                        "wall_seconds": perf_counter() - began,
