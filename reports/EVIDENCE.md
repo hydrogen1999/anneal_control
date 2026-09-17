@@ -66,7 +66,7 @@ directory; every caveat is load-bearing, not decoration.
 | | |
 |---|---|
 | **Claim** | On genuine Pegasus P16 connectivity, headroom is 0.1362 / 0.1649 / 0.1312 at 10 / 12 / 14 physical qubits — no decay. |
-| **Evidence** | 24 validation records, 12 parents, 0 censored, verdict `resolved_headroom_present`. `two_window` wins 12 of 12 parents. |
+| **Evidence** | 24 validation records over 12 parents, 0 censored, verdict `resolved_headroom_present`; train split complete at 144 records with the same picture (0.1466 / 0.1411 / 0.1471 / 0.1321 at 10 / 11 / 12 / 14). `two_window` wins 12 of 12 parents. |
 | **Artifact** | `pegasus_2026-09-17/` |
 | **Does not cover** | Real connectivity is **not a real device**: closed-system simulation, no noise, no calibration drift, no QPU job ever submitted. Budget 32 here against 64 in the main campaign. 12 parents give wide overlapping intervals — "does not decay" holds, "is constant" does not. |
 
@@ -88,11 +88,23 @@ directory; every caveat is load-bearing, not decoration.
 | **Artifact** | `backend_2026-09-17/crossover.json` |
 | **Does not cover** | 14 and 16 qubits are **not measured**: repeated config failures, then the GPU was returned to the Pegasus sweep. The ratios 3.22×/10.67×/103.57× that appear in commit `eb9de9f` have no artifact and are withheld. The census in this artifact mislabels process ownership — see `census_labelling_defect` inside it. |
 
+## 10. The advantage is not an artefact of simulating no environment
+
+| | |
+|---|---|
+| **Claim** | Under local dephasing, the searched control still beats the linear ramp on every record tested, and the ordering never flips. |
+| **Evidence** | Ten held-out records at 4–6 physical qubits. Mean headroom 0.1389 / 0.1193 / 0.0966 / 0.0708 at dephasing rate 0 / 0.02 / 0.05 / 0.1; best-found wins 10/10 at every rate. At rate zero the open-system pipeline reproduces the closed-system headroom to within 2 × 10⁻⁵, from a solver sharing no integration code with it. |
+| **Artifact** | `open_system_2026-09-17/` |
+| **Does not cover** | Local dephasing at a hand-chosen rate is **not a device model**: no thermal bath, no measured T1/T2, no per-qubit calibration, no readout error. Relaxation held at zero, so one noise axis only. 4–6 qubits — two records at N=7 were refused by the solver's own cap and are reported absent. Compares the *searched* control against linear; the amortised selector's degradation is untested. |
+
 ---
 
 ## Standing limitations that apply to everything above
 
-1. **No hardware.** Every number is a closed-system simulation. Real Pegasus connectivity is used in §7; a real Pegasus *machine* is not used anywhere.
+1. **No hardware.** Every campaign number is a closed-system simulation; §10 adds an
+   open-system check under hand-chosen local dephasing on ten small records, which
+   is a perturbation study and not a device model. Real Pegasus connectivity is
+   used in §7; a real Pegasus *machine* is not used anywhere.
 2. **Scale.** §1–6 and §8 are at most 10 physical qubits, i.e. 1024 amplitudes. §7 reaches 14. §3 cannot be extended by construction.
 3. **Budget-limited references.** Every "best found" is a finite-budget reference, never a global control optimum. Increasing the budget can only lower it, so headroom is a lower bound.
 4. **Parent-level independence.** Every interval resamples logical parents, and none of them include training-seed uncertainty, which is reported separately.
