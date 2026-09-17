@@ -137,9 +137,9 @@ def representation_rows():
                 "pair_id": f"p{index}_k", "parent_id": f"p{index}", "method": method,
                 "factor": "chain_strength", "scale_arm": "total_compiled_effect",
                 "encoder_variant": method,
-                "embedding_blind_by_construction": method in {"logical", "summary"},
-                "identical_choice": method in {"logical", "summary"},
-                "waveform_distance": 0.0 if method in {"logical", "summary"} else 0.2,
+                "embedding_blind_by_construction": method == "logical",
+                "identical_choice": method == "logical",
+                "waveform_distance": 0.0 if method == "logical" else 0.2,
                 "model_loss": {"A": 0.5, "B": 0.5},
                 "excess_loss": {"A": excess + jitter, "B": excess - jitter},
                 "mean_excess_loss": excess + jitter / 2,
@@ -163,7 +163,7 @@ def test_representation_figure_writes_pdf_and_png_without_type3(tmp_path):
 def test_representation_figure_marks_which_methods_are_embedding_blind(tmp_path):
     from annealctrl.figures import figure_representation
     result = figure_representation(representation_rows(), tmp_path / "figure5", baseline="logical")
-    assert set(result["blind_methods"]) == {"logical", "summary"}
+    assert set(result["blind_methods"]) == {"logical"}
     assert result["blindness_shown"] is True
 
 

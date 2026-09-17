@@ -319,3 +319,18 @@ def test_aggregate_counts_infeasible_proposals_and_keeps_them_out_of_the_statist
     block = summary["by_method"]["physical"]
     assert block["n_infeasible_proposals"] == 1
     assert block["mean_excess_loss"]["n_parents"] == 1
+
+
+def test_only_the_logical_encoder_is_classified_embedding_blind(checkpoints):
+    """summary pools aggregate moments of the PHYSICAL graph, so it is not blind.
+
+    Measured on the real campaign: the summary checkpoint chose a different
+    waveform on 1047 of 1060 intervention pairs. The blindness check flagged that
+    as a violation, which is how the misclassification was found.
+    """
+    logical = model_intervention_response(pair(), checkpoints["logical"],
+                                          tolerance=5e-3, initial_steps=16, max_steps=512)
+    physical = model_intervention_response(pair(), checkpoints["physical"],
+                                           tolerance=5e-3, initial_steps=16, max_steps=512)
+    assert logical["embedding_blind_by_construction"] is True
+    assert physical["embedding_blind_by_construction"] is False

@@ -183,7 +183,12 @@ def model_intervention_response(
     wave_a, wave_b = chosen["A"].s_knots, chosen["B"].s_knots
     identical = bool(np.array_equal(wave_a, wave_b))
     distance = float(np.abs(wave_a - wave_b).max()) if wave_a.shape == wave_b.shape else float("inf")
-    blind = variant in {"logical", "summary"}
+    # Only the logical encoder is embedding-blind. The summary variant pools
+    # aggregate moments of the PHYSICAL graph, so it sees embedding information -
+    # in compressed form, but it sees it. The blindness check caught this
+    # misclassification on the first real run: summary chose differently on 99%
+    # of pairs, which a blind model cannot do.
+    blind = variant == "logical"
 
     both_feasible = bool(feasible["A"] and feasible["B"])
     excess = None
