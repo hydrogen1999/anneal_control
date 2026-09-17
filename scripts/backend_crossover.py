@@ -29,6 +29,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -55,7 +56,33 @@ def census() -> dict:
             continue
         who = "self" if user.startswith(me[:8]) else "other"
         buckets[f"{who}_nice_{nice}"] = buckets.get(f"{who}_nice_{nice}", 0.0) + cpu
+    # A GPU benchmark whose census only counts CPU is measuring half the machine.
+    # A stray sweep of my own held 556 MiB and 18% of the GPU through one run and
+    # cut the measured CuPy throughput almost in half, while NumPy barely moved --
+    # exactly the kind of contamination that looks like a real size effect.
+    gpu = []
+    try:
+        listing = subprocess.run(
+            ["nvidia-smi", "--query-compute-apps=pid,used_memory", "--format=csv,noheader"],
+            capture_output=True, text=True, timeout=20)
+        for line in listing.stdout.splitlines():
+            parts = [x.strip() for x in line.split(",")]
+            if len(parts) == 2 and parts[0].isdigit():
+                described = subprocess.run(["ps", "-o", "stat=,user=,args=", "-p", parts[0]],
+                                           capture_output=True, text=True).stdout.strip()
+                state = described.split(maxsplit=1)[0] if described else "?"
+                gpu.append({"pid": int(parts[0]), "used": parts[1], "state": state,
+                            # A stopped process keeps its CUDA context and its
+                            # memory but executes nothing, so it does not compete
+                            # for compute. Its reservation is still recorded.
+                            "competing": not state.startswith("T"),
+                            "process": described[:140]})
+    except (OSError, subprocess.SubprocessError):
+        gpu = None
+
     return {"load_average": [float(x) for x in load],
+            "gpu_compute_processes": gpu,
+            "n_gpu_compute_processes": (len(gpu) if gpu is not None else None),
             "cpu_percent_by_user_and_nice": {k: round(v, 1) for k, v in sorted(buckets.items())},
             "self_competing_cpu_percent": round(
                 sum(v for k, v in buckets.items()
@@ -90,6 +117,18 @@ def main(argv=None) -> int:
         print(f"refusing to measure: this driver is running at nice {own_nice}. It would be "
               "starved exactly like the NumPy arm it is timing.", file=sys.stderr)
         print("Launch it from a shell that was not reniced (a fresh session), or pass --force.",
+              file=sys.stderr)
+        return 1
+    occupants = before.get("gpu_compute_processes") or []
+    competing = [entry for entry in occupants
+                 if str(os.getpid()) != str(entry["pid"]) and entry.get("competing", True)]
+    if competing and not args.force:
+        print("refusing to measure: another process is running on the GPU.", file=sys.stderr)
+        for entry in competing:
+            print(f"  pid {entry['pid']} ({entry['state']}) using {entry['used']}: "
+                  f"{entry['process']}", file=sys.stderr)
+        print("A contended GPU depresses the CuPy arm while NumPy is untouched, which reads as a "
+              "smaller size effect than the truth. Stop or pause that process, or pass --force.",
               file=sys.stderr)
         return 1
     if before["self_competing_cpu_percent"] > args.max_self_competing_cpu and not args.force:

@@ -17,9 +17,26 @@ four, so scattering more points in it is the wrong move.
 
 The fix that does. Take the trained model's **actual** proposals on the training
 and validation records, score them with the simulator, and append them to those
-records' banks. The critic is then trained on exactly the region it will be asked
-to rank. This is standard dataset aggregation, one round, and it is honest about
-its cost: every appended candidate is a real propagation, charged and reported.
+records' banks. This is standard dataset aggregation, one round, and it is honest
+about its cost: every appended candidate is a real propagation, charged and
+reported. Measured over three seeds against a matched ``collect_bank_extension``
+control, it is worth -0.0226 in selected loss on held-out parents, consistently
+(-0.0195, -0.0238, -0.0243), with 78% of the total gain attributable to
+aggregation and 22% to the bank merely growing from 64 candidates to 67.
+
+**The mechanism is not the one this module was written to address.** The
+hypothesis above was critic distribution shift, so the expected signature was a
+rise in rank correlation. It is not what happens. Against the control, rho moves
+by +0.003 on average and is negative on one seed of three; almost all of the
+apparent rho gain (0.575 to 0.630) comes from the larger bank, which the control
+arm reproduces. What aggregation actually moves is **generation**: the policy's
+own best proposal improves by -0.0194 and the generation gap closes by -0.0183,
+while ranking regret improves by only -0.0031.
+
+The plausible reading is that the policy and critic share an encoder and are
+trained jointly, so appending truthfully-labelled proposals changes the policy
+head's targets more than it recalibrates the critic. That is a hypothesis about
+a measurement, not a second measurement, and it is not claimed as established.
 
 Boundaries. Proposals are collected on train and validation records only; a test
 record's proposals are never labelled or trained on. The augmented bank is a

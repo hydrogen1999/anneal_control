@@ -1,0 +1,61 @@
+{
+  "_comment": "SCALE-UP of data_g2_research.json to 11-16 physical qubits. Same families, same runtimes, same candidate bank size and the same teacher.mode=none, so headroom measured here is directly comparable to the 3-10 qubit campaign at the same search budget. Only the logical sizes and chain lengths move, which is the point: aggregate_frontier stratifies by physical_size, so the two campaigns together give a size trend from 3 to 16 rather than two unrelated numbers. No spectral teacher is possible at these sizes -- the full teacher is capped at 10 physical qubits -- so the privileged-oracle comparison does NOT extend here and must not be quoted above 10.",
+  "seed": 20260917,
+  "parents": 36,
+  "families": [
+    "spin_glass",
+    "weighted_maxcut",
+    "planted_loops",
+    "weak_field"
+  ],
+  "logical_sizes": [
+    5,
+    6,
+    7
+  ],
+  "logical_support": {
+    "kind": "complete"
+  },
+  "chain_distribution": {
+    "distribution": "power_law",
+    "low": 2,
+    "high": 3,
+    "exponent": 2.0
+  },
+  "variants": [
+    {
+      "shape": "path",
+      "ports": 1,
+      "field_distribution": "uniform"
+    },
+    {
+      "shape": "random_tree",
+      "ports": 2,
+      "field_distribution": "concentrated",
+      "coupling_distribution": "random"
+    }
+  ],
+  "chain_strengths": [
+    0.75,
+    1.5,
+    3.0
+  ],
+  "runtimes": [
+    1.0,
+    4.0,
+    12.0
+  ],
+  "candidates": 8,
+  "candidate_batch_size": 8,
+  "spectral_points": 3,
+  "teacher": {
+    "mode": "none"
+  },
+  "steps": 64,
+  "max_steps": 16384,
+  "label_state_tolerance": 0.0002,
+  "max_physical_qubits": 16,
+  "endpoint_memory_mb": 4096,
+  "state_memory_mb": 16384,
+  "endpoint_max_qubits": 16
+}

@@ -1,0 +1,31 @@
+{
+  "split": "test",
+  "families": [
+    "linear",
+    "one_window",
+    "two_window",
+    "eight_bin",
+    "pause"
+  ],
+  "budget": 64,
+  "seed": 0,
+  "ambiguity_margin": 1.0,
+  "reference_floor": 0.01,
+  "backend": "numpy",
+  "tolerance": 0.0002,
+  "initial_steps": 128,
+  "max_steps": 16384,
+  "max_ds_dtau": 4.0,
+  "teacher_methods": [
+    "gap_inverse_square",
+    "d2"
+  ],
+  "retain_full_trials": true,
+  "on_error": "record",
+  "report": {
+    "bootstrap_resamples": 10000,
+    "seed": 0
+  },
+  "_scope_note": "Bayesian-optimisation arm of the test-split reference, at the SAME budget (64 per tunable family, 257 objective calls per record) as the sobol_local arm. The point is a like-for-like comparison of search algorithms at equal cost: if BO clearly beats sobol_local then the search row in the comparison table was a weak baseline and must be replaced; if it does not, that is evidence the baseline is not a straw man. Like the sobol arm this is ONLINE ADAPTATION -- true outcomes are consulted per instance -- and nothing is fitted or tuned on these rows.",
+  "strategy": "bayesian"
+}
