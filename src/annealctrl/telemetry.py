@@ -134,3 +134,18 @@ class RunLog:
 def _environment() -> dict:
     return {"python": platform.python_version(), "platform": platform.platform(),
             "machine": platform.machine(), "hostname": platform.node()}
+
+
+def unknown_config_keys(config, allowed) -> list[str]:
+    """Keys in ``config`` that are neither allowed nor annotations.
+
+    Underscore-prefixed keys are annotations: provenance notes, scope caveats,
+    the reason a config file exists. Every config validator in this package has
+    to permit them and reject everything else, so that a genuine typo like
+    ``budgte`` still fails loudly instead of silently taking a default.
+
+    This exists because that rule was written out separately in three places and
+    fixed one place at a time, each time after four sharded jobs had already died
+    on ``unknown ... keys: ['_scope_note']``. One implementation, three callers.
+    """
+    return sorted({str(key) for key in config if not str(key).startswith("_")} - set(allowed))

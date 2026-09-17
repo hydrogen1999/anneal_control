@@ -51,7 +51,7 @@ from .physics import AnnealPath, HamiltonianTerms
 from .schedules import Schedule
 from .search import CONTROL_FAMILIES, optimize_control_family
 from .sweeps import SweepUnit, run_sweep
-from .telemetry import _safe
+from .telemetry import _safe, unknown_config_keys
 
 # Declared factor -> the single specification key it is allowed to change.
 FACTORS: dict[str, str] = {
@@ -323,9 +323,9 @@ def plan_intervention_pairs(config: Mapping[str, Any] | str | Path, *,
         config = json.loads(Path(config).read_text(encoding="utf-8"))
     if not isinstance(config, Mapping):
         raise ValueError("intervention plan configuration must be a mapping or a path to one")
-    unknown = set(config) - PLAN_KEYS
+    unknown = unknown_config_keys(config, PLAN_KEYS)
     if unknown:
-        raise ValueError(f"unknown intervention plan keys: {sorted(unknown)}")
+        raise ValueError(f"unknown intervention plan keys: {unknown}")
 
     seed = int(config.get("seed", 0))
     n_parents = int(config.get("parents", 12))

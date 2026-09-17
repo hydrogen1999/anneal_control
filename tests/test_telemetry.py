@@ -126,3 +126,34 @@ def test_peak_rss_bytes_is_positive_and_plausible():
     assert isinstance(value, int)
     # Any live CPython interpreter holds more than 1 MiB and less than 1 TiB.
     assert 2**20 < value < 2**40
+
+
+# --- the shared config allowlist ---------------------------------------------
+
+def test_unknown_config_keys_permits_annotations_and_rejects_typos():
+    """Written out three separate times before; one implementation now, three callers."""
+    from annealctrl.telemetry import unknown_config_keys
+
+    allowed = {"budget", "split"}
+    assert unknown_config_keys({"budget": 1, "_why": "a note"}, allowed) == []
+    assert unknown_config_keys({"budget": 1, "_scope_note": "x", "_provenance": "y"}, allowed) == []
+    assert unknown_config_keys({"budgte": 1}, allowed) == ["budgte"]
+    assert unknown_config_keys({"budget": 1, "zzz": 2, "aaa": 3}, allowed) == ["aaa", "zzz"]
+
+
+def test_unknown_config_keys_is_used_by_every_config_validator():
+    """A fourth copy of this rule is how the same failure comes back."""
+    from annealctrl.experiments import validate_experiment
+    from annealctrl.headroom import load_frontier_config
+    from annealctrl.interventions import plan_intervention_pairs
+
+    for call in (lambda: load_frontier_config({"split": "test", "_note": "x"}),
+                 lambda: plan_intervention_pairs({"parents": 3, "logical_qubits": 3,
+                                                  "chain_lengths": [2, 2, 2], "_note": "x"}),
+                 lambda: validate_experiment({"dataset": "d.json", "seeds": [0],
+                                              "methods": [{"name": "m", "model": {}}],
+                                              "_note": "x"})):
+        try:
+            call()
+        except ValueError as error:
+            assert "_note" not in str(error), error

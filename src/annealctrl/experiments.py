@@ -17,6 +17,7 @@ import shutil
 from time import perf_counter
 
 from .pipeline import environment, generate_dataset, load_records, write_json
+from .telemetry import unknown_config_keys
 
 
 def content_hash(value) -> str:
@@ -72,7 +73,7 @@ def validate_experiment(cfg: dict) -> None:
     # Keys beginning with "_" are free-form annotations, never read. The dataset
     # configs already use that convention; the allowlist stays strict for
     # everything else so a typo like "excution" is still an error.
-    unknown = {key for key in cfg if not str(key).startswith("_")} - allowed
+    unknown = set(unknown_config_keys(cfg, allowed))
     if unknown:
         raise ValueError(f"Unknown experiment keys: {sorted(unknown)}")
     if cfg.get("schema_version", 1) != 1 or not isinstance(cfg.get("dataset"), dict):

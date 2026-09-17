@@ -1,0 +1,88 @@
+{
+  "seed": 20260917,
+  "parents": 24,
+  "families": [
+    "spin_glass",
+    "weighted_maxcut",
+    "planted_loops",
+    "weak_field"
+  ],
+  "logical_qubits": 4,
+  "logical_support": {
+    "kind": "complete"
+  },
+  "chain_lengths": [
+    4,
+    4,
+    3,
+    3
+  ],
+  "runtimes": [
+    2.0,
+    8.0
+  ],
+  "splits": [
+    "train",
+    "validation"
+  ],
+  "base": {
+    "shape": "path",
+    "ports": 1,
+    "field_distribution": "uniform",
+    "coupling_distribution": "uniform",
+    "chain_strength": 1.5
+  },
+  "interventions": [
+    {
+      "factor": "geometry",
+      "change": {
+        "shape": "star"
+      }
+    },
+    {
+      "factor": "geometry",
+      "change": {
+        "shape": "random_tree"
+      }
+    },
+    {
+      "factor": "ports",
+      "change": {
+        "ports": 2
+      }
+    },
+    {
+      "factor": "field_allocation",
+      "change": {
+        "field_distribution": "concentrated"
+      }
+    },
+    {
+      "factor": "chain_strength",
+      "change": {
+        "chain_strength": 3.0
+      }
+    }
+  ],
+  "search": {
+    "families": [
+      "linear",
+      "one_window",
+      "two_window",
+      "eight_bin"
+    ],
+    "budget": 64,
+    "seed": 0,
+    "ambiguity_margin": 1.0,
+    "backend": "numpy",
+    "tolerance": 0.0002,
+    "initial_steps": 128,
+    "max_steps": 16384,
+    "max_ds_dtau": 4.0,
+    "max_qubits": 14,
+    "on_error": "record"
+  },
+  "max_physical_qubits": 14,
+  "allow_size_change": false,
+  "_scope_note": "G3 interventions at 14 physical qubits, to ask whether the preferred control still depends on the embedding once the system is larger than the 8-qubit research config. Chain lengths are 4,4,3,3 rather than 3,3,2 because path and star coincide on three nodes and the geometry intervention would be vacuous. Fewer parents (24 against 120) because each pair costs 2^14 state amplitudes instead of 2^8."
+}
