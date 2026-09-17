@@ -45,6 +45,7 @@
   "max_steps": 16384,
   "label_state_tolerance": 0.0002,
   "max_physical_qubits": 12,
+  "endpoint_max_qubits": 12,
   "endpoint_memory_mb": 1024,
   "state_memory_mb": 4096,
   "_note": "Backend crossover point at 12 physical qubits (6 logical x chain length 2). teacher.mode=none so the measurement is propagation throughput, not teacher throughput."

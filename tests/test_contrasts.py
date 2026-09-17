@@ -15,6 +15,7 @@ from annealctrl.contrasts import (
     contrast_matrix,
     encoder_information_contrast,
     paired_method_contrast,
+    paired_parent_seed_contrast,
 )
 
 
@@ -198,3 +199,90 @@ def test_method_contrast_cli_reports_when_no_blind_encoder_is_present(tmp_path):
     information = json.loads((tmp_path / "c.json").read_text())["modes"]["bank"]["embedding_information"]
     assert information["status"] == "unavailable"
     assert "logical" in information["reason"]
+
+
+def test_nonrejection_is_not_transitive_and_maximal_sets_may_overlap(monkeypatch):
+    import annealctrl.contrasts as module
+    # a~b and a~c, but b and c differ. The former greedy grouping put all
+    # three into one purportedly indistinguishable set.
+    def contrast(_rows, a, b, **_kwargs):
+        rejected = {a, b} == {"b", "c"}
+        return {"method_a": a, "method_b": b, "p_value": 0.001 if rejected else 0.8,
+                "separated": rejected}
+    monkeypatch.setattr(module, "paired_method_contrast", contrast)
+    rows = sum((rows_for(m, "bank", [0.4, 0.5]) for m in ("a", "b", "c")), [])
+    matrix = contrast_matrix(rows, methods=["a", "b", "c"])
+    assert matrix["nonseparated_maximal_sets"] == [["a", "b"], ["a", "c"]]
+    assert matrix["indistinguishable_groups"] == matrix["nonseparated_maximal_sets"]
+
+
+def test_pooled_information_is_explicitly_outside_the_holm_family():
+    rows = rows_for("logical", "bank", [0.6, 0.7], parents=["p0", "p1"])
+    rows += rows_for("summary", "bank", [0.5, 0.6], parents=["p0", "p1"])
+    result = encoder_information_contrast(rows, bootstrap_resamples=100)
+    assert result["correction"] == "none"
+    assert result["inference_role"].startswith("exploratory")
+    assert "NOT part" in result["scope"]
+
+
+def test_pooled_information_refuses_silently_dropped_parents():
+    rows = rows_for("logical", "bank", [0.6, 0.7, 0.8], parents=["p0", "p1", "p2"])
+    rows += rows_for("summary", "bank", [0.5, 0.6], parents=["p0", "p1"])
+    with pytest.raises(ValueError, match="same parents"):
+        encoder_information_contrast(rows, bootstrap_resamples=100)
+
+
+def test_centered_bootstrap_has_an_explicit_null_and_never_a_zero_p_value():
+    from annealctrl.contrasts import _paired_bootstrap
+    result = _paired_bootstrap(np.zeros(20), n_resamples=100, seed=0)
+    assert result["p_value"] == 1
+    effect = _paired_bootstrap(np.full(20, 0.1), n_resamples=100, seed=0)
+    assert effect["p_value"] == pytest.approx(1 / 101)
+    assert effect["p_value_method"] == "centered_null_bootstrap_absolute_mean"
+
+
+def crossed_rows(seed_effects=(-0.1, 0., 0.1)):
+    rows = []
+    for method in ("a", "b"):
+        for parent in range(20):
+            for seed, effect in enumerate(seed_effects):
+                rows.append({"method": method, "mode": "direct", "parent_id": f"p{parent}",
+                             "seed": seed, "record_id": f"r{parent}",
+                             "loss": 0.5 + (effect if method == "b" else 0.)})
+    return rows
+
+
+def test_crossed_bootstrap_retains_shared_seed_uncertainty():
+    rows = crossed_rows()
+    parent_only = paired_method_contrast(rows, "a", "b", mode="direct", bootstrap_resamples=500)
+    result = paired_parent_seed_contrast(rows, "a", "b", bootstrap_resamples=1000)
+    assert parent_only["ci_high"] - parent_only["ci_low"] < 1e-10
+    assert result["ci_high"] - result["ci_low"] > 0.1
+    assert result["mean_difference"] == pytest.approx(0., abs=1e-14)
+    assert result["n_seeds"] == 3
+    assert result["p_value"] is None
+    assert result["per_seed_mean_difference"]["0"] == pytest.approx(-0.1)
+
+
+def test_crossed_bootstrap_requires_a_complete_panel_and_matching_records():
+    rows = crossed_rows()
+    incomplete = [r for r in rows if not (r["parent_id"] == "p0" and r["seed"] == 0)]
+    with pytest.raises(ValueError, match="complete"):
+        paired_parent_seed_contrast(incomplete, "a", "b", bootstrap_resamples=100)
+    rows[-1]["record_id"] = "different"
+    with pytest.raises(ValueError, match="matching record IDs"):
+        paired_parent_seed_contrast(rows, "a", "b", bootstrap_resamples=100)
+
+
+def test_crossed_bootstrap_does_not_report_joint_ci_from_one_seed():
+    result = paired_parent_seed_contrast(crossed_rows((-0.1,)), "a", "b", bootstrap_resamples=100)
+    assert result["status"] == "insufficient_parents_or_seeds"
+    assert result["ci_low"] is None
+    assert result["mean_difference"] == pytest.approx(-0.1)
+
+
+@pytest.mark.parametrize("resamples,confidence", [(0, .95), (True, .95), (100, 1.), (100, 0.)])
+def test_bootstrap_refuses_invalid_configuration(resamples, confidence):
+    with pytest.raises(ValueError):
+        paired_parent_seed_contrast(crossed_rows(), "a", "b",
+                                    bootstrap_resamples=resamples, confidence=confidence)

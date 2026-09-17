@@ -258,10 +258,83 @@ def _checkpoint_provenance(payload, training, validation, test):
             "legacy_checkpoint_warning": None if strict else "v0.1 checkpoint has parent-only data provenance"}
 
 
+def validate_training_augmentation(original, training_records):
+    """Verify append-only training labels without changing the held-out problem.
+
+    Candidate rows may be appended per instance. Every original physics field,
+    label, ID and candidate waveform remains exact; candidate_tau is a grid, not
+    a candidate-aligned column. The checkpoint content digest is checked later
+    against these explicit records, never against the smaller original bank.
+    """
+    original, training_records = list(original), list(training_records)
+    def indexed(records):
+        ids = [str(_scalar(r, "record_id")) for r in records]
+        if len(ids) != len(set(ids)):
+            raise ValueError("training augmentation contains duplicate record IDs")
+        return dict(zip(ids, records))
+    before, after = indexed(original), indexed(training_records)
+    if set(before) != set(after):
+        raise ValueError("training augmentation must retain exactly the original record IDs")
+    for record_id, old in before.items():
+        new = after[record_id]
+        if str(_scalar(old, "split")) != "train" or str(_scalar(new, "split")) != "train":
+            raise ValueError("augmentation accepts training records only")
+        count = len(old["candidate_losses"])
+        new_count = len(new["candidate_losses"])
+        if new_count < count:
+            raise ValueError("training augmentation removed original candidate rows")
+        for key, value in old.items():
+            if key not in new:
+                raise ValueError(f"training augmentation removed {key}")
+            if key == "payload_fingerprint":
+                from .pipeline import _payload_fingerprint
+                if str(_scalar(new, key)) != _payload_fingerprint(dict(new)):
+                    raise ValueError("training augmentation payload fingerprint mismatch")
+                continue
+            if key == "metadata_json":
+                old_metadata = json.loads(str(_scalar(old, key)))
+                new_metadata = json.loads(str(_scalar(new, key)))
+                for field, entry in old_metadata.items():
+                    if field == "acquisitions":
+                        if new_metadata.get(field, [])[:len(entry)] != entry:
+                            raise ValueError("training augmentation changed acquisition history")
+                    elif new_metadata.get(field) != entry:
+                        raise ValueError(f"training augmentation changed original metadata {field}")
+                continue
+            candidate_column = key.startswith("candidate_") and key != "candidate_tau"
+            expected, actual = np.asarray(value), np.asarray(new[key])
+            if candidate_column:
+                if expected.ndim < 1 or len(expected) != count or actual.ndim < 1 or len(actual) != new_count:
+                    raise ValueError(f"training augmentation has misaligned {key}")
+                actual = actual[:count]
+            # array_equal without equal_nan also supports string-valued IDs.
+            equal = np.array_equal(expected, actual)
+            if not equal and expected.dtype.kind in "fc" and actual.dtype.kind in "fc":
+                equal = np.array_equal(expected, actual, equal_nan=True)
+            if not equal:
+                raise ValueError(f"training augmentation changed original {key}")
+        for key, value in new.items():
+            if key.startswith("candidate_") and key != "candidate_tau":
+                column = np.asarray(value)
+                if column.ndim < 1 or len(column) != new_count:
+                    raise ValueError(f"training augmentation has misaligned {key}")
+        waves, losses = np.asarray(new["candidate_schedules"]), np.asarray(new["candidate_losses"])
+        if losses.shape != (new_count,) or not np.isfinite(losses).all() or not np.isfinite(waves).all():
+            raise ValueError("training augmentation contains invalid candidate labels/waveforms")
+        if "candidate_ids" in new and len(set(np.asarray(new["candidate_ids"], str))) != new_count:
+            raise ValueError("training augmentation contains duplicate candidate IDs")
+    return training_records
+
+
 def evaluate_checkpoint(data_dir, checkpoint_path, *, device="cpu", direct=True, seed=0,
                         backend="numpy", tolerance=5e-4, initial_steps=128, max_steps=8192,
-                        norm_tolerance=1e-9, n_resamples=2000, max_ds_dtau=4.):
-    """Load, validate, select without true outcomes, then score held-out records."""
+                        norm_tolerance=1e-9, n_resamples=2000, max_ds_dtau=4., training_records=None):
+    """Load, validate, select without outcomes, then score held-out records.
+
+    Explicit ``training_records`` support append-only acquisition experiments.
+    They are validated against the original data and checkpoint content hash;
+    the common deployment bank and validation choice always use original data.
+    """
     import torch
     from .learning import load_checkpoint
     from .models import graph_from_record
@@ -274,8 +347,13 @@ def evaluate_checkpoint(data_dir, checkpoint_path, *, device="cpu", direct=True,
     training, validation, test = (load_records(data_dir, split) for split in ("train", "validation", "test"))
     if not training or not validation or not test:
         raise ValueError("evaluation requires nonempty explicit train, validation and test splits")
+    actual_training = (training if training_records is None else
+                       validate_training_augmentation(training, training_records))
     payload = torch.load(checkpoint_path, map_location="cpu", weights_only=True)
-    provenance = _checkpoint_provenance(payload, training, validation, test)
+    provenance = _checkpoint_provenance(payload, actual_training, validation, test)
+    if training_records is not None and not provenance["training_validation_content_verified"]:
+        raise ValueError("explicit training records require checkpoint content provenance")
+    provenance["explicit_training_records_verified"] = training_records is not None
     bank = validate_candidate_banks(training + validation + test)
     # Parent-equal validation average; no test outcome enters this choice.
     vp = [str(_scalar(r, "parent_id")) for r in validation]

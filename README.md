@@ -6,6 +6,31 @@ tables/figures. Working software is not evidence of superiority or A* acceptance
 
 **Start with `RUNBOOK_VI.md`** for the complete Vietnamese operating guide.
 
+## Controlled acquisition and paper evidence
+
+The acquisition study tests whether labelling a frozen policy's proposals helps
+beyond more bank labels and random waveforms from the same decoder. It completes
+all training arms before reading test outcomes, preserves real numerical
+diagnostics, and compares direct deployment with the same untouched bank.
+
+```bash
+python -m annealctrl acquisition-study --config configs/acquisition_smoke.json --output runs/acquisition_smoke
+python -m annealctrl acquisition-study --config configs/acquisition_research.json --output runs/acquisition_research --dry-run
+```
+
+- [Method, architecture, conditional bounds and experiment contract](docs/acquisition_methodology.md)
+- [Literature BO baseline and disclosed adaptations](docs/literature_baseline.md)
+- [Repeated scaling benchmark and OOD protocol](docs/scaling_and_ood_protocol.md)
+- [Statistical corrections and parent/seed uncertainty](docs/statistical_inference.md)
+- [Fresh reanalysis of archived held-out results](reports/statistics_reanalysis_2026-09-17/README.md)
+- [Completed 60-parent, three-seed acquisition pilot, including negative results](reports/acquisition_pilot_2026-09-17/README.md)
+
+Summary moments remain the inexpensive reference encoder. The archived results
+support embedding information in bank selection, but do not establish a bank
+advantage for hierarchy. Pooled information effects are exploratory and outside
+the pairwise Holm correction family. New acquisition runs must establish their
+own benefit; no architecture or A* acceptance claim follows from implementation.
+
 ## Install and run one complete small experiment
 
 ```bash
@@ -70,8 +95,10 @@ what was built and why.
 
 Edit `configs/data_research.json` for distributions/physics/label budgets and
 `configs/experiment_research.json` for methods, seeds, losses, device and reporting.
-The research template requests 4,320 tasks / 276,480 candidate outcomes and **has
-not been run as a paper benchmark**. Profile a subset before spending that budget.
+The research template requests 4,320 tasks / 276,480 candidate outcomes.
+Archived held-out results are under `reports/heldout_2026-09-17`; they are distinct
+from the newly added controlled-acquisition study. Profile a subset before
+spending a new generation budget.
 
 ```bash
 # Same frozen experiment, reusing completed stages.

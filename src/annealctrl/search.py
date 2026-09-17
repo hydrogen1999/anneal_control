@@ -57,21 +57,11 @@ class SearchResult:
 def capped_simplex_samples(logits, *, max_ds_dtau: float = 4.0) -> np.ndarray:
     """NumPy twin of ``models.monotone_samples``: the policy's own decoder.
 
-    The critic is trained on the candidate bank and deployed on the policy's
-    proposals. Those came from a different parameterisation - the bank uses
-    residual-softmax durations and window/pause closures, the policy uses this
-    capped-simplex water filling - and the manifolds do not coincide. Measured on
-    P16-scale banks, 92% of policy waveforms sat further from the bank than a
-    typical bank waveform sits from its own nearest neighbour (0.133 against
-    0.079 in max-norm over nine knots). That gap is where a Spearman correlation
-    of 0.55 between predicted and true proposal losses comes from.
-
-    Adding random candidates from this family to the shared bank was measured and
-    does NOT fix it: sixteen extra candidates in a sixty-four candidate bank moved
-    the mean policy-to-bank distance only from 0.133 to 0.127, because an
-    eight-dimensional waveform space is not coverable by a bank of that size. The
-    fix that works has to target the model's *actual* proposals, which is what
-    ``policy_diagnostics.aggregate_proposals`` collects for a DAgger round.
+    The original bank and policy use different parameterisations. Random logits
+    through this decoder provide a control for that difference; they do not
+    reproduce the learned distribution. Geometric distance alone does not show
+    that critic error is caused by distribution shift or that one acquisition
+    rule improves control. See ``acquisition_study`` for matched comparisons.
 
     Kept in numpy, and pinned to the torch decoder by test, so callers can build
     waveforms on the policy manifold without ``search.py`` depending on torch.

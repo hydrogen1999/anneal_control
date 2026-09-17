@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "dataset": "data_research.json",
+  "seeds": [0, 1, 2, 3, 4],
+  "model": {"encoder_variant": "summary", "width": 64, "proposals": 16},
+  "training": {"epochs": 200, "patience": 25, "learning_rate": 0.001, "batch_size": 8, "accumulation_steps": 2, "weight_decay": 0.0001, "policy_weight": 0.2, "ranking_weight": 0.1, "response_weight": 0.0},
+  "acquisition": {"n_extra": 16, "random_seed": 1701, "logit_std": 1.0},
+  "execution": {"device": "cpu", "backend": "numpy", "threads": 1, "workers": 8},
+  "evaluation": {"direct": true, "tolerance": 0.0002, "initial_steps": 128, "max_steps": 16384, "n_resamples": 10000},
+  "latency": {"warmup": 3, "repeats": 10},
+  "bootstrap_resamples": 10000,
+  "_scope": "Frozen one-round, equal extra-label-count study. Use --data to reuse original research data. Architecture replication requires a separate predeclared hierarchical config. Five seeds are not five independent test datasets."
+}

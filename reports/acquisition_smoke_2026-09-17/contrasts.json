@@ -1,0 +1,337 @@
+{
+  "schema_version": 1,
+  "config_hash": "c5c892cc9c89ec975047f412e7d3786cab4e2523d653ca27037ac81df00939a6",
+  "source_hash": "a07e7a1ff339c0428b4df7582fc36a9304cecb575b40729ae915ba206779c84d",
+  "means": {
+    "control": {
+      "bank": 0.667667403882704,
+      "direct": 0.6829669017996155,
+      "global": 0.6444333393963568,
+      "linear": 0.6813750015399056
+    },
+    "bankext": {
+      "bank": 0.667667403882704,
+      "direct": 0.6827372808585261,
+      "global": 0.6444333393963568,
+      "linear": 0.6813750015399056
+    },
+    "decoder_random": {
+      "bank": 0.6619332252687441,
+      "direct": 0.6767691722253358,
+      "global": 0.6444333393963568,
+      "linear": 0.6813750015399056
+    },
+    "policy": {
+      "bank": 0.6714738699585557,
+      "direct": 0.6829685458433362,
+      "global": 0.6444333393963568,
+      "linear": 0.6813750015399056
+    }
+  },
+  "acquisition_contrasts": {
+    "policy_minus_control": {
+      "schema_version": 1,
+      "method_a": "control",
+      "method_b": "policy",
+      "mode": "direct",
+      "key": "loss",
+      "n_parents": 2,
+      "n_seeds": 3,
+      "mean_difference": 1.644043720679574e-06,
+      "per_seed_mean_difference": {
+        "0": -3.5342444337838064e-05,
+        "1": 1.1791110825665196e-05,
+        "2": 2.848346467421159e-05
+      },
+      "ci_low": -5.582610307719449e-05,
+      "ci_high": 7.82996931193436e-05,
+      "confidence": 0.95,
+      "resamples": 500,
+      "correction": "none",
+      "p_value": null,
+      "unit_of_resampling": "crossed_logical_parent_and_training_seed",
+      "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+      "reference": "https://arxiv.org/abs/0712.1111",
+      "scope": "descriptive crossed-factor percentile interval; parents and training seeds resampled independently; conditional on the fixed training dataset and recipe; not a multiplicity-adjusted test or evidence of equivalence; uncertainty with few seeds is poorly resolved",
+      "status": "ok"
+    },
+    "policy_minus_bankext": {
+      "schema_version": 1,
+      "method_a": "bankext",
+      "method_b": "policy",
+      "mode": "direct",
+      "key": "loss",
+      "n_parents": 2,
+      "n_seeds": 3,
+      "mean_difference": 0.00023126498481013114,
+      "per_seed_mean_difference": {
+        "0": 0.0006461272084676284,
+        "1": 1.1500040283995983e-05,
+        "2": 3.6167705678769035e-05
+      },
+      "ci_low": -3.6808908188246114e-05,
+      "ci_high": 0.0007418533506216018,
+      "confidence": 0.95,
+      "resamples": 500,
+      "correction": "none",
+      "p_value": null,
+      "unit_of_resampling": "crossed_logical_parent_and_training_seed",
+      "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+      "reference": "https://arxiv.org/abs/0712.1111",
+      "scope": "descriptive crossed-factor percentile interval; parents and training seeds resampled independently; conditional on the fixed training dataset and recipe; not a multiplicity-adjusted test or evidence of equivalence; uncertainty with few seeds is poorly resolved",
+      "status": "ok"
+    },
+    "policy_minus_decoder_random": {
+      "schema_version": 1,
+      "method_a": "decoder_random",
+      "method_b": "policy",
+      "mode": "direct",
+      "key": "loss",
+      "n_parents": 2,
+      "n_seeds": 3,
+      "mean_difference": 0.006199373618000603,
+      "per_seed_mean_difference": {
+        "0": 8.704408461845947e-06,
+        "1": 0.018528753626449068,
+        "2": 6.0662819090895326e-05
+      },
+      "ci_low": 2.113891686509698e-06,
+      "ci_high": 0.018132128526296826,
+      "confidence": 0.95,
+      "resamples": 500,
+      "correction": "none",
+      "p_value": null,
+      "unit_of_resampling": "crossed_logical_parent_and_training_seed",
+      "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+      "reference": "https://arxiv.org/abs/0712.1111",
+      "scope": "descriptive crossed-factor percentile interval; parents and training seeds resampled independently; conditional on the fixed training dataset and recipe; not a multiplicity-adjusted test or evidence of equivalence; uncertainty with few seeds is poorly resolved",
+      "status": "ok"
+    }
+  },
+  "deployment_contrasts": {
+    "control": {
+      "direct_minus_bank": {
+        "schema_version": 1,
+        "method_a": "bank",
+        "method_b": "direct",
+        "mode": "deployment",
+        "key": "loss",
+        "n_parents": 2,
+        "n_seeds": 3,
+        "mean_difference": 0.015299497916911523,
+        "per_seed_mean_difference": {
+          "0": 0.03428324824392864,
+          "1": 0.023310926657146513,
+          "2": -0.011695681150340587
+        },
+        "ci_low": -0.010455266373913844,
+        "ci_high": 0.03913641615621725,
+        "confidence": 0.95,
+        "resamples": 500,
+        "correction": "none",
+        "p_value": null,
+        "unit_of_resampling": "crossed_logical_parent_and_training_seed",
+        "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+        "reference": "https://arxiv.org/abs/0712.1111",
+        "scope": "descriptive crossed-factor percentile interval; parents and training seeds resampled independently; conditional on the fixed training dataset and recipe; not a multiplicity-adjusted test or evidence of equivalence; uncertainty with few seeds is poorly resolved",
+        "status": "ok"
+      },
+      "direct_minus_global": {
+        "schema_version": 1,
+        "method_a": "global",
+        "method_b": "direct",
+        "mode": "deployment",
+        "key": "loss",
+        "n_parents": 2,
+        "n_seeds": 3,
+        "mean_difference": 0.03853356240325878,
+        "per_seed_mean_difference": {
+          "0": 0.03428324824392864,
+          "1": 0.04051346249902654,
+          "2": 0.04080397646682116
+        },
+        "ci_low": 0.030916600270548728,
+        "ci_high": 0.04668819901515183,
+        "confidence": 0.95,
+        "resamples": 500,
+        "correction": "none",
+        "p_value": null,
+        "unit_of_resampling": "crossed_logical_parent_and_training_seed",
+        "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+        "reference": "https://arxiv.org/abs/0712.1111",
+        "scope": "descriptive crossed-factor percentile interval; parents and training seeds resampled independently; conditional on the fixed training dataset and recipe; not a multiplicity-adjusted test or evidence of equivalence; uncertainty with few seeds is poorly resolved",
+        "status": "ok"
+      }
+    },
+    "bankext": {
+      "direct_minus_bank": {
+        "schema_version": 1,
+        "method_a": "bank",
+        "method_b": "direct",
+        "mode": "deployment",
+        "key": "loss",
+        "n_parents": 2,
+        "n_seeds": 3,
+        "mean_difference": 0.015069876975822072,
+        "per_seed_mean_difference": {
+          "0": 0.03360177859112318,
+          "1": 0.023311217727688183,
+          "2": -0.011703365391345144
+        },
+        "ci_low": -0.010557077423377637,
+        "ci_high": 0.038504945203486095,
+        "confidence": 0.95,
+        "resamples": 500,
+        "correction": "none",
+        "p_value": null,
+        "unit_of_resampling": "crossed_logical_parent_and_training_seed",
+        "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+        "reference": "https://arxiv.org/abs/0712.1111",
+        "scope": "descriptive crossed-factor percentile interval; parents and training seeds resampled independently; conditional on the fixed training dataset and recipe; not a multiplicity-adjusted test or evidence of equivalence; uncertainty with few seeds is poorly resolved",
+        "status": "ok"
+      },
+      "direct_minus_global": {
+        "schema_version": 1,
+        "method_a": "global",
+        "method_b": "direct",
+        "mode": "deployment",
+        "key": "loss",
+        "n_parents": 2,
+        "n_seeds": 3,
+        "mean_difference": 0.03830394146216933,
+        "per_seed_mean_difference": {
+          "0": 0.03360177859112318,
+          "1": 0.04051375356956821,
+          "2": 0.0407962922258166
+        },
+        "ci_low": 0.03073817883576661,
+        "ci_high": 0.04668544067920447,
+        "confidence": 0.95,
+        "resamples": 500,
+        "correction": "none",
+        "p_value": null,
+        "unit_of_resampling": "crossed_logical_parent_and_training_seed",
+        "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+        "reference": "https://arxiv.org/abs/0712.1111",
+        "scope": "descriptive crossed-factor percentile interval; parents and training seeds resampled independently; conditional on the fixed training dataset and recipe; not a multiplicity-adjusted test or evidence of equivalence; uncertainty with few seeds is poorly resolved",
+        "status": "ok"
+      }
+    },
+    "decoder_random": {
+      "direct_minus_bank": {
+        "schema_version": 1,
+        "method_a": "bank",
+        "method_b": "direct",
+        "mode": "deployment",
+        "key": "loss",
+        "n_parents": 2,
+        "n_seeds": 3,
+        "mean_difference": 0.014835946956591609,
+        "per_seed_mean_difference": {
+          "0": 0.03423920139112896,
+          "1": 0.02199649998340314,
+          "2": -0.01172786050475727
+        },
+        "ci_low": -0.017131435780403697,
+        "ci_high": 0.03339093738095849,
+        "confidence": 0.95,
+        "resamples": 500,
+        "correction": "none",
+        "p_value": null,
+        "unit_of_resampling": "crossed_logical_parent_and_training_seed",
+        "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+        "reference": "https://arxiv.org/abs/0712.1111",
+        "scope": "descriptive crossed-factor percentile interval; parents and training seeds resampled independently; conditional on the fixed training dataset and recipe; not a multiplicity-adjusted test or evidence of equivalence; uncertainty with few seeds is poorly resolved",
+        "status": "ok"
+      },
+      "direct_minus_global": {
+        "schema_version": 1,
+        "method_a": "global",
+        "method_b": "direct",
+        "mode": "deployment",
+        "key": "loss",
+        "n_parents": 2,
+        "n_seeds": 3,
+        "mean_difference": 0.03233583282897886,
+        "per_seed_mean_difference": {
+          "0": 0.03423920139112896,
+          "1": 0.02199649998340314,
+          "2": 0.04077179711240447
+        },
+        "ci_low": 0.0253481950221206,
+        "ci_high": 0.04454653214456983,
+        "confidence": 0.95,
+        "resamples": 500,
+        "correction": "none",
+        "p_value": null,
+        "unit_of_resampling": "crossed_logical_parent_and_training_seed",
+        "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+        "reference": "https://arxiv.org/abs/0712.1111",
+        "scope": "descriptive crossed-factor percentile interval; parents and training seeds resampled independently; conditional on the fixed training dataset and recipe; not a multiplicity-adjusted test or evidence of equivalence; uncertainty with few seeds is poorly resolved",
+        "status": "ok"
+      }
+    },
+    "policy": {
+      "direct_minus_bank": {
+        "schema_version": 1,
+        "method_a": "bank",
+        "method_b": "direct",
+        "mode": "deployment",
+        "key": "loss",
+        "n_parents": 2,
+        "n_seeds": 3,
+        "mean_difference": 0.011494675884780406,
+        "per_seed_mean_difference": {
+          "0": 0.022828507572035417,
+          "1": 0.02332271776797218,
+          "2": -0.011667197685666375
+        },
+        "ci_low": -0.010383309212540196,
+        "ci_high": 0.039147745840591254,
+        "confidence": 0.95,
+        "resamples": 500,
+        "correction": "none",
+        "p_value": null,
+        "unit_of_resampling": "crossed_logical_parent_and_training_seed",
+        "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+        "reference": "https://arxiv.org/abs/0712.1111",
+        "scope": "descriptive crossed-factor percentile interval; parents and training seeds resampled independently; conditional on the fixed training dataset and recipe; not a multiplicity-adjusted test or evidence of equivalence; uncertainty with few seeds is poorly resolved",
+        "status": "ok"
+      },
+      "direct_minus_global": {
+        "schema_version": 1,
+        "method_a": "global",
+        "method_b": "direct",
+        "mode": "deployment",
+        "key": "loss",
+        "n_parents": 2,
+        "n_seeds": 3,
+        "mean_difference": 0.03853520644697946,
+        "per_seed_mean_difference": {
+          "0": 0.034247905799590805,
+          "1": 0.04052525360985221,
+          "2": 0.04083245993149537
+        },
+        "ci_low": 0.030883478835252776,
+        "ci_high": 0.04676015617652548,
+        "confidence": 0.95,
+        "resamples": 500,
+        "correction": "none",
+        "p_value": null,
+        "unit_of_resampling": "crossed_logical_parent_and_training_seed",
+        "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+        "reference": "https://arxiv.org/abs/0712.1111",
+        "scope": "descriptive crossed-factor percentile interval; parents and training seeds resampled independently; conditional on the fixed training dataset and recipe; not a multiplicity-adjusted test or evidence of equivalence; uncertainty with few seeds is poorly resolved",
+        "status": "ok"
+      }
+    }
+  },
+  "inference": "crossed parent/seed percentile intervals are descriptive and unadjusted; no automatic discovery claim",
+  "scope": "closed-system one-round experiment; shared-bank random extension and decoder-random are distinct controls",
+  "costs": {
+    "added_objective_calls": 216,
+    "offline_diagnostic_objective_calls": 144,
+    "failures": 0,
+    "full_summary_uncompressed_sha256": "9a71b16075325eee68a5eafe8a5761ab7bfc6ef1e10e5d42bef7ba1c719f96d4"
+  }
+}

@@ -1,0 +1,784 @@
+{
+  "schema_version": 1,
+  "config": {
+    "schema_version": 1,
+    "dataset": {
+      "seed": 20260917,
+      "parents": 12,
+      "families": [
+        "spin_glass",
+        "weighted_maxcut"
+      ],
+      "logical_qubits": 3,
+      "chain_lengths": [
+        1,
+        1,
+        1
+      ],
+      "variants": [
+        {
+          "shape": "path",
+          "ports": 1
+        }
+      ],
+      "chain_strengths": [
+        1.5
+      ],
+      "runtimes": [
+        2.0
+      ],
+      "candidates": 4,
+      "spectral_points": 3,
+      "teacher": {
+        "mode": "none"
+      },
+      "steps": 16,
+      "max_steps": 1024,
+      "label_state_tolerance": 0.005,
+      "max_physical_qubits": 3
+    },
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "model": {
+      "encoder_variant": "summary",
+      "width": 16,
+      "proposals": 3
+    },
+    "training": {
+      "epochs": 4,
+      "patience": 4,
+      "batch_size": 2,
+      "response_weight": 0.0
+    },
+    "acquisition": {
+      "n_extra": 3,
+      "random_seed": 1701,
+      "logit_std": 1.0
+    },
+    "execution": {
+      "device": "cpu",
+      "backend": "numpy",
+      "threads": 1,
+      "workers": 1
+    },
+    "evaluation": {
+      "direct": true,
+      "tolerance": 0.005,
+      "initial_steps": 16,
+      "max_steps": 1024,
+      "n_resamples": 200
+    },
+    "latency": {
+      "warmup": 1,
+      "repeats": 3
+    },
+    "bootstrap_resamples": 500,
+    "_scope": "Integration smoke only: 3-qubit population and four training epochs cannot support scientific performance claims."
+  },
+  "config_hash": "c5c892cc9c89ec975047f412e7d3786cab4e2523d653ca27037ac81df00939a6",
+  "source_hash": "a07e7a1ff339c0428b4df7582fc36a9304cecb575b40729ae915ba206779c84d",
+  "environment": {
+    "python": "3.12.14",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+    "packages": {
+      "numpy": "2.3.5",
+      "scipy": "1.17.0",
+      "networkx": "3.6.1",
+      "torch": "2.14.0+cpu",
+      "pytest": "9.1.1"
+    }
+  },
+  "data_dir": "/workspace/scratch/a2db4882ba16/anneal_control/runs/acquisition_smoke_verified/data",
+  "status": "complete",
+  "runs": {
+    "baseline/seed_0": {
+      "folder": "models/baseline/seed_0",
+      "trained": true,
+      "checkpoint": "models/baseline/seed_0/best.pt",
+      "checkpoint_sha256": "3f37748b2c22456745797ad07fbed0d692161f50fe7e06dd92a5d4685309db56",
+      "training_seconds": 1.1040169169991714,
+      "training_cost_complete": true,
+      "best_epoch": 1,
+      "last_epoch": 3
+    },
+    "control/seed_0": {
+      "folder": "models/control/seed_0",
+      "trained": true,
+      "checkpoint": "models/control/seed_0/best.pt",
+      "checkpoint_sha256": "3f37748b2c22456745797ad07fbed0d692161f50fe7e06dd92a5d4685309db56",
+      "training_seconds": 0.18518742600099358,
+      "training_cost_complete": true,
+      "best_epoch": 1,
+      "last_epoch": 3,
+      "evaluation": "evaluations/control_seed_0.json",
+      "evaluation_sha256": "e4adb131dee618fd116b74a6b41caca981531eedf09e7c27bcf6abc823254061"
+    },
+    "bankext/seed_0": {
+      "folder": "models/bankext/seed_0",
+      "acquisition": "acquisitions/bankext_seed_0.json",
+      "acquisition_sha256": "bb610130967147a80ddf509f2ec399d7977e4e6261aa0d34ba92b2a5cb6e22a4",
+      "acquisition_cost": {
+        "schema_version": 2,
+        "status": "complete",
+        "arm": "bankext",
+        "round_id": "round1",
+        "acquisition_id": "fae1ac4b7961f5cdc93787e8f7c73bf35d0f4862be2468873b985ddfb935ad12",
+        "split": "train",
+        "n_records": 8,
+        "proposals_per_record": 3,
+        "settings": {
+          "backend": "numpy",
+          "tolerance": 0.005,
+          "initial_steps": 16,
+          "max_steps": 1024,
+          "max_ds_dtau": 4.0,
+          "slope_roundoff_relative_tolerance": 1e-06,
+          "norm_tolerance": 1e-09
+        },
+        "provenance": {
+          "bank_seed": 20260917,
+          "bank_size": 4,
+          "n_segments": 8
+        },
+        "requested_objective_calls": 24,
+        "objective_calls": 24,
+        "successful_objective_calls": 24,
+        "propagation_calls": 384,
+        "total_integrator_steps": 1152,
+        "convergence_attempts": 24,
+        "offline_scoring_seconds": 0.0577831890041125,
+        "cost_counts_complete": true,
+        "failures": [],
+        "uncertainty_is_certificate": false,
+        "scope": "training labels only; fixed original validation and test banks",
+        "wall_seconds": 0.08433769800103619,
+        "propagations": 24,
+        "propagations_alias": "successful_objective_calls",
+        "infeasible_proposals": 0,
+        "artifact_digest": "6c8c750897c9ca22da6ffa22f35065fe35880efa6f8999714bed9fdddd36f4b0"
+      },
+      "trained": true,
+      "checkpoint": "models/bankext/seed_0/best.pt",
+      "checkpoint_sha256": "87005cb04bf7adbfdaec63ae8b64017525493be9ebd1bc00ea28b8fc2150d0f5",
+      "training_seconds": 0.18035547100043914,
+      "training_cost_complete": true,
+      "best_epoch": 2,
+      "last_epoch": 3,
+      "evaluation": "evaluations/bankext_seed_0.json",
+      "evaluation_sha256": "8e910d138a329cc4a72ccea9520ea70f2cf787bfda54474d0a6d79b6398134e4"
+    },
+    "decoder_random/seed_0": {
+      "folder": "models/decoder_random/seed_0",
+      "acquisition": "acquisitions/decoder_random_seed_0.json",
+      "acquisition_sha256": "25a1fbe7bd7854c513f7a35bb52e8420cc1c98e61a77a08f4afb170897b49eda",
+      "acquisition_cost": {
+        "schema_version": 2,
+        "status": "complete",
+        "arm": "decoder_random",
+        "round_id": "round1",
+        "acquisition_id": "b1a7bcc5238bc8833da30fa5855d8982a0f139c867d02458c57f8ce0cc650129",
+        "split": "train",
+        "n_records": 8,
+        "proposals_per_record": 3,
+        "settings": {
+          "backend": "numpy",
+          "tolerance": 0.005,
+          "initial_steps": 16,
+          "max_steps": 1024,
+          "max_ds_dtau": 4.0,
+          "slope_roundoff_relative_tolerance": 1e-06,
+          "norm_tolerance": 1e-09
+        },
+        "provenance": {
+          "seed": 1701,
+          "n_segments": 8,
+          "logit_std": 1.0,
+          "logit_distribution": "iid_normal_zero_mean",
+          "shared_across_records": true,
+          "decoder": "models.monotone_samples",
+          "decoder_dtype": "float32",
+          "logits": [
+            [
+              0.438742071390152,
+              0.32818514108657837,
+              0.6832883954048157,
+              -0.8192825317382812,
+              0.6915644407272339,
+              -1.624532699584961,
+              1.5080630779266357,
+              -1.2244985103607178
+            ],
+            [
+              1.2269606590270996,
+              -1.0501304864883423,
+              0.6250936388969421,
+              0.09693023562431335,
+              0.6277641654014587,
+              -0.285651832818985,
+              1.4967865943908691,
+              -0.7676854133605957
+            ],
+            [
+              -0.3942866921424866,
+              -1.3569350242614746,
+              0.33524957299232483,
+              0.5744276642799377,
+              1.6201691627502441,
+              0.33395177125930786,
+              -1.0290671586990356,
+              -0.942666232585907
+            ]
+          ]
+        },
+        "requested_objective_calls": 24,
+        "objective_calls": 24,
+        "successful_objective_calls": 24,
+        "propagation_calls": 384,
+        "total_integrator_steps": 1152,
+        "convergence_attempts": 24,
+        "offline_scoring_seconds": 0.05580376699981571,
+        "cost_counts_complete": true,
+        "failures": [],
+        "uncertainty_is_certificate": false,
+        "scope": "training labels only; fixed original validation and test banks",
+        "wall_seconds": 0.07406290200015064,
+        "propagations": 24,
+        "propagations_alias": "successful_objective_calls",
+        "infeasible_proposals": 0,
+        "artifact_digest": "44c5355b7486f6d3eb5b25bc51b6718d431699e32ea5538526165ac5072d5063"
+      },
+      "trained": true,
+      "checkpoint": "models/decoder_random/seed_0/best.pt",
+      "checkpoint_sha256": "cd8d6806839ea0a9ab99b8754baf9c4c7acb257e2a2056a9a5162be926f02c31",
+      "training_seconds": 0.17325497400088352,
+      "training_cost_complete": true,
+      "best_epoch": 1,
+      "last_epoch": 3,
+      "evaluation": "evaluations/decoder_random_seed_0.json",
+      "evaluation_sha256": "aef8bf4a9e96e9180161aba60af30f0d0bad414fd89243de0d150ebb78c4b1cd"
+    },
+    "policy/seed_0": {
+      "folder": "models/policy/seed_0",
+      "acquisition": "acquisitions/policy_seed_0.json",
+      "acquisition_sha256": "e29508bc92c57218f33170cc8688aa821c9f395427527c9583eb6dca67bdc1a5",
+      "acquisition_cost": {
+        "schema_version": 2,
+        "status": "complete",
+        "arm": "policy",
+        "round_id": "round1",
+        "acquisition_id": "66118f40b6be9d7ddbac06103c9b24820e1b7938c1124557470c28d90c94c447",
+        "split": "train",
+        "n_records": 8,
+        "proposals_per_record": 3,
+        "settings": {
+          "backend": "numpy",
+          "tolerance": 0.005,
+          "initial_steps": 16,
+          "max_steps": 1024,
+          "max_ds_dtau": 4.0,
+          "slope_roundoff_relative_tolerance": 1e-06,
+          "norm_tolerance": 1e-09
+        },
+        "provenance": {
+          "checkpoint_sha256": "3f37748b2c22456745797ad07fbed0d692161f50fe7e06dd92a5d4685309db56",
+          "checkpoint": "/workspace/scratch/a2db4882ba16/anneal_control/runs/acquisition_smoke_verified/models/baseline/seed_0/best.pt",
+          "device": "cpu"
+        },
+        "requested_objective_calls": 24,
+        "objective_calls": 24,
+        "successful_objective_calls": 24,
+        "propagation_calls": 384,
+        "total_integrator_steps": 1152,
+        "convergence_attempts": 24,
+        "offline_scoring_seconds": 0.05965410499993595,
+        "cost_counts_complete": true,
+        "failures": [],
+        "uncertainty_is_certificate": false,
+        "scope": "training labels only; fixed original validation and test banks",
+        "wall_seconds": 0.08810897200055479,
+        "propagations": 24,
+        "propagations_alias": "successful_objective_calls",
+        "infeasible_proposals": 0,
+        "artifact_digest": "223b493c2298b47f46fea55a3cd7cc4a2a6fbed8637abc1836cf329f3ab2759c"
+      },
+      "trained": true,
+      "checkpoint": "models/policy/seed_0/best.pt",
+      "checkpoint_sha256": "011e6dc63d681bb3f2804f97fdb2fe5a1534b7e6ae4c952ebea50cd7bcc52787",
+      "training_seconds": 0.17828735599869105,
+      "training_cost_complete": true,
+      "best_epoch": 1,
+      "last_epoch": 3,
+      "evaluation": "evaluations/policy_seed_0.json",
+      "evaluation_sha256": "7dd004f817a3315f7d6d185993c2200441ff04392bb9b2054bfcc25e55f5b1be"
+    },
+    "baseline/seed_1": {
+      "folder": "models/baseline/seed_1",
+      "trained": true,
+      "checkpoint": "models/baseline/seed_1/best.pt",
+      "checkpoint_sha256": "17c550f5dbfc5221be4490c4d073cb7a319b08c0d0495ae9fde0dddb13f00828",
+      "training_seconds": 0.17873741500079632,
+      "training_cost_complete": true,
+      "best_epoch": 0,
+      "last_epoch": 3
+    },
+    "control/seed_1": {
+      "folder": "models/control/seed_1",
+      "trained": true,
+      "checkpoint": "models/control/seed_1/best.pt",
+      "checkpoint_sha256": "17c550f5dbfc5221be4490c4d073cb7a319b08c0d0495ae9fde0dddb13f00828",
+      "training_seconds": 0.16856477799956338,
+      "training_cost_complete": true,
+      "best_epoch": 0,
+      "last_epoch": 3,
+      "evaluation": "evaluations/control_seed_1.json",
+      "evaluation_sha256": "8df0024e1797865fcf64f0ac41beaed0476669313ae2c7d12326f1f672bcc8ec"
+    },
+    "bankext/seed_1": {
+      "folder": "models/bankext/seed_1",
+      "acquisition": "acquisitions/bankext_seed_1.json",
+      "acquisition_sha256": "efae29de3e980c231a62e65903c7a195202cfb141919f0d21e46ca17eebdec11",
+      "acquisition_cost": {
+        "schema_version": 2,
+        "status": "complete",
+        "arm": "bankext",
+        "round_id": "round1",
+        "acquisition_id": "fae1ac4b7961f5cdc93787e8f7c73bf35d0f4862be2468873b985ddfb935ad12",
+        "split": "train",
+        "n_records": 8,
+        "proposals_per_record": 3,
+        "settings": {
+          "backend": "numpy",
+          "tolerance": 0.005,
+          "initial_steps": 16,
+          "max_steps": 1024,
+          "max_ds_dtau": 4.0,
+          "slope_roundoff_relative_tolerance": 1e-06,
+          "norm_tolerance": 1e-09
+        },
+        "provenance": {
+          "bank_seed": 20260917,
+          "bank_size": 4,
+          "n_segments": 8
+        },
+        "requested_objective_calls": 24,
+        "objective_calls": 24,
+        "successful_objective_calls": 24,
+        "propagation_calls": 384,
+        "total_integrator_steps": 1152,
+        "convergence_attempts": 24,
+        "offline_scoring_seconds": 0.05619999300324707,
+        "cost_counts_complete": true,
+        "failures": [],
+        "uncertainty_is_certificate": false,
+        "scope": "training labels only; fixed original validation and test banks",
+        "wall_seconds": 0.08094014800008154,
+        "propagations": 24,
+        "propagations_alias": "successful_objective_calls",
+        "infeasible_proposals": 0,
+        "artifact_digest": "c0744e531ceb1dc9d6a84da79c25fd36a86f293038a5b53c0c96d18a1ed872ec"
+      },
+      "trained": true,
+      "checkpoint": "models/bankext/seed_1/best.pt",
+      "checkpoint_sha256": "a34fce399e11b5d013086a8567373687f7feec229422509a75f55aa0a3bd621e",
+      "training_seconds": 0.16795006100073806,
+      "training_cost_complete": true,
+      "best_epoch": 0,
+      "last_epoch": 3,
+      "evaluation": "evaluations/bankext_seed_1.json",
+      "evaluation_sha256": "9d0357548570457f38bb756bbe2d1840903cda49c7d2d5d8aa9026f508fc2abc"
+    },
+    "decoder_random/seed_1": {
+      "folder": "models/decoder_random/seed_1",
+      "acquisition": "acquisitions/decoder_random_seed_1.json",
+      "acquisition_sha256": "9e09eb70497649824262048fcb9cf35a1f13a008b5765433fe6793ccb9535f61",
+      "acquisition_cost": {
+        "schema_version": 2,
+        "status": "complete",
+        "arm": "decoder_random",
+        "round_id": "round1",
+        "acquisition_id": "b1a7bcc5238bc8833da30fa5855d8982a0f139c867d02458c57f8ce0cc650129",
+        "split": "train",
+        "n_records": 8,
+        "proposals_per_record": 3,
+        "settings": {
+          "backend": "numpy",
+          "tolerance": 0.005,
+          "initial_steps": 16,
+          "max_steps": 1024,
+          "max_ds_dtau": 4.0,
+          "slope_roundoff_relative_tolerance": 1e-06,
+          "norm_tolerance": 1e-09
+        },
+        "provenance": {
+          "seed": 1701,
+          "n_segments": 8,
+          "logit_std": 1.0,
+          "logit_distribution": "iid_normal_zero_mean",
+          "shared_across_records": true,
+          "decoder": "models.monotone_samples",
+          "decoder_dtype": "float32",
+          "logits": [
+            [
+              0.438742071390152,
+              0.32818514108657837,
+              0.6832883954048157,
+              -0.8192825317382812,
+              0.6915644407272339,
+              -1.624532699584961,
+              1.5080630779266357,
+              -1.2244985103607178
+            ],
+            [
+              1.2269606590270996,
+              -1.0501304864883423,
+              0.6250936388969421,
+              0.09693023562431335,
+              0.6277641654014587,
+              -0.285651832818985,
+              1.4967865943908691,
+              -0.7676854133605957
+            ],
+            [
+              -0.3942866921424866,
+              -1.3569350242614746,
+              0.33524957299232483,
+              0.5744276642799377,
+              1.6201691627502441,
+              0.33395177125930786,
+              -1.0290671586990356,
+              -0.942666232585907
+            ]
+          ]
+        },
+        "requested_objective_calls": 24,
+        "objective_calls": 24,
+        "successful_objective_calls": 24,
+        "propagation_calls": 384,
+        "total_integrator_steps": 1152,
+        "convergence_attempts": 24,
+        "offline_scoring_seconds": 0.05485619999853952,
+        "cost_counts_complete": true,
+        "failures": [],
+        "uncertainty_is_certificate": false,
+        "scope": "training labels only; fixed original validation and test banks",
+        "wall_seconds": 0.07156609499907063,
+        "propagations": 24,
+        "propagations_alias": "successful_objective_calls",
+        "infeasible_proposals": 0,
+        "artifact_digest": "071750ac4dbd4f1d3d1e2b3b4f82436cc5a30b7109e31df7d9240bd0ad931728"
+      },
+      "trained": true,
+      "checkpoint": "models/decoder_random/seed_1/best.pt",
+      "checkpoint_sha256": "8e22c089f6f9ec00822e42ebb72e5dd25b881487e65fb73c336f52d67fb8541d",
+      "training_seconds": 0.16698383299990383,
+      "training_cost_complete": true,
+      "best_epoch": 3,
+      "last_epoch": 3,
+      "evaluation": "evaluations/decoder_random_seed_1.json",
+      "evaluation_sha256": "a486c2983ad864c69814c972584c676b82a68a0e229b61abe804d8c1d66843a6"
+    },
+    "policy/seed_1": {
+      "folder": "models/policy/seed_1",
+      "acquisition": "acquisitions/policy_seed_1.json",
+      "acquisition_sha256": "eab81e99ff29faf99fabc547c36127d742c9426d90bf58c5ee6d382698a6c889",
+      "acquisition_cost": {
+        "schema_version": 2,
+        "status": "complete",
+        "arm": "policy",
+        "round_id": "round1",
+        "acquisition_id": "f0d647a6882e8006ccab04404fb00fef30b97a86a90f9bb92f3c4474f90b27a2",
+        "split": "train",
+        "n_records": 8,
+        "proposals_per_record": 3,
+        "settings": {
+          "backend": "numpy",
+          "tolerance": 0.005,
+          "initial_steps": 16,
+          "max_steps": 1024,
+          "max_ds_dtau": 4.0,
+          "slope_roundoff_relative_tolerance": 1e-06,
+          "norm_tolerance": 1e-09
+        },
+        "provenance": {
+          "checkpoint_sha256": "17c550f5dbfc5221be4490c4d073cb7a319b08c0d0495ae9fde0dddb13f00828",
+          "checkpoint": "/workspace/scratch/a2db4882ba16/anneal_control/runs/acquisition_smoke_verified/models/baseline/seed_1/best.pt",
+          "device": "cpu"
+        },
+        "requested_objective_calls": 24,
+        "objective_calls": 24,
+        "successful_objective_calls": 24,
+        "propagation_calls": 384,
+        "total_integrator_steps": 1152,
+        "convergence_attempts": 24,
+        "offline_scoring_seconds": 0.05656682800145063,
+        "cost_counts_complete": true,
+        "failures": [],
+        "uncertainty_is_certificate": false,
+        "scope": "training labels only; fixed original validation and test banks",
+        "wall_seconds": 0.08321679199980281,
+        "propagations": 24,
+        "propagations_alias": "successful_objective_calls",
+        "infeasible_proposals": 0,
+        "artifact_digest": "cf35be730fc1a4453b4a905a6efdc8f2bd4e1837c201442e90d041bf015b9b60"
+      },
+      "trained": true,
+      "checkpoint": "models/policy/seed_1/best.pt",
+      "checkpoint_sha256": "190bb6df958963d0caf77d74d440ea9914aa065e75d59baae57061109bdbf691",
+      "training_seconds": 0.17283873700034746,
+      "training_cost_complete": true,
+      "best_epoch": 0,
+      "last_epoch": 3,
+      "evaluation": "evaluations/policy_seed_1.json",
+      "evaluation_sha256": "c87e552a7912030e008eeb70ec4a0f981dbb34c6b7b5a916df8c14a7d34a4559"
+    },
+    "baseline/seed_2": {
+      "folder": "models/baseline/seed_2",
+      "trained": true,
+      "checkpoint": "models/baseline/seed_2/best.pt",
+      "checkpoint_sha256": "4f65791911da44eb91fffc4a9d2df792bd9f167f12320934959df88f89ebe0ff",
+      "training_seconds": 0.17565213600028073,
+      "training_cost_complete": true,
+      "best_epoch": 0,
+      "last_epoch": 3
+    },
+    "control/seed_2": {
+      "folder": "models/control/seed_2",
+      "trained": true,
+      "checkpoint": "models/control/seed_2/best.pt",
+      "checkpoint_sha256": "4f65791911da44eb91fffc4a9d2df792bd9f167f12320934959df88f89ebe0ff",
+      "training_seconds": 0.1825128410000616,
+      "training_cost_complete": true,
+      "best_epoch": 0,
+      "last_epoch": 3,
+      "evaluation": "evaluations/control_seed_2.json",
+      "evaluation_sha256": "79bcd89f4c215f261903abbef24613c96e1d73bb9d02e2f08609d162a6ca6c1e"
+    },
+    "bankext/seed_2": {
+      "folder": "models/bankext/seed_2",
+      "acquisition": "acquisitions/bankext_seed_2.json",
+      "acquisition_sha256": "037fac4bc4789a276494ba531a93f138ed6e6c61ad5e12ebec457e27f205769c",
+      "acquisition_cost": {
+        "schema_version": 2,
+        "status": "complete",
+        "arm": "bankext",
+        "round_id": "round1",
+        "acquisition_id": "fae1ac4b7961f5cdc93787e8f7c73bf35d0f4862be2468873b985ddfb935ad12",
+        "split": "train",
+        "n_records": 8,
+        "proposals_per_record": 3,
+        "settings": {
+          "backend": "numpy",
+          "tolerance": 0.005,
+          "initial_steps": 16,
+          "max_steps": 1024,
+          "max_ds_dtau": 4.0,
+          "slope_roundoff_relative_tolerance": 1e-06,
+          "norm_tolerance": 1e-09
+        },
+        "provenance": {
+          "bank_seed": 20260917,
+          "bank_size": 4,
+          "n_segments": 8
+        },
+        "requested_objective_calls": 24,
+        "objective_calls": 24,
+        "successful_objective_calls": 24,
+        "propagation_calls": 384,
+        "total_integrator_steps": 1152,
+        "convergence_attempts": 24,
+        "offline_scoring_seconds": 0.05884227200658643,
+        "cost_counts_complete": true,
+        "failures": [],
+        "uncertainty_is_certificate": false,
+        "scope": "training labels only; fixed original validation and test banks",
+        "wall_seconds": 0.08634038399941346,
+        "propagations": 24,
+        "propagations_alias": "successful_objective_calls",
+        "infeasible_proposals": 0,
+        "artifact_digest": "3fedaf3fe5dfe9836a8a6ffda727abf44cae0e988e3bc0d1b6e393aff78ed8d2"
+      },
+      "trained": true,
+      "checkpoint": "models/bankext/seed_2/best.pt",
+      "checkpoint_sha256": "5535dee39dd014e35b5964b17df7ff57ce89d7d698e5beadd80d64b1919d6e1d",
+      "training_seconds": 0.17492170800142048,
+      "training_cost_complete": true,
+      "best_epoch": 0,
+      "last_epoch": 3,
+      "evaluation": "evaluations/bankext_seed_2.json",
+      "evaluation_sha256": "69eac4c4a0a298bdc89f4a46223263292f5d56ed2a126ebbb34f049e6d9abb1d"
+    },
+    "decoder_random/seed_2": {
+      "folder": "models/decoder_random/seed_2",
+      "acquisition": "acquisitions/decoder_random_seed_2.json",
+      "acquisition_sha256": "6730dd06b7f9a06d2f23de4233978c48600d335845151c7397d8f64fbb174936",
+      "acquisition_cost": {
+        "schema_version": 2,
+        "status": "complete",
+        "arm": "decoder_random",
+        "round_id": "round1",
+        "acquisition_id": "b1a7bcc5238bc8833da30fa5855d8982a0f139c867d02458c57f8ce0cc650129",
+        "split": "train",
+        "n_records": 8,
+        "proposals_per_record": 3,
+        "settings": {
+          "backend": "numpy",
+          "tolerance": 0.005,
+          "initial_steps": 16,
+          "max_steps": 1024,
+          "max_ds_dtau": 4.0,
+          "slope_roundoff_relative_tolerance": 1e-06,
+          "norm_tolerance": 1e-09
+        },
+        "provenance": {
+          "seed": 1701,
+          "n_segments": 8,
+          "logit_std": 1.0,
+          "logit_distribution": "iid_normal_zero_mean",
+          "shared_across_records": true,
+          "decoder": "models.monotone_samples",
+          "decoder_dtype": "float32",
+          "logits": [
+            [
+              0.438742071390152,
+              0.32818514108657837,
+              0.6832883954048157,
+              -0.8192825317382812,
+              0.6915644407272339,
+              -1.624532699584961,
+              1.5080630779266357,
+              -1.2244985103607178
+            ],
+            [
+              1.2269606590270996,
+              -1.0501304864883423,
+              0.6250936388969421,
+              0.09693023562431335,
+              0.6277641654014587,
+              -0.285651832818985,
+              1.4967865943908691,
+              -0.7676854133605957
+            ],
+            [
+              -0.3942866921424866,
+              -1.3569350242614746,
+              0.33524957299232483,
+              0.5744276642799377,
+              1.6201691627502441,
+              0.33395177125930786,
+              -1.0290671586990356,
+              -0.942666232585907
+            ]
+          ]
+        },
+        "requested_objective_calls": 24,
+        "objective_calls": 24,
+        "successful_objective_calls": 24,
+        "propagation_calls": 384,
+        "total_integrator_steps": 1152,
+        "convergence_attempts": 24,
+        "offline_scoring_seconds": 0.05746066800020344,
+        "cost_counts_complete": true,
+        "failures": [],
+        "uncertainty_is_certificate": false,
+        "scope": "training labels only; fixed original validation and test banks",
+        "wall_seconds": 0.07540853200043784,
+        "propagations": 24,
+        "propagations_alias": "successful_objective_calls",
+        "infeasible_proposals": 0,
+        "artifact_digest": "73f75bddb8f60278b4349a516761b0a93d63b8856a2388e5638178d6c350dd1a"
+      },
+      "trained": true,
+      "checkpoint": "models/decoder_random/seed_2/best.pt",
+      "checkpoint_sha256": "dfa1aeca50f56da68aaab095e5c19555aa8f289424c3b0fec7f884e5b4bd45ac",
+      "training_seconds": 0.17556892500033427,
+      "training_cost_complete": true,
+      "best_epoch": 0,
+      "last_epoch": 3,
+      "evaluation": "evaluations/decoder_random_seed_2.json",
+      "evaluation_sha256": "030f5a5835fbff5612a4a1b8e2008e0a8ecf6abaa6a2b1632acaec78761236b8"
+    },
+    "policy/seed_2": {
+      "folder": "models/policy/seed_2",
+      "acquisition": "acquisitions/policy_seed_2.json",
+      "acquisition_sha256": "82749770a1db086edf93119f2cd8b106aa0bfcc4340016b2eb4478f48dfa6ac8",
+      "acquisition_cost": {
+        "schema_version": 2,
+        "status": "complete",
+        "arm": "policy",
+        "round_id": "round1",
+        "acquisition_id": "a3bf3c1813c6fe2ec752ad4fe03da05ca9ae834cbd7f9089713bd96c639c84a0",
+        "split": "train",
+        "n_records": 8,
+        "proposals_per_record": 3,
+        "settings": {
+          "backend": "numpy",
+          "tolerance": 0.005,
+          "initial_steps": 16,
+          "max_steps": 1024,
+          "max_ds_dtau": 4.0,
+          "slope_roundoff_relative_tolerance": 1e-06,
+          "norm_tolerance": 1e-09
+        },
+        "provenance": {
+          "checkpoint_sha256": "4f65791911da44eb91fffc4a9d2df792bd9f167f12320934959df88f89ebe0ff",
+          "checkpoint": "/workspace/scratch/a2db4882ba16/anneal_control/runs/acquisition_smoke_verified/models/baseline/seed_2/best.pt",
+          "device": "cpu"
+        },
+        "requested_objective_calls": 24,
+        "objective_calls": 24,
+        "successful_objective_calls": 24,
+        "propagation_calls": 384,
+        "total_integrator_steps": 1152,
+        "convergence_attempts": 24,
+        "offline_scoring_seconds": 0.05881031299759343,
+        "cost_counts_complete": true,
+        "failures": [],
+        "uncertainty_is_certificate": false,
+        "scope": "training labels only; fixed original validation and test banks",
+        "wall_seconds": 0.08810958200047025,
+        "propagations": 24,
+        "propagations_alias": "successful_objective_calls",
+        "infeasible_proposals": 0,
+        "artifact_digest": "6ad754e1ee412798ff1d135fa4c253eac6449cee6d80bd26c66835fc3575d158"
+      },
+      "trained": true,
+      "checkpoint": "models/policy/seed_2/best.pt",
+      "checkpoint_sha256": "912817c266273420f8007bae6b2de333fcdbc92658c14c43c29d2c6949075eb4",
+      "training_seconds": 0.17571203100123967,
+      "training_cost_complete": true,
+      "best_epoch": 0,
+      "last_epoch": 3,
+      "evaluation": "evaluations/policy_seed_2.json",
+      "evaluation_sha256": "d72f5fbd3c6b817de92b6a72d01c2a0183be5666064a384664ffa357eca414a5"
+    }
+  },
+  "plan": {
+    "arms": [
+      "control",
+      "bankext",
+      "decoder_random",
+      "policy"
+    ],
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "training_runs": 15,
+    "added_labels_per_training_record_per_acquisition_arm": 3,
+    "retraining": "from scratch, identical initialization seed and recipe for all arms",
+    "selection": "original validation bank regret",
+    "primary_contrasts": [
+      "policy minus bankext",
+      "policy minus decoder_random"
+    ],
+    "scope": "one matched round; plan is not experimental evidence"
+  },
+  "data_manifest_sha256": "6af161a7b3f41fb514b97917209e8046b938e1484b04b4d258b3fe60634a8f12",
+  "training_digest": "d9685f310bca1a41c67cda1d9f324bde93bba4b8db7ee7c7f50f5f93bbd84845",
+  "validation_digest": "58c72550377463fa278bf14fc0cb93ae44cda275b60334a36d0c9ce828bbe692",
+  "training_complete": true
+}

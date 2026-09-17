@@ -1,0 +1,43 @@
+{
+  "seed": 20260916,
+  "parents": 3,
+  "families": [
+    "spin_glass",
+    "weighted_maxcut"
+  ],
+  "logical_qubits": 9,
+  "chain_lengths": 2,
+  "variants": [
+    {
+      "shape": "path",
+      "ports": 1,
+      "field_distribution": "uniform"
+    },
+    {
+      "shape": "random_tree",
+      "ports": 2,
+      "field_distribution": "concentrated",
+      "coupling_distribution": "random"
+    }
+  ],
+  "chain_strengths": [
+    1.5
+  ],
+  "runtimes": [
+    4
+  ],
+  "candidates": 8,
+  "candidate_batch_size": 2,
+  "spectral_points": 3,
+  "teacher": {
+    "mode": "none"
+  },
+  "steps": 64,
+  "max_steps": 4096,
+  "label_state_tolerance": 0.0002,
+  "max_physical_qubits": 18,
+  "endpoint_max_qubits": 18,
+  "endpoint_memory_mb": 256,
+  "state_memory_mb": 1024,
+  "_note": "Bounded feasibility pilot at 18 physical / 9 logical qubits. Outcome-only; no dense spectrum. Lower batch and label budget than 10-16q profiles: do not pool cross-size ratios as a common-workload curve. Failure to converge is retained as failure, not relaxed automatically."
+}
