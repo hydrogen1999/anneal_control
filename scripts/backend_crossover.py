@@ -40,7 +40,12 @@ from time import perf_counter
 def census() -> dict:
     """Who is using this machine right now, by user and nice level."""
     load = Path("/proc/loadavg").read_text().split()[:3] if Path("/proc/loadavg").exists() else []
-    rows = subprocess.run(["ps", "-eo", "user,ni,pcpu,etimes,comm", "--no-headers"],
+    # ps truncates the USER column to eight characters and appends '+', so a
+    # login name longer than that never matches itself and every one of this
+    # user's own processes gets filed under "other". That inverted the whole
+    # census: a machine carrying 3168% of my own load was recorded as 3168% of
+    # somebody else's. Ask for a wide column instead of guessing at prefixes.
+    rows = subprocess.run(["ps", "-eo", "user:32,ni,pcpu,etimes,comm", "--no-headers"],
                           capture_output=True, text=True).stdout.splitlines()
     me = subprocess.run(["id", "-un"], capture_output=True, text=True).stdout.strip()
     buckets: dict[str, float] = {}
@@ -55,7 +60,7 @@ def census() -> dict:
         # on an otherwise idle machine.
         if cpu <= 0.5 or age < 5 or comm in {"ps", "sshd", "bash", "awk", "id"}:
             continue
-        who = "self" if user.startswith(me[:8]) else "other"
+        who = "self" if user == me else "other"
         buckets[f"{who}_nice_{nice}"] = buckets.get(f"{who}_nice_{nice}", 0.0) + cpu
     # A GPU benchmark whose census only counts CPU is measuring half the machine.
     # A stray sweep of my own held 556 MiB and 18% of the GPU through one run and

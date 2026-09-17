@@ -1,0 +1,280 @@
+{
+  "schema_version": 1,
+  "split": "validation",
+  "n_records": 24,
+  "n_parents": 12,
+  "n_resolved_records": 24,
+  "n_censored_records": 0,
+  "censored_fraction": 0.0,
+  "low_headroom_reference_fraction": 0.0,
+  "headroom": {
+    "n_parents": 12,
+    "mean": 0.14410379676235172,
+    "std": 0.07812473492140716,
+    "min": 0.05325505283047499,
+    "max": 0.30530486212541236,
+    "quantiles": {
+      "p10": 0.0638337231831514,
+      "p25": 0.0831839561351419,
+      "p50": 0.1343174015624515,
+      "p75": 0.19391268498252226,
+      "p90": 0.24188827067273386
+    },
+    "parent_bootstrap_ci": {
+      "low": 0.10472130502492613,
+      "high": 0.1890984239625447,
+      "confidence": 0.95,
+      "resamples": 10000,
+      "unit_of_independence": "logical_parent",
+      "status": "ok",
+      "includes_training_seed_uncertainty": false
+    },
+    "parents": [
+      "parent_0002",
+      "parent_0010",
+      "parent_0016",
+      "parent_0017",
+      "parent_0020",
+      "parent_0045",
+      "parent_0047",
+      "parent_0066",
+      "parent_0075",
+      "parent_0084",
+      "parent_0085",
+      "parent_0091"
+    ]
+  },
+  "linear_loss": {
+    "n_parents": 12,
+    "mean": 0.6482786271221314,
+    "std": 0.2891033223013404,
+    "min": 0.13479967369987594,
+    "max": 0.9624791124923986,
+    "quantiles": {
+      "p10": 0.23885693065458233,
+      "p25": 0.45766432860858686,
+      "p50": 0.7583964746206391,
+      "p75": 0.8533982101018436,
+      "p90": 0.9418813377258483
+    }
+  },
+  "best_found_loss": {
+    "n_parents": 12,
+    "mean": 0.5041748303597796,
+    "std": 0.3216451125091416,
+    "min": 0.03604079028077145,
+    "max": 0.9002052470935487,
+    "quantiles": {
+      "p10": 0.09506801471855905,
+      "p25": 0.22515779792686108,
+      "p50": 0.6148054747850089,
+      "p75": 0.7343590220951701,
+      "p90": 0.8861645458542343
+    }
+  },
+  "family_restriction_loss": {
+    "eight_bin": {
+      "n_parents": 12,
+      "mean": 0.02535098867156246,
+      "std": 0.015389737185900077,
+      "min": 0.008016669814441046,
+      "max": 0.055355209812792405,
+      "quantiles": {
+        "p10": 0.009788014817318303,
+        "p25": 0.012993422269925128,
+        "p50": 0.023706132366415722,
+        "p75": 0.0329508217267233,
+        "p90": 0.04485539199414305
+      }
+    },
+    "linear": {
+      "n_parents": 12,
+      "mean": 0.14410379676235172,
+      "std": 0.07812473492140716,
+      "min": 0.05325505283047499,
+      "max": 0.30530486212541236,
+      "quantiles": {
+        "p10": 0.0638337231831514,
+        "p25": 0.0831839561351419,
+        "p50": 0.1343174015624515,
+        "p75": 0.19391268498252226,
+        "p90": 0.24188827067273386
+      }
+    },
+    "one_window": {
+      "n_parents": 12,
+      "mean": 0.019355770182058935,
+      "std": 0.028054762926456474,
+      "min": 0.0,
+      "max": 0.09753565355393329,
+      "quantiles": {
+        "p10": 0.0001578340470120955,
+        "p25": 0.003930134732602827,
+        "p50": 0.00812977157579059,
+        "p75": 0.020445250357924494,
+        "p90": 0.04225124741721498
+      }
+    },
+    "two_window": {
+      "n_parents": 12,
+      "mean": 0.006332324646949702,
+      "std": 0.008605309155882387,
+      "min": 0.0,
+      "max": 0.02509345426937032,
+      "quantiles": {
+        "p10": 0.0,
+        "p25": 0.0003166280809034916,
+        "p50": 0.003233396403973937,
+        "p75": 0.0072816633804468345,
+        "p90": 0.020880769738737457
+      }
+    }
+  },
+  "by_physical_size": {
+    "10": {
+      "physical_n": 10,
+      "n_records": 8,
+      "n_censored_records": 0,
+      "n_parents": 4,
+      "headroom": {
+        "n_parents": 4,
+        "mean": 0.13618258261376182,
+        "std": 0.04342255694013601,
+        "min": 0.084954460432901,
+        "max": 0.19114106689724325,
+        "quantiles": {
+          "p10": 0.09929655318151359,
+          "p25": 0.12080969230443248,
+          "p50": 0.1343174015624515,
+          "p75": 0.14969029187178085,
+          "p90": 0.1745607568870583
+        },
+        "parent_bootstrap_ci": {
+          "low": 0.0976841870404991,
+          "high": 0.17654615923833483,
+          "confidence": 0.95,
+          "resamples": 10000,
+          "unit_of_independence": "logical_parent",
+          "status": "ok",
+          "includes_training_seed_uncertainty": false
+        }
+      },
+      "best_family_counts": {
+        "eight_bin": 1,
+        "one_window": 4,
+        "two_window": 3
+      }
+    },
+    "12": {
+      "physical_n": 12,
+      "n_records": 8,
+      "n_censored_records": 0,
+      "n_parents": 4,
+      "headroom": {
+        "n_parents": 4,
+        "mean": 0.16488658440333778,
+        "std": 0.11246645619203978,
+        "min": 0.05325505283047499,
+        "max": 0.30530486212541236,
+        "quantiles": {
+          "p10": 0.06690620200706385,
+          "p25": 0.08738292577194712,
+          "p50": 0.1504932113287319,
+          "p75": 0.22799686996012256,
+          "p90": 0.27438166525929647
+        },
+        "parent_bootstrap_ci": {
+          "low": 0.07600696812478974,
+          "high": 0.2537662006818858,
+          "confidence": 0.95,
+          "resamples": 10000,
+          "unit_of_independence": "logical_parent",
+          "status": "ok",
+          "includes_training_seed_uncertainty": false
+        }
+      },
+      "best_family_counts": {
+        "one_window": 2,
+        "two_window": 6
+      }
+    },
+    "14": {
+      "physical_n": 14,
+      "n_records": 8,
+      "n_censored_records": 0,
+      "n_parents": 4,
+      "headroom": {
+        "n_parents": 4,
+        "mean": 0.13124222326995555,
+        "std": 0.08345695445242336,
+        "min": 0.06227386539884994,
+        "max": 0.24629501860988656,
+        "quantiles": {
+          "p10": 0.06695343875175433,
+          "p25": 0.07397279878111093,
+          "p50": 0.10820000453554282,
+          "p75": 0.16546942902438744,
+          "p90": 0.21396478277568692
+        },
+        "parent_bootstrap_ci": {
+          "low": 0.07007315432035727,
+          "high": 0.20418937476788107,
+          "confidence": 0.95,
+          "resamples": 10000,
+          "unit_of_independence": "logical_parent",
+          "status": "ok",
+          "includes_training_seed_uncertainty": false
+        }
+      },
+      "best_family_counts": {
+        "one_window": 5,
+        "two_window": 3
+      }
+    }
+  },
+  "best_family_counts": {
+    "eight_bin": 1,
+    "one_window": 11,
+    "two_window": 12
+  },
+  "records_with_audit_failures": 0,
+  "audit_failure_reasons": {},
+  "records_with_inconsistent_linear_reference": 0,
+  "total_objective_calls": 2328,
+  "total_integrator_steps": 6184473,
+  "verdict": "resolved_headroom_present",
+  "scope": "finite-budget best-found reference; headroom is a lower bound on control gain and censored rows are excluded from every headroom statistic above",
+  "failed_units": 0,
+  "failed_unit_ids": [],
+  "failure_reasons": {},
+  "sweep": {
+    "command": "control-sweep",
+    "settings": {
+      "split": "validation",
+      "families": [
+        "linear",
+        "one_window",
+        "two_window",
+        "eight_bin"
+      ],
+      "budget": 32,
+      "seed": 0,
+      "ambiguity_margin": 1.0,
+      "reference_floor": 0.01,
+      "allow_test_adaptation": false,
+      "backend": "cupy",
+      "tolerance": 0.0002,
+      "initial_steps": 128,
+      "max_steps": 16384,
+      "max_ds_dtau": 4.0,
+      "teacher_methods": [],
+      "strategy": "sobol_local",
+      "retain_full_trials": true
+    },
+    "settings_hash": "068d3e06bbd9a4e341dc86bb799a03b4894c9010211e3c8a408da8f3f1de5d2f",
+    "source_hash": "2148e7e29136f39a10c78c2909f77955d67f212a3e10035570d71793b5cd4a63",
+    "status": "ok",
+    "data_dir": "/home/nguyencongt/runs/pegasus_data",
+    "requested_objective_calls_per_unit": 97
+  }
+}

@@ -1,0 +1,361 @@
+{
+ "schema_version": 1,
+ "sizes": {
+  "10": {
+   "runs": [
+    {
+     "repeat": 0,
+     "wall_seconds": 775.8272888488136,
+     "returncode": 0,
+     "artifact": "/home/nguyencongt/runs/backend_crossover/profile_10q_r0/profile.json",
+     "census": {
+      "load_average": [
+       35.31,
+       35.36,
+       36.2
+      ],
+      "gpu_compute_processes": [
+       {
+        "pid": 3517044,
+        "used": "556 MiB",
+        "state": "TNl",
+        "competing": false,
+        "process": "TNl  nguyenc+ /home/nguyencongt/annealctrl_deploy/anneal_control/.venv/bin/python -m annealctrl control-sweep --data /home/nguyencongt/runs/"
+       }
+      ],
+      "n_gpu_compute_processes": 1,
+      "cpu_percent_by_user_and_nice": {
+       "other_nice_0": 0.8,
+       "other_nice_19": 3165.4
+      },
+      "self_competing_cpu_percent": 0,
+      "other_cpu_percent": 3166.2
+     },
+     "status": "complete",
+     "numpy": 14.492564027318338,
+     "cupy": 10.10237585244119,
+     "max_candidate_loss_difference": null
+    },
+    {
+     "repeat": 1,
+     "wall_seconds": 0.9688301188871264,
+     "returncode": 1,
+     "artifact": "/home/nguyencongt/runs/backend_crossover/profile_10q_r1/profile.json",
+     "census": {
+      "load_average": [
+       35.31,
+       35.36,
+       36.2
+      ],
+      "gpu_compute_processes": [
+       {
+        "pid": 3517044,
+        "used": "556 MiB",
+        "state": "TNl",
+        "competing": false,
+        "process": "TNl  nguyenc+ /home/nguyencongt/annealctrl_deploy/anneal_control/.venv/bin/python -m annealctrl control-sweep --data /home/nguyencongt/runs/"
+       }
+      ],
+      "n_gpu_compute_processes": 1,
+      "cpu_percent_by_user_and_nice": {
+       "other_nice_0": 0.8,
+       "other_nice_19": 3165.5
+      },
+      "self_competing_cpu_percent": 0,
+      "other_cpu_percent": 3166.3
+     },
+     "stderr_tail": [
+      "    root.mkdir(parents=True, exist_ok=False)",
+      "  File \"/usr/local/lib/egr/modules/python3.12/lib/python3.12/pathlib.py\", line 1313, in mkdir",
+      "    os.mkdir(self, mode)",
+      "FileExistsError: [Errno 17] File exists: '/home/nguyencongt/runs/backend_crossover/profile_10q_r1'"
+     ]
+    }
+   ],
+   "status": "insufficient_successful_repeats"
+  },
+  "12": {
+   "runs": [
+    {
+     "repeat": 0,
+     "wall_seconds": 587.6872602328658,
+     "returncode": 0,
+     "artifact": "/home/nguyencongt/runs/backend_crossover/profile_12q_r0/profile.json",
+     "census": {
+      "load_average": [
+       39.0,
+       37.58,
+       36.74
+      ],
+      "gpu_compute_processes": [
+       {
+        "pid": 3517044,
+        "used": "556 MiB",
+        "state": "TNl",
+        "competing": false,
+        "process": "TNl  nguyenc+ /home/nguyencongt/annealctrl_deploy/anneal_control/.venv/bin/python -m annealctrl control-sweep --data /home/nguyencongt/runs/"
+       }
+      ],
+      "n_gpu_compute_processes": 1,
+      "cpu_percent_by_user_and_nice": {
+       "other_nice_0": 100.7,
+       "other_nice_19": 3433.4
+      },
+      "self_competing_cpu_percent": 0,
+      "other_cpu_percent": 3534.1
+     },
+     "status": "complete",
+     "numpy": 2.6648241257797096,
+     "cupy": 7.485963039562079,
+     "max_candidate_loss_difference": null
+    },
+    {
+     "repeat": 1,
+     "wall_seconds": 607.2348432443105,
+     "returncode": 0,
+     "artifact": "/home/nguyencongt/runs/backend_crossover/profile_12q_r1/profile.json",
+     "census": {
+      "load_average": [
+       37.98,
+       38.13,
+       37.55
+      ],
+      "gpu_compute_processes": [
+       {
+        "pid": 3517044,
+        "used": "556 MiB",
+        "state": "TNl",
+        "competing": false,
+        "process": "TNl  nguyenc+ /home/nguyencongt/annealctrl_deploy/anneal_control/.venv/bin/python -m annealctrl control-sweep --data /home/nguyencongt/runs/"
+       }
+      ],
+      "n_gpu_compute_processes": 1,
+      "cpu_percent_by_user_and_nice": {
+       "other_nice_0": 100.7,
+       "other_nice_19": 3322.0
+      },
+      "self_competing_cpu_percent": 0,
+      "other_cpu_percent": 3422.7
+     },
+     "status": "complete",
+     "numpy": 2.5679079946031043,
+     "cupy": 7.329483479919474,
+     "max_candidate_loss_difference": null
+    }
+   ],
+   "status": "measured",
+   "numpy_labels_per_second": 2.6163660601914067,
+   "numpy_relative_spread": 0.036368678232469975,
+   "cupy_labels_per_second": 7.407723259740776,
+   "cupy_relative_spread": 0.020903063348781784,
+   "repeats_agree": true,
+   "ratio_cupy_over_numpy": 2.8313023060690696
+  },
+  "14": {
+   "runs": [
+    {
+     "repeat": 0,
+     "wall_seconds": 1.0427820845507085,
+     "returncode": 1,
+     "artifact": "/home/nguyencongt/runs/backend_crossover/profile_14q_r0/profile.json",
+     "census": {
+      "load_average": [
+       37.98,
+       38.13,
+       37.55
+      ],
+      "gpu_compute_processes": [
+       {
+        "pid": 3517044,
+        "used": "556 MiB",
+        "state": "TNl",
+        "competing": false,
+        "process": "TNl  nguyenc+ /home/nguyencongt/annealctrl_deploy/anneal_control/.venv/bin/python -m annealctrl control-sweep --data /home/nguyencongt/runs/"
+       }
+      ],
+      "n_gpu_compute_processes": 1,
+      "cpu_percent_by_user_and_nice": {
+       "other_nice_0": 100.7,
+       "other_nice_19": 3322.1
+      },
+      "self_competing_cpu_percent": 0,
+      "other_cpu_percent": 3422.8
+     },
+     "stderr_tail": [
+      "           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "  File \"/home/nguyencongt/annealctrl_deploy/anneal_control/src/annealctrl/generation.py\", line 636, in parent_splits",
+      "    raise ValueError(\"at least three logical parents per family for train/validation/test\")",
+      "ValueError: at least three logical parents per family for train/validation/test"
+     ]
+    },
+    {
+     "repeat": 1,
+     "wall_seconds": 1.069536198861897,
+     "returncode": 1,
+     "artifact": "/home/nguyencongt/runs/backend_crossover/profile_14q_r1/profile.json",
+     "census": {
+      "load_average": [
+       37.99,
+       38.13,
+       37.56
+      ],
+      "gpu_compute_processes": [
+       {
+        "pid": 3517044,
+        "used": "556 MiB",
+        "state": "TNl",
+        "competing": false,
+        "process": "TNl  nguyenc+ /home/nguyencongt/annealctrl_deploy/anneal_control/.venv/bin/python -m annealctrl control-sweep --data /home/nguyencongt/runs/"
+       }
+      ],
+      "n_gpu_compute_processes": 1,
+      "cpu_percent_by_user_and_nice": {
+       "other_nice_0": 100.7,
+       "other_nice_19": 3322.1
+      },
+      "self_competing_cpu_percent": 0,
+      "other_cpu_percent": 3422.8
+     },
+     "stderr_tail": [
+      "           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "  File \"/home/nguyencongt/annealctrl_deploy/anneal_control/src/annealctrl/generation.py\", line 636, in parent_splits",
+      "    raise ValueError(\"at least three logical parents per family for train/validation/test\")",
+      "ValueError: at least three logical parents per family for train/validation/test"
+     ]
+    }
+   ],
+   "status": "insufficient_successful_repeats"
+  },
+  "16": {
+   "runs": [
+    {
+     "repeat": 0,
+     "wall_seconds": 0.9432405531406403,
+     "returncode": 1,
+     "artifact": "/home/nguyencongt/runs/backend_crossover/profile_16q_r0/profile.json",
+     "census": {
+      "load_average": [
+       37.99,
+       38.13,
+       37.56
+      ],
+      "gpu_compute_processes": [
+       {
+        "pid": 3517044,
+        "used": "556 MiB",
+        "state": "TNl",
+        "competing": false,
+        "process": "TNl  nguyenc+ /home/nguyencongt/annealctrl_deploy/anneal_control/.venv/bin/python -m annealctrl control-sweep --data /home/nguyencongt/runs/"
+       }
+      ],
+      "n_gpu_compute_processes": 1,
+      "cpu_percent_by_user_and_nice": {
+       "other_nice_0": 100.7,
+       "other_nice_19": 3321.8
+      },
+      "self_competing_cpu_percent": 0,
+      "other_cpu_percent": 3422.5
+     },
+     "stderr_tail": [
+      "           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "  File \"/home/nguyencongt/annealctrl_deploy/anneal_control/src/annealctrl/generation.py\", line 636, in parent_splits",
+      "    raise ValueError(\"at least three logical parents per family for train/validation/test\")",
+      "ValueError: at least three logical parents per family for train/validation/test"
+     ]
+    },
+    {
+     "repeat": 1,
+     "wall_seconds": 1.1088007190264761,
+     "returncode": 1,
+     "artifact": "/home/nguyencongt/runs/backend_crossover/profile_16q_r1/profile.json",
+     "census": {
+      "load_average": [
+       37.99,
+       38.13,
+       37.56
+      ],
+      "gpu_compute_processes": [
+       {
+        "pid": 3517044,
+        "used": "556 MiB",
+        "state": "TNl",
+        "competing": false,
+        "process": "TNl  nguyenc+ /home/nguyencongt/annealctrl_deploy/anneal_control/.venv/bin/python -m annealctrl control-sweep --data /home/nguyencongt/runs/"
+       }
+      ],
+      "n_gpu_compute_processes": 1,
+      "cpu_percent_by_user_and_nice": {
+       "other_nice_0": 100.7,
+       "other_nice_19": 3321.9
+      },
+      "self_competing_cpu_percent": 0,
+      "other_cpu_percent": 3422.6
+     },
+     "stderr_tail": [
+      "           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+      "  File \"/home/nguyencongt/annealctrl_deploy/anneal_control/src/annealctrl/generation.py\", line 636, in parent_splits",
+      "    raise ValueError(\"at least three logical parents per family for train/validation/test\")",
+      "ValueError: at least three logical parents per family for train/validation/test"
+     ]
+    }
+   ],
+   "status": "insufficient_successful_repeats"
+  }
+ },
+ "repeats": 2,
+ "preflight_invalid": {},
+ "tolerance": 0.15,
+ "guard_overridden": false,
+ "census_before": {
+  "load_average": [
+   35.7,
+   37.57,
+   37.63
+  ],
+  "gpu_compute_processes": [
+   {
+    "pid": 3517044,
+    "used": "556 MiB",
+    "state": "TNl",
+    "competing": false,
+    "process": "TNl  nguyenc+ /home/nguyencongt/annealctrl_deploy/anneal_control/.venv/bin/python -m annealctrl control-sweep --data /home/nguyencongt/runs/"
+   }
+  ],
+  "n_gpu_compute_processes": 1,
+  "cpu_percent_by_user_and_nice": {
+   "other_nice_0": 0.8,
+   "other_nice_19": 3167.7
+  },
+  "self_competing_cpu_percent": 0,
+  "other_cpu_percent": 3168.5,
+  "driver_nice": 0
+ },
+ "scope": "NumPy against CuPy on a shared host; repeats bound the timing noise and the census records what else was running. A loaded host starves the NumPy arm and inflates the ratio, so an unstable size is reported as unstable rather than averaged.",
+ "census_after": {
+  "load_average": [
+   37.99,
+   38.13,
+   37.56
+  ],
+  "gpu_compute_processes": [
+   {
+    "pid": 3517044,
+    "used": "556 MiB",
+    "state": "TNl",
+    "competing": false,
+    "process": "TNl  nguyenc+ /home/nguyencongt/annealctrl_deploy/anneal_control/.venv/bin/python -m annealctrl control-sweep --data /home/nguyencongt/runs/"
+   }
+  ],
+  "n_gpu_compute_processes": 1,
+  "cpu_percent_by_user_and_nice": {
+   "other_nice_0": 100.7,
+   "other_nice_19": 3321.9
+  },
+  "self_competing_cpu_percent": 0,
+  "other_cpu_percent": 3422.6
+ },
+ "stable_sizes": [
+  "12"
+ ],
+ "census_labelling_defect": "The census in this artifact mislabels ownership: `ps -eo user` truncates the login name to eight characters plus '+', so every process of this user was filed under 'other'. The 3168% recorded as other_cpu_percent was in fact this user's own jobs, all at nice 19. The measurement conditions were nonetheless the intended ones and were verified directly at the time: driver at nice 0, every other job of this user at nice 19, and the GPU held exclusively with the only other compute process paused. The throughput numbers stand; the ownership breakdown in census_before/census_after does not. Fixed in scripts/backend_crossover.py."
+}
