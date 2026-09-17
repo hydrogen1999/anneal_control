@@ -1,0 +1,297 @@
+{
+  "schema_version": 1,
+  "n_pairs": 228,
+  "n_parents": 20,
+  "n_censored_pairs": 50,
+  "censored_fraction": 0.21929824561403508,
+  "n_one_sided_pairs": 55,
+  "decisive_reversals": 123,
+  "decisive_reversal_rate": 0.5394736842105263,
+  "decisive_reversal_denominator": 228,
+  "swap_consistency_check": 1.0,
+  "swap_consistency_holds": true,
+  "identical_waveform_pairs": 43,
+  "pairs_with_negative_direction": 53,
+  "negative_direction_fraction": 0.2324561403508772,
+  "physical_size_matched": true,
+  "by_scale_arm": {
+    "scale_controlled": {
+      "transfer_penalty": {
+        "n_parents": 20,
+        "mean": 0.09118582750245946,
+        "std": 0.058122289570542524,
+        "min": 0.021438332883859462,
+        "max": 0.2222755703135015,
+        "quantiles": {
+          "p10": 0.04003973989489511,
+          "p25": 0.047731884891685374,
+          "p50": 0.0695946658181325,
+          "p75": 0.11977598601553412,
+          "p90": 0.1712983643462106
+        },
+        "parent_bootstrap_ci": {
+          "low": 0.06812729793406964,
+          "high": 0.11686279507440124,
+          "confidence": 0.95,
+          "resamples": 10000,
+          "unit_of_independence": "logical_parent",
+          "status": "ok",
+          "includes_training_seed_uncertainty": false
+        },
+        "n_pairs": 50,
+        "n_included_pairs": 47,
+        "n_resolved_pairs": 45,
+        "n_one_sided_pairs": 2,
+        "inclusion_rule": "decisive in at least one direction; censored pairs excluded"
+      },
+      "decisive_reversals": 45,
+      "decisive_reversal_rate": 0.9,
+      "decisive_reversal_denominator": 50
+    },
+    "total_compiled_effect": {
+      "transfer_penalty": {
+        "n_parents": 20,
+        "mean": 0.026951687789765855,
+        "std": 0.02219981883586737,
+        "min": 0.004418591252078589,
+        "max": 0.07206378841613864,
+        "quantiles": {
+          "p10": 0.005554992611915137,
+          "p25": 0.007962082674875748,
+          "p50": 0.022327137584122234,
+          "p75": 0.04238364352311066,
+          "p90": 0.05499425562068248
+        },
+        "parent_bootstrap_ci": {
+          "low": 0.01787806279372594,
+          "high": 0.036821378799391256,
+          "confidence": 0.95,
+          "resamples": 10000,
+          "unit_of_independence": "logical_parent",
+          "status": "ok",
+          "includes_training_seed_uncertainty": false
+        },
+        "n_pairs": 178,
+        "n_included_pairs": 131,
+        "n_resolved_pairs": 78,
+        "n_one_sided_pairs": 53,
+        "inclusion_rule": "decisive in at least one direction; censored pairs excluded"
+      },
+      "decisive_reversals": 78,
+      "decisive_reversal_rate": 0.43820224719101125,
+      "decisive_reversal_denominator": 178
+    }
+  },
+  "by_factor": {
+    "chain_strength": {
+      "transfer_penalty": {
+        "n_parents": 20,
+        "mean": 0.07912506343241264,
+        "std": 0.05956036307399082,
+        "min": 0.022186855975903252,
+        "max": 0.23170668602037994,
+        "quantiles": {
+          "p10": 0.031167611442001867,
+          "p25": 0.03459385873594688,
+          "p50": 0.05117001657139009,
+          "p75": 0.09668089211498125,
+          "p90": 0.17627504680248648
+        },
+        "parent_bootstrap_ci": {
+          "low": 0.05599161465258424,
+          "high": 0.10586880248171852,
+          "confidence": 0.95,
+          "resamples": 10000,
+          "unit_of_independence": "logical_parent",
+          "status": "ok",
+          "includes_training_seed_uncertainty": false
+        },
+        "n_pairs": 80,
+        "n_included_pairs": 75,
+        "n_resolved_pairs": 69,
+        "n_one_sided_pairs": 6,
+        "inclusion_rule": "decisive in at least one direction; censored pairs excluded"
+      },
+      "decisive_reversals": 69,
+      "decisive_reversal_rate": 0.8625,
+      "decisive_reversal_denominator": 80
+    },
+    "field_allocation": {
+      "transfer_penalty": {
+        "n_parents": 2,
+        "mean": 0.0008672193366437014,
+        "std": 0.00026130676233289586,
+        "min": 0.0006824475530282093,
+        "max": 0.0010519911202591936,
+        "quantiles": {
+          "p10": 0.0007194019097513076,
+          "p25": 0.0007748334448359553,
+          "p50": 0.0008672193366437014,
+          "p75": 0.0009596052284514475,
+          "p90": 0.0010150367635360952
+        },
+        "parent_bootstrap_ci": {
+          "low": 0.0006824475530282093,
+          "high": 0.0010519911202591936,
+          "confidence": 0.95,
+          "resamples": 10000,
+          "unit_of_independence": "logical_parent",
+          "status": "ok",
+          "includes_training_seed_uncertainty": false
+        },
+        "n_pairs": 20,
+        "n_included_pairs": 3,
+        "n_resolved_pairs": 1,
+        "n_one_sided_pairs": 2,
+        "inclusion_rule": "decisive in at least one direction; censored pairs excluded"
+      },
+      "decisive_reversals": 1,
+      "decisive_reversal_rate": 0.05,
+      "decisive_reversal_denominator": 20
+    },
+    "geometry": {
+      "transfer_penalty": {
+        "n_parents": 20,
+        "mean": 0.008917523800810883,
+        "std": 0.012340602196536647,
+        "min": -0.003359482489190657,
+        "max": 0.0493527994197325,
+        "quantiles": {
+          "p10": -0.0004942492167725548,
+          "p25": 0.001164284065560222,
+          "p50": 0.004462381930998937,
+          "p75": 0.01312638482435605,
+          "p90": 0.021490911537778157
+        },
+        "parent_bootstrap_ci": {
+          "low": 0.004241618228397346,
+          "high": 0.014523991991641482,
+          "confidence": 0.95,
+          "resamples": 10000,
+          "unit_of_independence": "logical_parent",
+          "status": "ok",
+          "includes_training_seed_uncertainty": false
+        },
+        "n_pairs": 78,
+        "n_included_pairs": 59,
+        "n_resolved_pairs": 28,
+        "n_one_sided_pairs": 31,
+        "inclusion_rule": "decisive in at least one direction; censored pairs excluded"
+      },
+      "decisive_reversals": 28,
+      "decisive_reversal_rate": 0.358974358974359,
+      "decisive_reversal_denominator": 78
+    },
+    "ports": {
+      "transfer_penalty": {
+        "n_parents": 20,
+        "mean": 0.02019852099332692,
+        "std": 0.03302781565396023,
+        "min": -0.0013095815857853133,
+        "max": 0.1243483735989586,
+        "quantiles": {
+          "p10": -0.0002868567570970037,
+          "p25": 0.0009926030375276285,
+          "p50": 0.0033591730821088683,
+          "p75": 0.024891351535239116,
+          "p90": 0.06425914038964593
+        },
+        "parent_bootstrap_ci": {
+          "low": 0.007642706920482512,
+          "high": 0.03568522112575836,
+          "confidence": 0.95,
+          "resamples": 10000,
+          "unit_of_independence": "logical_parent",
+          "status": "ok",
+          "includes_training_seed_uncertainty": false
+        },
+        "n_pairs": 50,
+        "n_included_pairs": 41,
+        "n_resolved_pairs": 25,
+        "n_one_sided_pairs": 16,
+        "inclusion_rule": "decisive in at least one direction; censored pairs excluded"
+      },
+      "decisive_reversals": 25,
+      "decisive_reversal_rate": 0.5,
+      "decisive_reversal_denominator": 50
+    }
+  },
+  "factor_counts": {
+    "chain_strength": 80,
+    "field_allocation": 20,
+    "geometry": 78,
+    "ports": 50
+  },
+  "scale_arm_matched_contrast": {
+    "schema_version": 1,
+    "n_matched_pairs": 42,
+    "n_matched_censored_excluded": 8,
+    "n_unmatched_total_only": 128,
+    "n_unmatched_controlled_only": 0,
+    "factors_matched": {
+      "chain_strength": 35,
+      "ports": 7
+    },
+    "mean_scale_controlled": 0.11027890756462352,
+    "mean_total_compiled_effect": 0.064969032412244,
+    "mean_difference": 0.04530987515237954,
+    "mean_difference_pair_weighted": 0.03201256625225239,
+    "weighting": "equal_parent_mean",
+    "ratio_matched": 1.6974072642005436,
+    "pairs_holding_scale_increases_penalty": 29,
+    "parent_bootstrap_ci": {
+      "low": 0.020728784859088373,
+      "high": 0.07035519466854391,
+      "confidence": 0.95,
+      "resamples": 10000,
+      "unit_of_independence": "logical_parent",
+      "status": "ok",
+      "includes_training_seed_uncertainty": false
+    },
+    "n_parents": 20,
+    "ratio_unmatched_confounded": 3.3833067603686295,
+    "unmatched_is_composition_confounded": true,
+    "factor_composition": {
+      "scale_controlled": {
+        "chain_strength": 40,
+        "ports": 7
+      },
+      "total_compiled_effect": {
+        "chain_strength": 35,
+        "field_allocation": 3,
+        "geometry": 59,
+        "ports": 34
+      }
+    },
+    "unit_of_independence": "logical_parent",
+    "scope": "within-pair difference over interventions observed under both arms, so factor composition cancels; the marginal ratio is reported only to show what the composition correction changed and must not be quoted on its own"
+  },
+  "total_objective_calls": 88464,
+  "verdict": "preference_changes_measured",
+  "scope": "paired interventions inside the declared closed-system simulator; transfer penalties are signed and unclipped, and scale arms are reported separately",
+  "failed_units": 0,
+  "failed_unit_ids": [],
+  "sweep": {
+    "command": "intervention-sweep",
+    "settings": {
+      "families": [
+        "linear",
+        "one_window",
+        "two_window",
+        "eight_bin"
+      ],
+      "budget": 64,
+      "seed": 0,
+      "ambiguity_margin": 1.0,
+      "backend": "numpy",
+      "tolerance": 0.0002,
+      "initial_steps": 128,
+      "max_steps": 16384,
+      "max_ds_dtau": 4.0,
+      "max_qubits": 14
+    },
+    "settings_hash": "0b95a883a8f768b7c01d5c6c0a92583c314622ecc6aa259f8c67055ae3312561",
+    "source_hash": "9ea96d75444b9f89fb7fb233a8602c5df4d1cb76e4329ee2ef59a7bdba8f4e89",
+    "status": "ok"
+  }
+}

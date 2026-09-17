@@ -22,7 +22,8 @@ directory; every caveat is load-bearing, not decoration.
 | **Claim** | Changing one embedding factor reverses which control is preferred in 57.5% of paired interventions. |
 | **Evidence** | 610 of 1060 pairs show a decisive reversal, both directions decisive against their own numerical ambiguity. 24% censored and reported. |
 | **Artifact** | `campaign_2026-09-16/g3/`, ADR-0003 |
-| **Does not cover** | 8 physical qubits. `P(reversal \| resolved) ≡ 1` by construction and is **not** the finding; the rate is against all pairs. |
+| **Replicated at scale** | 14 physical qubits: 123 of 228 pairs (53.9%) over 20 parents, 21.9% censored, same verdict. The matched scale-arm contrast is 1.70× there against 1.52× at 8 qubits. `interventions14_2026-09-17/` |
+| **Does not cover** | Two sizes, 8 and 14, are not a ladder — they show the effect has not vanished between them, not a trend. 20 parents at 14 qubits, so per-factor cells are small. `P(reversal \| resolved) ≡ 1` by construction and is **not** the finding; the rate is against all pairs. The two campaigns generate their own parents, so this replicates the finding on a comparable distribution, not the same problems embedded twice. |
 | **Correction** | The scale-arm effect was first reported as **2.6×** by dividing two marginal means with different factor compositions. Matched value is **1.52×**, +0.0199 [0.0132, 0.0267] over 214 pairs. ADR-0008. |
 
 ## 3. The privileged spectral schedule is not the ceiling
