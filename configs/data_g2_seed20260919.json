@@ -1,0 +1,60 @@
+{
+  "_comment": "G2 headroom measurement dataset. Same distribution as data_research.json, but teacher.mode=none and a small stored bank: the frontier instrument re-searches controls from scratch with exact waveforms, so neither the adaptive spectral teacher nor a 64-candidate stored bank contributes to a headroom measurement. This dataset therefore CANNOT train the physics-auxiliary ablations; use data_research.json for that. This is dataset master seed 20260919; the G2 headroom result is reported across seeds so it cannot be an artefact of one draw.",
+  "seed": 20260919,
+  "parents": 240,
+  "families": [
+    "spin_glass",
+    "weighted_maxcut",
+    "planted_loops",
+    "weak_field"
+  ],
+  "logical_sizes": [
+    3,
+    4,
+    5
+  ],
+  "logical_support": {
+    "kind": "complete"
+  },
+  "chain_distribution": {
+    "distribution": "power_law",
+    "low": 1,
+    "high": 3,
+    "exponent": 2.0
+  },
+  "variants": [
+    {
+      "shape": "path",
+      "ports": 1,
+      "field_distribution": "uniform"
+    },
+    {
+      "shape": "random_tree",
+      "ports": 2,
+      "field_distribution": "concentrated",
+      "coupling_distribution": "random"
+    }
+  ],
+  "chain_strengths": [
+    0.75,
+    1.5,
+    3.0
+  ],
+  "runtimes": [
+    1.0,
+    4.0,
+    12.0
+  ],
+  "candidates": 8,
+  "candidate_batch_size": 8,
+  "spectral_points": 3,
+  "teacher": {
+    "mode": "none"
+  },
+  "steps": 64,
+  "max_steps": 16384,
+  "label_state_tolerance": 0.0002,
+  "max_physical_qubits": 10,
+  "endpoint_memory_mb": 1024,
+  "state_memory_mb": 2048
+}
