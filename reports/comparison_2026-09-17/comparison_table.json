@@ -1,0 +1,694 @@
+{
+ "schema_version": 1,
+ "n_records": 864,
+ "n_parents": 48,
+ "n_dropped_no_frontier_row": 0,
+ "n_dropped_no_ml_row": 0,
+ "rows": [
+  {
+   "method": "linear",
+   "cost_class": "fixed",
+   "consults_true_outcomes": false,
+   "n_records": 864,
+   "n_parents": 48,
+   "measured_on_full_population": true,
+   "mean_loss": 0.6009294912581947,
+   "std_parent_loss": 0.22780441073196908,
+   "parent_bootstrap_ci": {
+    "low": 0.5355953499810346,
+    "high": 0.6630420548461833,
+    "confidence": 0.95,
+    "resamples": 20000,
+    "unit_of_independence": "logical_parent",
+    "status": "ok",
+    "includes_training_seed_uncertainty": false
+   },
+   "vs_linear": {
+    "mean_difference": 0.0,
+    "parent_bootstrap_ci": {
+     "low": 0.0,
+     "high": 0.0,
+     "confidence": 0.95,
+     "resamples": 20000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "reference": "linear_loss",
+    "sign_convention": "negative means this method is better"
+   }
+  },
+  {
+   "method": "global",
+   "cost_class": "fixed",
+   "consults_true_outcomes": false,
+   "n_records": 864,
+   "n_parents": 48,
+   "measured_on_full_population": true,
+   "mean_loss": 0.5654369678493419,
+   "std_parent_loss": 0.23303665337515986,
+   "parent_bootstrap_ci": {
+    "low": 0.4990505368541034,
+    "high": 0.6290544401577453,
+    "confidence": 0.95,
+    "resamples": 20000,
+    "unit_of_independence": "logical_parent",
+    "status": "ok",
+    "includes_training_seed_uncertainty": false
+   },
+   "vs_linear": {
+    "mean_difference": -0.0354917758210603,
+    "parent_bootstrap_ci": {
+     "low": -0.04137827625508709,
+     "high": -0.029875638765201544,
+     "confidence": 0.95,
+     "resamples": 20000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "reference": "linear_loss",
+    "sign_convention": "negative means this method is better"
+   },
+   "vs_global": {
+    "mean_difference": 0.0,
+    "parent_bootstrap_ci": {
+     "low": 0.0,
+     "high": 0.0,
+     "confidence": 0.95,
+     "resamples": 20000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "reference": "global_loss",
+    "sign_convention": "negative means this method is better"
+   }
+  },
+  {
+   "method": "d2",
+   "cost_class": "privileged_spectrum",
+   "consults_true_outcomes": false,
+   "n_records": 846,
+   "n_parents": 47,
+   "measured_on_full_population": false,
+   "mean_loss": 0.5912987044985294,
+   "std_parent_loss": 0.25288732822544857,
+   "parent_bootstrap_ci": {
+    "low": 0.5179312717981595,
+    "high": 0.6611990427284463,
+    "confidence": 0.95,
+    "resamples": 20000,
+    "unit_of_independence": "logical_parent",
+    "status": "ok",
+    "includes_training_seed_uncertainty": false
+   },
+   "vs_linear": {
+    "mean_difference": -0.004115336236548072,
+    "parent_bootstrap_ci": {
+     "low": -0.02333906056079546,
+     "high": 0.01524061731782395,
+     "confidence": 0.95,
+     "resamples": 20000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "reference": "linear_loss",
+    "sign_convention": "negative means this method is better"
+   },
+   "note": "requires the exact instantaneous spectrum; not available to a deployed method"
+  },
+  {
+   "method": "gap_inverse_square",
+   "cost_class": "privileged_spectrum",
+   "consults_true_outcomes": false,
+   "n_records": 432,
+   "n_parents": 24,
+   "measured_on_full_population": false,
+   "mean_loss": 0.775030304555037,
+   "std_parent_loss": 0.09565550973210643,
+   "parent_bootstrap_ci": {
+    "low": 0.736173451959619,
+    "high": 0.8109100942548345,
+    "confidence": 0.95,
+    "resamples": 20000,
+    "unit_of_independence": "logical_parent",
+    "status": "ok",
+    "includes_training_seed_uncertainty": false
+   },
+   "vs_linear": {
+    "mean_difference": 0.03281574391674564,
+    "parent_bootstrap_ci": {
+     "low": 0.00531204412070627,
+     "high": 0.05988923739933281,
+     "confidence": 0.95,
+     "resamples": 20000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "reference": "linear_loss",
+    "sign_convention": "negative means this method is better"
+   },
+   "note": "requires the exact instantaneous spectrum; not available to a deployed method"
+  },
+  {
+   "method": "hierarchy_outcome/bank",
+   "cost_class": "amortised",
+   "consults_true_outcomes": false,
+   "n_records": 864,
+   "n_parents": 48,
+   "measured_on_full_population": true,
+   "mean_loss": 0.5455740686790304,
+   "std_parent_loss": 0.23381107821866998,
+   "parent_bootstrap_ci": {
+    "low": 0.4787853781231637,
+    "high": 0.6094874606009749,
+    "confidence": 0.95,
+    "resamples": 20000,
+    "unit_of_independence": "logical_parent",
+    "status": "ok",
+    "includes_training_seed_uncertainty": false
+   },
+   "vs_linear": {
+    "mean_difference": -0.0553546749913719,
+    "parent_bootstrap_ci": {
+     "low": -0.06241215819129647,
+     "high": -0.04898616066671856,
+     "confidence": 0.95,
+     "resamples": 20000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "reference": "linear_loss",
+    "sign_convention": "negative means this method is better"
+   },
+   "vs_global": {
+    "mean_difference": -0.019862899170311612,
+    "parent_bootstrap_ci": {
+     "low": -0.027188480143680464,
+     "high": -0.013236958993634817,
+     "confidence": 0.95,
+     "resamples": 20000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "reference": "global_loss",
+    "sign_convention": "negative means this method is better"
+   }
+  },
+  {
+   "method": "hierarchy_outcome/direct",
+   "cost_class": "amortised",
+   "consults_true_outcomes": false,
+   "n_records": 864,
+   "n_parents": 48,
+   "measured_on_full_population": true,
+   "mean_loss": 0.5906598324267772,
+   "std_parent_loss": 0.22638818322111137,
+   "parent_bootstrap_ci": {
+    "low": 0.5257555487698494,
+    "high": 0.6519506280015249,
+    "confidence": 0.95,
+    "resamples": 20000,
+    "unit_of_independence": "logical_parent",
+    "status": "ok",
+    "includes_training_seed_uncertainty": false
+   },
+   "vs_linear": {
+    "mean_difference": -0.01026891124362505,
+    "parent_bootstrap_ci": {
+     "low": -0.017990689835802667,
+     "high": -0.0023374065367308705,
+     "confidence": 0.95,
+     "resamples": 20000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "reference": "linear_loss",
+    "sign_convention": "negative means this method is better"
+   },
+   "vs_global": {
+    "mean_difference": 0.02522286457743524,
+    "parent_bootstrap_ci": {
+     "low": 0.01503773906300338,
+     "high": 0.03638160796844895,
+     "confidence": 0.95,
+     "resamples": 20000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "reference": "global_loss",
+    "sign_convention": "negative means this method is better"
+   }
+  },
+  {
+   "method": "hierarchy_physics/bank",
+   "cost_class": "amortised",
+   "consults_true_outcomes": false,
+   "n_records": 864,
+   "n_parents": 48,
+   "measured_on_full_population": true,
+   "mean_loss": 0.5450248479287781,
+   "std_parent_loss": 0.23285953663592995,
+   "parent_bootstrap_ci": {
+    "low": 0.47835724886951514,
+    "high": 0.608790047109972,
+    "confidence": 0.95,
+    "resamples": 20000,
+    "unit_of_independence": "logical_parent",
+    "status": "ok",
+    "includes_training_seed_uncertainty": false
+   },
+   "vs_linear": {
+    "mean_difference": -0.055903895741624056,
+    "parent_bootstrap_ci": {
+     "low": -0.06303753786347871,
+     "high": -0.04941720460463339,
+     "confidence": 0.95,
+     "resamples": 20000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "reference": "linear_loss",
+    "sign_convention": "negative means this method is better"
+   },
+   "vs_global": {
+    "mean_difference": -0.02041211992056376,
+    "parent_bootstrap_ci": {
+     "low": -0.027786756496545776,
+     "high": -0.0136487175507644,
+     "confidence": 0.95,
+     "resamples": 20000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "reference": "global_loss",
+    "sign_convention": "negative means this method is better"
+   }
+  },
+  {
+   "method": "hierarchy_physics/direct",
+   "cost_class": "amortised",
+   "consults_true_outcomes": false,
+   "n_records": 864,
+   "n_parents": 48,
+   "measured_on_full_population": true,
+   "mean_loss": 0.5906486723138928,
+   "std_parent_loss": 0.22190392868253797,
+   "parent_bootstrap_ci": {
+    "low": 0.5269909503656932,
+    "high": 0.6508963455473143,
+    "confidence": 0.95,
+    "resamples": 20000,
+    "unit_of_independence": "logical_parent",
+    "status": "ok",
+    "includes_training_seed_uncertainty": false
+   },
+   "vs_linear": {
+    "mean_difference": -0.010280071356509378,
+    "parent_bootstrap_ci": {
+     "low": -0.018321728977107567,
+     "high": -0.0018901558687054048,
+     "confidence": 0.95,
+     "resamples": 20000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "reference": "linear_loss",
+    "sign_convention": "negative means this method is better"
+   },
+   "vs_global": {
+    "mean_difference": 0.025211704464550917,
+    "parent_bootstrap_ci": {
+     "low": 0.01491844213155312,
+     "high": 0.03664887778345951,
+     "confidence": 0.95,
+     "resamples": 20000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "reference": "global_loss",
+    "sign_convention": "negative means this method is better"
+   }
+  },
+  {
+   "method": "logical/bank",
+   "cost_class": "amortised",
+   "consults_true_outcomes": false,
+   "n_records": 864,
+   "n_parents": 48,
+   "measured_on_full_population": true,
+   "mean_loss": 0.5531817745624861,
+   "std_parent_loss": 0.23530629166672543,
+   "parent_bootstrap_ci": {
+    "low": 0.48594580136932874,
+    "high": 0.6174720832182757,
+    "confidence": 0.95,
+    "resamples": 20000,
+    "unit_of_independence": "logical_parent",
+    "status": "ok",
+    "includes_training_seed_uncertainty": false
+   },
+   "vs_linear": {
+    "mean_difference": -0.047746969107916155,
+    "parent_bootstrap_ci": {
+     "low": -0.05458256727819435,
+     "high": -0.04165585029911163,
+     "confidence": 0.95,
+     "resamples": 20000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "reference": "linear_loss",
+    "sign_convention": "negative means this method is better"
+   },
+   "vs_global": {
+    "mean_difference": -0.012255193286855868,
+    "parent_bootstrap_ci": {
+     "low": -0.018550536495305536,
+     "high": -0.006529767664350229,
+     "confidence": 0.95,
+     "resamples": 20000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "reference": "global_loss",
+    "sign_convention": "negative means this method is better"
+   }
+  },
+  {
+   "method": "logical/direct",
+   "cost_class": "amortised",
+   "consults_true_outcomes": false,
+   "n_records": 864,
+   "n_parents": 48,
+   "measured_on_full_population": true,
+   "mean_loss": 0.5898128930993236,
+   "std_parent_loss": 0.23389340644427994,
+   "parent_bootstrap_ci": {
+    "low": 0.5222475297059967,
+    "high": 0.6532728351992779,
+    "confidence": 0.95,
+    "resamples": 20000,
+    "unit_of_independence": "logical_parent",
+    "status": "ok",
+    "includes_training_seed_uncertainty": false
+   },
+   "vs_linear": {
+    "mean_difference": -0.011115850571078584,
+    "parent_bootstrap_ci": {
+     "low": -0.019370598383086,
+     "high": -0.0027323301712482155,
+     "confidence": 0.95,
+     "resamples": 20000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "reference": "linear_loss",
+    "sign_convention": "negative means this method is better"
+   },
+   "vs_global": {
+    "mean_difference": 0.024375925249981712,
+    "parent_bootstrap_ci": {
+     "low": 0.013819926366915588,
+     "high": 0.035737612473146024,
+     "confidence": 0.95,
+     "resamples": 20000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "reference": "global_loss",
+    "sign_convention": "negative means this method is better"
+   }
+  },
+  {
+   "method": "physical/bank",
+   "cost_class": "amortised",
+   "consults_true_outcomes": false,
+   "n_records": 864,
+   "n_parents": 48,
+   "measured_on_full_population": true,
+   "mean_loss": 0.5461961915977701,
+   "std_parent_loss": 0.2322288080186216,
+   "parent_bootstrap_ci": {
+    "low": 0.4796823432381451,
+    "high": 0.6096209899929795,
+    "confidence": 0.95,
+    "resamples": 20000,
+    "unit_of_independence": "logical_parent",
+    "status": "ok",
+    "includes_training_seed_uncertainty": false
+   },
+   "vs_linear": {
+    "mean_difference": -0.05473255207263217,
+    "parent_bootstrap_ci": {
+     "low": -0.06149245224002439,
+     "high": -0.048488124724321326,
+     "confidence": 0.95,
+     "resamples": 20000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "reference": "linear_loss",
+    "sign_convention": "negative means this method is better"
+   },
+   "vs_global": {
+    "mean_difference": -0.019240776251571872,
+    "parent_bootstrap_ci": {
+     "low": -0.026844742150103965,
+     "high": -0.012296473762684454,
+     "confidence": 0.95,
+     "resamples": 20000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "reference": "global_loss",
+    "sign_convention": "negative means this method is better"
+   }
+  },
+  {
+   "method": "physical/direct",
+   "cost_class": "amortised",
+   "consults_true_outcomes": false,
+   "n_records": 864,
+   "n_parents": 48,
+   "measured_on_full_population": true,
+   "mean_loss": 0.5977584675510874,
+   "std_parent_loss": 0.22163827696790575,
+   "parent_bootstrap_ci": {
+    "low": 0.5341151637029932,
+    "high": 0.6580062060779656,
+    "confidence": 0.95,
+    "resamples": 20000,
+    "unit_of_independence": "logical_parent",
+    "status": "ok",
+    "includes_training_seed_uncertainty": false
+   },
+   "vs_linear": {
+    "mean_difference": -0.0031702761193147786,
+    "parent_bootstrap_ci": {
+     "low": -0.011532996495827364,
+     "high": 0.006034278719320056,
+     "confidence": 0.95,
+     "resamples": 20000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "reference": "linear_loss",
+    "sign_convention": "negative means this method is better"
+   },
+   "vs_global": {
+    "mean_difference": 0.03232149970174551,
+    "parent_bootstrap_ci": {
+     "low": 0.021268700887969706,
+     "high": 0.04493913330583733,
+     "confidence": 0.95,
+     "resamples": 20000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "reference": "global_loss",
+    "sign_convention": "negative means this method is better"
+   }
+  },
+  {
+   "method": "summary/bank",
+   "cost_class": "amortised",
+   "consults_true_outcomes": false,
+   "n_records": 864,
+   "n_parents": 48,
+   "measured_on_full_population": true,
+   "mean_loss": 0.544662059490677,
+   "std_parent_loss": 0.23451134480101127,
+   "parent_bootstrap_ci": {
+    "low": 0.4776689397911667,
+    "high": 0.6088270901712965,
+    "confidence": 0.95,
+    "resamples": 20000,
+    "unit_of_independence": "logical_parent",
+    "status": "ok",
+    "includes_training_seed_uncertainty": false
+   },
+   "vs_linear": {
+    "mean_difference": -0.056266684179725246,
+    "parent_bootstrap_ci": {
+     "low": -0.06356065581786069,
+     "high": -0.04942870684004907,
+     "confidence": 0.95,
+     "resamples": 20000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "reference": "linear_loss",
+    "sign_convention": "negative means this method is better"
+   },
+   "vs_global": {
+    "mean_difference": -0.02077490835866495,
+    "parent_bootstrap_ci": {
+     "low": -0.027734491074740426,
+     "high": -0.014166815536305598,
+     "confidence": 0.95,
+     "resamples": 20000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "reference": "global_loss",
+    "sign_convention": "negative means this method is better"
+   }
+  },
+  {
+   "method": "summary/direct",
+   "cost_class": "amortised",
+   "consults_true_outcomes": false,
+   "n_records": 864,
+   "n_parents": 48,
+   "measured_on_full_population": true,
+   "mean_loss": 0.5905332783058529,
+   "std_parent_loss": 0.22589615316847564,
+   "parent_bootstrap_ci": {
+    "low": 0.5260626042465062,
+    "high": 0.6519810034968796,
+    "confidence": 0.95,
+    "resamples": 20000,
+    "unit_of_independence": "logical_parent",
+    "status": "ok",
+    "includes_training_seed_uncertainty": false
+   },
+   "vs_linear": {
+    "mean_difference": -0.010395465364549317,
+    "parent_bootstrap_ci": {
+     "low": -0.017526507776662478,
+     "high": -0.003256397631169913,
+     "confidence": 0.95,
+     "resamples": 20000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "reference": "linear_loss",
+    "sign_convention": "negative means this method is better"
+   },
+   "vs_global": {
+    "mean_difference": 0.025096310456510975,
+    "parent_bootstrap_ci": {
+     "low": 0.01655812386062607,
+     "high": 0.03440550147584481,
+     "confidence": 0.95,
+     "resamples": 20000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "reference": "global_loss",
+    "sign_convention": "negative means this method is better"
+   }
+  },
+  {
+   "method": "search_best_found",
+   "cost_class": "online_adaptation",
+   "consults_true_outcomes": true,
+   "n_records": 864,
+   "n_parents": 48,
+   "measured_on_full_population": true,
+   "mean_loss": 0.5073517362335433,
+   "std_parent_loss": 0.23907208544352482,
+   "parent_bootstrap_ci": {
+    "low": 0.43913862206897053,
+    "high": 0.5727910506504675,
+    "confidence": 0.95,
+    "resamples": 20000,
+    "unit_of_independence": "logical_parent",
+    "status": "ok",
+    "includes_training_seed_uncertainty": false
+   },
+   "vs_linear": {
+    "mean_difference": -0.09357775502465143,
+    "parent_bootstrap_ci": {
+     "low": -0.10478147486277001,
+     "high": -0.08343327762434286,
+     "confidence": 0.95,
+     "resamples": 20000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "reference": "linear_loss",
+    "sign_convention": "negative means this method is better"
+   },
+   "note": "online adaptation: true outcomes are consulted per instance",
+   "objective_calls_per_instance": 257.0
+  }
+ ],
+ "ranked_within_cost_class": {
+  "fixed": [
+   "global",
+   "linear"
+  ],
+  "privileged_spectrum": [
+   "d2",
+   "gap_inverse_square"
+  ],
+  "amortised": [
+   "summary/bank",
+   "hierarchy_physics/bank",
+   "hierarchy_outcome/bank",
+   "physical/bank",
+   "logical/bank",
+   "logical/direct",
+   "summary/direct",
+   "hierarchy_physics/direct",
+   "hierarchy_outcome/direct",
+   "physical/direct"
+  ],
+  "online_adaptation": [
+   "search_best_found"
+  ]
+ },
+ "cost_classes": [
+  "fixed",
+  "privileged_spectrum",
+  "amortised",
+  "online_adaptation"
+ ],
+ "scope": "every row is measured on the same held-out records; rows are ordered only within a cost class, because a method that consults true outcomes per instance and one that consults none are not competing for the same prize"
+}

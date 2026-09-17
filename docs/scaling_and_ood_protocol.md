@@ -11,6 +11,13 @@ The old one-shot script guarded host load only once and the 12/14/16-qubit
 configurations omitted the mandatory `endpoint_max_qubits` field. Those
 configurations now pass validation. The replacement driver:
 
+Before creating output or timing a backend, profiling also runs the actual
+logical-parent planner and split implementation. This catches the requirement
+for three parents per family and insufficient family/size cells, which the
+configuration-schema validator alone does not enforce. Preflight performs no
+state propagation or spectral allocation; generation subsequently reruns parent
+planning fresh inside its measured work.
+
 1. Keeps one complete warm-up per backend separate from four measured runs.
 2. Alternates backend order from a declared seeded first order; an even number
    of repetitions balances the first-running backend.
@@ -79,7 +86,7 @@ not be mixed silently with this protocol.
 
 `configs/backend_profile_18q.json` and `backend_profile_20q.json` use 9 and 10
 logical variables respectively, each with two physical qubits per chain. They
-request three parents, two embedding variants, eight controls, batch size two,
+request six parents (three per family), two embedding variants, eight controls, batch size two,
 one chain strength and runtime, and at most 4096 integration steps. Explicit
 caps are 256 MiB for endpoint work and 1024 MiB for state work; the existing GPU
 guard additionally checks currently free device memory. These are conservative

@@ -55,6 +55,11 @@ configuration; they are not committed as model weights.
 Reproduce from the source revision with fingerprint
 `a07e7a1ff339c0428b4df7582fc36a9304cecb575b40729ae915ba206779c84d`:
 
+The archived run's source is preserved in GitHub commit
+[`cb1f565`](https://github.com/hydrogen1999/anneal_control/commit/cb1f565d01b77431ea2aa781a8a2827e5160ac2f).
+Later commits harden retry accounting and integrate newer upstream modules;
+they have a different source fingerprint and cannot resume this old run silently.
+
 ```bash
 python -m annealctrl acquisition-study --config configs/acquisition_pilot.json --output runs/pilot_reproduction
 python scripts/plot_acquisition_study.py --summary reports/acquisition_pilot_2026-09-17/summary.json.gz --output runs/pilot_plot.svg --title 'Exploratory acquisition pilot'

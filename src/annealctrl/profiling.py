@@ -16,7 +16,27 @@ from time import perf_counter, process_time
 import numpy as np
 
 from .physics import backend_device_info, estimate_state_workspace
-from .pipeline import _validate_config, environment, generate_dataset, load_records, source_fingerprint, write_json
+from .pipeline import (_plan_parents, _split_parents, _validate_config, environment,
+                       generate_dataset, load_records, source_fingerprint, write_json)
+
+
+def preflight_generation(config: dict) -> dict:
+    """Exercise the actual parent planner and split contract before timing.
+
+    A syntactically valid configuration can still lack three parents per
+    family, or enough parents in a family/size cell. Reusing the real planner
+    and splitter prevents this preflight from drifting into a weaker duplicate
+    of their checks. This does not propagate states or allocate dense spectra.
+    """
+    _validate_config(config)
+    parents = _plan_parents(config)
+    splits = _split_parents(parents, config)
+    return {"status": "passed", "parents": len(parents),
+            "parents_per_family": {family: sum(p["family"] == family for p in parents)
+                                   for family in sorted(config["families"])},
+            "split_counts": {name: sum(value == name for value in splits.values())
+                             for name in ("train", "validation", "test")},
+            "scope": "Actual logical-parent planning and split validation, excluded from measured generation wall time. Generation reruns these steps fresh; state propagation and spectral allocation are not preflighted."}
 
 
 def _host_status() -> dict:
@@ -247,7 +267,7 @@ def profile_generation(config: dict, output: str | Path, *, backends=("numpy",),
     must not inherit cached generation costs. Dataset recovery remains possible
     through the generation command, but is not comparable fresh-run timing.
     """
-    _validate_config(config)
+    preflight = preflight_generation(config)
     requested = tuple(backends)
     if not requested or len(set(requested)) != len(requested) or any(item not in {"numpy", "cupy"} for item in requested):
         raise ValueError("backends must be unique explicitly requested numpy/cupy names")
@@ -266,6 +286,7 @@ def profile_generation(config: dict, output: str | Path, *, backends=("numpy",),
         "config_hash": hashlib.sha256(json.dumps(frozen, sort_keys=True).encode()).hexdigest(),
         "source_fingerprint": source_fingerprint(), "environment": environment(),
         "requested_backends": list(requested), "workers": workers, "max_load": max_load,
+        "preflight": preflight,
         "precision": {"coefficients": "float64", "state": "complex128"},
         "gpu_timing_synchronized": "cupy" in requested,
         "backends": {backend: {"status": "planned", "dataset": str(root / backend)} for backend in requested},
@@ -348,7 +369,7 @@ def profile_repeated_generation(config: dict, output: str | Path, *, backends=("
     order for even repeats, but does not eliminate host drift or establish that
     any size/generalization claim holds outside the measured workload.
     """
-    _validate_config(config)
+    preflight = preflight_generation(config)
     requested = tuple(backends)
     if not requested or len(set(requested)) != len(requested) or set(requested) - {"numpy", "cupy"}:
         raise ValueError("backends must be unique numpy/cupy names")
@@ -368,6 +389,7 @@ def profile_repeated_generation(config: dict, output: str | Path, *, backends=("
     initial_order = list(np.random.default_rng(order_seed).permutation(requested))
     report = {"schema_version": 1, "status": "in_progress", "config": deepcopy(config),
               "source_fingerprint": source_fingerprint(), "environment": environment(),
+              "preflight": preflight,
               "repeats_requested": repeats, "warmups_requested": warmups,
               "order_seed": order_seed, "max_load": max_load,
               "parity_tolerance": parity_tolerance, "warmups": [], "repetitions": [],

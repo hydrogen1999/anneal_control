@@ -1,6 +1,6 @@
 {
   "seed": 20260916,
-  "parents": 3,
+  "parents": 6,
   "families": [
     "spin_glass",
     "weighted_maxcut"

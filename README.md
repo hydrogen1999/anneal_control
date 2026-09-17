@@ -24,6 +24,8 @@ python -m annealctrl acquisition-study --config configs/acquisition_research.jso
 - [Statistical corrections and parent/seed uncertainty](docs/statistical_inference.md)
 - [Fresh reanalysis of archived held-out results](reports/statistics_reanalysis_2026-09-17/README.md)
 - [Completed 60-parent, three-seed acquisition pilot, including negative results](reports/acquisition_pilot_2026-09-17/README.md)
+- [Audit of newer upstream results](docs/latest_evidence_audit_2026-09-17.md)
+- [Corrected teacher comparisons on audited, matched populations](reports/comparison_audit_corrected_2026-09-17/RESULTS.md)
 
 Summary moments remain the inexpensive reference encoder. The archived results
 support embedding information in bank selection, but do not establish a bank

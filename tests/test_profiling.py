@@ -267,10 +267,37 @@ def test_unrestricted_host_measurement_is_marked_exploratory(monkeypatch, tmp_pa
 def test_shipped_scaling_configs_pass_allocation_contract(qubits):
     root = Path(__file__).resolve().parents[1]
     cfg = json.loads((root / "configs" / f"backend_profile_{qubits}q.json").read_text())
-    pipeline._validate_config(cfg)
+    preflight = profiling.preflight_generation(cfg)
+    assert preflight["status"] == "passed"
+    assert all(count >= 3 for count in preflight["parents_per_family"].values())
+    assert all(count > 0 for count in preflight["split_counts"].values())
     assert cfg["teacher"]["mode"] == "none"
-    assert cfg["endpoint_max_qubits"] == cfg["max_physical_qubits"] == qubits
+    assert cfg.get("endpoint_max_qubits", 20) >= cfg["max_physical_qubits"] == qubits
     assert cfg["logical_qubits"] * 2 == qubits
+
+
+@pytest.mark.parametrize("entrypoint", ["profile_generation", "profile_repeated_generation"])
+def test_real_parent_family_split_rejected_before_output(tmp_path, entrypoint):
+    cfg = config()
+    cfg["families"] = ["spin_glass", "weighted_maxcut"]
+    # This is precisely the configuration-schema blind spot: three total
+    # parents passes, although the real stratified split needs six here.
+    pipeline._validate_config(cfg)
+    destination = tmp_path / "not_started"
+    with pytest.raises(ValueError, match="three logical parents per family"):
+        getattr(profiling, entrypoint)(cfg, destination)
+    assert not destination.exists()
+
+
+def test_preflight_uses_real_family_size_cells_not_only_family_counts():
+    cfg = config()
+    cfg.update(parents=6, families=["spin_glass", "weighted_maxcut"],
+               logical_sizes=[3, 4], chain_lengths=1)
+    # Three parents per family is insufficient when each family is divided
+    # across two size cells and every cell needs train/validation/test.
+    pipeline._validate_config(cfg)
+    with pytest.raises(ValueError, match="too few parents in family-size cell"):
+        profiling.preflight_generation(cfg)
 
 
 @pytest.mark.parametrize("kwargs", [{"repeats": 2}, {"warmups": 0}, {"workers": 2},

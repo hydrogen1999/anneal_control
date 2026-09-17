@@ -494,3 +494,28 @@ def test_the_benchmark_records_which_strategy_produced_it(tmp_path):
                                        seed=0, tolerance=5e-3, initial_steps=16, max_steps=512,
                                        strategy="bayesian")
     assert result["search_strategy"] == "bayesian"
+
+
+def test_frontier_config_accepts_underscore_annotations_but_not_typos():
+    """A config may carry provenance notes; a misspelled real key must still fail."""
+    from annealctrl.headroom import load_frontier_config
+
+    settings, _ = load_frontier_config({
+        "split": "test", "budget": 8,
+        "_scope_note": "reference measurement; nothing is tuned on these rows",
+        "_provenance": "derived from frontier_research.json"})
+    assert settings["budget"] == 8
+    assert not any(str(key).startswith("_") for key in settings)
+
+    with pytest.raises(ValueError, match="unknown frontier configuration keys"):
+        load_frontier_config({"split": "test", "budgte": 8})
+
+
+def test_frontier_annotations_do_not_change_the_settings_hash():
+    """Otherwise adding a comment would invalidate every resumable sweep."""
+    from annealctrl.headroom import load_frontier_config
+    from annealctrl.sweeps import settings_hash
+
+    plain, _ = load_frontier_config({"split": "test", "budget": 8})
+    annotated, _ = load_frontier_config({"split": "test", "budget": 8, "_why": "a note"})
+    assert settings_hash(plain) == settings_hash(annotated)

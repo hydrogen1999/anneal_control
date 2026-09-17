@@ -298,8 +298,12 @@ def main(argv=None):
                     allow_test_adaptation=args.allow_test_adaptation, backend=args.backend,
                     tolerance=args.tolerance, initial_steps=args.initial_steps, max_steps=args.max_steps)
                 result["provenance"] = provenance
+                result["source_fingerprint_at_end"] = source_fingerprint()
+                result["source_frozen"] = result["source_fingerprint_at_end"] == provenance["source_fingerprint_at_start"]
                 stream.write(json.dumps(result, allow_nan=False) + "\n")
                 stream.flush()
+                if not result["source_frozen"]:
+                    raise RuntimeError("source changed during baseline run; retained row is invalid for the frozen revision")
 
 
 if __name__ == "__main__":

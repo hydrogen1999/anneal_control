@@ -183,3 +183,97 @@ def test_external_dataset_must_match_frozen_scientific_config(completed_study, t
     changed["dataset"]["seed"] += 1
     with pytest.raises(ValueError, match="dataset config differs"):
         study.run_study(changed, tmp_path / "wrong_dataset", data_dir=data, stage="train")
+
+
+def test_failed_acquisition_costs_survive_resume_in_immutable_hashed_ledger(completed_study, tmp_path, monkeypatch):
+    from annealctrl import benchmarking
+    from annealctrl.dagger import AcquisitionError
+
+    cfg, data, _, _ = completed_study
+    cfg = copy.deepcopy(cfg)
+    cfg["seeds"] = [0]
+    output = tmp_path / "retry_study"
+    original = benchmarking.score_schedule
+    completed_scores = []
+    failed = False
+
+    def fail_once(record, schedule, **kwargs):
+        nonlocal failed
+        if len(completed_scores) == 1 and not failed:
+            failed = True
+            raise ArithmeticError("deliberate second-call convergence failure")
+        result = original(record, schedule, **kwargs)
+        completed_scores.append(result)
+        return result
+
+    monkeypatch.setattr(benchmarking, "score_schedule", fail_once)
+    with pytest.raises(AcquisitionError, match="convergence failure"):
+        study.run_study(cfg, output, data_dir=data, stage="all")
+    failed_manifest = json.loads((output / "study.json").read_text())
+    state = failed_manifest["runs"]["bankext/seed_0"]
+    assert "acquisition" not in state, "partial labels must not become training labels"
+    assert len(state["acquisition_attempts"]) == 1
+    attempt = state["acquisition_attempts"][0]
+    assert attempt["status"] == "failed"
+    first_audit = (output / attempt["audit"]).read_bytes()
+    first_request = (output / attempt["request"]).read_bytes()
+    assert hashlib.sha256(first_audit).hexdigest() == attempt["audit_sha256"]
+    assert failed_manifest["error"]["acquisition_audit"] == attempt["audit"]
+    assert state["acquisition_cost"]["objective_calls"] == 2
+    assert state["acquisition_cost"]["successful_objective_calls"] == 1
+    assert not state["acquisition_cost"]["cost_counts_complete"]
+
+    resumed = study.run_study(cfg, output, data_dir=data, stage="all", resume=True)
+    state = resumed["runs"]["bankext/seed_0"]
+    assert [row["status"] for row in state["acquisition_attempts"]] == ["failed", "complete"]
+    assert (output / attempt["audit"]).read_bytes() == first_audit
+    assert (output / attempt["request"]).read_bytes() == first_request
+    assert len({row["audit"] for row in state["acquisition_attempts"]}) == 2
+    added_labels = len(load_records(data, "train")) * 3
+    successful = json.loads((output / state["acquisition"]).read_text())
+    assert successful["objective_calls"] == added_labels
+    summary = json.loads((output / "summary.json").read_text())
+    costs = summary["costs"]["bankext/seed_0"]["acquisition"]
+    assert costs["objective_calls"] == added_labels + 2
+    assert costs["successful_objective_calls"] == added_labels + 1
+    assert costs["failed_attempt_objective_calls"] == 2
+    assert costs["failed_objective_calls"] == 1
+    assert costs["attempt_count"] == 2
+    assert costs["failed_attempts"] == 1
+    assert costs["total_integrator_steps"] == (successful["total_integrator_steps"]
+                                              + completed_scores[0]["total_integrator_steps"])
+    assert costs["propagation_calls"] == successful["propagation_calls"] + completed_scores[0]["propagation_calls"]
+    assert costs["objective_calls_complete"]
+    assert not costs["cost_counts_complete"]
+    assert costs["counts_are_lower_bounds"]
+    with (output / attempt["audit"]).open("a") as handle:
+        handle.write(" ")
+    with pytest.raises(ValueError, match="changed frozen artifact"):
+        study.run_study(cfg, output, data_dir=data, resume=True)
+
+
+def test_interrupted_acquisition_is_retained_as_unknown_work_before_retry(completed_study, tmp_path, monkeypatch):
+    cfg, data, _, _ = completed_study
+    cfg = copy.deepcopy(cfg)
+    cfg["seeds"] = [0]
+    output = tmp_path / "interrupted_study"
+    original = study._acquire
+
+    def interrupted(*args, **kwargs):
+        raise KeyboardInterrupt("simulated process interruption")
+
+    monkeypatch.setattr(study, "_acquire", interrupted)
+    with pytest.raises(KeyboardInterrupt):
+        study.run_study(cfg, output, data_dir=data, stage="train")
+    manifest = json.loads((output / "study.json").read_text())
+    request = manifest["runs"]["bankext/seed_0"]["acquisition_attempts"][0]
+    assert request["status"] == "started"
+    request_bytes = (output / request["request"]).read_bytes()
+    monkeypatch.setattr(study, "_acquire", original)
+    resumed = study.run_study(cfg, output, data_dir=data, stage="train", resume=True)
+    state = resumed["runs"]["bankext/seed_0"]
+    assert [row["status"] for row in state["acquisition_attempts"]] == ["interrupted", "complete"]
+    assert (output / request["request"]).read_bytes() == request_bytes
+    assert not state["acquisition_cost"]["objective_calls_complete"]
+    assert not state["acquisition_cost"]["cost_counts_complete"]
+    assert state["acquisition_cost"]["failed_attempts"] == 1

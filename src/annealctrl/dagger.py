@@ -5,6 +5,9 @@ through the policy decoder are three different acquisition rules. Their effect
 must be measured; using the decoder or adding labels is not itself evidence of
 improved control. This is dataset aggregation, not a claim of canonical DAgger
 imitation-learning guarantees. Validation and test banks stay untouched.
+
+Historical augmented-validation results remain in reports/dagger_2026-09-17.
+This collector deliberately enforces the newer fixed-validation study contract.
 """
 from __future__ import annotations
 

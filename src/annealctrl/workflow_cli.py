@@ -17,7 +17,7 @@ COMMANDS = {"run", "tune", "report", "audit", "doctor", "train-config", "infer",
             "control-sweep", "frontier-report", "screen",
             "intervention-sweep", "intervention-report",
             "model-intervention-sweep", "model-intervention-report", "cost-report",
-            "method-contrast", "acquisition-study"}
+            "method-contrast", "acquisition-study", "teacher-baseline-report", "comparison-table"}
 
 
 def _json(path):
@@ -222,6 +222,24 @@ def main(argv):
                           help="encoders that cannot see the embedding")
     contrast.add_argument("--bootstrap-resamples", type=int, default=20000)
     contrast.add_argument("--alpha", type=float, default=0.05)
+    teach = sub.add_parser(
+        "teacher-baseline-report",
+        help="G2: privileged spectral baselines against linear and against the search")
+    teach.add_argument("--sweep", nargs="+", required=True,
+                       help="control-sweep directories whose rows carry privileged_teachers")
+    teach.add_argument("--output", required=True)
+    teach.add_argument("--bootstrap-resamples", type=int, default=20000)
+    table = sub.add_parser(
+        "comparison-table",
+        help="one held-out table: every method on the same records, labelled by cost class")
+    table.add_argument("--records", required=True, help="heldout_records.json from method-contrast")
+    table.add_argument("--reference-sweep", nargs="+", required=True,
+                       help="test-split control-sweep directories (online adaptation)")
+    table.add_argument("--output", required=True)
+    table.add_argument("--bootstrap-resamples", type=int, default=20000)
+    table.add_argument("--search", nargs="+", metavar="NAME=DIR", default=[],
+                       help="further search strategies at the same budget, e.g. bayesian=DIR; "
+                            "each becomes its own online_adaptation row")
     opened = sub.add_parser("simulate-open", help="small independent Lindblad model, not a calibrated QPU")
     opened.add_argument("--record", required=True)
     opened.add_argument("--schedule", required=True)
@@ -447,6 +465,60 @@ def main(argv):
                     information["mean_difference"], information["ci_low"],
                     information["ci_high"], information["separated"]))
         _save(args.output, result)
+    elif args.command == "teacher-baseline-report":
+        from .sweeps import load_rows
+        from .teacher_baselines import aggregate_privileged_teachers
+        rows = [row["result"] for directory in args.sweep for row in load_rows(directory)
+                if row.get("status") == "ok" and row.get("result")]
+        result = aggregate_privileged_teachers(rows, bootstrap_resamples=args.bootstrap_resamples)
+        _save(args.output, result)
+        print("%d rows, %d parents" % (result["n_rows"], result["n_parents"]))
+        for name, block in sorted(result["methods"].items()):
+            if block.get("mean_loss") is None:
+                print("%-20s %s" % (name, block.get("status")))
+                continue
+            print("%-20s teacher %.4f | linear %.4f | search %.4f | resolved %.1f%% | %s" % (
+                name, block["mean_loss"], block["mean_linear_loss"],
+                block["mean_best_found_loss"], 100 * block["resolution_rate"], block["verdict"]))
+            print("%-20s vs linear %+.4f [%+.4f, %+.4f] | vs search %+.4f [%+.4f, %+.4f]" % (
+                "", block["vs_linear"]["mean_difference"],
+                block["vs_linear"]["parent_bootstrap_ci"]["low"],
+                block["vs_linear"]["parent_bootstrap_ci"]["high"],
+                block["vs_best_found"]["mean_difference"],
+                block["vs_best_found"]["parent_bootstrap_ci"]["low"],
+                block["vs_best_found"]["parent_bootstrap_ci"]["high"]))
+    elif args.command == "comparison-table":
+        from .paper_table import assemble_comparison
+        from .sweeps import load_rows
+        payload = json.loads(Path(args.records).read_text())
+        ml_rows = payload["record_means"] if isinstance(payload, dict) else payload
+        frontier = [row["result"] for directory in args.reference_sweep
+                    for row in load_rows(directory)
+                    if row.get("status") == "ok" and row.get("result")]
+        searches = {}
+        for item in args.search:
+            if "=" not in item:
+                raise ValueError(f"--search expects NAME=DIR, got {item!r}")
+            name, directory = item.split("=", 1)
+            searches[name] = [row["result"] for row in load_rows(directory)
+                              if row.get("status") == "ok" and row.get("result")]
+        result = assemble_comparison([row for row in ml_rows if row.get("split") == "test"],
+                                     frontier, searches=searches or None,
+                                     bootstrap_resamples=args.bootstrap_resamples)
+        _save(args.output, result)
+        print("%d records, %d parents (dropped %d without a reference row)" % (
+            result["n_records"], result["n_parents"], result["n_dropped_no_frontier_row"]))
+        for cost_class in result["cost_classes"]:
+            members = [row for row in result["rows"] if row["cost_class"] == cost_class]
+            if not members:
+                continue
+            print("-- %s" % cost_class)
+            for row in sorted(members, key=lambda r: r["mean_loss"]):
+                ci = row["parent_bootstrap_ci"]
+                print("   %-24s %.4f [%.4f, %.4f] n=%d%s" % (
+                    row["method"], row["mean_loss"], ci["low"] if ci["low"] is not None else float("nan"),
+                    ci["high"] if ci["high"] is not None else float("nan"), row["n_records"],
+                    "" if row["measured_on_full_population"] else "  (conditional population)"))
     elif args.command == "control-benchmark":
         from .benchmarking import benchmark_record_controls
         _save(args.output, benchmark_record_controls(_record(args), budget_per_family=args.budget, seed=args.seed,

@@ -49,6 +49,8 @@ def main():
                  "descriptive 95% crossed-bootstrap intervals", fontsize=12)
     target.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(target)
+    if target.suffix == ".svg":
+        target.write_text("\n".join(line.rstrip() for line in target.read_text().splitlines()) + "\n")
     plt.close(fig)
 
 

@@ -7,13 +7,14 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from pathlib import Path
 from time import perf_counter
 
 import numpy as np
 
 from .experiments import _assert_frozen, _device, content_hash, output_lock, source_hash, validate_experiment
-from .pipeline import environment, generate_dataset, load_records, write_json
+from .pipeline import environment, generate_dataset, jsonable, load_records, write_json
 
 ARMS = ("control", "bankext", "decoder_random", "policy")
 
@@ -86,6 +87,84 @@ def _verify_artifact(root, state, key):
     return path
 
 
+def _write_once_json(path, value):
+    """Create an immutable attempt receipt; never replace an earlier attempt."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("x", encoding="utf-8") as handle:
+        json.dump(value, handle, default=jsonable, sort_keys=True, allow_nan=False)
+        handle.write("\n")
+        handle.flush()
+        os.fsync(handle.fileno())
+
+
+def _attempt_costs(root, state):
+    """Sum known work, including work discarded by failed attempts.
+
+    A failed scorer does not expose its internal step count. Those sums are
+    lower bounds, even after a later retry succeeds. An interrupted attempt can
+    also have unknown objective calls; its known contribution is zero.
+    """
+    keys = ("objective_calls", "successful_objective_calls", "propagation_calls",
+            "total_integrator_steps", "convergence_attempts", "offline_scoring_seconds", "wall_seconds")
+    totals = {key: 0 for key in keys}
+    totals.update(attempt_count=0, failed_attempts=0, failed_attempt_objective_calls=0,
+                  failed_objective_calls=0, cost_counts_complete=True, objective_calls_complete=True,
+                  scope="cumulative known work over all acquisition attempts, including discarded failed attempts")
+    for attempt in state.get("acquisition_attempts", []):
+        _verify_artifact(root, attempt, "request")
+        audit = json.loads(_verify_artifact(root, attempt, "audit").read_text())
+        totals["attempt_count"] += 1
+        for key in keys:
+            totals[key] += audit.get(key, 0)
+        if attempt["status"] != "complete":
+            totals["failed_attempts"] += 1
+            totals["failed_attempt_objective_calls"] += audit.get("objective_calls", 0)
+            totals["failed_objective_calls"] += max(0, audit.get("objective_calls", 0)
+                                                       - audit.get("successful_objective_calls", 0))
+        totals["cost_counts_complete"] &= bool(audit.get("cost_counts_complete", False))
+        totals["objective_calls_complete"] &= bool(audit.get("objective_calls_complete",
+                                                              "objective_calls" in audit))
+    totals["counts_are_lower_bounds"] = not totals["cost_counts_complete"]
+    return totals
+
+
+def _finish_attempt(root, attempt, audit):
+    path = root / attempt["request"].replace(".request.json", ".audit.json")
+    _write_once_json(path, audit)
+    attempt.update(status=audit["status"], audit=str(path.relative_to(root)), audit_sha256=_sha(path))
+
+
+def _acquire_recorded(root, manifest, state, *, data, baseline, arm, seed, cfg, data_config, device):
+    attempts = state.setdefault("acquisition_attempts", [])
+    index = len(attempts) + 1
+    request = root / "acquisition_attempts" / arm / f"seed_{seed}" / f"attempt_{index:04d}.request.json"
+    _write_once_json(request, {"arm": arm, "seed": seed, "attempt": index,
+                               "config_hash": manifest["config_hash"], "source_hash": manifest["source_hash"],
+                               "baseline_sha256": _sha(baseline)})
+    attempt = {"index": index, "status": "started", "request": str(request.relative_to(root)),
+               "request_sha256": _sha(request)}
+    attempts.append(attempt)
+    write_json(root / "study.json", manifest)
+    try:
+        collected = _acquire(data, baseline, arm, cfg, data_config, device)
+    except Exception as error:
+        audit = getattr(error, "audit", None)
+        if audit is None:
+            audit = {"status": "failed", "cost_counts_complete": False, "objective_calls_complete": False,
+                     "error": {"type": type(error).__name__, "message": str(error)},
+                     "scope": "No scorer ledger was returned; work before the exception is unknown."}
+        _finish_attempt(root, attempt, audit)
+        state["acquisition_cost"] = _attempt_costs(root, state)
+        error.acquisition_audit = attempt["audit"]
+        write_json(root / "study.json", manifest)
+        raise
+    _finish_attempt(root, attempt, collected)
+    state.update(acquisition=attempt["audit"], acquisition_sha256=attempt["audit_sha256"],
+                 acquisition_cost=_attempt_costs(root, state))
+    write_json(root / "study.json", manifest)
+    return collected
+
+
 def _fit(root, state, records, validation, cfg, seed, device, resume):
     from .learning import fit_records
     folder = root / state["folder"]
@@ -149,7 +228,8 @@ def summarize_study(root, manifest):
                            "shared_frozen_baseline_training_cost_complete": base["training_cost_complete"],
                            "cost_note": "baseline training is shared within a seed; charge it once, not once per arm",
                            "training_cost_complete": state["training_cost_complete"],
-                           "acquisition": state.get("acquisition_cost", {"objective_calls": 0}),
+                           "acquisition": (_attempt_costs(root, state) if state.get("acquisition_attempts")
+                                           else state.get("acquisition_cost", {"objective_calls": 0})),
                            "offline_evaluation_diagnostics": result["costs"],
                            "deployment_latency": result["deployment_latency"]}
             diagnostics[name] = {k: result[k] for k in ("proposal_diagnostics", "frozen_proposal_diagnostics")}
@@ -212,6 +292,18 @@ def run_study(cfg, output, *, data_dir=None, stage="all", resume=False):
                 for key in ("checkpoint", "acquisition", "evaluation"):
                     if key in state:
                         _verify_artifact(root, state, key)
+                for attempt in state.get("acquisition_attempts", []):
+                    _verify_artifact(root, attempt, "request")
+                    if attempt["status"] == "started":
+                        _finish_attempt(root, attempt, {
+                            "status": "interrupted", "cost_counts_complete": False,
+                            "objective_calls_complete": False,
+                            "scope": "Persisted request has no terminal receipt; unreported work is unknown."})
+                    else:
+                        _verify_artifact(root, attempt, "audit")
+                if state.get("acquisition_attempts"):
+                    state["acquisition_cost"] = _attempt_costs(root, state)
+            write_json(path, manifest)
         else:
             if any(p.name != ".experiment.lock" for p in root.iterdir()):
                 raise FileExistsError("nonempty output without study manifest")
@@ -263,12 +355,9 @@ def run_study(cfg, output, *, data_dir=None, stage="all", resume=False):
                         if arm != "control":
                             if "acquisition" not in state:
                                 print(f"[acquire] {name}", flush=True)
-                                collected = _acquire(data, baseline, arm, cfg, data_config, device)
-                                artifact = root / "acquisitions" / f"{arm}_seed_{seed}.json"
-                                write_json(artifact, collected)
-                                state.update(acquisition=str(artifact.relative_to(root)), acquisition_sha256=_sha(artifact),
-                                             acquisition_cost={k: v for k, v in collected.items() if k != "records"})
-                                write_json(path, manifest)
+                                _acquire_recorded(root, manifest, state, data=data, baseline=baseline,
+                                                  arm=arm, seed=seed, cfg=cfg,
+                                                  data_config=data_config, device=device)
                             collected = json.loads(_verify_artifact(root, state, "acquisition").read_text())
                             records = augment_records(training, collected)
                         print(f"[retrain] {name}", flush=True)
@@ -314,9 +403,8 @@ def run_study(cfg, output, *, data_dir=None, stage="all", resume=False):
             write_json(path, manifest)
         except Exception as error:
             manifest.update(status="failed", error={"type": type(error).__name__, "message": str(error)})
-            if getattr(error, "audit", None) is not None:
-                write_json(root / "failed_acquisition.json", error.audit)
-                manifest["error"]["acquisition_audit"] = "failed_acquisition.json"
+            if getattr(error, "acquisition_audit", None) is not None:
+                manifest["error"]["acquisition_audit"] = error.acquisition_audit
             write_json(path, manifest)
             raise
     return manifest

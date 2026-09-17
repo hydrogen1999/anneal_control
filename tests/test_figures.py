@@ -1,5 +1,8 @@
 """Figure rendering must be camera-ready: TrueType, never Type 3 (ADR-0006)."""
 import sys
+from pathlib import Path
+
+import numpy as np
 
 import pytest
 
@@ -231,3 +234,125 @@ def test_the_vendored_copy_records_its_upstream_provenance():
     assert "Upstream:" in header
     assert "sha256" in header
     assert "Do not edit this copy" in header
+
+
+# --- the teacher baseline figure ---------------------------------------------
+
+def teacher_summary():
+    def block(name, mean, rate, per_runtime):
+        return {"method": name, "mean_loss": mean, "mean_linear_loss": 0.70,
+                "mean_best_found_loss": 0.61, "resolution_rate": rate, "n_rows": 3447,
+                "n_resolved": int(3447 * rate),
+                "by_runtime": {
+                    runtime: {"vs_linear": {
+                        "mean_difference": difference,
+                        "parent_bootstrap_ci": {"low": difference - 0.01, "high": difference + 0.01}}}
+                    for runtime, difference in per_runtime.items()}}
+    return {"methods": {
+        "gap_inverse_square": block("gap_inverse_square", 0.7159, 0.447,
+                                    {"1.0": 0.0063, "4.0": 0.0625, "12.0": -0.0001}),
+        "d2": block("d2", 0.5569, 0.981, {"1.0": 0.0057, "4.0": 0.0232, "12.0": -0.0341})}}
+
+
+def test_teacher_baseline_figure_renders_truetype(tmp_path):
+    from annealctrl.figures import figure_teacher_baselines
+
+    result = figure_teacher_baselines(teacher_summary(), tmp_path / "figure_teachers")
+    assert result["methods"] == ["d2", "gap_inverse_square"]
+    assert any(str(path).endswith(".pdf") for path in result["files"])
+    for path in result["files"]:
+        assert Path(path).exists()
+
+
+def test_teacher_baseline_figure_refuses_when_nothing_resolved():
+    from annealctrl.figures import figure_teacher_baselines
+
+    empty = {"methods": {"gap_inverse_square": {"mean_loss": None, "status": "no_audited_waveforms"}}}
+    with pytest.raises(ValueError, match="at least one resolved"):
+        figure_teacher_baselines(empty, "unused")
+
+
+def test_teacher_figure_never_compares_across_populations(tmp_path, monkeypatch):
+    """Each baseline must be drawn against its own linear/search, not a shared one."""
+    from annealctrl import figures
+
+    summary = teacher_summary()
+    # Give the two baselines deliberately different references; if the figure
+    # shared one, the drawn bars could not reproduce both.
+    summary["methods"]["d2"]["mean_linear_loss"] = 0.5667
+    summary["methods"]["d2"]["mean_best_found_loss"] = 0.4641
+    summary["methods"]["d2"]["n_audit_passed"] = 2946
+    summary["methods"]["gap_inverse_square"]["mean_linear_loss"] = 0.7013
+    summary["methods"]["gap_inverse_square"]["mean_best_found_loss"] = 0.6116
+    summary["methods"]["gap_inverse_square"]["n_audit_passed"] = 1381
+
+    drawn = []
+    real_bar = None
+
+    def record_bar(self, x, height, **kwargs):
+        drawn.extend(float(v) for v in np.atleast_1d(height))
+        return real_bar(self, x, height, **kwargs)
+
+    import matplotlib.axes
+    real_bar = matplotlib.axes.Axes.bar
+    monkeypatch.setattr(matplotlib.axes.Axes, "bar", record_bar)
+    figures.figure_teacher_baselines(summary, tmp_path / "fig")
+
+    for expected in (0.5667, 0.4641, 0.7013, 0.6116):
+        assert any(abs(value - expected) < 1e-9 for value in drawn), (expected, drawn)
+
+
+# --- the comparison figure ---------------------------------------------------
+
+def comparison_table():
+    def row(method, cost_class, loss, *, full=True, n=864):
+        return {"method": method, "cost_class": cost_class, "mean_loss": loss,
+                "n_records": n, "measured_on_full_population": full,
+                "parent_bootstrap_ci": {"low": loss - 0.06, "high": loss + 0.06}}
+    return {"cost_classes": ["fixed", "privileged_spectrum", "amortised", "online_adaptation"],
+            "rows": [row("linear", "fixed", 0.6009), row("global", "fixed", 0.5654),
+                     row("d2", "privileged_spectrum", 0.5913, full=False, n=846),
+                     row("gap_inverse_square", "privileged_spectrum", 0.7750, full=False, n=432),
+                     row("summary/bank", "amortised", 0.5447),
+                     row("summary/direct", "amortised", 0.5905),
+                     row("search_best_found", "online_adaptation", 0.5074)]}
+
+
+def test_comparison_figure_hatches_rows_measured_on_a_subset(tmp_path):
+    from annealctrl.figures import figure_comparison
+
+    result = figure_comparison(comparison_table(), tmp_path / "figure_comparison")
+    assert set(result["hatched_partial_population"]) == {"d2", "gap_inverse_square"}
+    assert any(str(path).endswith(".pdf") for path in result["files"])
+
+
+def test_comparison_figure_never_orders_across_cost_classes(tmp_path):
+    """search is the lowest loss; it must still be drawn last, in its own block."""
+    from annealctrl.figures import figure_comparison
+
+    result = figure_comparison(comparison_table(), tmp_path / "fig")
+    methods = result["methods"]
+    assert methods.index("search_best_found") > methods.index("summary/bank")
+    assert methods.index("summary/bank") > methods.index("gap_inverse_square")
+
+
+def test_comparison_figure_refuses_an_empty_table():
+    from annealctrl.figures import figure_comparison
+
+    with pytest.raises(ValueError, match="at least one measured row"):
+        figure_comparison({"rows": []}, "unused")
+
+
+def test_comparison_figure_keeps_one_row_per_variant(tmp_path):
+    """Four bank rows must not crowd out the direct mode the paper calls weak."""
+    from annealctrl.figures import figure_comparison
+
+    table = comparison_table()
+    table["rows"] += [
+        {"method": f"{name}/bank", "cost_class": "amortised", "mean_loss": 0.545 + i * 1e-4,
+         "n_records": 864, "measured_on_full_population": True,
+         "parent_bootstrap_ci": {"low": 0.48, "high": 0.61}}
+        for i, name in enumerate(("physical", "logical", "hierarchy_outcome"))]
+    result = figure_comparison(table, tmp_path / "fig", max_rows_per_class=4)
+    assert any(method.endswith("/direct") for method in result["methods"])
+    assert sum(1 for method in result["methods"] if method.endswith("/bank")) == 1

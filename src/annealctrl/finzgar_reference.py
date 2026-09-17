@@ -157,7 +157,11 @@ def main(argv=None):
         fingerprint = source_fingerprint()
         result = run_reference(seeds=args.seeds, budget=args.budget)
         result["source_fingerprint_at_start"] = fingerprint
+        result["source_fingerprint_at_end"] = source_fingerprint()
+        result["source_frozen"] = result["source_fingerprint_at_end"] == fingerprint
         stream.write(json.dumps(result, indent=2, allow_nan=False) + "\n")
+        if not result["source_frozen"]:
+            raise RuntimeError("source changed during reference run; retained result is invalid for the frozen revision")
 
 
 if __name__ == "__main__":

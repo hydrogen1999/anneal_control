@@ -1,6 +1,6 @@
 {
   "seed": 20260916,
-  "parents": 12,
+  "parents": 6,
   "families": [
     "spin_glass",
     "weighted_maxcut"
@@ -37,8 +37,8 @@
   "runtimes": [
     4.0
   ],
-  "candidates": 64,
-  "candidate_batch_size": 16,
+  "candidates": 8,
+  "candidate_batch_size": 8,
   "spectral_points": 3,
   "teacher": {
     "mode": "none"
@@ -47,8 +47,8 @@
   "max_steps": 16384,
   "label_state_tolerance": 0.0002,
   "max_physical_qubits": 16,
-  "endpoint_max_qubits": 16,
-  "endpoint_memory_mb": 1024,
+  "endpoint_memory_mb": 4096,
   "state_memory_mb": 16384,
-  "_note": "Backend crossover point at 16 physical qubits (8 logical x chain length 2). teacher.mode=none so the measurement is propagation throughput, not teacher throughput."
+  "endpoint_max_qubits": 16,
+  "_note": "Backend crossover at 16 physical qubits, 6 parents x 8 candidates = 48 labels over 2 families. Parents must be at least three per family (6 here) or generation.parent_splits cannot fill train/validation/test. teacher.mode=none, so this measures propagation throughput. Fewer labels at large sizes amortise CuPy's fixed startup over less work, biasing the ratio DOWN against the GPU -- the conservative direction."
 }
