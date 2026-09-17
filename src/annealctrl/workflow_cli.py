@@ -15,7 +15,8 @@ from .pipeline import environment, load_records, write_json
 COMMANDS = {"run", "tune", "report", "audit", "doctor", "train-config", "infer",
             "control-benchmark", "export-hardware", "ingest-hardware", "simulate-open", "profile-generation",
             "control-sweep", "frontier-report", "screen",
-            "intervention-sweep", "intervention-report"}
+            "intervention-sweep", "intervention-report",
+            "model-intervention-sweep", "model-intervention-report"}
 
 
 def _json(path):
@@ -170,6 +171,29 @@ def main(argv):
     ireport.add_argument("--seed", type=int, default=0)
     ireport.add_argument("--figures", action="store_true", help="also render Figure 4 (Type-3-free)")
     ireport.add_argument("--venue", default="neurips", help="figure column geometry")
+    mis = sub.add_parser("model-intervention-sweep",
+                         help="G3 model side: run checkpoints on paired interventions")
+    mis.add_argument("--config", required=True, help="intervention plan JSON")
+    mis.add_argument("--checkpoints", nargs="+", required=True, metavar="NAME=PATH",
+                     help="one or more method=checkpoint.pt pairs")
+    mis.add_argument("--reference-sweep", nargs="+",
+                     help="intervention-sweep directories supplying each pair's best-found reference")
+    mis.add_argument("--output", required=True)
+    mis.add_argument("--device", default="cpu")
+    mis.add_argument("--resume", action="store_true")
+    mis.add_argument("--dry-run", action="store_true")
+    mis.add_argument("--allow-test-parents", action="store_true")
+    mis.add_argument("--shard", type=int, default=0)
+    mis.add_argument("--shard-count", type=int, default=1)
+    mir = sub.add_parser("model-intervention-report",
+                         help="G3 model side: per-method excess loss and the paired decision value")
+    mir.add_argument("--sweep", nargs="+", required=True)
+    mir.add_argument("--output")
+    mir.add_argument("--baseline", default="logical",
+                     help="method the paired contrast is measured against")
+    mir.add_argument("--swap-pairs-only", action="store_true",
+                     help="restrict to pairs whose preferred control demonstrably reverses")
+    mir.add_argument("--bootstrap-resamples", type=int, default=10000)
     opened = sub.add_parser("simulate-open", help="small independent Lindblad model, not a calibrated QPU")
     opened.add_argument("--record", required=True)
     opened.add_argument("--schedule", required=True)
@@ -301,6 +325,49 @@ def main(argv):
                     if row.get("status") == "ok"]
             print(json.dumps(figure_interventions(rows, destination / "figure4_interventions", venue=args.venue), indent=2))
         print(f"Report: {destination / 'INTERVENTIONS.md'}")
+    elif args.command == "model-intervention-sweep":
+        from .interventions import plan_intervention_pairs
+        from .representation import sweep_model_interventions
+        from .sweeps import load_rows
+        config = _json(args.config)
+        pairs, plan = plan_intervention_pairs(config, allow_test_parents=args.allow_test_parents)
+        checkpoints = {}
+        for item in args.checkpoints:
+            if "=" not in item:
+                raise ValueError(f"--checkpoints entries must be NAME=PATH, got {item!r}")
+            name, path = item.split("=", 1)
+            checkpoints[name] = path
+        matrices = None
+        if args.reference_sweep:
+            matrices = {row["result"]["pair_id"]: row["result"]
+                        for part in args.reference_sweep for row in load_rows(part)
+                        if row.get("status") == "ok"}
+        search = dict(config.get("search") or {})
+        for key in ("families", "budget", "seed", "ambiguity_margin", "on_error"):
+            search.pop(key, None)
+        result = sweep_model_interventions(pairs, checkpoints, output=args.output,
+                                           matrices=matrices, device=args.device,
+                                           resume=args.resume, dry_run=args.dry_run,
+                                           shard=args.shard, shard_count=args.shard_count, **search)
+        if not args.dry_run:
+            write_json(Path(args.output) / "plan.json", plan)
+        print(json.dumps(result, indent=2))
+    elif args.command == "model-intervention-report":
+        from .representation import aggregate_model_interventions
+        from .sweeps import load_rows
+        rows = [row["result"] for part in args.sweep for row in load_rows(part)
+                if row.get("status") == "ok"]
+        summary = aggregate_model_interventions(rows, baseline=args.baseline,
+                                                swap_pairs_only=args.swap_pairs_only,
+                                                bootstrap_resamples=args.bootstrap_resamples)
+        destination = Path(args.output or Path(args.sweep[0]) / "report")
+        write_json(destination / "summary.json", summary)
+        print(json.dumps({"methods": summary["methods"],
+                          "n_pairs_per_method": summary["n_pairs_per_method"],
+                          "n_parents": summary["n_parents"],
+                          "restricted_to_swap_pairs": summary["restricted_to_swap_pairs"],
+                          "blindness_violations": summary["blindness_violations"],
+                          "decision_value": summary["decision_value"]}, indent=2))
     elif args.command == "control-benchmark":
         from .benchmarking import benchmark_record_controls
         _save(args.output, benchmark_record_controls(_record(args), budget_per_family=args.budget, seed=args.seed,
