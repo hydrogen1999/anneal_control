@@ -435,3 +435,44 @@ def test_merging_shards_with_different_settings_is_refused(tmp_path):
     sweep_control_frontier(data, output=tmp_path / "b", budget=3, **base)
     with pytest.raises(ValueError, match="different settings"):
         frontier_report([tmp_path / "a", tmp_path / "b"], output=tmp_path / "merged")
+
+
+# --- stratification by physical size (scale-up ladder) ------------------------
+
+def sized_rows(spec, *, split="validation"):
+    """spec: list of (physical_n, parent_suffix, headroom)."""
+    rows = []
+    for physical_n, suffix, value in spec:
+        rows.append({**rows_for([value], parent_prefix=f"n{physical_n}s{suffix}", split=split)[0],
+                     "physical_n": physical_n})
+    return rows
+
+
+def test_aggregate_stratifies_headroom_by_physical_size():
+    rows = sized_rows([(12, "a", 0.10), (12, "b", 0.14),
+                       (14, "a", 0.08), (14, "b", 0.12),
+                       (16, "a", 0.05), (16, "b", 0.09)])
+    summary = aggregate_frontier(rows)
+    strata = summary["by_physical_size"]
+    assert sorted(strata) == ["12", "14", "16"]
+    assert strata["12"]["headroom"]["mean"] == pytest.approx(0.12)
+    assert strata["16"]["headroom"]["mean"] == pytest.approx(0.07)
+    assert strata["14"]["headroom"]["n_parents"] == 2
+    assert strata["12"]["n_records"] == 2
+
+
+def test_size_strata_exclude_censored_rows_but_count_them():
+    rows = sized_rows([(12, "a", 0.10), (12, "b", 0.20)])
+    rows[1]["resolution_status"] = "censored_numerical"
+    strata = aggregate_frontier(rows)["by_physical_size"]
+    assert strata["12"]["n_records"] == 2
+    assert strata["12"]["n_censored_records"] == 1
+    assert strata["12"]["headroom"]["n_parents"] == 1
+    assert strata["12"]["headroom"]["mean"] == pytest.approx(0.10)
+
+
+def test_size_strata_carry_their_own_bootstrap_interval():
+    rows = sized_rows([(12, chr(97 + i), 0.05 + 0.02 * i) for i in range(5)])
+    strata = aggregate_frontier(rows, bootstrap_resamples=200)["by_physical_size"]
+    ci = strata["12"]["headroom"]["parent_bootstrap_ci"]
+    assert ci["unit_of_independence"] == "logical_parent" and ci["resamples"] == 200

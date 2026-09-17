@@ -465,6 +465,23 @@ def _frontier_markdown(summary: Mapping[str, Any]) -> str:
         lines.append(f"| `{name}` | {stats['n_parents']} | {_cell(stats['mean'])} | "
                      f"{_cell(stats['quantiles']['p50'])} | {_cell(stats['quantiles']['p90'])} | "
                      f"{wins.get(name, 0)} |")
+    strata = summary.get("by_physical_size") or {}
+    if len(strata) > 1:
+        lines += ["", "## Headroom by physical size", "",
+                  "| physical qubits | records | censored | parents | mean | p50 | p90 | bootstrap CI |",
+                  "|---:|---:|---:|---:|---:|---:|---:|---|"]
+        for key in sorted(strata, key=int):
+            block = strata[key]
+            head, ci = block["headroom"], block["headroom"]["parent_bootstrap_ci"]
+            lines.append(
+                f"| {block['physical_n']} | {block['n_records']} | {block['n_censored_records']} | "
+                f"{head['n_parents']} | {_cell(head['mean'])} | {_cell(head['quantiles']['p50'])} | "
+                f"{_cell(head['quantiles']['p90'])} | "
+                f"[{_cell(ci['low'], 4)}, {_cell(ci['high'], 4)}] |")
+        lines.append("")
+        lines.append("Pooling sizes would hide whether headroom survives as the system grows, "
+                     "so the ladder is reported stratified and never averaged across sizes.")
+
     lines += [
         "",
         "## Reading this table",
@@ -524,6 +541,24 @@ def aggregate_frontier(rows: Sequence[Mapping[str, Any]], *, bootstrap_resamples
     inconsistent = sum(1 for row in rows if row.get("linear_reference_consistent") is False)
     low_reference = sum(1 for row in rows if row.get("low_headroom_reference"))
 
+    sizes = sorted({int(row["physical_n"]) for row in rows if row.get("physical_n") is not None})
+    by_size = {}
+    for size in sizes:
+        stratum = [row for row in rows if int(row.get("physical_n", -1)) == size]
+        kept = [row for row in stratum if row.get("resolution_status") == "resolved"]
+        values, parents = _parent_means(kept, lambda row: row.get("headroom"))
+        by_size[str(size)] = {
+            "physical_n": size, "n_records": len(stratum),
+            "n_censored_records": sum(1 for row in stratum
+                                      if row.get("resolution_status") == "censored_numerical"),
+            "n_parents": len({str(row["parent_id"]) for row in stratum}),
+            "headroom": {**_describe(values),
+                         "parent_bootstrap_ci": _bootstrap(values, n_resamples=bootstrap_resamples,
+                                                           seed=seed)},
+            "best_family_counts": dict(sorted(Counter(str(row.get("best_family"))
+                                                      for row in kept).items())),
+        }
+
     summary = {
         "schema_version": 1, "split": splits.pop(),
         "n_records": len(rows),
@@ -537,6 +572,9 @@ def aggregate_frontier(rows: Sequence[Mapping[str, Any]], *, bootstrap_resamples
         "linear_loss": _describe(linear_values),
         "best_found_loss": _describe(best_values),
         "family_restriction_loss": restriction,
+        # A scale-up ladder is only informative stratified: pooling sizes hides
+        # whether headroom survives as the system grows.
+        "by_physical_size": by_size,
         "best_family_counts": dict(sorted(winners.items())),
         "records_with_audit_failures": sum(1 for row in rows if row.get("audit_failures")),
         "audit_failure_reasons": dict(sorted(reasons.items())),
