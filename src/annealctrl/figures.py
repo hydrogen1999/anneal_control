@@ -442,3 +442,114 @@ def figure_teacher_baselines(summary: Mapping[str, Any], stem: str | Path, *,
             "vendored_plot_utils": bool(getattr(plot_utils, "__annealctrl_vendored__", False)),
             "scope": ("privileged spectral baselines against linear and against the equal-budget "
                       "search; resolution rates are drawn because the resolved subset is not random")}
+
+
+COST_CLASS_LABELS = {
+    "fixed": "fixed\none waveform for every instance",
+    "privileged_spectrum": "privileged spectrum\nexact gap at every path point",
+    "amortised": "amortised\ntrain offline, forward pass at deployment",
+    "online_adaptation": "online adaptation\ntrue outcomes consulted per instance",
+}
+
+
+def figure_comparison(table: Mapping[str, Any], stem: str | Path, *,
+                      venue: str = "neurips", column: str = "double",
+                      max_rows_per_class: int = 4) -> dict:
+    """Figure 1: every method on one held-out population, grouped by what it consumes.
+
+    Horizontal bars with parent bootstrap intervals, blocked by cost class and
+    ordered only inside a block. There is deliberately no shared cost axis: an
+    exact spectral evaluation, a forward pass and a simulator call are not the
+    same unit, and a scatter against "cost" would invent a common currency in
+    order to draw a trade-off curve. The class label carries the cost in words
+    instead, which is less pretty and does not mislead.
+
+    Rows measured on a subset are hatched and annotated with their record count,
+    because a bar drawn the same way as its neighbours implies the same
+    population.
+    """
+    _check_venue(venue)
+    rows = [row for row in (table.get("rows") or []) if row.get("mean_loss") is not None]
+    if not rows:
+        raise ValueError("figure_comparison requires at least one measured row")
+    plot_utils = load_plot_utils()
+    import matplotlib.pyplot as plt
+
+    # Selecting the lowest-loss rows outright drops whole modes: the amortised
+    # class is four bank rows within 0.0015 of each other, and the direct mode --
+    # the one the paper says is weak -- disappears entirely. Keep the best row of
+    # each variant instead, where a variant is the part after "/" when a method
+    # has one.
+    ordered, blocks = [], []
+    position = 0.0
+    for cost_class in table.get("cost_classes", COST_CLASS_LABELS):
+        members = sorted((row for row in rows if row["cost_class"] == cost_class),
+                         key=lambda row: row["mean_loss"])
+        best_of_variant: dict[str, Any] = {}
+        for row in members:
+            variant = row["method"].split("/")[-1] if "/" in row["method"] else row["method"]
+            best_of_variant.setdefault(variant, row)
+        members = sorted(best_of_variant.values(), key=lambda row: row["mean_loss"])
+        members = members[:max_rows_per_class]
+        if not members:
+            continue
+        position += 1.0            # a blank slot carries the class label
+        blocks.append({"label": COST_CLASS_LABELS.get(cost_class, cost_class),
+                       "label_position": position - 0.46,
+                       "rows": members,
+                       "positions": [position + index for index in range(len(members))]})
+        ordered.extend(members)
+        position += len(members)
+
+    width = plot_utils.use_venue(venue, column)
+    fig, axis = plt.subplots(figsize=(width, width * 0.5))
+    palette = plt.rcParams["axes.prop_cycle"].by_key()["color"]
+    ceiling = max(float(row["mean_loss"]) for row in ordered)
+    upper = 0.0
+
+    for index, block in enumerate(blocks):
+        colour = palette[index % len(palette)]
+        for row, y in zip(block["rows"], block["positions"]):
+            centre = float(row["mean_loss"])
+            interval = row.get("parent_bootstrap_ci") or {}
+            low = centre - float(interval["low"]) if interval.get("low") is not None else 0.0
+            high = float(interval["high"]) - centre if interval.get("high") is not None else 0.0
+            partial = not row.get("measured_on_full_population", True)
+            axis.barh(y, centre, height=0.66, color=colour,
+                      hatch="///" if partial else None,
+                      edgecolor="white" if partial else "none", linewidth=0.0)
+            axis.errorbar(centre, y, xerr=[[low], [high]], fmt="none", ecolor="0.25",
+                          elinewidth=0.9, capsize=2)
+            upper = max(upper, centre + high)
+            if partial:
+                # Past the whisker, never on top of it.
+                axis.annotate(f"n={row['n_records']}", (centre + high, y),
+                              textcoords="offset points", xytext=(5, 0), va="center",
+                              fontsize=5.5, color="0.3")
+        # The label lives in the blank slot above the block, so it cannot sit on a bar.
+        # Anchored at the bottom so a two-line label grows upward into the blank
+        # slot instead of downward onto the first bar of its own block.
+        axis.annotate(block["label"], (0.0, block["label_position"]),
+                      xytext=(2, 1), textcoords="offset points", fontsize=5.5,
+                      va="bottom", ha="left", style="italic", color="0.3")
+        if index:
+            axis.axhline(block["label_position"] - 0.62, linewidth=0.5, color="0.8")
+
+    positions = [y for block in blocks for y in block["positions"]]
+    axis.set_yticks(positions)
+    axis.set_yticklabels([row["method"] for row in ordered], fontsize=6)
+    axis.set_ylim(positions[-1] + 0.8, blocks[0]["label_position"] - 1.05)
+    axis.set_xlabel("mean loss on held-out records (lower is better)")
+    axis.set_xlim(0.0, max(ceiling, upper) * 1.14)
+    axis.grid(axis="y", visible=False)
+
+    fig.tight_layout()
+    written = plot_utils.save(fig, stem)
+    plt.close(fig)
+    return {"figure": "comparison", "files": [str(path) for path in written],
+            "methods": [row["method"] for row in ordered],
+            "hatched_partial_population": [row["method"] for row in ordered
+                                           if not row.get("measured_on_full_population", True)],
+            "vendored_plot_utils": bool(getattr(plot_utils, "__annealctrl_vendored__", False)),
+            "scope": ("one held-out population; bars are ordered within a cost class and never "
+                      "across one, and no shared cost axis is drawn because the units differ")}

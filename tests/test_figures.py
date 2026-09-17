@@ -300,3 +300,59 @@ def test_teacher_figure_never_compares_across_populations(tmp_path, monkeypatch)
 
     for expected in (0.5667, 0.4641, 0.7013, 0.6116):
         assert any(abs(value - expected) < 1e-9 for value in drawn), (expected, drawn)
+
+
+# --- the comparison figure ---------------------------------------------------
+
+def comparison_table():
+    def row(method, cost_class, loss, *, full=True, n=864):
+        return {"method": method, "cost_class": cost_class, "mean_loss": loss,
+                "n_records": n, "measured_on_full_population": full,
+                "parent_bootstrap_ci": {"low": loss - 0.06, "high": loss + 0.06}}
+    return {"cost_classes": ["fixed", "privileged_spectrum", "amortised", "online_adaptation"],
+            "rows": [row("linear", "fixed", 0.6009), row("global", "fixed", 0.5654),
+                     row("d2", "privileged_spectrum", 0.5913, full=False, n=846),
+                     row("gap_inverse_square", "privileged_spectrum", 0.7750, full=False, n=432),
+                     row("summary/bank", "amortised", 0.5447),
+                     row("summary/direct", "amortised", 0.5905),
+                     row("search_best_found", "online_adaptation", 0.5074)]}
+
+
+def test_comparison_figure_hatches_rows_measured_on_a_subset(tmp_path):
+    from annealctrl.figures import figure_comparison
+
+    result = figure_comparison(comparison_table(), tmp_path / "figure_comparison")
+    assert set(result["hatched_partial_population"]) == {"d2", "gap_inverse_square"}
+    assert any(str(path).endswith(".pdf") for path in result["files"])
+
+
+def test_comparison_figure_never_orders_across_cost_classes(tmp_path):
+    """search is the lowest loss; it must still be drawn last, in its own block."""
+    from annealctrl.figures import figure_comparison
+
+    result = figure_comparison(comparison_table(), tmp_path / "fig")
+    methods = result["methods"]
+    assert methods.index("search_best_found") > methods.index("summary/bank")
+    assert methods.index("summary/bank") > methods.index("gap_inverse_square")
+
+
+def test_comparison_figure_refuses_an_empty_table():
+    from annealctrl.figures import figure_comparison
+
+    with pytest.raises(ValueError, match="at least one measured row"):
+        figure_comparison({"rows": []}, "unused")
+
+
+def test_comparison_figure_keeps_one_row_per_variant(tmp_path):
+    """Four bank rows must not crowd out the direct mode the paper calls weak."""
+    from annealctrl.figures import figure_comparison
+
+    table = comparison_table()
+    table["rows"] += [
+        {"method": f"{name}/bank", "cost_class": "amortised", "mean_loss": 0.545 + i * 1e-4,
+         "n_records": 864, "measured_on_full_population": True,
+         "parent_bootstrap_ci": {"low": 0.48, "high": 0.61}}
+        for i, name in enumerate(("physical", "logical", "hierarchy_outcome"))]
+    result = figure_comparison(table, tmp_path / "fig", max_rows_per_class=4)
+    assert any(method.endswith("/direct") for method in result["methods"])
+    assert sum(1 for method in result["methods"] if method.endswith("/bank")) == 1
