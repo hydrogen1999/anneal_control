@@ -1,0 +1,26 @@
+{
+  "_comment": "G2 headroom on REAL pegasus connectivity. Chains are grown inside a connected local patch of dwave_networkx.pegasus_graph(16) - the region a small minor-embedding actually occupies - and the logical problem is the quotient of that growth. This is vendor connectivity, not a calibrated device: no working-graph exclusions, no per-qubit calibration, no noise model. Outcome-only teacher, because the frontier instrument re-searches controls and a full spectral teacher caps at 10 qubits.",
+  "seed": 20260917,
+  "parents": 96,
+  "families": ["spin_glass", "weighted_maxcut", "planted_loops", "weak_field"],
+  "logical_sizes": [5, 6, 7],
+  "generation_route": "hardware_growth",
+  "hardware": {"topology": "pegasus", "m": 16, "patch_sites": 96},
+  "chain_lengths": 2,
+  "variants": [
+    {"field_distribution": "uniform", "coupling_distribution": "uniform"}
+  ],
+  "chain_strengths": [1.5],
+  "runtimes": [4.0, 12.0],
+  "candidates": 8,
+  "candidate_batch_size": 8,
+  "spectral_points": 3,
+  "teacher": {"mode": "none"},
+  "steps": 64,
+  "max_steps": 16384,
+  "label_state_tolerance": 0.0002,
+  "max_physical_qubits": 14,
+  "endpoint_max_qubits": 14,
+  "endpoint_memory_mb": 8192,
+  "state_memory_mb": 16384
+}
