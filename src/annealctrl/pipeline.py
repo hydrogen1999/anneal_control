@@ -23,7 +23,7 @@ import numpy as np
 
 from .generation import (compile_embedding, generate_problem, parent_splits,
                          synthetic_lift, validate_compilation, output_observables,
-                         grow_hardware_partition, sample_chain_lengths,
+                         grow_hardware_partition, resolve_hardware, sample_chain_lengths,
                          sample_logical_support, logical_fingerprint)
 from .physics import (AnnealPath, HamiltonianTerms, PropagationResult, propagate,
                       propagate_batch, dense_reference_propagate)
@@ -134,8 +134,14 @@ def _validate_config(cfg: dict) -> None:
         raise ValueError("generation_route must be synthetic_lift or hardware_growth")
     if route == "hardware_growth":
         hw = cfg.get("hardware", {})
-        if not isinstance(hw.get("n_qubits"), int) or hw["n_qubits"] < max(sizes) or "edges" not in hw:
-            raise ValueError("hardware requires n_qubits and edges with capacity for all logical seeds")
+        if "topology" in hw:
+            # Validate by building it once; the result is cached for generation.
+            probe = resolve_hardware(hw, np.random.default_rng(0))
+            if probe["n_qubits"] < max(sizes):
+                raise ValueError("hardware patch is smaller than the largest logical size")
+        elif not isinstance(hw.get("n_qubits"), int) or hw["n_qubits"] < max(sizes) or "edges" not in hw:
+            raise ValueError("hardware requires n_qubits and edges, or topology and m, "
+                             "with capacity for all logical seeds")
     if cfg["candidates"] < 2 or cfg["spectral_points"] < 3:
         raise ValueError("need >=2 candidates and >=3 spectral points")
     if not cfg["variants"] or not cfg["chain_strengths"] or not cfg["runtimes"]:
@@ -222,7 +228,9 @@ def _lengths(cfg: dict, n: int, parent_index: int) -> tuple[np.ndarray, dict]:
         return result, {"distribution": "fixed", "target_lengths": result.tolist()}
     settings = cfg["chain_distribution"]
     rng = np.random.default_rng(_seed(cfg["seed"], "chain_lengths", parent_index))
-    cap = min(cfg["max_physical_qubits"], cfg.get("hardware", {}).get("n_qubits", cfg["max_physical_qubits"]))
+    hardware = cfg.get("hardware", {})
+    capacity = hardware.get("n_qubits", hardware.get("patch_sites", cfg["max_physical_qubits"]))
+    cap = min(cfg["max_physical_qubits"], capacity)
     for attempt in range(1024):
         result = sample_chain_lengths(n, settings["low"], settings["high"], rng,
                                       settings.get("distribution", "uniform"), settings.get("exponent", 2.))
@@ -246,9 +254,24 @@ def _plan_parents(cfg: dict) -> list[dict]:
             fixed_embedding = None
             support_cfg = cfg.get("logical_support", {"kind": "complete"})
             if route == "hardware_growth":
-                hw = cfg["hardware"]
+                # A fresh patch per parent: different local regions of the chip
+                # give the structural variety a single fixed region cannot.
+                hw = resolve_hardware(cfg["hardware"],
+                                      np.random.default_rng(_seed(cfg["seed"], "hardware_patch", index, attempt)))
                 fixed_embedding = grow_hardware_partition(hw["n_qubits"], hw["edges"], lengths,
                     np.random.default_rng(_seed(cfg["seed"], "hardware_partition", index, attempt)))
+                # Two mappings compose here and must not be confused: growth
+                # returns active->patch indices, the patch carries patch->device
+                # qubit ids. What provenance needs is active->device.
+                patch_ids = hw.get("original_ids")
+                if patch_ids is not None:
+                    active = fixed_embedding.metadata["original_physical_ids"]
+                    fixed_embedding.metadata["device_qubit_ids"] = [int(patch_ids[i]) for i in active]
+                fixed_embedding.metadata.update(
+                    {key: hw[key] for key in ("topology", "m", "patch_sites", "source_qubits",
+                                              "is_commercial_topology", "is_full_device",
+                                              "is_calibrated_device", "generator")
+                     if key in hw})
                 edges = fixed_embedding.quotient_edges
             else:
                 edges = sample_logical_support(n, np.random.default_rng(_seed(cfg["seed"], "support", index, attempt)),

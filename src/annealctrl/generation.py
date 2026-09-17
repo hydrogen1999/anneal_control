@@ -9,9 +9,10 @@ Bit i is LSB; bit 0 denotes spin +1 throughout this project.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from functools import lru_cache
 import hashlib
 import json
-from typing import Any
+from typing import Any, Mapping
 
 import networkx as nx
 import numpy as np
@@ -346,6 +347,122 @@ class CompiledInstance:
                    "logical_J": self.logical.J.tolist(), "scale": self.programmed_scale,
                    "decoder": "majority_tie_plus_v1", "schema": 1}
         return hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
+
+
+TOPOLOGIES = ("pegasus", "zephyr", "chimera")
+
+
+@lru_cache(maxsize=8)
+def _topology_arrays(name: str, m: int) -> tuple[int, tuple, tuple]:
+    """Vendor connectivity, relabelled to 0..N-1. Cached: P16 has 40k edges."""
+    if name not in TOPOLOGIES:
+        raise ValueError(f"unknown topology {name!r}; available: {list(TOPOLOGIES)}")
+    if isinstance(m, bool) or not isinstance(m, int) or m < 1:
+        raise ValueError("m must be a positive integer")
+    try:
+        import dwave_networkx as dnx
+    except ImportError as error:  # pragma: no cover - depends on the optional extra
+        raise ImportError("commercial topologies need dwave-networkx: pip install '.[hardware]'") from error
+    builder = {"pegasus": dnx.pegasus_graph, "zephyr": dnx.zephyr_graph,
+               "chimera": dnx.chimera_graph}[name]
+    graph = builder(m)
+    # Pegasus labels are not contiguous (they start at 2), and Embedding requires
+    # contiguous membership, so relabel and keep the device ids alongside.
+    original = sorted(graph.nodes())
+    index = {node: position for position, node in enumerate(original)}
+    edges = tuple(sorted((index[u], index[v]) if index[u] < index[v] else (index[v], index[u])
+                         for u, v in graph.edges()))
+    return len(original), tuple(int(x) for x in original), edges
+
+
+def commercial_topology(name: str, m: int) -> dict:
+    """Real Pegasus/Zephyr/Chimera connectivity from the vendor's own generator.
+
+    This *is* the verification `IMPLEMENTATION_PLAN_VI.md` §3.2 asks for before a
+    graph may be called Pegasus or Zephyr: the adjacency comes from
+    ``dwave_networkx``, not from a hand-built lattice. What it is not is a
+    calibrated device — there are no working-graph exclusions, no per-qubit
+    calibration and no noise model here, only connectivity.
+    """
+    n_qubits, original, edges = _topology_arrays(name, m)
+    return {"topology": name, "m": m, "n_qubits": n_qubits,
+            "edges": [list(edge) for edge in edges], "original_ids": list(original),
+            "is_commercial_topology": True, "is_full_device": True,
+            "is_calibrated_device": False,
+            "generator": f"dwave_networkx.{name}_graph({m})",
+            "note": ("vendor connectivity only: no working-graph exclusions, "
+                     "no calibration, no noise model")}
+
+
+def topology_patch(name: str, m: int, n_sites: int, rng: np.random.Generator) -> dict:
+    """A connected local region of a device graph, which is where a small problem lands.
+
+    Seeding chains uniformly across a 5640-qubit device would place them far
+    apart, they would never meet, and the quotient support would have no edges. A
+    real minor-embedding of a small problem occupies a contiguous patch, so the
+    patch is taken as a breadth-first ball from a random site. The region is a
+    modelling choice and is declared as one: ``is_full_device`` is False.
+    """
+    if isinstance(n_sites, bool) or not isinstance(n_sites, int) or n_sites < 2:
+        raise ValueError("patch n_sites must be an integer >= 2")
+    n_qubits, original, edges = _topology_arrays(name, m)
+    if n_sites > n_qubits:
+        raise ValueError(f"patch of {n_sites} sites exceeds the {n_qubits}-qubit {name}_graph({m})")
+    adjacency: dict[int, list[int]] = {node: [] for node in range(n_qubits)}
+    for u, v in edges:
+        adjacency[u].append(v)
+        adjacency[v].append(u)
+    start = int(rng.integers(n_qubits))
+    chosen, frontier = [start], [start]
+    seen = {start}
+    while len(chosen) < n_sites and frontier:
+        nxt = []
+        for node in frontier:
+            neighbours = adjacency[node]
+            for position in rng.permutation(len(neighbours)):
+                neighbour = neighbours[int(position)]
+                if neighbour in seen:
+                    continue
+                seen.add(neighbour)
+                chosen.append(neighbour)
+                nxt.append(neighbour)
+                if len(chosen) >= n_sites:
+                    break
+            if len(chosen) >= n_sites:
+                break
+        frontier = nxt
+    if len(chosen) < n_sites:
+        raise ValueError(f"{name}_graph({m}) has no connected patch of {n_sites} sites")
+    index = {node: position for position, node in enumerate(chosen)}
+    inside = set(chosen)
+    patch_edges = sorted({(index[u], index[v]) if index[u] < index[v] else (index[v], index[u])
+                          for u, v in edges if u in inside and v in inside})
+    return {"topology": name, "m": m, "n_qubits": len(chosen),
+            "edges": [list(edge) for edge in patch_edges],
+            "original_ids": [int(original[node]) for node in chosen],
+            "patch_sites": n_sites, "source_qubits": n_qubits,
+            "is_commercial_topology": True, "is_full_device": False,
+            "is_calibrated_device": False,
+            "generator": f"dwave_networkx.{name}_graph({m})",
+            "note": ("a connected local patch of the device graph, which is where a small "
+                     "minor-embedding actually lands; not a full device and not calibrated")}
+
+
+def resolve_hardware(spec: Mapping[str, Any], rng: np.random.Generator) -> dict:
+    """Either an explicit edge list or a patch of a named commercial topology."""
+    explicit = "n_qubits" in spec or "edges" in spec
+    named = "topology" in spec
+    if explicit and named:
+        raise ValueError("hardware takes exactly one of an explicit graph or a named topology")
+    if named:
+        return topology_patch(str(spec["topology"]), int(spec.get("m", 16)),
+                              int(spec.get("patch_sites", 64)), rng)
+    if not ("n_qubits" in spec and "edges" in spec):
+        raise ValueError("hardware requires either n_qubits and edges, or topology and m")
+    return {"n_qubits": int(spec["n_qubits"]), "edges": spec["edges"],
+            "is_commercial_topology": False, "is_full_device": False,
+            "is_calibrated_device": False,
+            "note": "caller-supplied graph; provenance is the caller's responsibility"}
 
 
 def conservative_common_scale(*instances: "CompiledInstance") -> float:
