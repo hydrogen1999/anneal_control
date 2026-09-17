@@ -146,3 +146,83 @@ def augment_records(records: Sequence[Mapping[str, Any]], collected: Mapping[str
             new[key] = np.concatenate((column, np.full(per_record, float(column.mean()))))
         augmented.append(new)
     return augmented
+
+
+def collect_bank_extension(data_dir, *, split: str = "train", n_extra: int = 3,
+                           bank_seed: int, bank_size: int, n_segments: int = 8,
+                           backend: str = "numpy", tolerance: float = 5e-4,
+                           initial_steps: int = 128, max_steps: int = 8192,
+                           max_ds_dtau: float = 4.0) -> dict:
+    """The control arm: extend each bank with more of *the same* distribution.
+
+    Aggregation changes two things at once -- the bank grows, and the new
+    entries come from the policy. Without this arm a reader cannot tell which
+    one did the work, and "our method helps" would be indistinguishable from
+    "sixty seven candidates beat sixty four".
+
+    The bank is a deterministic Sobol sequence, so asking for ``bank_size +
+    n_extra`` reproduces the original entries and appends the next points of the
+    same sequence. That identity is checked rather than assumed: if the
+    regenerated prefix does not match what the record stores, the bank was built
+    with different parameters and every downstream comparison would be void.
+    """
+    from .benchmarking import score_schedule
+    from .pipeline import load_records
+    from .schedules import Schedule
+    from .search import shared_candidate_bank
+
+    if split == "test":
+        raise ValueError("refusing to label test-split candidates: training on them is leakage")
+    if n_extra < 1:
+        raise ValueError("n_extra must be at least one")
+
+    records = load_records(data_dir, split)
+    if not records:
+        raise ValueError(f"split {split!r} of {data_dir} contains no records")
+
+    began = perf_counter()
+    collected: dict[str, dict[str, np.ndarray]] = {}
+    propagations, infeasible = 0, 0
+    for record in records:
+        runtime = float(np.asarray(record["runtime"]).item())
+        stored = np.asarray(record["candidate_schedules"], dtype=float)
+        tau = np.linspace(0.0, 1.0, stored.shape[1])
+        bank = shared_candidate_bank(n=bank_size + n_extra, n_segments=n_segments, seed=bank_seed,
+                                     runtime=runtime, max_slope=max_ds_dtau / runtime)
+        waves = np.stack([candidate.schedule(tau) for candidate in bank])
+        if waves.shape[0] < bank_size + n_extra:
+            raise ValueError(f"bank generator returned {waves.shape[0]} candidates, "
+                             f"fewer than the {bank_size + n_extra} requested")
+        deviation = float(np.abs(waves[:bank_size] - stored[:bank_size]).max())
+        if deviation > 1e-9:
+            raise ValueError(
+                f"regenerated bank prefix differs from the stored bank by {deviation:.3e} on "
+                f"record {record['record_id']}; the stored bank was not built with seed="
+                f"{bank_seed}, n={bank_size}, n_segments={n_segments}, max_slope="
+                f"{max_ds_dtau}/runtime, so this control arm would not be matched")
+
+        waveforms, losses = [], []
+        for wave in waves[bank_size:bank_size + n_extra]:
+            try:
+                outcome = score_schedule(record, Schedule(tau, wave), backend=backend,
+                                         tolerance=tolerance, initial_steps=initial_steps,
+                                         max_steps=max_steps, max_ds_dtau=max_ds_dtau * (1 + 1e-6))
+            except ValueError:
+                infeasible += 1
+                continue
+            waveforms.append(np.asarray(wave, dtype=float))
+            losses.append(float(outcome["loss"]))
+            propagations += 1
+        if len(waveforms) != n_extra:
+            raise ValueError(f"record {record['record_id']} yielded {len(waveforms)} of {n_extra} "
+                             "extension candidates; a ragged control arm is not matched")
+        collected[str(np.asarray(record["record_id"]).item())] = {
+            "waveforms": np.asarray(waveforms, dtype=float),
+            "losses": np.asarray(losses, dtype=float)}
+
+    return {"records": collected, "n_records": len(collected), "split": split,
+            "proposals_per_record": int(n_extra), "propagations": propagations,
+            "infeasible_proposals": infeasible, "wall_seconds": perf_counter() - began,
+            "bank_seed": bank_seed, "bank_size": bank_size,
+            "scope": ("control arm: the next points of the same Sobol bank, scored the same way, "
+                      "so only the source of the extra candidates differs from aggregation")}

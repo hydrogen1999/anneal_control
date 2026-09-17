@@ -113,3 +113,37 @@ def test_augmentation_closes_the_manifold_gap_it_was_built_for(trained):
                    ).max(axis=2).min(axis=1)
     assert after.max() < 1e-12, "the policy's own proposals are now IN the bank"
     assert before.min() > 0, "and they were not there before"
+
+
+# --- the control arm ---------------------------------------------------------
+
+def test_bank_extension_refuses_the_test_split():
+    from annealctrl.dagger import collect_bank_extension
+
+    with pytest.raises(ValueError, match="leakage"):
+        collect_bank_extension("unused", split="test", bank_seed=0, bank_size=64)
+
+
+def test_bank_extension_refuses_a_nonpositive_count():
+    from annealctrl.dagger import collect_bank_extension
+
+    with pytest.raises(ValueError, match="at least one"):
+        collect_bank_extension("unused", split="train", n_extra=0, bank_seed=0, bank_size=64)
+
+
+def test_the_extension_continues_the_same_sobol_sequence():
+    """The control is only matched if the first entries are byte-identical."""
+    import numpy as np
+
+    from annealctrl.search import shared_candidate_bank
+
+    tau = np.linspace(0.0, 1.0, 9)
+    base = shared_candidate_bank(n=64, n_segments=8, seed=20260916, runtime=1.0, max_slope=4.0)
+    extended = shared_candidate_bank(n=67, n_segments=8, seed=20260916, runtime=1.0, max_slope=4.0)
+    a = np.stack([c.schedule(tau) for c in base])
+    b = np.stack([c.schedule(tau) for c in extended])
+    assert b.shape[0] == 67
+    assert np.abs(a - b[:64]).max() < 1e-12
+    # The three new entries are genuinely new waveforms, not repeats.
+    for extra in b[64:]:
+        assert np.abs(a - extra).max(axis=1).min() > 1e-6
