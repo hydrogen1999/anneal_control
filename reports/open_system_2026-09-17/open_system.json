@@ -1,0 +1,943 @@
+{
+ "schema_version": 1,
+ "rates": [
+  0.0,
+  0.02,
+  0.05,
+  0.1
+ ],
+ "n_records": 10,
+ "records": [
+  {
+   "schema_version": 1,
+   "n_records": 1,
+   "rates": [
+    0.0,
+    0.02,
+    0.05,
+    0.1
+   ],
+   "waveforms": [
+    "best_found",
+    "linear"
+   ],
+   "by_rate": {
+    "0.0": {
+     "mean_loss": {
+      "linear": 0.7055064130011518,
+      "best_found": 0.6519817342820566
+     },
+     "per_record": {
+      "linear": [
+       0.7055064130011518
+      ],
+      "best_found": [
+       0.6519817342820566
+      ]
+     },
+     "n_records": 1
+    },
+    "0.02": {
+     "mean_loss": {
+      "linear": 0.7094422606043181,
+      "best_found": 0.6597995141524975
+     },
+     "per_record": {
+      "linear": [
+       0.7094422606043181
+      ],
+      "best_found": [
+       0.6597995141524975
+      ]
+     },
+     "n_records": 1
+    },
+    "0.05": {
+     "mean_loss": {
+      "linear": 0.7147752669292169,
+      "best_found": 0.6704661856792947
+     },
+     "per_record": {
+      "linear": [
+       0.7147752669292169
+      ],
+      "best_found": [
+       0.6704661856792947
+      ]
+     },
+     "n_records": 1
+    },
+    "0.1": {
+     "mean_loss": {
+      "linear": 0.7222270251046776,
+      "best_found": 0.6855350499504531
+     },
+     "per_record": {
+      "linear": [
+       0.7222270251046776
+      ],
+      "best_found": [
+       0.6855350499504531
+      ]
+     },
+     "n_records": 1
+    }
+   },
+   "best_at_each_rate": {
+    "0.0": "best_found",
+    "0.02": "best_found",
+    "0.05": "best_found",
+    "0.1": "best_found"
+   },
+   "best_is_unchanged": true,
+   "ordering_preserved": true,
+   "ordering_at_zero": [
+    "best_found",
+    "linear"
+   ],
+   "relaxation_rate": 0.0,
+   "scope": "local dephasing at a declared rate, not a calibrated device model: no thermal bath, no measured T1 or T2, no per-qubit calibration, no working-graph exclusions. Says whether the ordering is fragile under an explicitly chosen perturbation, not what a real annealer would do.",
+   "record_id": "parent_0013_e0_k2_t1",
+   "physical_n": 4,
+   "closed_headroom": 0.05352202156152763
+  },
+  {
+   "schema_version": 1,
+   "n_records": 1,
+   "rates": [
+    0.0,
+    0.02,
+    0.05,
+    0.1
+   ],
+   "waveforms": [
+    "best_found",
+    "linear"
+   ],
+   "by_rate": {
+    "0.0": {
+     "mean_loss": {
+      "linear": 0.3208379708926469,
+      "best_found": 0.05920036195617173
+     },
+     "per_record": {
+      "linear": [
+       0.3208379708926469
+      ],
+      "best_found": [
+       0.05920036195617173
+      ]
+     },
+     "n_records": 1
+    },
+    "0.02": {
+     "mean_loss": {
+      "linear": 0.3750260859105832,
+      "best_found": 0.1497795717894943
+     },
+     "per_record": {
+      "linear": [
+       0.3750260859105832
+      ],
+      "best_found": [
+       0.1497795717894943
+      ]
+     },
+     "n_records": 1
+    },
+    "0.05": {
+     "mean_loss": {
+      "linear": 0.44117230656144235,
+      "best_found": 0.2590199721196361
+     },
+     "per_record": {
+      "linear": [
+       0.44117230656144235
+      ],
+      "best_found": [
+       0.2590199721196361
+      ]
+     },
+     "n_records": 1
+    },
+    "0.1": {
+     "mean_loss": {
+      "linear": 0.5219803443797101,
+      "best_found": 0.3894045093452403
+     },
+     "per_record": {
+      "linear": [
+       0.5219803443797101
+      ],
+      "best_found": [
+       0.3894045093452403
+      ]
+     },
+     "n_records": 1
+    }
+   },
+   "best_at_each_rate": {
+    "0.0": "best_found",
+    "0.02": "best_found",
+    "0.05": "best_found",
+    "0.1": "best_found"
+   },
+   "best_is_unchanged": true,
+   "ordering_preserved": true,
+   "ordering_at_zero": [
+    "best_found",
+    "linear"
+   ],
+   "relaxation_rate": 0.0,
+   "scope": "local dephasing at a declared rate, not a calibrated device model: no thermal bath, no measured T1 or T2, no per-qubit calibration, no working-graph exclusions. Says whether the ordering is fragile under an explicitly chosen perturbation, not what a real annealer would do.",
+   "record_id": "parent_0014_e0_k0_t1",
+   "physical_n": 4,
+   "closed_headroom": 0.26165317564092083
+  },
+  {
+   "schema_version": 1,
+   "n_records": 1,
+   "rates": [
+    0.0,
+    0.02,
+    0.05,
+    0.1
+   ],
+   "waveforms": [
+    "best_found",
+    "linear"
+   ],
+   "by_rate": {
+    "0.0": {
+     "mean_loss": {
+      "linear": 0.23328268310289646,
+      "best_found": 0.033286950168003204
+     },
+     "per_record": {
+      "linear": [
+       0.23328268310289646
+      ],
+      "best_found": [
+       0.033286950168003204
+      ]
+     },
+     "n_records": 1
+    },
+    "0.02": {
+     "mean_loss": {
+      "linear": 0.3017869637528956,
+      "best_found": 0.11738935527893446
+     },
+     "per_record": {
+      "linear": [
+       0.3017869637528956
+      ],
+      "best_found": [
+       0.11738935527893446
+      ]
+     },
+     "n_records": 1
+    },
+    "0.05": {
+     "mean_loss": {
+      "linear": 0.38503969804326976,
+      "best_found": 0.22207417640281424
+     },
+     "per_record": {
+      "linear": [
+       0.38503969804326976
+      ],
+      "best_found": [
+       0.22207417640281424
+      ]
+     },
+     "n_records": 1
+    },
+    "0.1": {
+     "mean_loss": {
+      "linear": 0.48574072753873043,
+      "best_found": 0.3527832957250412
+     },
+     "per_record": {
+      "linear": [
+       0.48574072753873043
+      ],
+      "best_found": [
+       0.3527832957250412
+      ]
+     },
+     "n_records": 1
+    }
+   },
+   "best_at_each_rate": {
+    "0.0": "best_found",
+    "0.02": "best_found",
+    "0.05": "best_found",
+    "0.1": "best_found"
+   },
+   "best_is_unchanged": true,
+   "ordering_preserved": true,
+   "ordering_at_zero": [
+    "best_found",
+    "linear"
+   ],
+   "relaxation_rate": 0.0,
+   "scope": "local dephasing at a declared rate, not a calibrated device model: no thermal bath, no measured T1 or T2, no per-qubit calibration, no working-graph exclusions. Says whether the ordering is fragile under an explicitly chosen perturbation, not what a real annealer would do.",
+   "record_id": "parent_0014_e1_k1_t1",
+   "physical_n": 4,
+   "closed_headroom": 0.20000859532754622
+  },
+  {
+   "schema_version": 1,
+   "n_records": 1,
+   "rates": [
+    0.0,
+    0.02,
+    0.05,
+    0.1
+   ],
+   "waveforms": [
+    "best_found",
+    "linear"
+   ],
+   "by_rate": {
+    "0.0": {
+     "mean_loss": {
+      "linear": 0.898352814496971,
+      "best_found": 0.8146244723951301
+     },
+     "per_record": {
+      "linear": [
+       0.898352814496971
+      ],
+      "best_found": [
+       0.8146244723951301
+      ]
+     },
+     "n_records": 1
+    },
+    "0.02": {
+     "mean_loss": {
+      "linear": 0.9036211737366052,
+      "best_found": 0.8350439248362987
+     },
+     "per_record": {
+      "linear": [
+       0.9036211737366052
+      ],
+      "best_found": [
+       0.8350439248362987
+      ]
+     },
+     "n_records": 1
+    },
+    "0.05": {
+     "mean_loss": {
+      "linear": 0.9103928642865577,
+      "best_found": 0.8587778676521973
+     },
+     "per_record": {
+      "linear": [
+       0.9103928642865577
+      ],
+      "best_found": [
+       0.8587778676521973
+      ]
+     },
+     "n_records": 1
+    },
+    "0.1": {
+     "mean_loss": {
+      "linear": 0.9193381457745937,
+      "best_found": 0.8858042379610123
+     },
+     "per_record": {
+      "linear": [
+       0.9193381457745937
+      ],
+      "best_found": [
+       0.8858042379610123
+      ]
+     },
+     "n_records": 1
+    }
+   },
+   "best_at_each_rate": {
+    "0.0": "best_found",
+    "0.02": "best_found",
+    "0.05": "best_found",
+    "0.1": "best_found"
+   },
+   "best_is_unchanged": true,
+   "ordering_preserved": true,
+   "ordering_at_zero": [
+    "best_found",
+    "linear"
+   ],
+   "relaxation_rate": 0.0,
+   "scope": "local dephasing at a declared rate, not a calibrated device model: no thermal bath, no measured T1 or T2, no per-qubit calibration, no working-graph exclusions. Says whether the ordering is fragile under an explicitly chosen perturbation, not what a real annealer would do.",
+   "record_id": "parent_0016_e0_k2_t1",
+   "physical_n": 6,
+   "closed_headroom": 0.08372790327422586
+  },
+  {
+   "schema_version": 1,
+   "n_records": 1,
+   "rates": [
+    0.0,
+    0.02,
+    0.05,
+    0.1
+   ],
+   "waveforms": [
+    "best_found",
+    "linear"
+   ],
+   "by_rate": {
+    "0.0": {
+     "mean_loss": {
+      "linear": 0.7262760646246509,
+      "best_found": 0.6406730710019278
+     },
+     "per_record": {
+      "linear": [
+       0.7262760646246509
+      ],
+      "best_found": [
+       0.6406730710019278
+      ]
+     },
+     "n_records": 1
+    },
+    "0.02": {
+     "mean_loss": {
+      "linear": 0.7440422362503014,
+      "best_found": 0.6764803452282935
+     },
+     "per_record": {
+      "linear": [
+       0.7440422362503014
+      ],
+      "best_found": [
+       0.6764803452282935
+      ]
+     },
+     "n_records": 1
+    },
+    "0.05": {
+     "mean_loss": {
+      "linear": 0.7656757010175917,
+      "best_found": 0.7173118623304975
+     },
+     "per_record": {
+      "linear": [
+       0.7656757010175917
+      ],
+      "best_found": [
+       0.7173118623304975
+      ]
+     },
+     "n_records": 1
+    },
+    "0.1": {
+     "mean_loss": {
+      "linear": 0.7922343071759195,
+      "best_found": 0.762907921381263
+     },
+     "per_record": {
+      "linear": [
+       0.7922343071759195
+      ],
+      "best_found": [
+       0.762907921381263
+      ]
+     },
+     "n_records": 1
+    }
+   },
+   "best_at_each_rate": {
+    "0.0": "best_found",
+    "0.02": "best_found",
+    "0.05": "best_found",
+    "0.1": "best_found"
+   },
+   "best_is_unchanged": true,
+   "ordering_preserved": true,
+   "ordering_at_zero": [
+    "best_found",
+    "linear"
+   ],
+   "relaxation_rate": 0.0,
+   "scope": "local dephasing at a declared rate, not a calibrated device model: no thermal bath, no measured T1 or T2, no per-qubit calibration, no working-graph exclusions. Says whether the ordering is fragile under an explicitly chosen perturbation, not what a real annealer would do.",
+   "record_id": "parent_0048_e0_k0_t1",
+   "physical_n": 5,
+   "closed_headroom": 0.08561264000367874
+  },
+  {
+   "schema_version": 1,
+   "n_records": 1,
+   "rates": [
+    0.0,
+    0.02,
+    0.05,
+    0.1
+   ],
+   "waveforms": [
+    "best_found",
+    "linear"
+   ],
+   "by_rate": {
+    "0.0": {
+     "mean_loss": {
+      "linear": 0.7522204482854846,
+      "best_found": 0.6913113104300019
+     },
+     "per_record": {
+      "linear": [
+       0.7522204482854846
+      ],
+      "best_found": [
+       0.6913113104300019
+      ]
+     },
+     "n_records": 1
+    },
+    "0.02": {
+     "mean_loss": {
+      "linear": 0.7676621958268997,
+      "best_found": 0.7166112100493527
+     },
+     "per_record": {
+      "linear": [
+       0.7676621958268997
+      ],
+      "best_found": [
+       0.7166112100493527
+      ]
+     },
+     "n_records": 1
+    },
+    "0.05": {
+     "mean_loss": {
+      "linear": 0.7862314108122759,
+      "best_found": 0.7461855296383622
+     },
+     "per_record": {
+      "linear": [
+       0.7862314108122759
+      ],
+      "best_found": [
+       0.7461855296383622
+      ]
+     },
+     "n_records": 1
+    },
+    "0.1": {
+     "mean_loss": {
+      "linear": 0.8086189249210837,
+      "best_found": 0.7803640419868291
+     },
+     "per_record": {
+      "linear": [
+       0.8086189249210837
+      ],
+      "best_found": [
+       0.7803640419868291
+      ]
+     },
+     "n_records": 1
+    }
+   },
+   "best_at_each_rate": {
+    "0.0": "best_found",
+    "0.02": "best_found",
+    "0.05": "best_found",
+    "0.1": "best_found"
+   },
+   "best_is_unchanged": true,
+   "ordering_preserved": true,
+   "ordering_at_zero": [
+    "best_found",
+    "linear"
+   ],
+   "relaxation_rate": 0.0,
+   "scope": "local dephasing at a declared rate, not a calibrated device model: no thermal bath, no measured T1 or T2, no per-qubit calibration, no working-graph exclusions. Says whether the ordering is fragile under an explicitly chosen perturbation, not what a real annealer would do.",
+   "record_id": "parent_0048_e1_k1_t1",
+   "physical_n": 5,
+   "closed_headroom": 0.060916682004181655
+  },
+  {
+   "schema_version": 1,
+   "n_records": 1,
+   "rates": [
+    0.0,
+    0.02,
+    0.05,
+    0.1
+   ],
+   "waveforms": [
+    "best_found",
+    "linear"
+   ],
+   "by_rate": {
+    "0.0": {
+     "mean_loss": {
+      "linear": 0.7537721240214813,
+      "best_found": 0.582334314884614
+     },
+     "per_record": {
+      "linear": [
+       0.7537721240214813
+      ],
+      "best_found": [
+       0.582334314884614
+      ]
+     },
+     "n_records": 1
+    },
+    "0.02": {
+     "mean_loss": {
+      "linear": 0.7633460609838979,
+      "best_found": 0.618729739700514
+     },
+     "per_record": {
+      "linear": [
+       0.7633460609838979
+      ],
+      "best_found": [
+       0.618729739700514
+      ]
+     },
+     "n_records": 1
+    },
+    "0.05": {
+     "mean_loss": {
+      "linear": 0.7745584326434924,
+      "best_found": 0.6616657754476178
+     },
+     "per_record": {
+      "linear": [
+       0.7745584326434924
+      ],
+      "best_found": [
+       0.6616657754476178
+      ]
+     },
+     "n_records": 1
+    },
+    "0.1": {
+     "mean_loss": {
+      "linear": 0.787364336667632,
+      "best_found": 0.7111458346927488
+     },
+     "per_record": {
+      "linear": [
+       0.787364336667632
+      ],
+      "best_found": [
+       0.7111458346927488
+      ]
+     },
+     "n_records": 1
+    }
+   },
+   "best_at_each_rate": {
+    "0.0": "best_found",
+    "0.02": "best_found",
+    "0.05": "best_found",
+    "0.1": "best_found"
+   },
+   "best_is_unchanged": true,
+   "ordering_preserved": true,
+   "ordering_at_zero": [
+    "best_found",
+    "linear"
+   ],
+   "relaxation_rate": 0.0,
+   "scope": "local dephasing at a declared rate, not a calibrated device model: no thermal bath, no measured T1 or T2, no per-qubit calibration, no working-graph exclusions. Says whether the ordering is fragile under an explicitly chosen perturbation, not what a real annealer would do.",
+   "record_id": "parent_0063_e0_k2_t1",
+   "physical_n": 4,
+   "closed_headroom": 0.1714397784438978
+  },
+  {
+   "schema_version": 1,
+   "n_records": 1,
+   "rates": [
+    0.0,
+    0.02,
+    0.05,
+    0.1
+   ],
+   "waveforms": [
+    "best_found",
+    "linear"
+   ],
+   "by_rate": {
+    "0.0": {
+     "mean_loss": {
+      "linear": 0.6144721521476704,
+      "best_found": 0.4701469735432602
+     },
+     "per_record": {
+      "linear": [
+       0.6144721521476704
+      ],
+      "best_found": [
+       0.4701469735432602
+      ]
+     },
+     "n_records": 1
+    },
+    "0.02": {
+     "mean_loss": {
+      "linear": 0.6402987533111175,
+      "best_found": 0.5160064745446331
+     },
+     "per_record": {
+      "linear": [
+       0.6402987533111175
+      ],
+      "best_found": [
+       0.5160064745446331
+      ]
+     },
+     "n_records": 1
+    },
+    "0.05": {
+     "mean_loss": {
+      "linear": 0.6740622719869649,
+      "best_found": 0.5720747932287064
+     },
+     "per_record": {
+      "linear": [
+       0.6740622719869649
+      ],
+      "best_found": [
+       0.5720747932287064
+      ]
+     },
+     "n_records": 1
+    },
+    "0.1": {
+     "mean_loss": {
+      "linear": 0.7191286038415475,
+      "best_found": 0.641037770342814
+     },
+     "per_record": {
+      "linear": [
+       0.7191286038415475
+      ],
+      "best_found": [
+       0.641037770342814
+      ]
+     },
+     "n_records": 1
+    }
+   },
+   "best_at_each_rate": {
+    "0.0": "best_found",
+    "0.02": "best_found",
+    "0.05": "best_found",
+    "0.1": "best_found"
+   },
+   "best_is_unchanged": true,
+   "ordering_preserved": true,
+   "ordering_at_zero": [
+    "best_found",
+    "linear"
+   ],
+   "relaxation_rate": 0.0,
+   "scope": "local dephasing at a declared rate, not a calibrated device model: no thermal bath, no measured T1 or T2, no per-qubit calibration, no working-graph exclusions. Says whether the ordering is fragile under an explicitly chosen perturbation, not what a real annealer would do.",
+   "record_id": "parent_0077_e0_k0_t1",
+   "physical_n": 4,
+   "closed_headroom": 0.1443344742072159
+  },
+  {
+   "schema_version": 1,
+   "n_records": 1,
+   "rates": [
+    0.0,
+    0.02,
+    0.05,
+    0.1
+   ],
+   "waveforms": [
+    "best_found",
+    "linear"
+   ],
+   "by_rate": {
+    "0.0": {
+     "mean_loss": {
+      "linear": 0.6144721521476704,
+      "best_found": 0.470146973795031
+     },
+     "per_record": {
+      "linear": [
+       0.6144721521476704
+      ],
+      "best_found": [
+       0.470146973795031
+      ]
+     },
+     "n_records": 1
+    },
+    "0.02": {
+     "mean_loss": {
+      "linear": 0.6402987533111174,
+      "best_found": 0.5160064746617069
+     },
+     "per_record": {
+      "linear": [
+       0.6402987533111174
+      ],
+      "best_found": [
+       0.5160064746617069
+      ]
+     },
+     "n_records": 1
+    },
+    "0.05": {
+     "mean_loss": {
+      "linear": 0.6740622719869649,
+      "best_found": 0.5720747931453196
+     },
+     "per_record": {
+      "linear": [
+       0.6740622719869649
+      ],
+      "best_found": [
+       0.5720747931453196
+      ]
+     },
+     "n_records": 1
+    },
+    "0.1": {
+     "mean_loss": {
+      "linear": 0.7191286038415475,
+      "best_found": 0.6410377701590892
+     },
+     "per_record": {
+      "linear": [
+       0.7191286038415475
+      ],
+      "best_found": [
+       0.6410377701590892
+      ]
+     },
+     "n_records": 1
+    }
+   },
+   "best_at_each_rate": {
+    "0.0": "best_found",
+    "0.02": "best_found",
+    "0.05": "best_found",
+    "0.1": "best_found"
+   },
+   "best_is_unchanged": true,
+   "ordering_preserved": true,
+   "ordering_at_zero": [
+    "best_found",
+    "linear"
+   ],
+   "relaxation_rate": 0.0,
+   "scope": "local dephasing at a declared rate, not a calibrated device model: no thermal bath, no measured T1 or T2, no per-qubit calibration, no working-graph exclusions. Says whether the ordering is fragile under an explicitly chosen perturbation, not what a real annealer would do.",
+   "record_id": "parent_0077_e1_k1_t1",
+   "physical_n": 4,
+   "closed_headroom": 0.14433447420721568
+  },
+  {
+   "schema_version": 1,
+   "n_records": 1,
+   "rates": [
+    0.0,
+    0.02,
+    0.05,
+    0.1
+   ],
+   "waveforms": [
+    "best_found",
+    "linear"
+   ],
+   "by_rate": {
+    "0.0": {
+     "mean_loss": {
+      "linear": 0.8184952503333683,
+      "best_found": 0.6345590986777185
+     },
+     "per_record": {
+      "linear": [
+       0.8184952503333683
+      ],
+      "best_found": [
+       0.6345590986777185
+      ]
+     },
+     "n_records": 1
+    },
+    "0.02": {
+     "mean_loss": {
+      "linear": 0.8296110078367491,
+      "best_found": 0.6760224405777442
+     },
+     "per_record": {
+      "linear": [
+       0.8296110078367491
+      ],
+      "best_found": [
+       0.6760224405777442
+      ]
+     },
+     "n_records": 1
+    },
+    "0.05": {
+     "mean_loss": {
+      "linear": 0.84326296789745,
+      "best_found": 0.7239471705676986
+     },
+     "per_record": {
+      "linear": [
+       0.84326296789745
+      ],
+      "best_found": [
+       0.7239471705676986
+      ]
+     },
+     "n_records": 1
+    },
+    "0.1": {
+     "mean_loss": {
+      "linear": 0.8600808091259396,
+      "best_found": 0.7782863948872243
+     },
+     "per_record": {
+      "linear": [
+       0.8600808091259396
+      ],
+      "best_found": [
+       0.7782863948872243
+      ]
+     },
+     "n_records": 1
+    }
+   },
+   "best_at_each_rate": {
+    "0.0": "best_found",
+    "0.02": "best_found",
+    "0.05": "best_found",
+    "0.1": "best_found"
+   },
+   "best_is_unchanged": true,
+   "ordering_preserved": true,
+   "ordering_at_zero": [
+    "best_found",
+    "linear"
+   ],
+   "relaxation_rate": 0.0,
+   "scope": "local dephasing at a declared rate, not a calibrated device model: no thermal bath, no measured T1 or T2, no per-qubit calibration, no working-graph exclusions. Says whether the ordering is fragile under an explicitly chosen perturbation, not what a real annealer would do.",
+   "record_id": "parent_0079_e0_k2_t1",
+   "physical_n": 5,
+   "closed_headroom": 0.18392946627231166
+  }
+ ],
+ "wall_seconds": 1546.5704517364502
+}
