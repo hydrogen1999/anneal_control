@@ -74,6 +74,7 @@ def _block(rows: Sequence[Mapping[str, Any]], method: str, cost_class: str, *,
 
 def assemble_comparison(ml_rows: Sequence[Mapping[str, Any]],
                         frontier_rows: Sequence[Mapping[str, Any]], *,
+                        searches: Mapping[str, Sequence[Mapping[str, Any]]] | None = None,
                         bootstrap_resamples: int = 20000, seed: int = 0) -> dict:
     """Join the learned evaluation and the test-split reference sweep by record.
 
@@ -81,6 +82,15 @@ def assemble_comparison(ml_rows: Sequence[Mapping[str, Any]],
     only one of them is dropped and counted, because a method evaluated on a
     different record set is not in the same table however similar the numbers
     look.
+
+    ``searches`` adds further search strategies run at the same budget -- a
+    Bayesian-optimisation arm beside the quasi-random one, say. Each becomes its
+    own ``online_adaptation`` row. They are restricted to the records the primary
+    join already covers, so a strategy that happened to run on more instances
+    cannot look better by being measured somewhere easier. The linear reference
+    and the privileged teachers are taken from the primary sweep alone, because
+    neither depends on which search was used and reading them twice would invite
+    two slightly different values for the same quantity.
     """
     ml_rows, frontier_rows = list(ml_rows), list(frontier_rows)
     splits = {str(row.get("split")) for row in ml_rows}
@@ -148,6 +158,27 @@ def assemble_comparison(ml_rows: Sequence[Mapping[str, Any]],
     if search is not None:
         search["objective_calls_per_instance"] = float(np.mean(calls)) if calls else None
         rows.append(search)
+
+    for name, extra_rows in sorted((searches or {}).items()):
+        by_id = {str(row["record_id"]): row for row in extra_rows if str(row["record_id"]) in shared}
+        entries = [{"parent_id": row["parent_id"], "record_id": record,
+                    "linear_loss": row.get("linear_loss"), "global_loss": None,
+                    "best_found_loss": row.get("best_found_loss"),
+                    "teachers": {}, "objective_calls": row.get("total_objective_calls")}
+                   for record, row in sorted(by_id.items())]
+        if not entries:
+            continue
+        block = _block(entries, f"search_{name}", "online_adaptation",
+                       loss_key=lambda r: r["best_found_loss"], reference_total=total,
+                       bootstrap_resamples=bootstrap_resamples, seed=seed,
+                       consults_outcomes=True,
+                       note=f"online adaptation, {name} strategy at the same budget")
+        if block is None:
+            continue
+        extra_calls = [float(entry["objective_calls"]) for entry in entries
+                       if entry["objective_calls"] is not None]
+        block["objective_calls_per_instance"] = float(np.mean(extra_calls)) if extra_calls else None
+        rows.append(block)
 
     rows = [row for row in rows if row is not None]
     ranked = {}

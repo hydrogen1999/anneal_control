@@ -230,6 +230,9 @@ def main(argv):
                        help="test-split control-sweep directories (online adaptation)")
     table.add_argument("--output", required=True)
     table.add_argument("--bootstrap-resamples", type=int, default=20000)
+    table.add_argument("--search", nargs="+", metavar="NAME=DIR", default=[],
+                       help="further search strategies at the same budget, e.g. bayesian=DIR; "
+                            "each becomes its own online_adaptation row")
     opened = sub.add_parser("simulate-open", help="small independent Lindblad model, not a calibrated QPU")
     opened.add_argument("--record", required=True)
     opened.add_argument("--schedule", required=True)
@@ -479,8 +482,16 @@ def main(argv):
         frontier = [row["result"] for directory in args.reference_sweep
                     for row in load_rows(directory)
                     if row.get("status") == "ok" and row.get("result")]
+        searches = {}
+        for item in args.search:
+            if "=" not in item:
+                raise ValueError(f"--search expects NAME=DIR, got {item!r}")
+            name, directory = item.split("=", 1)
+            searches[name] = [row["result"] for row in load_rows(directory)
+                              if row.get("status") == "ok" and row.get("result")]
         result = assemble_comparison([row for row in ml_rows if row.get("split") == "test"],
-                                     frontier, bootstrap_resamples=args.bootstrap_resamples)
+                                     frontier, searches=searches or None,
+                                     bootstrap_resamples=args.bootstrap_resamples)
         _save(args.output, result)
         print("%d records, %d parents (dropped %d without a reference row)" % (
             result["n_records"], result["n_parents"], result["n_dropped_no_frontier_row"]))

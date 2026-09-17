@@ -159,3 +159,90 @@ def test_comparison_table_cli_runs_end_to_end(tmp_path, capsys):
     assert result["n_records"] == 10
     out = capsys.readouterr().out
     assert "online_adaptation" in out and "privileged_spectrum" in out
+
+
+# --- several search strategies, each its own row -----------------------------
+
+def test_a_second_search_strategy_becomes_its_own_row():
+    ml, frontier = paired(n=12)
+    bayes = [{**row, "best_found_loss": 0.48} for row in frontier]
+    table = assemble_comparison(ml, frontier, searches={"bayesian": bayes},
+                                bootstrap_resamples=500)
+    by_method = {row["method"]: row for row in table["rows"]}
+    assert by_method["search_best_found"]["mean_loss"] == pytest.approx(0.50)
+    assert by_method["search_bayesian"]["mean_loss"] == pytest.approx(0.48)
+    assert by_method["search_bayesian"]["cost_class"] == "online_adaptation"
+    assert by_method["search_bayesian"]["consults_true_outcomes"] is True
+
+
+def test_extra_searches_are_restricted_to_the_shared_records():
+    """A strategy evaluated on more records than the join would not be comparable."""
+    ml, frontier = paired(n=10)
+    bayes = [{**row, "best_found_loss": 0.48} for row in frontier]
+    bayes.append(frontier_row("extra", "p_extra", best=0.01))
+    table = assemble_comparison(ml, frontier, searches={"bayesian": bayes},
+                                bootstrap_resamples=500)
+    by_method = {row["method"]: row for row in table["rows"]}
+    assert by_method["search_bayesian"]["n_records"] == 10
+    assert by_method["search_bayesian"]["mean_loss"] == pytest.approx(0.48)
+
+
+def test_a_strategy_missing_records_is_marked_conditional():
+    ml, frontier = paired(n=10)
+    bayes = [{**row, "best_found_loss": 0.48} for row in frontier[:6]]
+    table = assemble_comparison(ml, frontier, searches={"bayesian": bayes},
+                                bootstrap_resamples=500)
+    row = next(r for r in table["rows"] if r["method"] == "search_bayesian")
+    assert row["n_records"] == 6
+    assert row["measured_on_full_population"] is False
+
+
+def test_search_strategies_are_ordered_within_their_class():
+    ml, frontier = paired(n=12)
+    bayes = [{**row, "best_found_loss": 0.48} for row in frontier]
+    table = assemble_comparison(ml, frontier, searches={"bayesian": bayes},
+                                bootstrap_resamples=500)
+    order = table["ranked_within_cost_class"]["online_adaptation"]
+    assert order == ["search_bayesian", "search_best_found"]
+
+
+def test_comparison_table_cli_accepts_extra_search_directories(tmp_path, capsys):
+    from annealctrl.workflow_cli import main
+
+    ml, frontier = paired(n=10)
+    (tmp_path / "heldout.json").write_text(json.dumps({"record_means": ml}))
+
+    def write_sweep(name, rows):
+        directory = tmp_path / name
+        directory.mkdir()
+        with (directory / "rows.jsonl").open("w") as handle:
+            for index, row in enumerate(rows):
+                handle.write(json.dumps({
+                    "unit_id": f"u{index}", "unit_key": f"k{index}", "fingerprint": f"f{index}",
+                    "settings_hash": "s", "source_hash": "h", "status": "ok",
+                    "result": row}) + "\n")
+        return directory
+
+    primary = write_sweep("sobol", frontier)
+    bayes = write_sweep("bayes", [{**row, "best_found_loss": 0.47} for row in frontier])
+
+    main(["comparison-table", "--records", str(tmp_path / "heldout.json"),
+          "--reference-sweep", str(primary), "--search", f"bayesian={bayes}",
+          "--output", str(tmp_path / "t.json"), "--bootstrap-resamples", "300"])
+    methods = {row["method"] for row in json.loads((tmp_path / "t.json").read_text())["rows"]}
+    assert {"search_best_found", "search_bayesian"} <= methods
+    assert "search_bayesian" in capsys.readouterr().out
+
+
+def test_comparison_table_cli_rejects_a_malformed_search_argument(tmp_path):
+    from annealctrl.workflow_cli import main
+
+    ml, frontier = paired(n=4)
+    (tmp_path / "heldout.json").write_text(json.dumps({"record_means": ml}))
+    directory = tmp_path / "sweep"
+    directory.mkdir()
+    (directory / "rows.jsonl").write_text("")
+    with pytest.raises(ValueError, match="NAME=DIR"):
+        main(["comparison-table", "--records", str(tmp_path / "heldout.json"),
+              "--reference-sweep", str(directory), "--search", "justadir",
+              "--output", str(tmp_path / "t.json")])
