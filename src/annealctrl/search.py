@@ -54,6 +54,54 @@ class SearchResult:
         return sum(record.elapsed_seconds for record in self.records)
 
 
+def capped_simplex_samples(logits, *, max_ds_dtau: float = 4.0) -> np.ndarray:
+    """NumPy twin of ``models.monotone_samples``: the policy's own decoder.
+
+    The critic is trained on the candidate bank and deployed on the policy's
+    proposals. Those came from a different parameterisation - the bank uses
+    residual-softmax durations and window/pause closures, the policy uses this
+    capped-simplex water filling - and the manifolds do not coincide. Measured on
+    P16-scale banks, 92% of policy waveforms sat further from the bank than a
+    typical bank waveform sits from its own nearest neighbour (0.133 against
+    0.079 in max-norm over nine knots). That gap is where a Spearman correlation
+    of 0.55 between predicted and true proposal losses comes from.
+
+    Adding random candidates from this family to the shared bank was measured and
+    does NOT fix it: sixteen extra candidates in a sixty-four candidate bank moved
+    the mean policy-to-bank distance only from 0.133 to 0.127, because an
+    eight-dimensional waveform space is not coverable by a bank of that size. The
+    fix that works has to target the model's *actual* proposals, which is what
+    ``policy_diagnostics.aggregate_proposals`` collects for a DAgger round.
+
+    Kept in numpy, and pinned to the torch decoder by test, so callers can build
+    waveforms on the policy manifold without ``search.py`` depending on torch.
+    """
+    logits = np.atleast_2d(np.asarray(logits, dtype=float))
+    bins = logits.shape[-1]
+    if bins < 1 or not np.isfinite(max_ds_dtau) or max_ds_dtau < 1 or not np.isfinite(logits).all():
+        raise ValueError("finite logits and max_ds_dtau >= 1 required")
+    if max_ds_dtau == 1:
+        increments = np.ones_like(logits) / bins
+    else:
+        cap = min(float(max_ds_dtau) / bins, 1.0)
+        weights = np.exp(np.clip(logits - logits.max(axis=-1, keepdims=True), -30, None))
+        saturated = np.zeros_like(logits, dtype=bool)
+        increments = weights / weights.sum(axis=-1, keepdims=True)
+        for _ in range(bins):
+            free_weights = weights * ~saturated
+            remaining = np.clip(1 - cap * saturated.sum(axis=-1, keepdims=True), 0, None)
+            free = remaining * free_weights / np.maximum(
+                free_weights.sum(axis=-1, keepdims=True), 1e-30)
+            increments = np.where(saturated, cap, free)
+            new_saturated = saturated | (free > cap)
+            if np.array_equal(new_saturated, saturated):
+                break
+            saturated = new_saturated
+    cumulative = np.cumsum(increments, axis=-1)
+    return np.concatenate((np.zeros_like(cumulative[..., :1]), cumulative[..., :-1],
+                           np.ones_like(cumulative[..., :1])), axis=-1)
+
+
 def shared_candidate_bank(
     n: int = 64,
     n_segments: int = 8,

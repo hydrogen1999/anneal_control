@@ -153,3 +153,67 @@ def test_an_unknown_strategy_is_refused():
     with pytest.raises(ValueError, match="strategy"):
         optimize_control_family(lambda s: 0.5, "one_window", budget=8, runtime=2.0,
                                 max_slope=2.0, seed=0, strategy="genetic")
+
+
+# --- the policy waveform family in the training bank -------------------------
+
+def test_capped_simplex_matches_the_torch_decoder_the_policy_uses():
+    """The bank's policy-family candidates must lie on the policy's own manifold.
+
+    If the numpy twin drifts from models.monotone_samples, the critic is again
+    trained on waveforms its policy does not emit, which is the failure this
+    exists to remove.
+    """
+    torch = pytest.importorskip("torch")
+    from annealctrl.models import monotone_samples
+    from annealctrl.search import capped_simplex_samples
+
+    rng = np.random.default_rng(0)
+    logits = rng.normal(0, 1.5, (32, 8))
+    for cap in (1.0, 2.0, 4.0, 10.0):
+        expected = monotone_samples(torch.as_tensor(logits, dtype=torch.float64),
+                                    max_ds_dtau=cap).numpy()
+        np.testing.assert_allclose(capped_simplex_samples(logits, max_ds_dtau=cap),
+                                   expected, atol=1e-12)
+
+
+def test_capped_simplex_samples_are_monotone_and_bounded():
+    from annealctrl.search import capped_simplex_samples
+    rng = np.random.default_rng(1)
+    waves = capped_simplex_samples(rng.normal(0, 3.0, (64, 8)), max_ds_dtau=4.0)
+    assert waves.shape == (64, 9)
+    assert np.allclose(waves[:, 0], 0.0) and np.allclose(waves[:, -1], 1.0)
+    assert np.all(np.diff(waves, axis=1) >= -1e-12)
+    assert np.all(np.diff(waves, axis=1) <= 4.0 / 8 + 1e-9)
+
+
+def test_random_policy_family_candidates_do_not_close_the_manifold_gap():
+    """The fix that was tried and rejected, kept so it is not tried again.
+
+    Sixteen extra candidates drawn from the policy's own decoder move the mean
+    policy-to-bank distance from 0.133 to only 0.127. An eight-dimensional
+    waveform space is not coverable by a sixty-four candidate bank, so the shift
+    has to be closed with the model's actual proposals rather than random draws
+    from the same family.
+    """
+    torch = pytest.importorskip("torch")
+    from annealctrl.models import monotone_samples
+    from annealctrl.search import capped_simplex_samples
+
+    tau = np.linspace(0, 1, 9)
+    rng = np.random.default_rng(0)
+    policy = monotone_samples(torch.as_tensor(rng.normal(0, 1.5, (200, 8)), dtype=torch.float32),
+                              max_ds_dtau=4.0).numpy()
+    bank = np.stack([c.schedule(tau) for c in
+                     shared_candidate_bank(n=64, n_segments=8, seed=7, runtime=4.0, max_slope=1.0)])
+    extra = capped_simplex_samples(1.5 * rng.normal(0, 1, (16, 8)), max_ds_dtau=4.0)
+
+    def nearest(waves):
+        return np.abs(policy[:, None, :] - waves[None, :, :]).max(axis=2).min(axis=1).mean()
+
+    without, with_family = nearest(bank), nearest(np.vstack((bank, extra)))
+    assert with_family > 0.8 * without, (
+        "if random same-family candidates closed this gap the DAgger round would "
+        f"be unnecessary: {with_family:.4f} vs {without:.4f}")
+
+
