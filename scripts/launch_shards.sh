@@ -23,6 +23,11 @@ usage: launch_shards.sh --kind intervention|frontier --output DIR --shards N [op
   --data DIR         dataset directory (frontier only)
   --split NAME       frontier split (default validation)
   --nice N           nice level for every shard (default 10; shared machine)
+  --allow-test-adaptation
+                     required when --split test. Searching controls on the test
+                     split consults true outcomes per instance, which is online
+                     adaptation and a different cost class from any amortised
+                     method. Every row is labelled online_adaptation=true.
   --dry-run          print the commands without running them
 
 Re-running the same --output resumes each shard. Merge afterwards with, e.g.
@@ -32,6 +37,7 @@ USAGE
 }
 
 KIND=""; OUTPUT=""; SHARDS=""; CONFIG=""; DATA=""; SPLIT="validation"; NICE=10; DRY=0
+ADAPT=""
 while [ $# -gt 0 ]; do
     case "$1" in
         --kind) KIND="${2:-}"; shift 2 ;;
@@ -41,6 +47,7 @@ while [ $# -gt 0 ]; do
         --data) DATA="${2:-}"; shift 2 ;;
         --split) SPLIT="${2:-}"; shift 2 ;;
         --nice) NICE="${2:-}"; shift 2 ;;
+        --allow-test-adaptation) ADAPT="--allow-test-adaptation"; shift ;;
         --dry-run) DRY=1; shift ;;
         -h|--help) usage ;;
         *) echo "unknown argument: $1" >&2; usage ;;
@@ -51,6 +58,15 @@ done
 case "$KIND" in intervention|frontier) ;; *) echo "unknown --kind $KIND" >&2; usage ;; esac
 [ "$KIND" = "frontier" ] && [ -z "$DATA" ] && { echo "error: --data is required for --kind frontier" >&2; exit 2; }
 case "$SHARDS" in ''|*[!0-9]*) echo "error: --shards must be a positive integer" >&2; exit 2 ;; esac
+# Mirror the CLI's own guard here rather than letting N shards discover it
+# separately: a test-split search is an explicit act, and a launcher that makes
+# it implicit defeats the point of the flag existing.
+if [ "$KIND" = "frontier" ] && [ "$SPLIT" = "test" ] && [ -z "$ADAPT" ]; then
+    echo "error: --split test requires --allow-test-adaptation." >&2
+    echo "       Searching controls on held-out records is online adaptation, not a free" >&2
+    echo "       ceiling; it must be a deliberate choice and is reported as such." >&2
+    exit 2
+fi
 [ "$SHARDS" -ge 1 ] || { echo "error: --shards must be >= 1" >&2; exit 2; }
 
 CORES="$(nproc 2>/dev/null || echo 1)"
@@ -88,7 +104,7 @@ for INDEX in $(seq 0 $((SHARDS - 1))); do
                --shard "$INDEX" --shard-count "$SHARDS" $RESUME
     else
         set -- -m annealctrl control-sweep --data "$DATA" --config "$CONFIG" --output "$DIR" \
-               --split "$SPLIT" --shard "$INDEX" --shard-count "$SHARDS" $RESUME
+               --split "$SPLIT" --shard "$INDEX" --shard-count "$SHARDS" $RESUME $ADAPT
     fi
     if [ "$DRY" -eq 1 ]; then
         echo "  would run: nice -n $NICE $PYTHON $*"

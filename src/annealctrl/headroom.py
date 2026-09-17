@@ -212,14 +212,20 @@ def load_frontier_config(config: Mapping[str, Any] | str | Path) -> tuple[dict, 
     if "allow_test_adaptation" in config:
         raise ValueError("allow_test_adaptation is a command-line flag, not a configuration key; "
                          "test-split search must be an explicit act at the call site")
-    unknown = set(config) - set(FRONTIER_DEFAULTS) - {"report"}
+    # Underscore-prefixed keys are annotations: provenance notes, scope caveats,
+    # the reason a config exists. They are ignored by the sweep and kept out of
+    # the settings hash. Everything else must be a known key, so a typo like
+    # "budgte" is still refused rather than silently taking the default.
+    unknown = {key for key in config if not str(key).startswith("_")} \
+        - set(FRONTIER_DEFAULTS) - {"report"}
     if unknown:
         raise ValueError(f"unknown frontier configuration keys: {sorted(unknown)}")
     report = dict(config.get("report") or {})
-    unknown_report = set(report) - set(REPORT_DEFAULTS)
+    unknown_report = {key for key in report if not str(key).startswith("_")} - set(REPORT_DEFAULTS)
     if unknown_report:
         raise ValueError(f"unknown frontier report keys: {sorted(unknown_report)}")
-    sweep = {**FRONTIER_DEFAULTS, **{k: v for k, v in config.items() if k != "report"}}
+    sweep = {**FRONTIER_DEFAULTS,
+             **{k: v for k, v in config.items() if k != "report" and not str(k).startswith("_")}}
     sweep["families"] = list(sweep["families"])
     sweep["teacher_methods"] = list(sweep["teacher_methods"])
     return sweep, {**REPORT_DEFAULTS, **report}
