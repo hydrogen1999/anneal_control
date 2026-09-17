@@ -280,3 +280,42 @@ def test_logical_overlap_refuses_an_empty_pair_set():
     from annealctrl.representation import logical_overlap
     with pytest.raises(ValueError, match="nonempty"):
         logical_overlap([], [])
+
+
+def test_an_infeasible_proposal_is_counted_not_crashed_on(checkpoints, monkeypatch):
+    """A policy that emits an over-slope waveform has failed that instance.
+
+    benchmarking.evaluate_checkpoint scores direct proposals with a 1e-6 relative
+    slack for float32 construction; anything past that is a genuine feasibility
+    failure and must be recorded, not raised, or one bad proposal kills a sweep.
+    """
+    from annealctrl import representation
+
+    real = representation._select
+
+    def infeasible(model, normalizer, record, *, device, max_ds_dtau):
+        schedule, index, scores, _ = real(model, normalizer, record, device=device,
+                                          max_ds_dtau=max_ds_dtau)
+        return schedule, index, scores, False
+
+    monkeypatch.setattr(representation, "_select", infeasible)
+    result = representation.model_intervention_response(
+        pair(), checkpoints["physical"], tolerance=5e-3, initial_steps=16, max_steps=512)
+
+    assert result["both_arms_feasible"] is False
+    assert result["feasible_proposal"] == {"A": False, "B": False}
+    assert result["model_loss"] == {"A": None, "B": None}
+    assert result["excess_loss"] is None
+    assert result["objective_calls"] == 0
+
+
+def test_aggregate_counts_infeasible_proposals_and_keeps_them_out_of_the_statistics():
+    rows = [row("physical", "p0", 0.05, 0.05),
+            {**row("physical", "p1", 0.0, 0.0), "both_arms_feasible": False,
+             "mean_excess_loss": None, "excess_loss": None}]
+    summary = aggregate_model_interventions(rows)
+    assert summary["infeasible_proposal_pairs"] == 1
+    assert summary["infeasible_proposal_fraction"] == pytest.approx(0.5)
+    block = summary["by_method"]["physical"]
+    assert block["n_infeasible_proposals"] == 1
+    assert block["mean_excess_loss"]["n_parents"] == 1

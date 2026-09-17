@@ -98,10 +98,21 @@ def arm_record(arm: InterventionArm, runtime: float) -> dict[str, Any]:
     }
 
 
-def _select(model, normalizer, record: Mapping[str, Any], *, device: str) -> tuple[Schedule, int, list[float]]:
+# The direct-proposal contract benchmarking.evaluate_checkpoint already uses: the
+# waveform is built in float32 and its endpoints are forced to exactly 0 and 1,
+# which perturbs the first and last slope at construction level. Scoring therefore
+# allows the same relative slack. A violation beyond it is a real infeasible
+# proposal and is recorded as one, never repaired and never crashed on.
+SLOPE_SLACK = 1.0 + 1e-6
+
+
+def _select(model, normalizer, record: Mapping[str, Any], *,
+            device: str, max_ds_dtau: float) -> tuple[Schedule, int, list[float], bool]:
     """The model's own choice: propose, score with its critic, take the argmin.
 
-    No simulator outcome participates in the selection.
+    No simulator outcome participates in the selection. Returns a feasibility
+    flag rather than raising, so an infeasible policy output becomes a counted
+    outcome instead of a dead sweep unit.
     """
     import torch
 
@@ -117,8 +128,12 @@ def _select(model, normalizer, record: Mapping[str, Any], *, device: str) -> tup
     tau = np.linspace(0.0, 1.0, len(wave))
     schedule = Schedule(tau, wave)
     runtime = float(record["runtime"])
-    schedule.validate_slope(runtime=runtime, max_slope=model.max_ds_dtau / runtime + 1e-6)
-    return schedule, index, [float(x) for x in predicted.cpu().tolist()]
+    try:
+        schedule.validate_slope(runtime=runtime, max_slope=max_ds_dtau * SLOPE_SLACK / runtime)
+        feasible = True
+    except ValueError:
+        feasible = False
+    return schedule, index, [float(x) for x in predicted.cpu().tolist()], feasible
 
 
 def model_intervention_response(
@@ -142,10 +157,18 @@ def model_intervention_response(
     model.eval()
     variant = str(getattr(model, "encoder_variant", "unknown"))
 
-    chosen, losses, indices, predicted = {}, {}, {}, {}
+    chosen, losses, indices, predicted, feasible = {}, {}, {}, {}, {}
     for arm in pair.arms:
         record = arm_record(arm, pair.runtime)
-        schedule, index, scores = _select(model, normalizer, record, device=device)
+        schedule, index, scores, ok = _select(model, normalizer, record, device=device,
+                                              max_ds_dtau=max_ds_dtau)
+        chosen[arm.label] = schedule
+        indices[arm.label] = index
+        predicted[arm.label] = scores
+        feasible[arm.label] = ok
+        if not ok:
+            losses[arm.label] = None
+            continue
         physical = arm.compiled.physical
         context = (HamiltonianTerms(physical.n, physical.h, physical.edges, physical.J),
                    AnnealPath(),
@@ -154,19 +177,17 @@ def model_intervention_response(
         outcome = score_schedule({"runtime": np.array(float(pair.runtime))}, schedule,
                                  physics_context=context, backend=backend, tolerance=tolerance,
                                  initial_steps=initial_steps, max_steps=max_steps,
-                                 max_ds_dtau=max_ds_dtau)
-        chosen[arm.label] = schedule
+                                 max_ds_dtau=max_ds_dtau * SLOPE_SLACK)
         losses[arm.label] = float(outcome["loss"])
-        indices[arm.label] = index
-        predicted[arm.label] = scores
 
     wave_a, wave_b = chosen["A"].s_knots, chosen["B"].s_knots
     identical = bool(np.array_equal(wave_a, wave_b))
     distance = float(np.abs(wave_a - wave_b).max()) if wave_a.shape == wave_b.shape else float("inf")
     blind = variant in {"logical", "summary"}
 
+    both_feasible = bool(feasible["A"] and feasible["B"])
     excess = None
-    if matrix is not None:
+    if matrix is not None and both_feasible:
         reference = matrix["loss_matrix"]
         excess = {"A": losses["A"] - float(reference["A_on_A"]),
                   "B": losses["B"] - float(reference["B_on_B"])}
@@ -178,6 +199,8 @@ def model_intervention_response(
         "method": method or variant, "encoder_variant": variant,
         "checkpoint": str(checkpoint),
         "model_loss": losses,
+        "feasible_proposal": feasible,
+        "both_arms_feasible": both_feasible,
         "selected_proposal_index": indices,
         "critic_predicted_losses": predicted,
         "selected_waveform": {"A": chosen["A"].to_dict(), "B": chosen["B"].to_dict()},
@@ -192,7 +215,7 @@ def model_intervention_response(
         "resolution_status": None if matrix is None else str(matrix["resolution_status"]),
         "reference_best_found": None if matrix is None else
             {"A": float(matrix["loss_matrix"]["A_on_A"]), "B": float(matrix["loss_matrix"]["B_on_B"])},
-        "objective_calls": 2,
+        "objective_calls": int(feasible["A"]) + int(feasible["B"]),
         "true_outcome_observed_after_selection": True,
         "reference_status": "best_found_within_evaluated_candidates",
         "causal_scope": "inside the declared closed-system simulator only",
@@ -273,6 +296,7 @@ def aggregate_model_interventions(
         if not rows:
             raise ValueError("no swap pairs in this row set")
 
+    infeasible = [row for row in rows if row.get("both_arms_feasible") is False]
     methods = sorted({str(row["method"]) for row in rows})
     pairs_by_method = {m: {str(row["pair_id"]) for row in rows if row["method"] == m} for m in methods}
     common = set.intersection(*pairs_by_method.values()) if pairs_by_method else set()
@@ -291,6 +315,7 @@ def aggregate_model_interventions(
         by_method[method] = {
             "mean_excess_loss": block,
             "n_pairs": len(subset),
+            "n_infeasible_proposals": sum(1 for r in subset if r.get("both_arms_feasible") is False),
             "identical_choice_fraction": sum(1 for r in subset if r.get("identical_choice")) / len(subset),
             "mean_waveform_distance": float(np.mean([float(r.get("waveform_distance", 0.0))
                                                      for r in subset])),
@@ -346,6 +371,8 @@ def aggregate_model_interventions(
         "restricted_to_swap_pairs": bool(swap_pairs_only),
         "by_method": by_method,
         "decision_value": decision_value,
+        "infeasible_proposal_pairs": len(infeasible),
+        "infeasible_proposal_fraction": len(infeasible) / len(rows),
         "blindness_violations": len(violations),
         "blindness_violation_methods": sorted({str(r["method"]) for r in violations}),
         "factor_counts": dict(sorted(Counter(str(row.get("factor")) for row in rows).items())),
