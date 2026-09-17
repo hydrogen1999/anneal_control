@@ -125,3 +125,59 @@ def test_intervention_figure_refuses_an_empty_row_set(tmp_path):
 def test_an_unknown_venue_is_refused(tmp_path):
     with pytest.raises(ValueError, match="venue"):
         figure_frontier(frontier_rows(), tmp_path / "figure3", venue="neurlps")
+
+
+def representation_rows():
+    rows = []
+    for index in range(6):
+        for method, excess in (("logical", 0.10), ("summary", 0.12),
+                               ("physical", 0.05), ("hierarchy_physics", 0.04)):
+            jitter = 0.01 * ((index % 3) - 1)
+            rows.append({
+                "pair_id": f"p{index}_k", "parent_id": f"p{index}", "method": method,
+                "factor": "chain_strength", "scale_arm": "total_compiled_effect",
+                "encoder_variant": method,
+                "embedding_blind_by_construction": method in {"logical", "summary"},
+                "identical_choice": method in {"logical", "summary"},
+                "waveform_distance": 0.0 if method in {"logical", "summary"} else 0.2,
+                "model_loss": {"A": 0.5, "B": 0.5},
+                "excess_loss": {"A": excess + jitter, "B": excess - jitter},
+                "mean_excess_loss": excess + jitter / 2,
+                "preferred_control_swapped": index < 4,
+                "resolution_status": "resolved" if index < 4 else "censored_numerical",
+                "objective_calls": 2})
+    return rows
+
+
+def test_representation_figure_writes_pdf_and_png_without_type3(tmp_path):
+    from annealctrl.figures import figure_representation
+    result = figure_representation(representation_rows(), tmp_path / "figure5",
+                                   baseline="logical", venue="neurips")
+    pdf = tmp_path / "figure5.pdf"
+    assert pdf.exists() and (tmp_path / "figure5.png").exists()
+    no_type3(pdf)
+    assert result["baseline"] == "logical"
+    assert set(result["methods"]) == {"logical", "summary", "physical", "hierarchy_physics"}
+
+
+def test_representation_figure_marks_which_methods_are_embedding_blind(tmp_path):
+    from annealctrl.figures import figure_representation
+    result = figure_representation(representation_rows(), tmp_path / "figure5", baseline="logical")
+    assert set(result["blind_methods"]) == {"logical", "summary"}
+    assert result["blindness_shown"] is True
+
+
+def test_representation_figure_can_restrict_to_swap_pairs(tmp_path):
+    from annealctrl.figures import figure_representation
+    everything = figure_representation(representation_rows(), tmp_path / "a", baseline="logical")
+    swaps = figure_representation(representation_rows(), tmp_path / "b", baseline="logical",
+                                  swap_pairs_only=True)
+    assert everything["n_pairs_per_method"] == 6
+    assert swaps["n_pairs_per_method"] == 4
+    assert swaps["restricted_to_swap_pairs"] is True
+
+
+def test_representation_figure_refuses_an_empty_row_set(tmp_path):
+    from annealctrl.figures import figure_representation
+    with pytest.raises(ValueError, match="nonempty"):
+        figure_representation([], tmp_path / "figure5")

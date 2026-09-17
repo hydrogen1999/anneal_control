@@ -234,3 +234,94 @@ def figure_interventions(rows: Sequence[Mapping[str, Any]], stem: str | Path, *,
             "n_pairs": len(rows), "n_measurable": len(measured), "n_censored": len(censored),
             "censored_shown": True, "files": [str(path) for path in written],
             "note": "causal scope is inside the declared closed-system simulator"}
+
+
+def figure_representation(rows, stem: str | Path, *, baseline: str = "logical",
+                          swap_pairs_only: bool = False, venue: str = "neurips",
+                          column: str = "double") -> dict:
+    """Figure 5: does seeing the embedding buy better decisions on swap pairs?
+
+    Left panel: excess loss against each arm's own best-found control, one box per
+    method, parent-averaged. Methods that are embedding-blind by construction are
+    hatched — a logical or summary encoder receives identical input on both arms
+    of a pair and cannot propose different controls, so its excess loss is the
+    price of that blindness rather than a training shortfall.
+
+    Right panel: the paired contrast against the baseline, per parent, with a
+    bootstrap interval. Negative favours the method. A zero-crossing interval is
+    the honest outcome when physical information does not pay, and the panel is
+    drawn so that outcome is as visible as the favourable one.
+    """
+    from .representation import aggregate_model_interventions
+
+    _check_venue(venue)
+    rows = list(rows)
+    if not rows:
+        raise ValueError("figure_representation requires a nonempty row set")
+    plot_utils = load_plot_utils()
+    import matplotlib.pyplot as plt
+
+    summary = aggregate_model_interventions(rows, baseline=baseline,
+                                            swap_pairs_only=swap_pairs_only)
+    methods = summary["methods"]
+    blind = [m for m in methods if summary["by_method"][m]["embedding_blind_by_construction"]]
+
+    if swap_pairs_only:
+        swaps = {str(r["pair_id"]) for r in rows if r.get("preferred_control_swapped")}
+        rows = [r for r in rows if str(r["pair_id"]) in swaps]
+
+    width = plot_utils.use_venue(venue, column)
+    fig, (left, right) = plt.subplots(1, 2, figsize=(width, width * 0.50))
+
+    data, labels, hatches = [], [], []
+    for method in methods:
+        values = _parent_mean([r for r in rows if r["method"] == method],
+                              lambda row: row.get("mean_excess_loss"))
+        if not values.size:
+            continue
+        data.append(values)
+        labels.append(method.replace("_", " "))
+        hatches.append(method in blind)
+    if data:
+        boxes = left.boxplot(data, tick_labels=labels, widths=0.6, showfliers=False,
+                             patch_artist=True, medianprops={"linewidth": 1.2})
+        for patch, is_blind in zip(boxes["boxes"], hatches):
+            patch.set_facecolor("none")
+            if is_blind:
+                patch.set_hatch("////")
+    left.set_ylabel("excess loss vs arm best-found")
+    left.set_xlabel("method  (hatched = embedding-blind by construction)")
+    left.tick_params(axis="x", labelrotation=22)
+    for label in left.get_xticklabels():
+        label.set_horizontalalignment("right")
+    left.axhline(0.0, linewidth=0.6, linestyle=":", color="0.4")
+
+    contrasts = summary["decision_value"]
+    names = [m for m in methods if m in contrasts]
+    if names:
+        centres = np.arange(len(names))
+        means = [contrasts[m]["mean_difference"] for m in names]
+        lows = [contrasts[m]["parent_bootstrap_ci"]["low"] for m in names]
+        highs = [contrasts[m]["parent_bootstrap_ci"]["high"] for m in names]
+        errors = np.array([[m - (l if l is not None else m) for m, l in zip(means, lows)],
+                           [(h if h is not None else m) - m for m, h in zip(means, highs)]])
+        right.errorbar(centres, means, yerr=np.abs(errors), fmt="o", capsize=3)
+        right.set_xticks(centres)
+        right.set_xticklabels([m.replace("_", " ") for m in names], rotation=22, ha="right")
+    right.axhline(0.0, linewidth=0.8, linestyle="--", color="0.4")
+    right.set_ylabel(f"excess loss minus\n{baseline.replace('_', ' ')} (negative favours method)")
+    right.set_xlabel("method")
+    fig.tight_layout()
+    written = plot_utils.save(fig, stem)
+    plt.close(fig)
+
+    return {"figure": "representation", "venue": venue, "column": column,
+            "panels": ["excess_loss_by_method", "paired_decision_value"],
+            "methods": methods, "baseline": baseline, "blind_methods": blind,
+            "blindness_shown": True,
+            "n_pairs_per_method": summary["n_pairs_per_method"],
+            "n_parents": summary["n_parents"],
+            "restricted_to_swap_pairs": bool(swap_pairs_only),
+            "blindness_violations": summary["blindness_violations"],
+            "files": [str(path) for path in written],
+            "note": "excess loss is against a finite-budget best-found reference, not a global optimum"}
