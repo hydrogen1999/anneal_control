@@ -27,27 +27,55 @@ from typing import Any, Mapping, Sequence
 import numpy as np
 
 DEFAULT_PLOT_UTILS = Path.home() / "research-os" / "scripts"
+# A copy travels with the repository so a clean checkout can regenerate figures.
+# Upstream stays canonical; this is only reached when upstream is absent.
+VENDORED_PLOT_UTILS = Path(__file__).resolve().parent / "_vendor"
 VENUES = ("neurips", "icml", "iclr", "acl", "cvpr", "aaai")
 
 
+def plot_utils_source() -> Path:
+    """The directory ``load_plot_utils`` will import from, without importing it.
+
+    An explicit ``ANNEALCTRL_PLOT_UTILS`` is honoured strictly: if it names a
+    directory with no ``plot_utils.py``, that is an error rather than a cue to
+    fall back, because silently ignoring an explicit pointer is how figures get
+    rendered by something other than what the author asked for.
+    """
+    override = os.environ.get("ANNEALCTRL_PLOT_UTILS")
+    if override is not None:
+        root = Path(override)
+        if not (root / "plot_utils.py").exists():
+            raise RuntimeError(
+                f"plot_utils.py not found in {root}. Camera-ready figures must be rendered "
+                "through it: matplotlib's default pdf.fonttype is 3, and Type 3 fonts are "
+                "rejected by IEEE PDF eXpress and flagged by NeurIPS/ICML/CVPR. Point "
+                "ANNEALCTRL_PLOT_UTILS at the directory containing it, or unset it to use the "
+                f"copy vendored at {VENDORED_PLOT_UTILS}.")
+        return root
+    if (DEFAULT_PLOT_UTILS / "plot_utils.py").exists():
+        return DEFAULT_PLOT_UTILS
+    if (VENDORED_PLOT_UTILS / "plot_utils.py").exists():
+        return VENDORED_PLOT_UTILS
+    raise RuntimeError(
+        f"plot_utils.py not found in {DEFAULT_PLOT_UTILS} and no vendored copy at "
+        f"{VENDORED_PLOT_UTILS}. Camera-ready figures must be rendered through it: "
+        "matplotlib's default pdf.fonttype is 3, and Type 3 fonts are rejected by IEEE PDF "
+        "eXpress and flagged by NeurIPS/ICML/CVPR.")
+
+
 def load_plot_utils():
-    """Import ``plot_utils``, or raise naming the directory that was searched."""
-    root = Path(os.environ.get("ANNEALCTRL_PLOT_UTILS", DEFAULT_PLOT_UTILS))
+    """Import ``plot_utils`` from upstream if present, else the vendored copy."""
+    root = plot_utils_source()
     module = sys.modules.get("plot_utils")
     if module is not None and Path(getattr(module, "__file__", "")).parent == root:
         return module
-    if not (root / "plot_utils.py").exists():
-        raise RuntimeError(
-            f"plot_utils.py not found in {root}. Camera-ready figures must be rendered through it: "
-            "matplotlib's default pdf.fonttype is 3, and Type 3 fonts are rejected by IEEE PDF "
-            "eXpress and flagged by NeurIPS/ICML/CVPR. Set ANNEALCTRL_PLOT_UTILS to the directory "
-            "containing it, or vendor a copy with its upstream revision recorded.")
     sys.modules.pop("plot_utils", None)
     sys.path.insert(0, str(root))
     try:
         import plot_utils  # noqa: PLC0415
     finally:
         sys.path.remove(str(root))
+    plot_utils.__annealctrl_vendored__ = root == VENDORED_PLOT_UTILS
     return plot_utils
 
 

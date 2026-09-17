@@ -181,3 +181,53 @@ def test_representation_figure_refuses_an_empty_row_set(tmp_path):
     from annealctrl.figures import figure_representation
     with pytest.raises(ValueError, match="nonempty"):
         figure_representation([], tmp_path / "figure5")
+
+
+# --- reproducibility on a clean machine --------------------------------------
+
+def test_falls_back_to_the_vendored_copy_when_upstream_is_absent(tmp_path, monkeypatch):
+    """A clean checkout with no research-os must still render camera-ready figures."""
+    from annealctrl import figures
+
+    monkeypatch.delenv("ANNEALCTRL_PLOT_UTILS", raising=False)
+    monkeypatch.setattr(figures, "DEFAULT_PLOT_UTILS", tmp_path / "no-research-os")
+    monkeypatch.delitem(sys.modules, "plot_utils", raising=False)
+
+    assert figures.plot_utils_source() == figures.VENDORED_PLOT_UTILS
+    module = figures.load_plot_utils()
+    assert module.__annealctrl_vendored__ is True
+    # The whole reason the module exists: TrueType, never Type 3.
+    module.use_venue("neurips", "single")
+    assert matplotlib.rcParams["pdf.fonttype"] == 42
+    assert matplotlib.rcParams["ps.fonttype"] == 42
+
+
+def test_an_explicit_pointer_is_never_silently_replaced_by_the_vendored_copy(tmp_path, monkeypatch):
+    """Falling back on an explicit override would render figures with the wrong module."""
+    from annealctrl import figures
+
+    monkeypatch.setenv("ANNEALCTRL_PLOT_UTILS", str(tmp_path / "absent"))
+    monkeypatch.delitem(sys.modules, "plot_utils", raising=False)
+    with pytest.raises(RuntimeError, match="absent"):
+        figures.plot_utils_source()
+
+
+def test_upstream_wins_over_the_vendored_copy_when_both_exist(tmp_path, monkeypatch):
+    from annealctrl import figures
+
+    upstream = tmp_path / "upstream"
+    upstream.mkdir()
+    (upstream / "plot_utils.py").write_text("")
+    monkeypatch.delenv("ANNEALCTRL_PLOT_UTILS", raising=False)
+    monkeypatch.setattr(figures, "DEFAULT_PLOT_UTILS", upstream)
+    assert figures.plot_utils_source() == upstream
+
+
+def test_the_vendored_copy_records_its_upstream_provenance():
+    """A vendored file with no recorded origin cannot be audited or re-synced."""
+    from annealctrl import figures
+
+    header = (figures.VENDORED_PLOT_UTILS / "plot_utils.py").read_text()[:1200]
+    assert "Upstream:" in header
+    assert "sha256" in header
+    assert "Do not edit this copy" in header

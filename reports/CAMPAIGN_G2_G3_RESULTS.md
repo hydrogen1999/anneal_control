@@ -87,11 +87,47 @@ is not a finding; the rate above is against all pairs.
 | `scale_controlled` | 248 | **0.0515** | [0.0465, 0.0566] | 219/248 (88.3%) |
 | `total_compiled_effect` | 812 | 0.0201 | [0.0172, 0.0233] | 391/812 (48.2%) |
 
-Holding the global `H_Z` scale fixed makes the effect **2.6× larger**. Raising κ
-lowers the programmed scale α, and that drop partially *compensates* the penalty
-change. Reporting only the total compiled effect would understate the causal role
-of chain strength by more than half — which is precisely why ADR-0003 requires
-both arms and why `aggregate_interventions` refuses to pool them.
+**These two marginal means must not be divided by each other.** An earlier
+revision of this report did exactly that and claimed holding scale fixed makes
+the effect "2.6× larger". That ratio is a composition artefact. A
+`scale_controlled` arm is only constructed when the intervention actually moves
+α, so the controlled column contains only `chain_strength` and `ports`, while
+the 812-pair column is 231 `geometry` and 18 `field_allocation` pairs as well.
+Those factors carry much smaller penalties and are absent from the numerator, so
+the ratio charges the difference between factors to the scale control.
+
+The matched contrast pairs each intervention with its own controlled twin, so
+factor composition cancels:
+
+| quantity | value |
+|---|---:|
+| matched pairs (parents) | 214 (95) |
+| matched censored, excluded | 34 |
+| factors matched | `chain_strength` 167, `ports` 47 |
+| `scale_controlled` | 0.0583 |
+| `total_compiled_effect` | 0.0384 |
+| within-pair difference | **+0.0199**, 95% CI [0.0132, 0.0267] |
+| matched ratio | **1.52×** |
+| confounded marginal ratio | 2.56× *(superseded)* |
+| pairs where holding scale raises the penalty | 130/214 (60.7%) |
+
+Holding the global `H_Z` scale fixed raises the measured transfer penalty by
+**0.0199 [0.0132, 0.0267]**, a **1.52×** effect rather than 2.6×. The finding
+survives the correction — the interval excludes zero and a clear majority of
+matched pairs move the same way — but it is a little over half the size the
+uncorrected ratio suggested, and it is no longer unanimous: 84 of 214 matched
+pairs move the other way. Raising κ lowers α, and that drop partially
+*compensates* the penalty change. Reporting only the total compiled effect still
+understates the causal role of chain strength, which is why ADR-0003 requires
+both arms and why `aggregate_interventions` refuses to pool them — but the size
+of that understatement is 1.52×, on matched pairs, weighted by parent.
+
+`scale_arm_matched_contrast` now computes this automatically and
+`aggregate_interventions` reports it beside the arms, with
+`unmatched_is_composition_confounded` set whenever the two arms' factor
+compositions differ. Every number above is weighted by parent, the unit of
+independence, so the point estimate and its interval describe the same
+estimand.
 
 ### By intervened factor
 

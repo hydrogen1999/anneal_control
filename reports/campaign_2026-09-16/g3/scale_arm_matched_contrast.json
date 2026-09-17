@@ -1,0 +1,44 @@
+{
+ "schema_version": 1,
+ "n_matched_pairs": 214,
+ "n_matched_censored_excluded": 34,
+ "n_unmatched_total_only": 564,
+ "n_unmatched_controlled_only": 0,
+ "factors_matched": {
+  "chain_strength": 167,
+  "ports": 47
+ },
+ "mean_scale_controlled": 0.058301309441618515,
+ "mean_total_compiled_effect": 0.038421743198381035,
+ "mean_difference": 0.019879566243237477,
+ "mean_difference_pair_weighted": 0.00999213316361695,
+ "weighting": "equal_parent_mean",
+ "ratio_matched": 1.517404068331682,
+ "pairs_holding_scale_increases_penalty": 130,
+ "parent_bootstrap_ci": {
+  "low": 0.013204390840688904,
+  "high": 0.026735466982778695,
+  "confidence": 0.95,
+  "resamples": 20000,
+  "unit_of_independence": "logical_parent",
+  "status": "ok",
+  "includes_training_seed_uncertainty": false
+ },
+ "n_parents": 95,
+ "ratio_unmatched_confounded": 2.560083133711604,
+ "unmatched_is_composition_confounded": true,
+ "factor_composition": {
+  "scale_controlled": {
+   "chain_strength": 189,
+   "ports": 48
+  },
+  "total_compiled_effect": {
+   "chain_strength": 169,
+   "field_allocation": 18,
+   "geometry": 231,
+   "ports": 151
+  }
+ },
+ "unit_of_independence": "logical_parent",
+ "scope": "within-pair difference over interventions observed under both arms, so factor composition cancels; the marginal ratio is reported only to show what the composition correction changed and must not be quoted on its own"
+}

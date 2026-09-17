@@ -631,6 +631,113 @@ def _reversal_stats(rows: Sequence[Mapping[str, Any]]) -> dict:
             "swap_consistency_holds": conditional is None or abs(conditional - 1.0) < 1e-12}
 
 
+SCALE_CONTROLLED_SUFFIX = "__scale_controlled"
+
+
+def scale_arm_matched_contrast(rows: Sequence[Mapping[str, Any]], *,
+                               bootstrap_resamples: int = 2000, seed: int = 0) -> dict:
+    """How much holding the programmed scale fixed changes the penalty, on matched pairs.
+
+    Comparing the two arms' marginal means is not an answer to that question. A
+    ``scale_controlled`` arm is only built when the intervention actually moves
+    alpha, so the controlled population is a subset of factors -- here chain
+    strength and ports -- while the total-effect population also contains
+    geometry and field allocation, which are absent from the controlled side
+    entirely. The ratio of those two marginal means mixes the scale effect with
+    the difference between factors, and attributes the whole of it to scale.
+
+    The matched contrast pairs each base intervention with its own controlled
+    twin and averages the within-pair difference, so factor composition cancels
+    by construction. The confounded ratio is reported alongside, labelled, so a
+    reader can see exactly what the correction changed.
+    """
+    rows = list(rows)
+    paired: dict[str, dict[str, Mapping[str, Any]]] = {}
+    for row in rows:
+        pair_id = str(row.get("pair_id", ""))
+        base = (pair_id[:-len(SCALE_CONTROLLED_SUFFIX)]
+                if pair_id.endswith(SCALE_CONTROLLED_SUFFIX) else pair_id)
+        paired.setdefault(base, {})[str(row.get("scale_arm"))] = row
+
+    both = [arms for arms in paired.values()
+            if {"scale_controlled", "total_compiled_effect"} <= set(arms)]
+    censored = [arms for arms in both
+                if any(a.get("resolution_status") == "censored_numerical" for a in arms.values())]
+    usable = [arms for arms in both if arms not in censored]
+    if not usable:
+        raise ValueError("no intervention pair appears under both scale arms; a matched "
+                         "contrast cannot be formed")
+
+    # Every headline number here is weighted by parent, because the parent is the
+    # unit of independence and the bootstrap resamples parents. Mixing a
+    # pair-weighted point estimate with a parent-weighted interval would put the
+    # estimate outside its own confidence interval whenever parents contribute
+    # unequal numbers of pairs, which they do.
+    def parent_weighted(select):
+        values, _ = _parent_means(
+            [{"parent_id": a["scale_controlled"]["parent_id"], "value": select(a)}
+             for a in usable], lambda row: row["value"])
+        return values
+
+    def penalty(arm):
+        return lambda arms: float(arms[arm]["mean_transfer_penalty"])
+
+    difference = lambda arms: (float(arms["scale_controlled"]["mean_transfer_penalty"])
+                               - float(arms["total_compiled_effect"]["mean_transfer_penalty"]))
+    parent_values = parent_weighted(difference)
+    differences = np.array([difference(a) for a in usable])
+    controlled_mean = float(parent_weighted(penalty("scale_controlled")).mean())
+    total_mean = float(parent_weighted(penalty("total_compiled_effect")).mean())
+    included = [row for row in rows if row.get("resolution_status") != "censored_numerical"]
+    marginal = {}
+    for arm in ("scale_controlled", "total_compiled_effect"):
+        values, _ = _parent_means([row for row in included if row.get("scale_arm") == arm],
+                                  lambda row: row.get("mean_transfer_penalty"))
+        marginal[arm] = float(values.mean()) if values.size else float("nan")
+    factors = {arm: Counter(str(row.get("factor")) for row in included
+                            if row.get("scale_arm") == arm)
+               for arm in ("scale_controlled", "total_compiled_effect")}
+
+    return _safe({
+        "schema_version": 1,
+        "n_matched_pairs": len(usable),
+        "n_matched_censored_excluded": len(censored),
+        "n_unmatched_total_only": sum(1 for arms in paired.values()
+                                      if set(arms) == {"total_compiled_effect"}),
+        "n_unmatched_controlled_only": sum(1 for arms in paired.values()
+                                           if set(arms) == {"scale_controlled"}),
+        "factors_matched": dict(sorted(Counter(
+            str(a["scale_controlled"].get("factor")) for a in usable).items())),
+        "mean_scale_controlled": controlled_mean,
+        "mean_total_compiled_effect": total_mean,
+        "mean_difference": float(parent_values.mean()),
+        "mean_difference_pair_weighted": float(differences.mean()),
+        "weighting": "equal_parent_mean",
+        "ratio_matched": controlled_mean / total_mean if total_mean else None,
+        "pairs_holding_scale_increases_penalty": int((differences > 0).sum()),
+        "parent_bootstrap_ci": _bootstrap(parent_values, n_resamples=bootstrap_resamples, seed=seed),
+        "n_parents": int(parent_values.size),
+        "ratio_unmatched_confounded": (marginal["scale_controlled"] / marginal["total_compiled_effect"]
+                                       if marginal["total_compiled_effect"] else None),
+        "unmatched_is_composition_confounded": bool(
+            set(factors["scale_controlled"]) != set(factors["total_compiled_effect"])),
+        "factor_composition": {arm: dict(sorted(counter.items()))
+                               for arm, counter in factors.items()},
+        "unit_of_independence": "logical_parent",
+        "scope": ("within-pair difference over interventions observed under both arms, so factor "
+                  "composition cancels; the marginal ratio is reported only to show what the "
+                  "composition correction changed and must not be quoted on its own"),
+    })
+
+
+def _matched_contrast_or_reason(rows, *, bootstrap_resamples: int, seed: int) -> dict:
+    """The matched contrast, or a stated reason. Never silently absent."""
+    try:
+        return scale_arm_matched_contrast(rows, bootstrap_resamples=bootstrap_resamples, seed=seed)
+    except ValueError as error:
+        return {"status": "unavailable", "reason": str(error)}
+
+
 def aggregate_interventions(rows: Sequence[Mapping[str, Any]], *, bootstrap_resamples: int = 2000,
                             seed: int = 0) -> dict:
     """Parent-level intervention summary, split by scale arm and by factor.
@@ -689,6 +796,10 @@ def aggregate_interventions(rows: Sequence[Mapping[str, Any]], *, bootstrap_resa
                if k in {"decisive_reversals", "decisive_reversal_rate", "decisive_reversal_denominator"}}}
             for factor in factors},
         "factor_counts": dict(sorted(Counter(str(row.get("factor")) for row in rows).items())),
+        # The two arms' marginal means have different factor compositions, so their
+        # ratio is not the effect of holding scale fixed. The matched contrast is.
+        "scale_arm_matched_contrast": _matched_contrast_or_reason(
+            rows, bootstrap_resamples=bootstrap_resamples, seed=seed),
         "total_objective_calls": int(sum(int(row.get("objective_calls", 0)) for row in rows)),
         "verdict": ("no_resolved_preference_change" if not reversal["decisive_reversals"]
                     else "preference_changes_measured"),

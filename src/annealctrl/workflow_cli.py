@@ -16,7 +16,8 @@ COMMANDS = {"run", "tune", "report", "audit", "doctor", "train-config", "infer",
             "control-benchmark", "export-hardware", "ingest-hardware", "simulate-open", "profile-generation",
             "control-sweep", "frontier-report", "screen",
             "intervention-sweep", "intervention-report",
-            "model-intervention-sweep", "model-intervention-report", "cost-report"}
+            "model-intervention-sweep", "model-intervention-report", "cost-report",
+            "method-contrast"}
 
 
 def _json(path):
@@ -203,6 +204,17 @@ def main(argv):
     cost.add_argument("--deployments", nargs="+", type=int,
                       default=[1, 10, 100, 1000, 10000],
                       help="deployment counts; must include 1 so the unamortised cost is shown")
+    contrast = sub.add_parser(
+        "method-contrast",
+        help="held-out: method against method, Holm-corrected, plus embedding-aware vs blind")
+    contrast.add_argument("--records", required=True,
+                          help="heldout_records.json, or a paper/results.json from `report`")
+    contrast.add_argument("--output", required=True)
+    contrast.add_argument("--mode", nargs="+", default=["bank", "direct"])
+    contrast.add_argument("--blind", nargs="+", default=["logical"],
+                          help="encoders that cannot see the embedding")
+    contrast.add_argument("--bootstrap-resamples", type=int, default=20000)
+    contrast.add_argument("--alpha", type=float, default=0.05)
     opened = sub.add_parser("simulate-open", help="small independent Lindblad model, not a calibrated QPU")
     opened.add_argument("--record", required=True)
     opened.add_argument("--schedule", required=True)
@@ -391,6 +403,37 @@ def main(argv):
         print("reference (never amortises): %.4f s per instance, %.0f objective calls" % (
             result["reference"]["online_seconds_per_instance"],
             result["reference"]["objective_calls_per_instance"]))
+    elif args.command == "method-contrast":
+        from .contrasts import contrast_matrix, encoder_information_contrast
+        payload = json.loads(Path(args.records).read_text())
+        rows = payload["record_means"] if isinstance(payload, dict) else payload
+        result = {"schema_version": 1, "source": str(args.records), "modes": {}}
+        for mode in args.mode:
+            matrix = contrast_matrix(rows, mode=mode, bootstrap_resamples=args.bootstrap_resamples,
+                                     alpha=args.alpha)
+            block = {"contrast_matrix": matrix}
+            try:
+                block["embedding_information"] = encoder_information_contrast(
+                    rows, blind=args.blind, mode=mode,
+                    bootstrap_resamples=args.bootstrap_resamples)
+            except ValueError as error:
+                block["embedding_information"] = {"status": "unavailable", "reason": str(error)}
+            result["modes"][mode] = block
+
+            print("=== mode=%s | %d comparisons, %s-corrected ===" % (
+                mode, matrix["n_comparisons"], matrix["correction"]))
+            for pair in sorted(matrix["pairs"], key=lambda p: p["p_value_holm"]):
+                print("  %-18s vs %-18s d=%+.5f [%+.5f,%+.5f] holm=%.4f %s" % (
+                    pair["method_a"], pair["method_b"], pair["mean_difference"],
+                    pair["ci_low"], pair["ci_high"], pair["p_value_holm"],
+                    "SEPARATED" if pair["separated_after_correction"] else ""))
+            print("  indistinguishable:", matrix["indistinguishable_groups"])
+            information = block["embedding_information"]
+            if information.get("status") != "unavailable":
+                print("  embedding-aware vs blind: %+.5f [%+.5f,%+.5f] separated=%s" % (
+                    information["mean_difference"], information["ci_low"],
+                    information["ci_high"], information["separated"]))
+        _save(args.output, result)
     elif args.command == "control-benchmark":
         from .benchmarking import benchmark_record_controls
         _save(args.output, benchmark_record_controls(_record(args), budget_per_family=args.budget, seed=args.seed,

@@ -562,3 +562,161 @@ def test_aggregate_counts_pairs_whose_search_was_asymmetric():
     summary = aggregate_interventions(rows)
     assert summary["pairs_with_negative_direction"] == 2
     assert summary["negative_direction_fraction"] == pytest.approx(2 / 3)
+
+
+# --- the scale arms must be contrasted on matched pairs ----------------------
+
+def scale_pair(base, parent, factor, controlled, total, *, status="resolved"):
+    """One base intervention observed under both scale arms."""
+    common = {"parent_id": parent, "factor": factor, "resolution_status": status,
+              "physical_size_matched": True, "decisive_on_A": True, "decisive_on_B": True,
+              "preferred_control_swapped": False, "transfer_penalty_on_A": 0.0,
+              "transfer_penalty_on_B": 0.0}
+    return [{**common, "pair_id": base, "scale_arm": "total_compiled_effect",
+             "mean_transfer_penalty": total},
+            {**common, "pair_id": f"{base}__scale_controlled", "scale_arm": "scale_controlled",
+             "mean_transfer_penalty": controlled}]
+
+
+def test_matched_contrast_uses_only_pairs_present_in_both_arms():
+    from annealctrl.interventions import scale_arm_matched_contrast
+
+    rows = []
+    for index in range(6):
+        rows += scale_pair(f"p{index}__chain_strength_3__t0", f"p{index}", "chain_strength",
+                           controlled=0.05, total=0.02)
+    # Geometry exists only in the total arm; it must not enter the contrast.
+    rows += [{"pair_id": "p9__geometry__t0", "parent_id": "p9", "factor": "geometry",
+              "scale_arm": "total_compiled_effect", "mean_transfer_penalty": 0.001,
+              "resolution_status": "resolved", "physical_size_matched": True,
+              "decisive_on_A": True, "decisive_on_B": True, "preferred_control_swapped": False,
+              "transfer_penalty_on_A": 0.0, "transfer_penalty_on_B": 0.0}]
+
+    result = scale_arm_matched_contrast(rows, bootstrap_resamples=500)
+    assert result["n_matched_pairs"] == 6
+    assert result["n_unmatched_total_only"] == 1
+    assert result["factors_matched"] == {"chain_strength": 6}
+    assert result["mean_difference"] == pytest.approx(0.03)
+    assert result["ratio_matched"] == pytest.approx(2.5)
+
+
+def test_matched_contrast_reports_the_confounded_ratio_it_replaces():
+    """The unmatched ratio must be visible, and labelled, or the correction is unauditable."""
+    from annealctrl.interventions import scale_arm_matched_contrast
+
+    rows = []
+    for index in range(5):
+        rows += scale_pair(f"p{index}__chain_strength_3__t0", f"p{index}", "chain_strength",
+                           controlled=0.05, total=0.04)
+    for index in range(20):
+        rows.append({"pair_id": f"g{index}__geometry__t0", "parent_id": f"g{index}",
+                     "factor": "geometry", "scale_arm": "total_compiled_effect",
+                     "mean_transfer_penalty": 0.001, "resolution_status": "resolved",
+                     "physical_size_matched": True, "decisive_on_A": True, "decisive_on_B": True,
+                     "preferred_control_swapped": False, "transfer_penalty_on_A": 0.0,
+                     "transfer_penalty_on_B": 0.0})
+
+    result = scale_arm_matched_contrast(rows, bootstrap_resamples=500)
+    assert result["ratio_matched"] == pytest.approx(1.25)
+    # Pooling the geometry pairs into the denominator inflates the ratio badly.
+    assert result["ratio_unmatched_confounded"] > 4.0
+    assert result["unmatched_is_composition_confounded"] is True
+    assert "composition" in result["scope"]
+
+
+def test_matched_contrast_is_not_confounded_when_compositions_agree():
+    from annealctrl.interventions import scale_arm_matched_contrast
+
+    rows = []
+    for index in range(5):
+        rows += scale_pair(f"p{index}__chain_strength_3__t0", f"p{index}", "chain_strength",
+                           controlled=0.05, total=0.04)
+    result = scale_arm_matched_contrast(rows, bootstrap_resamples=500)
+    assert result["unmatched_is_composition_confounded"] is False
+    assert result["ratio_matched"] == pytest.approx(result["ratio_unmatched_confounded"])
+
+
+def test_matched_contrast_counts_pairs_that_move_in_each_direction():
+    from annealctrl.interventions import scale_arm_matched_contrast
+
+    rows = scale_pair("a__chain_strength_3__t0", "pa", "chain_strength", controlled=0.05, total=0.02)
+    rows += scale_pair("b__chain_strength_3__t0", "pb", "chain_strength", controlled=0.01, total=0.04)
+    rows += scale_pair("c__chain_strength_3__t0", "pc", "chain_strength", controlled=0.03, total=0.02)
+    result = scale_arm_matched_contrast(rows, bootstrap_resamples=500)
+    assert result["pairs_holding_scale_increases_penalty"] == 2
+    assert result["n_matched_pairs"] == 3
+
+
+def test_matched_contrast_excludes_censored_pairs_like_every_other_penalty_block():
+    from annealctrl.interventions import scale_arm_matched_contrast
+
+    rows = []
+    for index in range(4):
+        rows += scale_pair(f"p{index}__chain_strength_3__t0", f"p{index}", "chain_strength",
+                           controlled=0.05, total=0.02)
+    rows += scale_pair("pz__chain_strength_3__t0", "pz", "chain_strength",
+                       controlled=9.0, total=9.0, status="censored_numerical")
+    result = scale_arm_matched_contrast(rows, bootstrap_resamples=500)
+    assert result["n_matched_pairs"] == 4
+    assert result["n_matched_censored_excluded"] == 1
+    assert result["mean_difference"] == pytest.approx(0.03)
+
+
+def test_matched_contrast_refuses_when_no_pair_has_both_arms():
+    from annealctrl.interventions import scale_arm_matched_contrast
+
+    rows = [{"pair_id": "p0__geometry__t0", "parent_id": "p0", "factor": "geometry",
+             "scale_arm": "total_compiled_effect", "mean_transfer_penalty": 0.01,
+             "resolution_status": "resolved", "physical_size_matched": True,
+             "decisive_on_A": True, "decisive_on_B": True, "preferred_control_swapped": False,
+             "transfer_penalty_on_A": 0.0, "transfer_penalty_on_B": 0.0}]
+    with pytest.raises(ValueError, match="both scale arms"):
+        scale_arm_matched_contrast(rows, bootstrap_resamples=100)
+
+
+def test_aggregate_reports_the_matched_contrast_beside_the_arms():
+    from annealctrl.interventions import aggregate_interventions
+
+    rows = []
+    for index in range(5):
+        rows += scale_pair(f"p{index}__chain_strength_3__t0", f"p{index}", "chain_strength",
+                           controlled=0.05, total=0.02)
+    summary = aggregate_interventions(rows, bootstrap_resamples=500)
+    contrast = summary["scale_arm_matched_contrast"]
+    assert contrast["n_matched_pairs"] == 5
+    assert contrast["mean_difference"] == pytest.approx(0.03)
+
+
+def test_aggregate_states_no_matched_contrast_rather_than_omitting_it():
+    from annealctrl.interventions import aggregate_interventions
+
+    rows = [{"pair_id": "p0__geometry__t0", "parent_id": "p0", "factor": "geometry",
+             "scale_arm": "total_compiled_effect", "mean_transfer_penalty": 0.01,
+             "resolution_status": "resolved", "physical_size_matched": True,
+             "decisive_on_A": True, "decisive_on_B": True, "preferred_control_swapped": False,
+             "transfer_penalty_on_A": 0.0, "transfer_penalty_on_B": 0.0}]
+    summary = aggregate_interventions(rows, bootstrap_resamples=500)
+    assert summary["scale_arm_matched_contrast"]["status"] == "unavailable"
+
+
+def test_matched_contrast_point_estimate_agrees_with_its_own_interval():
+    """Parents contribute unequal pair counts; a pair-weighted mean would fall outside the CI."""
+    from annealctrl.interventions import scale_arm_matched_contrast
+
+    rows = []
+    # One parent carries eight pairs with a small difference ...
+    for index in range(8):
+        rows += scale_pair(f"heavy{index}__chain_strength_3__t0", "p_heavy", "chain_strength",
+                           controlled=0.011, total=0.010)
+    # ... while four parents carry one pair each with a large difference.
+    for index in range(4):
+        rows += scale_pair(f"light{index}__chain_strength_3__t0", f"p_light{index}",
+                           "chain_strength", controlled=0.09, total=0.01)
+
+    result = scale_arm_matched_contrast(rows, bootstrap_resamples=4000)
+    assert result["weighting"] == "equal_parent_mean"
+    # Parent-weighted: (0.001 + 4 * 0.08) / 5 = 0.0642. Pair-weighted would be 0.0273.
+    assert result["mean_difference"] == pytest.approx(0.0642)
+    assert result["mean_difference_pair_weighted"] == pytest.approx(0.0273, abs=1e-4)
+    ci = result["parent_bootstrap_ci"]
+    assert ci["low"] <= result["mean_difference"] <= ci["high"]
