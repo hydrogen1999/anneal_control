@@ -38,6 +38,41 @@ from .sweeps import SweepUnit, run_sweep
 from .telemetry import _safe
 
 
+def logical_overlap(pairs: Sequence[InterventionPair],
+                    records: Sequence[Mapping[str, Any]]) -> dict:
+    """Do these intervention pairs share a logical instance with these records?
+
+    The model-side test is only a deployment test if the pairs are instances the
+    model never trained on. The two are drawn from the same generator with
+    different seed streams, which makes collisions unlikely but not impossible,
+    so the disjointness is checked on labelled-coefficient fingerprints rather
+    than assumed from the seeds.
+
+    A fingerprint match is not a graph-isomorphism or gauge-equivalence
+    certificate; it catches identical labelled instances, which is the failure
+    that would actually leak.
+    """
+    from .generation import IsingProblem, logical_fingerprint
+
+    pairs = list(pairs)
+    if not pairs:
+        raise ValueError("logical_overlap requires a nonempty pair set")
+    pair_fingerprints = {logical_fingerprint(pair.arms[0].compiled.logical) for pair in pairs}
+    record_fingerprints = {
+        logical_fingerprint(IsingProblem(record["logical_h"], record["logical_edges"],
+                                         record["logical_J"]))
+        for record in records}
+    shared = pair_fingerprints & record_fingerprints
+    return _safe({
+        "n_pair_instances": len(pair_fingerprints),
+        "n_record_instances": len(record_fingerprints),
+        "n_overlapping": len(shared),
+        "disjoint": not shared,
+        "basis": "labelled logical coefficient fingerprint",
+        "not_a_certificate_of": "graph isomorphism or gauge equivalence",
+    })
+
+
 def arm_record(arm: InterventionArm, runtime: float) -> dict[str, Any]:
     """A ``graph_from_record``-compatible view of one intervention arm.
 

@@ -245,3 +245,38 @@ def test_aggregate_refuses_an_unknown_baseline():
 def test_aggregate_of_an_empty_row_set_is_refused():
     with pytest.raises(ValueError, match="nonempty"):
         aggregate_model_interventions([])
+
+
+# --- leakage between intervention pairs and training data --------------------
+
+def test_disjoint_logical_instances_is_verified_not_assumed(tmp_path):
+    from annealctrl.representation import logical_overlap
+
+    built = [pair(), pair("geometry", {"shape": "star"})]
+    # A record set built from the pairs themselves must overlap completely.
+    records = [{"logical_h": p.arms[0].compiled.logical.h,
+                "logical_edges": p.arms[0].compiled.logical.edges,
+                "logical_J": p.arms[0].compiled.logical.J} for p in built]
+    same = logical_overlap(built, records)
+    assert same["n_pair_instances"] == 1        # both pairs share one parent
+    assert same["n_overlapping"] == 1
+    assert same["disjoint"] is False
+
+
+def test_unrelated_records_are_reported_disjoint():
+    from annealctrl.representation import logical_overlap
+    import numpy as np
+
+    built = [pair()]
+    other = [{"logical_h": np.array([0.9, -0.8, 0.7]),
+              "logical_edges": np.array([[0, 1], [1, 2], [0, 2]]),
+              "logical_J": np.array([0.11, -0.22, 0.33])}]
+    result = logical_overlap(built, other)
+    assert result["n_overlapping"] == 0
+    assert result["disjoint"] is True
+
+
+def test_logical_overlap_refuses_an_empty_pair_set():
+    from annealctrl.representation import logical_overlap
+    with pytest.raises(ValueError, match="nonempty"):
+        logical_overlap([], [])
