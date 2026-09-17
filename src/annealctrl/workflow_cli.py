@@ -17,7 +17,7 @@ COMMANDS = {"run", "tune", "report", "audit", "doctor", "train-config", "infer",
             "control-sweep", "frontier-report", "screen",
             "intervention-sweep", "intervention-report",
             "model-intervention-sweep", "model-intervention-report", "cost-report",
-            "method-contrast"}
+            "method-contrast", "teacher-baseline-report"}
 
 
 def _json(path):
@@ -215,6 +215,13 @@ def main(argv):
                           help="encoders that cannot see the embedding")
     contrast.add_argument("--bootstrap-resamples", type=int, default=20000)
     contrast.add_argument("--alpha", type=float, default=0.05)
+    teach = sub.add_parser(
+        "teacher-baseline-report",
+        help="G2: privileged spectral baselines against linear and against the search")
+    teach.add_argument("--sweep", nargs="+", required=True,
+                       help="control-sweep directories whose rows carry privileged_teachers")
+    teach.add_argument("--output", required=True)
+    teach.add_argument("--bootstrap-resamples", type=int, default=20000)
     opened = sub.add_parser("simulate-open", help="small independent Lindblad model, not a calibrated QPU")
     opened.add_argument("--record", required=True)
     opened.add_argument("--schedule", required=True)
@@ -434,6 +441,28 @@ def main(argv):
                     information["mean_difference"], information["ci_low"],
                     information["ci_high"], information["separated"]))
         _save(args.output, result)
+    elif args.command == "teacher-baseline-report":
+        from .sweeps import load_rows
+        from .teacher_baselines import aggregate_privileged_teachers
+        rows = [row["result"] for directory in args.sweep for row in load_rows(directory)
+                if row.get("status") == "ok" and row.get("result")]
+        result = aggregate_privileged_teachers(rows, bootstrap_resamples=args.bootstrap_resamples)
+        _save(args.output, result)
+        print("%d rows, %d parents" % (result["n_rows"], result["n_parents"]))
+        for name, block in sorted(result["methods"].items()):
+            if block.get("mean_loss") is None:
+                print("%-20s %s" % (name, block.get("status")))
+                continue
+            print("%-20s teacher %.4f | linear %.4f | search %.4f | resolved %.1f%% | %s" % (
+                name, block["mean_loss"], block["mean_linear_loss"],
+                block["mean_best_found_loss"], 100 * block["resolution_rate"], block["verdict"]))
+            print("%-20s vs linear %+.4f [%+.4f, %+.4f] | vs search %+.4f [%+.4f, %+.4f]" % (
+                "", block["vs_linear"]["mean_difference"],
+                block["vs_linear"]["parent_bootstrap_ci"]["low"],
+                block["vs_linear"]["parent_bootstrap_ci"]["high"],
+                block["vs_best_found"]["mean_difference"],
+                block["vs_best_found"]["parent_bootstrap_ci"]["low"],
+                block["vs_best_found"]["parent_bootstrap_ci"]["high"]))
     elif args.command == "control-benchmark":
         from .benchmarking import benchmark_record_controls
         _save(args.output, benchmark_record_controls(_record(args), budget_per_family=args.budget, seed=args.seed,
