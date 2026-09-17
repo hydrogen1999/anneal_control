@@ -60,6 +60,18 @@ fi
 
 export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 MPLBACKEND=Agg
 PYTHON="${PYTHON:-python}"
+
+# Check the interpreter BEFORE launching N detached shards. Without this, a
+# PYTHON that cannot import the package starts N processes that each die
+# instantly into their own log, the row count stays at zero, and the failure
+# looks like slow progress. That cost an hour of wall clock once.
+if ! "$PYTHON" -c "import annealctrl" 2>/dev/null; then
+    echo "error: '$PYTHON' cannot import annealctrl." >&2
+    echo "       Set PYTHON to the interpreter of the environment the package is installed in," >&2
+    echo "       e.g. PYTHON=\$HOME/anneal_control/.venv/bin/python $0 ..." >&2
+    exit 1
+fi
+
 mkdir -p "$OUTPUT"
 
 echo "launching $SHARDS shards of the $KIND sweep"
