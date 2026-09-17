@@ -67,8 +67,14 @@ def load_experiment(path: str | Path) -> dict:
 
 def validate_experiment(cfg: dict) -> None:
     allowed = {"schema_version", "dataset", "seeds", "methods", "training", "execution", "evaluation", "report"}
-    if not isinstance(cfg, dict) or set(cfg) - allowed:
-        raise ValueError(f"Unknown experiment keys: {sorted(set(cfg) - allowed)}")
+    if not isinstance(cfg, dict):
+        raise ValueError("experiment configuration must be a mapping")
+    # Keys beginning with "_" are free-form annotations, never read. The dataset
+    # configs already use that convention; the allowlist stays strict for
+    # everything else so a typo like "excution" is still an error.
+    unknown = {key for key in cfg if not str(key).startswith("_")} - allowed
+    if unknown:
+        raise ValueError(f"Unknown experiment keys: {sorted(unknown)}")
     if cfg.get("schema_version", 1) != 1 or not isinstance(cfg.get("dataset"), dict):
         raise ValueError("schema_version=1 and dataset object/path required")
     from .pipeline import _validate_config

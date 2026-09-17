@@ -123,3 +123,22 @@ def test_report_keeps_parent_and_seed_uncertainty_separate():
 
 def test_doctor_cpu_is_nonmutating():
     assert "capabilities" in doctor()
+
+
+def test_experiment_config_allows_underscore_annotations_but_still_catches_typos():
+    from annealctrl.experiments import validate_experiment
+    base = {
+        "schema_version": 1,
+        "dataset": {"seed": 1, "parents": 3, "families": ["spin_glass"], "logical_qubits": 3,
+                    "chain_lengths": [1, 1, 1], "variants": [{"shape": "path", "ports": 1}],
+                    "chain_strengths": [1.5], "runtimes": [2.0], "candidates": 2,
+                    "spectral_points": 3, "steps": 8, "max_steps": 128,
+                    "label_state_tolerance": 0.005, "max_physical_qubits": 3},
+        "seeds": [0], "methods": [{"name": "m", "model": {"width": 8}}],
+    }
+    # Underscore-prefixed keys are free-form annotations; the dataset configs
+    # already use that convention and it can never collide with a real key.
+    validate_experiment({**base, "_execution_note": "measured on apollo"})
+    # A near-miss of a real key must still be rejected.
+    with pytest.raises(ValueError, match="Unknown experiment keys"):
+        validate_experiment({**base, "excution": {"device": "cpu"}})
