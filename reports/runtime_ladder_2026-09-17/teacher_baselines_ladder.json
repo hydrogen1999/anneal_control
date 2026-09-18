@@ -1,0 +1,613 @@
+{
+ "schema_version": 1,
+ "n_rows": 355,
+ "n_parents": 28,
+ "methods": {
+  "d2": {
+   "method": "d2",
+   "n_rows": 355,
+   "n_resolved": 342,
+   "resolution_rate": 0.9633802816901409,
+   "n_audit_passed": 315,
+   "n_audit_failed": 27,
+   "status_counts": {
+    "interpolation_audit_failed": 27,
+    "sampled_point_audit_passed": 315,
+    "unresolved_spectral_points": 13
+   },
+   "comparison_population_is_conditional": true,
+   "resolved_mean_linear_loss": 0.34588437666608957,
+   "unresolved_mean_linear_loss": 0.15952030806385883,
+   "teacher_seconds_total": 56.51640033489093,
+   "mean_loss": 0.3008092122327442,
+   "mean_loss_including_audit_failures": 0.3102015462097751,
+   "mean_linear_loss": 0.34730684172572795,
+   "mean_best_found_loss": 0.22725204399250518,
+   "vs_linear": {
+    "n_parents": 27,
+    "std": 0.14498236702042552,
+    "min": -0.2627914517144137,
+    "max": 0.2131490152407959,
+    "quantiles": {
+     "p10": -0.2172334333281123,
+     "p25": -0.15709666221315005,
+     "p50": -0.01970103802173989,
+     "p75": 0.09448315250854258,
+     "p90": 0.1442500749821237
+    },
+    "mean_difference": -0.024221019208719042,
+    "parent_bootstrap_ci": {
+     "low": -0.0786083395320462,
+     "high": 0.028629864605711163,
+     "confidence": 0.95,
+     "resamples": 20000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "reference": "linear_loss",
+    "sign_convention": "positive means the privileged teacher is worse"
+   },
+   "vs_best_found": {
+    "n_parents": 27,
+    "std": 0.13487115122264542,
+    "min": -0.0021543931979422135,
+    "max": 0.45979549849523654,
+    "quantiles": {
+     "p10": -0.0002775375392837545,
+     "p25": 0.005861548417744214,
+     "p50": 0.027460667084318713,
+     "p75": 0.12014920113463265,
+     "p90": 0.3076117893784353
+    },
+    "mean_difference": 0.09749986195332577,
+    "parent_bootstrap_ci": {
+     "low": 0.05110271518656585,
+     "high": 0.15026749756725458,
+     "confidence": 0.95,
+     "resamples": 20000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "reference": "best_found_loss",
+    "sign_convention": "positive means the privileged teacher is worse"
+   },
+   "beats_linear_fraction": 0.5968253968253968,
+   "beats_best_found_fraction": 0.24761904761904763,
+   "audit_failures_change_the_sign": false,
+   "verdict": "beats_linear_loses_to_search",
+   "by_runtime": {
+    "12.0": {
+     "method": "d2",
+     "n_rows": 168,
+     "n_resolved": 160,
+     "resolution_rate": 0.9523809523809523,
+     "n_audit_passed": 147,
+     "n_audit_failed": 13,
+     "status_counts": {
+      "interpolation_audit_failed": 13,
+      "sampled_point_audit_passed": 147,
+      "unresolved_spectral_points": 8
+     },
+     "comparison_population_is_conditional": true,
+     "resolved_mean_linear_loss": 0.4052090303771438,
+     "unresolved_mean_linear_loss": 0.253931017939335,
+     "teacher_seconds_total": 31.200671249534935,
+     "mean_loss": 0.37974752605556883,
+     "mean_loss_including_audit_failures": 0.3871478557101712,
+     "mean_linear_loss": 0.41144094651190094,
+     "mean_best_found_loss": 0.2804137943192071,
+     "vs_linear": {
+      "n_parents": 27,
+      "std": 0.16336535400441685,
+      "min": -0.29787070627864815,
+      "max": 0.31503424738346497,
+      "quantiles": {
+       "p10": -0.251667428684889,
+       "p25": -0.11858087878899048,
+       "p50": -0.0038553118963429354,
+       "p75": 0.11495732658836283,
+       "p90": 0.16270063633053372
+      },
+      "mean_difference": -0.010872270364967431,
+      "parent_bootstrap_ci": {
+       "low": -0.07207091402977878,
+       "high": 0.048949141444916626,
+       "confidence": 0.95,
+       "resamples": 20000,
+       "unit_of_independence": "logical_parent",
+       "status": "ok",
+       "includes_training_seed_uncertainty": false
+      },
+      "reference": "linear_loss",
+      "sign_convention": "positive means the privileged teacher is worse"
+     },
+     "vs_best_found": {
+      "n_parents": 27,
+      "std": 0.1417732285486742,
+      "min": -0.006463772927127354,
+      "max": 0.45979549849523654,
+      "quantiles": {
+       "p10": -0.000900053308900994,
+       "p25": 0.01632580503707235,
+       "p50": 0.05678699477616311,
+       "p75": 0.1485351671911634,
+       "p90": 0.3845518234604327
+      },
+      "mean_difference": 0.11819051894881295,
+      "parent_bootstrap_ci": {
+       "low": 0.06919319892179009,
+       "high": 0.17385992309408493,
+       "confidence": 0.95,
+       "resamples": 20000,
+       "unit_of_independence": "logical_parent",
+       "status": "ok",
+       "includes_training_seed_uncertainty": false
+      },
+      "reference": "best_found_loss",
+      "sign_convention": "positive means the privileged teacher is worse"
+     },
+     "beats_linear_fraction": 0.564625850340136,
+     "beats_best_found_fraction": 0.14965986394557823,
+     "audit_failures_change_the_sign": false,
+     "verdict": "beats_linear_loses_to_search"
+    },
+    "36.0": {
+     "method": "d2",
+     "n_rows": 137,
+     "n_resolved": 132,
+     "resolution_rate": 0.9635036496350365,
+     "n_audit_passed": 121,
+     "n_audit_failed": 11,
+     "status_counts": {
+      "interpolation_audit_failed": 11,
+      "sampled_point_audit_passed": 121,
+      "unresolved_spectral_points": 5
+     },
+     "comparison_population_is_conditional": true,
+     "resolved_mean_linear_loss": 0.2829267691580293,
+     "unresolved_mean_linear_loss": 0.008463172263096962,
+     "teacher_seconds_total": 23.83476292807609,
+     "mean_loss": 0.2195342917450306,
+     "mean_loss_including_audit_failures": 0.22602434044969166,
+     "mean_linear_loss": 0.2840961806360298,
+     "mean_best_found_loss": 0.17314279919842074,
+     "vs_linear": {
+      "n_parents": 22,
+      "std": 0.13194797853354553,
+      "min": -0.28487968577481065,
+      "max": 0.14472134684856452,
+      "quantiles": {
+       "p10": -0.24418891267286438,
+       "p25": -0.18615701409239407,
+       "p50": -0.004946108759219053,
+       "p75": 0.028238579534011335,
+       "p90": 0.10423649194202941
+      },
+      "mean_difference": -0.052156118313921834,
+      "parent_bootstrap_ci": {
+       "low": -0.10619429881986,
+       "high": 0.0015391909933242937,
+       "confidence": 0.95,
+       "resamples": 20000,
+       "unit_of_independence": "logical_parent",
+       "status": "ok",
+       "includes_training_seed_uncertainty": false
+      },
+      "reference": "linear_loss",
+      "sign_convention": "positive means the privileged teacher is worse"
+     },
+     "vs_best_found": {
+      "n_parents": 22,
+      "std": 0.12111106047875239,
+      "min": -0.025768621783264112,
+      "max": 0.4465301196565563,
+      "quantiles": {
+       "p10": -0.012453987880847107,
+       "p25": -0.00020692501918327666,
+       "p50": 0.0009196086568150352,
+       "p75": 0.05296332276258648,
+       "p90": 0.18706277068747015
+      },
+      "mean_difference": 0.05977876468834987,
+      "parent_bootstrap_ci": {
+       "low": 0.01665073809437289,
+       "high": 0.11446654179299086,
+       "confidence": 0.95,
+       "resamples": 20000,
+       "unit_of_independence": "logical_parent",
+       "status": "ok",
+       "includes_training_seed_uncertainty": false
+      },
+      "reference": "best_found_loss",
+      "sign_convention": "positive means the privileged teacher is worse"
+     },
+     "beats_linear_fraction": 0.628099173553719,
+     "beats_best_found_fraction": 0.34710743801652894,
+     "audit_failures_change_the_sign": false,
+     "verdict": "beats_linear_loses_to_search"
+    },
+    "108.0": {
+     "method": "d2",
+     "n_rows": 50,
+     "n_resolved": 50,
+     "resolution_rate": 1.0,
+     "n_audit_passed": 47,
+     "n_audit_failed": 3,
+     "status_counts": {
+      "interpolation_audit_failed": 3,
+      "sampled_point_audit_passed": 47
+     },
+     "comparison_population_is_conditional": false,
+     "resolved_mean_linear_loss": 0.32225356861199494,
+     "unresolved_mean_linear_loss": null,
+     "teacher_seconds_total": 1.4809661572799087,
+     "mean_loss": 0.263156728127598,
+     "mean_loss_including_audit_failures": 0.2862011790151275,
+     "mean_linear_loss": 0.3094510244552183,
+     "mean_best_found_loss": 0.20028271041929313,
+     "vs_linear": {
+      "n_parents": 9,
+      "std": 0.16814814622222268,
+      "min": -0.3260930022321486,
+      "max": 0.25127454618132045,
+      "quantiles": {
+       "p10": -0.2569194511773011,
+       "p25": -0.014546725992267362,
+       "p50": -0.0003210658590167559,
+       "p75": 0.007094175722018277,
+       "p90": 0.11114970914849295
+      },
+      "mean_difference": -0.0274110220893197,
+      "parent_bootstrap_ci": {
+       "low": -0.1348974113669575,
+       "high": 0.07207127720772377,
+       "confidence": 0.95,
+       "resamples": 20000,
+       "unit_of_independence": "logical_parent",
+       "status": "ok",
+       "includes_training_seed_uncertainty": false
+      },
+      "reference": "linear_loss",
+      "sign_convention": "positive means the privileged teacher is worse"
+     },
+     "vs_best_found": {
+      "n_parents": 9,
+      "std": 0.14567867634946932,
+      "min": -0.024265496033931855,
+      "max": 0.445166875128242,
+      "quantiles": {
+       "p10": -0.004941796282530874,
+       "p25": 2.2975023895088764e-05,
+       "p50": 0.03966281052066367,
+       "p75": 0.08695596731767652,
+       "p90": 0.2180858523061574
+      },
+      "mean_difference": 0.085896357906403,
+      "parent_bootstrap_ci": {
+       "low": 0.015044541100717963,
+       "high": 0.1873518357417892,
+       "confidence": 0.95,
+       "resamples": 20000,
+       "unit_of_independence": "logical_parent",
+       "status": "ok",
+       "includes_training_seed_uncertainty": false
+      },
+      "reference": "best_found_loss",
+      "sign_convention": "positive means the privileged teacher is worse"
+     },
+     "beats_linear_fraction": 0.6170212765957447,
+     "beats_best_found_fraction": 0.2978723404255319,
+     "audit_failures_change_the_sign": false,
+     "verdict": "beats_linear_loses_to_search"
+    }
+   }
+  },
+  "gap_inverse_square": {
+   "method": "gap_inverse_square",
+   "n_rows": 355,
+   "n_resolved": 164,
+   "resolution_rate": 0.4619718309859155,
+   "n_audit_passed": 158,
+   "n_audit_failed": 6,
+   "status_counts": {
+    "interpolation_audit_failed": 6,
+    "sampled_point_audit_passed": 158,
+    "unresolved_spectral_points": 191
+   },
+   "comparison_population_is_conditional": true,
+   "resolved_mean_linear_loss": 0.4935688647151912,
+   "unresolved_mean_linear_loss": 0.20639228801749435,
+   "teacher_seconds_total": 53.43727400852367,
+   "mean_loss": 0.4779257778929417,
+   "mean_loss_including_audit_failures": 0.4865952887835069,
+   "mean_linear_loss": 0.4910872895076057,
+   "mean_best_found_loss": 0.3656441690220543,
+   "vs_linear": {
+    "n_parents": 13,
+    "std": 0.12704477024409494,
+    "min": -0.1766391105126454,
+    "max": 0.22127271857055694,
+    "quantiles": {
+     "p10": -0.17036637147791578,
+     "p25": -0.0897264246966778,
+     "p50": 0.03995939480021974,
+     "p75": 0.07827219868780323,
+     "p90": 0.13539510500380098
+    },
+    "mean_difference": 0.0032262000727266236,
+    "parent_bootstrap_ci": {
+     "low": -0.06355844219594295,
+     "high": 0.06963861000078891,
+     "confidence": 0.95,
+     "resamples": 20000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "reference": "linear_loss",
+    "sign_convention": "positive means the privileged teacher is worse"
+   },
+   "vs_best_found": {
+    "n_parents": 13,
+    "std": 0.09754503881180185,
+    "min": 0.021000962618715435,
+    "max": 0.3637246840592008,
+    "quantiles": {
+     "p10": 0.05235514848423701,
+     "p25": 0.05747789257718283,
+     "p50": 0.07873283389746222,
+     "p75": 0.1707498047178139,
+     "p90": 0.23306316888022943
+    },
+    "mean_difference": 0.12013747469530786,
+    "parent_bootstrap_ci": {
+     "low": 0.07447877407812967,
+     "high": 0.1755384394270767,
+     "confidence": 0.95,
+     "resamples": 20000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "reference": "best_found_loss",
+    "sign_convention": "positive means the privileged teacher is worse"
+   },
+   "beats_linear_fraction": 0.3987341772151899,
+   "beats_best_found_fraction": 0.06962025316455696,
+   "audit_failures_change_the_sign": true,
+   "verdict": "loses_to_linear",
+   "by_runtime": {
+    "12.0": {
+     "method": "gap_inverse_square",
+     "n_rows": 168,
+     "n_resolved": 78,
+     "resolution_rate": 0.4642857142857143,
+     "n_audit_passed": 74,
+     "n_audit_failed": 4,
+     "status_counts": {
+      "interpolation_audit_failed": 4,
+      "sampled_point_audit_passed": 74,
+      "unresolved_spectral_points": 90
+     },
+     "comparison_population_is_conditional": true,
+     "resolved_mean_linear_loss": 0.561412256442285,
+     "unresolved_mean_linear_loss": 0.25638596668177177,
+     "teacher_seconds_total": 29.860916150268167,
+     "mean_loss": 0.5890727573536899,
+     "mean_loss_including_audit_failures": 0.5978827961757719,
+     "mean_linear_loss": 0.5599800659294624,
+     "mean_best_found_loss": 0.45079023335437357,
+     "vs_linear": {
+      "n_parents": 13,
+      "std": 0.12339744275809152,
+      "min": -0.1672572773234237,
+      "max": 0.22127271857055694,
+      "quantiles": {
+       "p10": -0.12805019449140811,
+       "p25": -0.07770143770002463,
+       "p50": 0.0848177034951797,
+       "p75": 0.12132497940553921,
+       "p90": 0.1435716912642295
+      },
+      "mean_difference": 0.03638531488903897,
+      "parent_bootstrap_ci": {
+       "low": -0.029267869919592217,
+       "high": 0.09881619155949624,
+       "confidence": 0.95,
+       "resamples": 20000,
+       "unit_of_independence": "logical_parent",
+       "status": "ok",
+       "includes_training_seed_uncertainty": false
+      },
+      "reference": "linear_loss",
+      "sign_convention": "positive means the privileged teacher is worse"
+     },
+     "vs_best_found": {
+      "n_parents": 13,
+      "std": 0.10524422349150038,
+      "min": 0.03576635358573377,
+      "max": 0.4306395106474932,
+      "quantiles": {
+       "p10": 0.04137904265823683,
+       "p25": 0.08378269979123955,
+       "p50": 0.11585771426308078,
+       "p75": 0.1707498047178139,
+       "p90": 0.22932279064105812
+      },
+      "mean_difference": 0.14103838346292175,
+      "parent_bootstrap_ci": {
+       "low": 0.09285902817155356,
+       "high": 0.201200492846092,
+       "confidence": 0.95,
+       "resamples": 20000,
+       "unit_of_independence": "logical_parent",
+       "status": "ok",
+       "includes_training_seed_uncertainty": false
+      },
+      "reference": "best_found_loss",
+      "sign_convention": "positive means the privileged teacher is worse"
+     },
+     "beats_linear_fraction": 0.3783783783783784,
+     "beats_best_found_fraction": 0.013513513513513514,
+     "audit_failures_change_the_sign": false,
+     "verdict": "loses_to_linear"
+    },
+    "36.0": {
+     "method": "gap_inverse_square",
+     "n_rows": 137,
+     "n_resolved": 60,
+     "resolution_rate": 0.43795620437956206,
+     "n_audit_passed": 58,
+     "n_audit_failed": 2,
+     "status_counts": {
+      "interpolation_audit_failed": 2,
+      "sampled_point_audit_passed": 58,
+      "unresolved_spectral_points": 77
+     },
+     "comparison_population_is_conditional": true,
+     "resolved_mean_linear_loss": 0.4418979989060192,
+     "unresolved_mean_linear_loss": 0.14123077215343116,
+     "teacher_seconds_total": 22.288628262467682,
+     "mean_loss": 0.3921397134961151,
+     "mean_loss_including_audit_failures": 0.39983306297746435,
+     "mean_linear_loss": 0.4398622239136123,
+     "mean_best_found_loss": 0.3069801975907672,
+     "vs_linear": {
+      "n_parents": 10,
+      "std": 0.11799011364496355,
+      "min": -0.2182101166142242,
+      "max": 0.11080746234214922,
+      "quantiles": {
+       "p10": -0.186966621267159,
+       "p25": -0.15361875009541393,
+       "p50": 0.0074665793774206235,
+       "p75": 0.03297176014422612,
+       "p90": 0.0707895105415326
+      },
+      "mean_difference": -0.04495777947124514,
+      "parent_bootstrap_ci": {
+       "low": -0.11468586966520594,
+       "high": 0.02272423123787275,
+       "confidence": 0.95,
+       "resamples": 20000,
+       "unit_of_independence": "logical_parent",
+       "status": "ok",
+       "includes_training_seed_uncertainty": false
+      },
+      "reference": "linear_loss",
+      "sign_convention": "positive means the privileged teacher is worse"
+     },
+     "vs_best_found": {
+      "n_parents": 10,
+      "std": 0.09449242301352997,
+      "min": 0.0049578497695439054,
+      "max": 0.2968098574709083,
+      "quantiles": {
+       "p10": 0.013339596559336094,
+       "p25": 0.01946483757677499,
+       "p50": 0.040138617326602594,
+       "p75": 0.13578924004569998,
+       "p90": 0.18054956213208795
+      },
+      "mean_difference": 0.08396941261303363,
+      "parent_bootstrap_ci": {
+       "low": 0.03444155634694421,
+       "high": 0.14542899019354794,
+       "confidence": 0.95,
+       "resamples": 20000,
+       "unit_of_independence": "logical_parent",
+       "status": "ok",
+       "includes_training_seed_uncertainty": false
+      },
+      "reference": "best_found_loss",
+      "sign_convention": "positive means the privileged teacher is worse"
+     },
+     "beats_linear_fraction": 0.43103448275862066,
+     "beats_best_found_fraction": 0.13793103448275862,
+     "audit_failures_change_the_sign": false,
+     "verdict": "beats_linear_loses_to_search"
+    },
+    "108.0": {
+     "method": "gap_inverse_square",
+     "n_rows": 50,
+     "n_resolved": 26,
+     "resolution_rate": 0.52,
+     "n_audit_passed": 26,
+     "n_audit_failed": 0,
+     "status_counts": {
+      "sampled_point_audit_passed": 26,
+      "unresolved_spectral_points": 24
+     },
+     "comparison_population_is_conditional": true,
+     "resolved_mean_linear_loss": 0.4092791490935379,
+     "unresolved_mean_linear_loss": 0.22797585642365661,
+     "teacher_seconds_total": 1.2877295957878232,
+     "mean_loss": 0.3529532876975792,
+     "mean_loss_including_audit_failures": 0.3529532876975792,
+     "mean_linear_loss": 0.4092791490935379,
+     "mean_best_found_loss": 0.2541711529614016,
+     "vs_linear": {
+      "n_parents": 5,
+      "std": 0.09317164739824861,
+      "min": -0.20613344265072064,
+      "max": 0.009591548631199598,
+      "quantiles": {
+       "p10": -0.14666802925754197,
+       "p25": -0.05746990916777391,
+       "p50": 0.0068374179159210735,
+       "p75": 0.009490018309686044,
+       "p90": 0.009550936502594176
+      },
+      "mean_difference": -0.047536873392337566,
+      "parent_bootstrap_ci": {
+       "low": -0.13325573769774726,
+       "high": 0.00900011035953847,
+       "confidence": 0.95,
+       "resamples": 20000,
+       "unit_of_independence": "logical_parent",
+       "status": "ok",
+       "includes_training_seed_uncertainty": false
+      },
+      "reference": "linear_loss",
+      "sign_convention": "positive means the privileged teacher is worse"
+     },
+     "vs_best_found": {
+      "n_parents": 5,
+      "std": 0.11269224418805357,
+      "min": 0.009227124728936739,
+      "max": 0.2909387910394617,
+      "quantiles": {
+       "p10": 0.022359736080694616,
+       "p25": 0.042058653108331435,
+       "p50": 0.04879993433299212,
+       "p75": 0.11109424194114348,
+       "p90": 0.21900097140013441
+      },
+      "mean_difference": 0.1004237490301731,
+      "parent_bootstrap_ci": {
+       "low": 0.030274298001505696,
+       "high": 0.19862754795769305,
+       "confidence": 0.95,
+       "resamples": 20000,
+       "unit_of_independence": "logical_parent",
+       "status": "ok",
+       "includes_training_seed_uncertainty": false
+      },
+      "reference": "best_found_loss",
+      "sign_convention": "positive means the privileged teacher is worse"
+     },
+     "beats_linear_fraction": 0.38461538461538464,
+     "beats_best_found_fraction": 0.07692307692307693,
+     "audit_failures_change_the_sign": false,
+     "verdict": "beats_linear_loses_to_search"
+    }
+   }
+  }
+ },
+ "methods_losing_to_linear": [
+  "gap_inverse_square"
+ ],
+ "scope": "privileged per-instance spectral baselines, excluded from every equal-budget claim; losses are true simulator outcomes of the waveform each rule specifies, and the resolved subset is conditional on the teacher resolving at all"
+}
