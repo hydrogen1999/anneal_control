@@ -1,0 +1,281 @@
+{
+  "schema_version": 1,
+  "split": "validation",
+  "n_records": 24,
+  "n_parents": 12,
+  "n_resolved_records": 24,
+  "n_censored_records": 0,
+  "censored_fraction": 0.0,
+  "low_headroom_reference_fraction": 0.0,
+  "headroom": {
+    "n_parents": 12,
+    "mean": 0.14793932245889216,
+    "std": 0.06657075573142078,
+    "min": 0.062052673566793115,
+    "max": 0.30113636366190377,
+    "quantiles": {
+      "p10": 0.09764450032756747,
+      "p25": 0.10754994232282432,
+      "p50": 0.12595658297802198,
+      "p75": 0.1722426518370718,
+      "p90": 0.22562524430516814
+    },
+    "parent_bootstrap_ci": {
+      "low": 0.11499761091693363,
+      "high": 0.18666443089923457,
+      "confidence": 0.95,
+      "resamples": 10000,
+      "unit_of_independence": "logical_parent",
+      "status": "ok",
+      "includes_training_seed_uncertainty": false
+    },
+    "parents": [
+      "parent_0002",
+      "parent_0010",
+      "parent_0016",
+      "parent_0017",
+      "parent_0020",
+      "parent_0045",
+      "parent_0047",
+      "parent_0066",
+      "parent_0075",
+      "parent_0084",
+      "parent_0085",
+      "parent_0091"
+    ]
+  },
+  "linear_loss": {
+    "n_parents": 12,
+    "mean": 0.6636930479429027,
+    "std": 0.26014400336078747,
+    "min": 0.1753080640872542,
+    "max": 0.9451734379519874,
+    "quantiles": {
+      "p10": 0.2635178858322627,
+      "p25": 0.5435942482994158,
+      "p50": 0.71302107846716,
+      "p75": 0.8884816572927112,
+      "p90": 0.9165671138028486
+    }
+  },
+  "best_found_loss": {
+    "n_parents": 12,
+    "mean": 0.5157537254840107,
+    "std": 0.27296825580353573,
+    "min": 0.06509124617094347,
+    "max": 0.8456241224096221,
+    "quantiles": {
+      "p10": 0.13301408334317918,
+      "p25": 0.3070264174766461,
+      "p50": 0.5345055584223418,
+      "p75": 0.7628714931924403,
+      "p90": 0.8145596380745072
+    }
+  },
+  "family_restriction_loss": {
+    "eight_bin": {
+      "n_parents": 12,
+      "mean": 0.036285940444410365,
+      "std": 0.033209975297992037,
+      "min": 0.0,
+      "max": 0.11185323779113454,
+      "quantiles": {
+        "p10": 0.005855290106305395,
+        "p25": 0.0178495711702618,
+        "p50": 0.024965527973227264,
+        "p75": 0.04284383495228103,
+        "p90": 0.08109275126292867
+      }
+    },
+    "linear": {
+      "n_parents": 12,
+      "mean": 0.14793932245889216,
+      "std": 0.06657075573142078,
+      "min": 0.062052673566793115,
+      "max": 0.30113636366190377,
+      "quantiles": {
+        "p10": 0.09764450032756747,
+        "p25": 0.10754994232282432,
+        "p50": 0.12595658297802198,
+        "p75": 0.1722426518370718,
+        "p90": 0.22562524430516814
+      }
+    },
+    "one_window": {
+      "n_parents": 12,
+      "mean": 0.023924615091813126,
+      "std": 0.019559721186648813,
+      "min": 0.0014305268908993973,
+      "max": 0.07168364466163873,
+      "quantiles": {
+        "p10": 0.002447251793941491,
+        "p25": 0.011870593916484318,
+        "p50": 0.023066492184083492,
+        "p75": 0.032523128751960215,
+        "p90": 0.035579721051155214
+      }
+    },
+    "two_window": {
+      "n_parents": 12,
+      "mean": 0.008391417228838058,
+      "std": 0.007515553637280525,
+      "min": 0.0,
+      "max": 0.025272473585629285,
+      "quantiles": {
+        "p10": 0.00019921100517827936,
+        "p25": 0.0021309006863167723,
+        "p50": 0.007845552614124257,
+        "p75": 0.012889964106542112,
+        "p90": 0.014071272055590034
+      }
+    }
+  },
+  "by_physical_size": {
+    "10": {
+      "physical_n": 10,
+      "n_records": 8,
+      "n_censored_records": 0,
+      "n_parents": 4,
+      "headroom": {
+        "n_parents": 4,
+        "mean": 0.1177712387197352,
+        "std": 0.04115395339614988,
+        "min": 0.062052673566793115,
+        "max": 0.16133106135421793,
+        "quantiles": {
+          "p10": 0.08011726338169903,
+          "p25": 0.10721414810405791,
+          "p50": 0.12385060997896488,
+          "p75": 0.1344077005946422,
+          "p90": 0.15056171705038762
+        },
+        "parent_bootstrap_ci": {
+          "low": 0.07789781692712407,
+          "high": 0.15156528925311666,
+          "confidence": 0.95,
+          "resamples": 10000,
+          "unit_of_independence": "logical_parent",
+          "status": "ok",
+          "includes_training_seed_uncertainty": false
+        }
+      },
+      "best_family_counts": {
+        "one_window": 2,
+        "two_window": 6
+      }
+    },
+    "12": {
+      "physical_n": 12,
+      "n_records": 8,
+      "n_censored_records": 0,
+      "n_parents": 4,
+      "headroom": {
+        "n_parents": 4,
+        "mean": 0.18303575535945732,
+        "std": 0.09054968937611216,
+        "min": 0.09954931554236512,
+        "max": 0.30113636366190377,
+        "quantiles": {
+          "p10": 0.1076284965640337,
+          "p25": 0.11974726809653656,
+          "p50": 0.16572867111678022,
+          "p75": 0.229017158379701,
+          "p90": 0.2722886815490227
+        },
+        "parent_bootstrap_ci": {
+          "low": 0.11301461724514608,
+          "high": 0.2574722524834096,
+          "confidence": 0.95,
+          "resamples": 10000,
+          "unit_of_independence": "logical_parent",
+          "status": "ok",
+          "includes_training_seed_uncertainty": false
+        }
+      },
+      "best_family_counts": {
+        "eight_bin": 2,
+        "one_window": 3,
+        "two_window": 3
+      }
+    },
+    "14": {
+      "physical_n": 14,
+      "n_records": 8,
+      "n_censored_records": 0,
+      "n_parents": 4,
+      "headroom": {
+        "n_parents": 4,
+        "mean": 0.1430109732974839,
+        "std": 0.05889253577286666,
+        "min": 0.09743285419258996,
+        "max": 0.22791944664067199,
+        "quantiles": {
+          "p10": 0.10126804330970618,
+          "p25": 0.10702082698538053,
+          "p50": 0.12334579617833685,
+          "p75": 0.15933594249044025,
+          "p90": 0.20048604498057931
+        },
+        "parent_bootstrap_ci": {
+          "low": 0.10382483605445034,
+          "high": 0.19849378945958168,
+          "confidence": 0.95,
+          "resamples": 10000,
+          "unit_of_independence": "logical_parent",
+          "status": "ok",
+          "includes_training_seed_uncertainty": false
+        }
+      },
+      "best_family_counts": {
+        "eight_bin": 1,
+        "one_window": 3,
+        "two_window": 4
+      }
+    }
+  },
+  "best_family_counts": {
+    "eight_bin": 3,
+    "one_window": 8,
+    "two_window": 13
+  },
+  "records_with_audit_failures": 0,
+  "audit_failure_reasons": {},
+  "records_with_inconsistent_linear_reference": 0,
+  "total_objective_calls": 2328,
+  "total_integrator_steps": 6691803,
+  "verdict": "resolved_headroom_present",
+  "scope": "finite-budget best-found reference; headroom is a lower bound on control gain and censored rows are excluded from every headroom statistic above",
+  "failed_units": 0,
+  "failed_unit_ids": [],
+  "failure_reasons": {},
+  "sweep": {
+    "command": "control-sweep",
+    "settings": {
+      "split": "validation",
+      "families": [
+        "linear",
+        "one_window",
+        "two_window",
+        "eight_bin"
+      ],
+      "budget": 32,
+      "seed": 0,
+      "ambiguity_margin": 1.0,
+      "reference_floor": 0.01,
+      "allow_test_adaptation": false,
+      "backend": "cupy",
+      "tolerance": 0.0002,
+      "initial_steps": 128,
+      "max_steps": 16384,
+      "max_ds_dtau": 4.0,
+      "teacher_methods": [],
+      "strategy": "sobol_local",
+      "retain_full_trials": true
+    },
+    "settings_hash": "068d3e06bbd9a4e341dc86bb799a03b4894c9010211e3c8a408da8f3f1de5d2f",
+    "source_hash": "80a858a7b77851e7b0a5b3280383d7bb6c6857b2566b662c3353ff410e12c6fa",
+    "status": "ok",
+    "data_dir": "/home/nguyencongt/runs/zephyr_data",
+    "requested_objective_calls_per_unit": 97
+  }
+}

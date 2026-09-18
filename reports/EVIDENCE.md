@@ -69,8 +69,9 @@ directory; every caveat is load-bearing, not decoration.
 |---|---|
 | **Claim** | On genuine Pegasus P16 connectivity, headroom is 0.1362 / 0.1649 / 0.1312 at 10 / 12 / 14 physical qubits — no decay. |
 | **Evidence** | 24 validation records over 12 parents, 0 censored, verdict `resolved_headroom_present`; train split complete at 144 records with the same picture (0.1466 / 0.1411 / 0.1471 / 0.1321 at 10 / 11 / 12 / 14). `two_window` wins 12 of 12 parents. |
+| **Second topology** | **Zephyr Z15** (7440 qubits, 71736 couplers), independently generated: validation headroom 0.1479 [0.1150, 0.1867] and train 0.1339 [0.1183, 0.1495], **0% censored on both splits**. The two vendor graphs agree on the headline to within 0.004. `zephyr_2026-09-18/` |
 | **Artifact** | `pegasus_2026-09-17/` |
-| **Does not cover** | Real connectivity is **not a real device**: closed-system simulation, no noise, no calibration drift, no QPU job ever submitted. Budget 32 here against 64 in the main campaign. 12 parents give wide overlapping intervals — "does not decay" holds, "is constant" does not. |
+| **Does not cover** | Real connectivity is **not a real device**: closed-system simulation, no noise, no calibration drift, no QPU job ever submitted. Budget 32 here against 64 in the main campaign. Zephyr's train split declines mildly with size (0.1559, 0.1426, 0.1084 at 10/12/14) where its validation split does not (0.1178, 0.1830, 0.1430), so **"headroom persists" is supported and "headroom is flat in size" is not**. Sizes 9, 11 and 13 carry 1–2 parents and are not points on a curve. |
 
 ## 8. The search baseline is not a straw man
 
