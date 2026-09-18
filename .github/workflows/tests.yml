@@ -14,3 +14,6 @@ jobs:
         env:
           OMP_NUM_THREADS: '1'
           OPENBLAS_NUM_THREADS: '1'
+      - run: python scripts/rebuild_evidence.py --check
+      - run: python reports/paper_campaign_2026-09-18/reproduce.py --check
+      - run: python reports/paper_budget_validation_2026-09-18/reproduce.py --check

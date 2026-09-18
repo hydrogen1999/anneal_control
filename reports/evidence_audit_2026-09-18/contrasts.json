@@ -1545,7 +1545,7 @@
   },
   "provenance": {
     "analysis_sha256": {
-      "scripts/rebuild_evidence.py": "b8f517bf6af3bba6a68e73522319eb4b40be17785a1f4b7c3ddb10660efbe660",
+      "scripts/rebuild_evidence.py": "9f05c5f3ec919cda1deb9c89b504bcb701567e8527451c462ba05fb08a3aa646",
       "src/annealctrl/contrasts.py": "62d538d4e1810a4718d3e6b1168d7d148bcaca2934e79e710ec79f7a908db6a6",
       "src/annealctrl/headroom.py": "a14cadbfebe26929e43f73f1a348c4863de8609e033318a4e0f6151287ecfeec",
       "src/annealctrl/paper_table.py": "e4049ec63bd170d5666b74a206129aef24032c624d15ce03d549c829f30644c3"
@@ -1556,7 +1556,8 @@
       "reports/comparison_2026-09-17/policy_gradient_rows.json": "3c48948bebb5cccabe5d04b7b2685740fcc6d7c022601f8f69b6b0eff2307d12",
       "reports/comparison_2026-09-17/testref_rows.json": "fcb176cd1224cc2150cf4162e9e7aa8e3eda284ff864e974c43184dc3c70b45b",
       "reports/heldout_2026-09-17/heldout_records.json": "0379b399e4cf6734a40ef2853c134da4d263387c84b895334104d4e4f48c5d7b",
-      "reports/pegasus_learned_2026-09-18/heldout_records.json": "d2be1f3a07f6235ec0bac73015ef907cf605da4f9ce71d33fb0b024e63c4578f"
+      "reports/pegasus_learned_2026-09-18/heldout_records.json": "d2be1f3a07f6235ec0bac73015ef907cf605da4f9ce71d33fb0b024e63c4578f",
+      "reports/pegasus_learned_2026-09-18/transfer.json": "6a0c022627a0491f5de0051f7aab7a5690773ce4589b306fabcd638947e456b8"
     },
     "scope": "reanalysis of archived outcomes only; no new training or simulator queries",
     "seed": 0,

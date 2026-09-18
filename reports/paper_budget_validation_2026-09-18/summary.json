@@ -1,0 +1,2231 @@
+{
+  "schema_version": 1,
+  "source_hash": "1ccf566c336be9e7208cafee210ecb75908347299245fff6a67f8f4a0f5427ef",
+  "scope": "diagnostic follow-up using same three heldout parents; postpilot protocol decision; not independent confirmation",
+  "n_parents": 3,
+  "n_records": 6,
+  "n_training_seeds": 3,
+  "n_search_seeds": 2,
+  "budgets": [
+    0,
+    1,
+    5,
+    9,
+    17,
+    25
+  ],
+  "checkpoint_arms": [
+    "control",
+    "policy"
+  ],
+  "curves": [
+    {
+      "checkpoint_arm": "control",
+      "method": "bank",
+      "budget": 0,
+      "mean_loss": 0.6431365217089189,
+      "per_training_seed_loss": {
+        "0": 0.6431365217089189,
+        "1": 0.6431365217089189,
+        "2": 0.6431365217089189
+      },
+      "mean_online_seconds": 0.0006905347221011956
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "bayesian/bank",
+      "budget": 1,
+      "mean_loss": 0.6599458359236224,
+      "per_training_seed_loss": {
+        "0": 0.6599458359236224,
+        "1": 0.6599458359236224,
+        "2": 0.6599458359236224
+      },
+      "mean_online_seconds": 0.00637871108314256
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "bayesian/bank",
+      "budget": 5,
+      "mean_loss": 0.6152094067353437,
+      "per_training_seed_loss": {
+        "0": 0.6152094067353437,
+        "1": 0.6152094067353437,
+        "2": 0.6152094067353437
+      },
+      "mean_online_seconds": 0.028720993166517578
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "bayesian/bank",
+      "budget": 9,
+      "mean_loss": 0.601833013299895,
+      "per_training_seed_loss": {
+        "0": 0.601833013299895,
+        "1": 0.601833013299895,
+        "2": 0.601833013299895
+      },
+      "mean_online_seconds": 0.049515509222096125
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "bayesian/bank",
+      "budget": 17,
+      "mean_loss": 0.5978435701924402,
+      "per_training_seed_loss": {
+        "0": 0.5978435701924402,
+        "1": 0.5978435701924402,
+        "2": 0.5978435701924402
+      },
+      "mean_online_seconds": 0.09348863586099772
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "bayesian/bank",
+      "budget": 25,
+      "mean_loss": 0.5876406904475889,
+      "per_training_seed_loss": {
+        "0": 0.5876406904475889,
+        "1": 0.5876406904475889,
+        "2": 0.5876406904475889
+      },
+      "mean_online_seconds": 0.1601409308887772
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "bayesian/cold",
+      "budget": 1,
+      "mean_loss": 0.6599458359236224,
+      "per_training_seed_loss": {
+        "0": 0.6599458359236224,
+        "1": 0.6599458359236224,
+        "2": 0.6599458359236224
+      },
+      "mean_online_seconds": 0.005067949777867398
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "bayesian/cold",
+      "budget": 5,
+      "mean_loss": 0.6123447630489137,
+      "per_training_seed_loss": {
+        "0": 0.6123447630489137,
+        "1": 0.6123447630489137,
+        "2": 0.6123447630489137
+      },
+      "mean_online_seconds": 0.02412878036117642
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "bayesian/cold",
+      "budget": 9,
+      "mean_loss": 0.6029522592116165,
+      "per_training_seed_loss": {
+        "0": 0.6029522592116165,
+        "1": 0.6029522592116165,
+        "2": 0.6029522592116165
+      },
+      "mean_online_seconds": 0.04324836558334432
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "bayesian/cold",
+      "budget": 17,
+      "mean_loss": 0.5974550189383567,
+      "per_training_seed_loss": {
+        "0": 0.5974550189383567,
+        "1": 0.5974550189383567,
+        "2": 0.5974550189383567
+      },
+      "mean_online_seconds": 0.08141477041676304
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "bayesian/cold",
+      "budget": 25,
+      "mean_loss": 0.588521949587437,
+      "per_training_seed_loss": {
+        "0": 0.588521949587437,
+        "1": 0.588521949587437,
+        "2": 0.588521949587437
+      },
+      "mean_online_seconds": 0.151415074500038
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "bayesian/direct",
+      "budget": 1,
+      "mean_loss": 0.6599458359236224,
+      "per_training_seed_loss": {
+        "0": 0.6599458359236224,
+        "1": 0.6599458359236224,
+        "2": 0.6599458359236224
+      },
+      "mean_online_seconds": 0.006717523222227504
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "bayesian/direct",
+      "budget": 5,
+      "mean_loss": 0.6169527478833653,
+      "per_training_seed_loss": {
+        "0": 0.6201127956396858,
+        "1": 0.620511715111131,
+        "2": 0.6102337328992791
+      },
+      "mean_online_seconds": 0.03152475733329791
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "bayesian/direct",
+      "budget": 9,
+      "mean_loss": 0.6030951147866128,
+      "per_training_seed_loss": {
+        "0": 0.6031311422068928,
+        "1": 0.6031311422068928,
+        "2": 0.6030230599460528
+      },
+      "mean_online_seconds": 0.05412417238873483
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "bayesian/direct",
+      "budget": 17,
+      "mean_loss": 0.5978435701924402,
+      "per_training_seed_loss": {
+        "0": 0.5978435701924402,
+        "1": 0.5978435701924402,
+        "2": 0.5978435701924402
+      },
+      "mean_online_seconds": 0.09770079747204363
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "bayesian/direct",
+      "budget": 25,
+      "mean_loss": 0.5883755037718458,
+      "per_training_seed_loss": {
+        "0": 0.5884579975362911,
+        "1": 0.588707474454515,
+        "2": 0.5879610393247313
+      },
+      "mean_online_seconds": 0.16078926166659988
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "bayesian/source_global",
+      "budget": 1,
+      "mean_loss": 0.6599458359236224,
+      "per_training_seed_loss": {
+        "0": 0.6599458359236224,
+        "1": 0.6599458359236224,
+        "2": 0.6599458359236224
+      },
+      "mean_online_seconds": 0.0060004957776477056
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "bayesian/source_global",
+      "budget": 5,
+      "mean_loss": 0.6152094078608467,
+      "per_training_seed_loss": {
+        "0": 0.6152094078608467,
+        "1": 0.6152094078608467,
+        "2": 0.6152094078608467
+      },
+      "mean_online_seconds": 0.030313078555536777
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "bayesian/source_global",
+      "budget": 9,
+      "mean_loss": 0.6018330134766945,
+      "per_training_seed_loss": {
+        "0": 0.6018330134766945,
+        "1": 0.6018330134766945,
+        "2": 0.6018330134766945
+      },
+      "mean_online_seconds": 0.05344171541661227
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "bayesian/source_global",
+      "budget": 17,
+      "mean_loss": 0.5978435701924402,
+      "per_training_seed_loss": {
+        "0": 0.5978435701924402,
+        "1": 0.5978435701924402,
+        "2": 0.5978435701924402
+      },
+      "mean_online_seconds": 0.09906222819439688
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "bayesian/source_global",
+      "budget": 25,
+      "mean_loss": 0.5876406904475889,
+      "per_training_seed_loss": {
+        "0": 0.5876406904475889,
+        "1": 0.5876406904475889,
+        "2": 0.5876406904475889
+      },
+      "mean_online_seconds": 0.15946701983322478
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "direct",
+      "budget": 0,
+      "mean_loss": 0.6420968639896341,
+      "per_training_seed_loss": {
+        "0": 0.6531494483307483,
+        "1": 0.657494922785138,
+        "2": 0.6156462208530157
+      },
+      "mean_online_seconds": 0.0011738029999529924
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "finzgar_gp_ucb/bank",
+      "budget": 1,
+      "mean_loss": 0.6599458359236224,
+      "per_training_seed_loss": {
+        "0": 0.6599458359236224,
+        "1": 0.6599458359236224,
+        "2": 0.6599458359236224
+      },
+      "mean_online_seconds": 0.010274647999899066
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "finzgar_gp_ucb/bank",
+      "budget": 5,
+      "mean_loss": 0.6251602604211411,
+      "per_training_seed_loss": {
+        "0": 0.6251602604211411,
+        "1": 0.6251602604211411,
+        "2": 0.6251602604211411
+      },
+      "mean_online_seconds": 0.037380896388842504
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "finzgar_gp_ucb/bank",
+      "budget": 9,
+      "mean_loss": 0.6149060627611729,
+      "per_training_seed_loss": {
+        "0": 0.6149060627611729,
+        "1": 0.6149060627611729,
+        "2": 0.6149060627611729
+      },
+      "mean_online_seconds": 0.06238514158331377
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "finzgar_gp_ucb/bank",
+      "budget": 17,
+      "mean_loss": 0.5928606814389537,
+      "per_training_seed_loss": {
+        "0": 0.5928606814389537,
+        "1": 0.5928606814389537,
+        "2": 0.5928606814389537
+      },
+      "mean_online_seconds": 0.18433177199992515
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "finzgar_gp_ucb/bank",
+      "budget": 25,
+      "mean_loss": 0.5889123049462762,
+      "per_training_seed_loss": {
+        "0": 0.5889123049462762,
+        "1": 0.5889123049462762,
+        "2": 0.5889123049462762
+      },
+      "mean_online_seconds": 0.3346959655276957
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "finzgar_gp_ucb/cold",
+      "budget": 1,
+      "mean_loss": 0.6599458359236224,
+      "per_training_seed_loss": {
+        "0": 0.6599458359236224,
+        "1": 0.6599458359236224,
+        "2": 0.6599458359236224
+      },
+      "mean_online_seconds": 0.006684815722110216
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "finzgar_gp_ucb/cold",
+      "budget": 5,
+      "mean_loss": 0.6329590759424676,
+      "per_training_seed_loss": {
+        "0": 0.6329590759424676,
+        "1": 0.6329590759424676,
+        "2": 0.6329590759424676
+      },
+      "mean_online_seconds": 0.029263806444406428
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "finzgar_gp_ucb/cold",
+      "budget": 9,
+      "mean_loss": 0.6181006601561475,
+      "per_training_seed_loss": {
+        "0": 0.6181006601561475,
+        "1": 0.6181006601561475,
+        "2": 0.6181006601561475
+      },
+      "mean_online_seconds": 0.05327122811101819
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "finzgar_gp_ucb/cold",
+      "budget": 17,
+      "mean_loss": 0.595560040392481,
+      "per_training_seed_loss": {
+        "0": 0.595560040392481,
+        "1": 0.595560040392481,
+        "2": 0.595560040392481
+      },
+      "mean_online_seconds": 0.20836769030554733
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "finzgar_gp_ucb/cold",
+      "budget": 25,
+      "mean_loss": 0.590638431409224,
+      "per_training_seed_loss": {
+        "0": 0.590638431409224,
+        "1": 0.590638431409224,
+        "2": 0.590638431409224
+      },
+      "mean_online_seconds": 0.3621343023333136
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "finzgar_gp_ucb/direct",
+      "budget": 1,
+      "mean_loss": 0.6599458359236224,
+      "per_training_seed_loss": {
+        "0": 0.6599458359236224,
+        "1": 0.6599458359236224,
+        "2": 0.6599458359236224
+      },
+      "mean_online_seconds": 0.009967245583412577
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "finzgar_gp_ucb/direct",
+      "budget": 5,
+      "mean_loss": 0.6243362334558652,
+      "per_training_seed_loss": {
+        "0": 0.6308256728483472,
+        "1": 0.6326013639628766,
+        "2": 0.6095816635563717
+      },
+      "mean_online_seconds": 0.03808441625013378
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "finzgar_gp_ucb/direct",
+      "budget": 9,
+      "mean_loss": 0.6132088432238461,
+      "per_training_seed_loss": {
+        "0": 0.6176291000459666,
+        "1": 0.6181036852858149,
+        "2": 0.6038937443397568
+      },
+      "mean_online_seconds": 0.06641819902776863
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "finzgar_gp_ucb/direct",
+      "budget": 17,
+      "mean_loss": 0.5948879777186398,
+      "per_training_seed_loss": {
+        "0": 0.5963672552791488,
+        "1": 0.5949974609449082,
+        "2": 0.5932992169318622
+      },
+      "mean_online_seconds": 0.198554963194561
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "finzgar_gp_ucb/direct",
+      "budget": 25,
+      "mean_loss": 0.5913070867311894,
+      "per_training_seed_loss": {
+        "0": 0.5926250881300944,
+        "1": 0.5900340568014152,
+        "2": 0.5912621152620584
+      },
+      "mean_online_seconds": 0.35720465136121976
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "finzgar_gp_ucb/source_global",
+      "budget": 1,
+      "mean_loss": 0.6599458359236224,
+      "per_training_seed_loss": {
+        "0": 0.6599458359236224,
+        "1": 0.6599458359236224,
+        "2": 0.6599458359236224
+      },
+      "mean_online_seconds": 0.008362466139033131
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "finzgar_gp_ucb/source_global",
+      "budget": 5,
+      "mean_loss": 0.6251602628747089,
+      "per_training_seed_loss": {
+        "0": 0.6251602628747089,
+        "1": 0.6251602628747089,
+        "2": 0.6251602628747089
+      },
+      "mean_online_seconds": 0.032753753388887065
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "finzgar_gp_ucb/source_global",
+      "budget": 9,
+      "mean_loss": 0.6149060629669039,
+      "per_training_seed_loss": {
+        "0": 0.6149060629669039,
+        "1": 0.6149060629669039,
+        "2": 0.6149060629669039
+      },
+      "mean_online_seconds": 0.056768310861166855
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "finzgar_gp_ucb/source_global",
+      "budget": 17,
+      "mean_loss": 0.5928607499079382,
+      "per_training_seed_loss": {
+        "0": 0.5928607499079382,
+        "1": 0.5928607499079382,
+        "2": 0.5928607499079382
+      },
+      "mean_online_seconds": 0.17379927916671375
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "finzgar_gp_ucb/source_global",
+      "budget": 25,
+      "mean_loss": 0.5889123121668637,
+      "per_training_seed_loss": {
+        "0": 0.5889123121668637,
+        "1": 0.5889123121668637,
+        "2": 0.5889123121668637
+      },
+      "mean_online_seconds": 0.3128361585832964
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "linear",
+      "budget": 0,
+      "mean_loss": 0.6599458359236224,
+      "per_training_seed_loss": {
+        "0": 0.6599458359236224,
+        "1": 0.6599458359236224,
+        "2": 0.6599458359236224
+      },
+      "mean_online_seconds": 0.0
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "sobol_local/bank",
+      "budget": 1,
+      "mean_loss": 0.6599458359236224,
+      "per_training_seed_loss": {
+        "0": 0.6599458359236224,
+        "1": 0.6599458359236224,
+        "2": 0.6599458359236224
+      },
+      "mean_online_seconds": 0.0060810353053916
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "sobol_local/bank",
+      "budget": 5,
+      "mean_loss": 0.6176550290727228,
+      "per_training_seed_loss": {
+        "0": 0.6176550290727228,
+        "1": 0.6176550290727228,
+        "2": 0.6176550290727228
+      },
+      "mean_online_seconds": 0.028373025388671317
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "sobol_local/bank",
+      "budget": 9,
+      "mean_loss": 0.5978054561949998,
+      "per_training_seed_loss": {
+        "0": 0.5978054561949998,
+        "1": 0.5978054561949998,
+        "2": 0.5978054561949998
+      },
+      "mean_online_seconds": 0.04728420019430107
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "sobol_local/bank",
+      "budget": 17,
+      "mean_loss": 0.5931488421334317,
+      "per_training_seed_loss": {
+        "0": 0.5931488421334317,
+        "1": 0.5931488421334317,
+        "2": 0.5931488421334317
+      },
+      "mean_online_seconds": 0.0862081657498695
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "sobol_local/bank",
+      "budget": 25,
+      "mean_loss": 0.5913820442097912,
+      "per_training_seed_loss": {
+        "0": 0.5913820442097912,
+        "1": 0.5913820442097912,
+        "2": 0.5913820442097912
+      },
+      "mean_online_seconds": 0.1268477770277059
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "sobol_local/cold",
+      "budget": 1,
+      "mean_loss": 0.6599458359236224,
+      "per_training_seed_loss": {
+        "0": 0.6599458359236224,
+        "1": 0.6599458359236224,
+        "2": 0.6599458359236224
+      },
+      "mean_online_seconds": 0.00568064891672293
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "sobol_local/cold",
+      "budget": 5,
+      "mean_loss": 0.6167343395971793,
+      "per_training_seed_loss": {
+        "0": 0.6167343395971793,
+        "1": 0.6167343395971793,
+        "2": 0.6167343395971793
+      },
+      "mean_online_seconds": 0.0267514875278923
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "sobol_local/cold",
+      "budget": 9,
+      "mean_loss": 0.6098367751365723,
+      "per_training_seed_loss": {
+        "0": 0.6098367751365723,
+        "1": 0.6098367751365723,
+        "2": 0.6098367751365723
+      },
+      "mean_online_seconds": 0.04850301713898059
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "sobol_local/cold",
+      "budget": 17,
+      "mean_loss": 0.593362990561223,
+      "per_training_seed_loss": {
+        "0": 0.593362990561223,
+        "1": 0.593362990561223,
+        "2": 0.593362990561223
+      },
+      "mean_online_seconds": 0.09077605758339914
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "sobol_local/cold",
+      "budget": 25,
+      "mean_loss": 0.591751036232072,
+      "per_training_seed_loss": {
+        "0": 0.591751036232072,
+        "1": 0.591751036232072,
+        "2": 0.591751036232072
+      },
+      "mean_online_seconds": 0.12861938777791693
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "sobol_local/direct",
+      "budget": 1,
+      "mean_loss": 0.6599458359236224,
+      "per_training_seed_loss": {
+        "0": 0.6599458359236224,
+        "1": 0.6599458359236224,
+        "2": 0.6599458359236224
+      },
+      "mean_online_seconds": 0.006693363611121741
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "sobol_local/direct",
+      "budget": 5,
+      "mean_loss": 0.614485530341235,
+      "per_training_seed_loss": {
+        "0": 0.617177847860782,
+        "1": 0.6238352019393592,
+        "2": 0.6024435412235637
+      },
+      "mean_online_seconds": 0.028448489888887707
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "sobol_local/direct",
+      "budget": 9,
+      "mean_loss": 0.5954133674390841,
+      "per_training_seed_loss": {
+        "0": 0.5967192522008238,
+        "1": 0.5972985681970165,
+        "2": 0.5922222819194117
+      },
+      "mean_online_seconds": 0.04795464547217104
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "sobol_local/direct",
+      "budget": 17,
+      "mean_loss": 0.5918452225433818,
+      "per_training_seed_loss": {
+        "0": 0.5924896159858651,
+        "1": 0.5924494256023983,
+        "2": 0.5905966260418821
+      },
+      "mean_online_seconds": 0.08602068333337026
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "sobol_local/direct",
+      "budget": 25,
+      "mean_loss": 0.5900848004691904,
+      "per_training_seed_loss": {
+        "0": 0.5907207961582203,
+        "1": 0.590707945905523,
+        "2": 0.588825659343828
+      },
+      "mean_online_seconds": 0.12613329774995288
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "sobol_local/source_global",
+      "budget": 1,
+      "mean_loss": 0.6599458359236224,
+      "per_training_seed_loss": {
+        "0": 0.6599458359236224,
+        "1": 0.6599458359236224,
+        "2": 0.6599458359236224
+      },
+      "mean_online_seconds": 0.005404116083455948
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "sobol_local/source_global",
+      "budget": 5,
+      "mean_loss": 0.6176550315213812,
+      "per_training_seed_loss": {
+        "0": 0.6176550315213812,
+        "1": 0.6176550315213812,
+        "2": 0.6176550315213812
+      },
+      "mean_online_seconds": 0.028181374083411963
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "sobol_local/source_global",
+      "budget": 9,
+      "mean_loss": 0.5978054578471794,
+      "per_training_seed_loss": {
+        "0": 0.5978054578471794,
+        "1": 0.5978054578471794,
+        "2": 0.5978054578471794
+      },
+      "mean_online_seconds": 0.04737456097238161
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "sobol_local/source_global",
+      "budget": 17,
+      "mean_loss": 0.5931488420950857,
+      "per_training_seed_loss": {
+        "0": 0.5931488420950857,
+        "1": 0.5931488420950857,
+        "2": 0.5931488420950857
+      },
+      "mean_online_seconds": 0.08926943294449706
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "sobol_local/source_global",
+      "budget": 25,
+      "mean_loss": 0.5913820441714824,
+      "per_training_seed_loss": {
+        "0": 0.5913820441714824,
+        "1": 0.5913820441714824,
+        "2": 0.5913820441714824
+      },
+      "mean_online_seconds": 0.1294226458612431
+    },
+    {
+      "checkpoint_arm": "control",
+      "method": "source_global",
+      "budget": 0,
+      "mean_loss": 0.6431365282194598,
+      "per_training_seed_loss": {
+        "0": 0.6431365282194598,
+        "1": 0.6431365282194598,
+        "2": 0.6431365282194598
+      },
+      "mean_online_seconds": 0.0
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "bank",
+      "budget": 0,
+      "mean_loss": 0.6431365217089189,
+      "per_training_seed_loss": {
+        "0": 0.6431365217089189,
+        "1": 0.6431365217089189,
+        "2": 0.6431365217089189
+      },
+      "mean_online_seconds": 0.0006778287223217679
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "bayesian/bank",
+      "budget": 1,
+      "mean_loss": 0.6599458359236224,
+      "per_training_seed_loss": {
+        "0": 0.6599458359236224,
+        "1": 0.6599458359236224,
+        "2": 0.6599458359236224
+      },
+      "mean_online_seconds": 0.006748015500407847
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "bayesian/bank",
+      "budget": 5,
+      "mean_loss": 0.6152094067353437,
+      "per_training_seed_loss": {
+        "0": 0.6152094067353437,
+        "1": 0.6152094067353437,
+        "2": 0.6152094067353437
+      },
+      "mean_online_seconds": 0.028461865583621047
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "bayesian/bank",
+      "budget": 9,
+      "mean_loss": 0.601833013299895,
+      "per_training_seed_loss": {
+        "0": 0.601833013299895,
+        "1": 0.601833013299895,
+        "2": 0.601833013299895
+      },
+      "mean_online_seconds": 0.049454472778077414
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "bayesian/bank",
+      "budget": 17,
+      "mean_loss": 0.5978435701924402,
+      "per_training_seed_loss": {
+        "0": 0.5978435701924402,
+        "1": 0.5978435701924402,
+        "2": 0.5978435701924402
+      },
+      "mean_online_seconds": 0.09119077016705684
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "bayesian/bank",
+      "budget": 25,
+      "mean_loss": 0.5876406904475889,
+      "per_training_seed_loss": {
+        "0": 0.5876406904475889,
+        "1": 0.5876406904475889,
+        "2": 0.5876406904475889
+      },
+      "mean_online_seconds": 0.15202819002812853
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "bayesian/cold",
+      "budget": 1,
+      "mean_loss": 0.6599458359236224,
+      "per_training_seed_loss": {
+        "0": 0.6599458359236224,
+        "1": 0.6599458359236224,
+        "2": 0.6599458359236224
+      },
+      "mean_online_seconds": 0.00532012133349882
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "bayesian/cold",
+      "budget": 5,
+      "mean_loss": 0.6123447630489137,
+      "per_training_seed_loss": {
+        "0": 0.6123447630489137,
+        "1": 0.6123447630489137,
+        "2": 0.6123447630489137
+      },
+      "mean_online_seconds": 0.024625821166864625
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "bayesian/cold",
+      "budget": 9,
+      "mean_loss": 0.6029522592116165,
+      "per_training_seed_loss": {
+        "0": 0.6029522592116165,
+        "1": 0.6029522592116165,
+        "2": 0.6029522592116165
+      },
+      "mean_online_seconds": 0.04401578586129693
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "bayesian/cold",
+      "budget": 17,
+      "mean_loss": 0.5974550189383567,
+      "per_training_seed_loss": {
+        "0": 0.5974550189383567,
+        "1": 0.5974550189383567,
+        "2": 0.5974550189383567
+      },
+      "mean_online_seconds": 0.08238002863913607
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "bayesian/cold",
+      "budget": 25,
+      "mean_loss": 0.588521949587437,
+      "per_training_seed_loss": {
+        "0": 0.588521949587437,
+        "1": 0.588521949587437,
+        "2": 0.588521949587437
+      },
+      "mean_online_seconds": 0.1606186409446511
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "bayesian/direct",
+      "budget": 1,
+      "mean_loss": 0.6599458359236224,
+      "per_training_seed_loss": {
+        "0": 0.6599458359236224,
+        "1": 0.6599458359236224,
+        "2": 0.6599458359236224
+      },
+      "mean_online_seconds": 0.007152010833326333
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "bayesian/direct",
+      "budget": 5,
+      "mean_loss": 0.619632652220142,
+      "per_training_seed_loss": {
+        "0": 0.6202343473679531,
+        "1": 0.6206148980230076,
+        "2": 0.6180487112694649
+      },
+      "mean_online_seconds": 0.03022477847220115
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "bayesian/direct",
+      "budget": 9,
+      "mean_loss": 0.6031311422068928,
+      "per_training_seed_loss": {
+        "0": 0.6031311422068928,
+        "1": 0.6031311422068928,
+        "2": 0.6031311422068928
+      },
+      "mean_online_seconds": 0.051221851583376415
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "bayesian/direct",
+      "budget": 17,
+      "mean_loss": 0.5978435701924402,
+      "per_training_seed_loss": {
+        "0": 0.5978435701924402,
+        "1": 0.5978435701924402,
+        "2": 0.5978435701924402
+      },
+      "mean_online_seconds": 0.09598650777780271
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "bayesian/direct",
+      "budget": 25,
+      "mean_loss": 0.5887031292247435,
+      "per_training_seed_loss": {
+        "0": 0.5890981924075186,
+        "1": 0.588638970070353,
+        "2": 0.5883722251963591
+      },
+      "mean_online_seconds": 0.16207712758336534
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "bayesian/source_global",
+      "budget": 1,
+      "mean_loss": 0.6599458359236224,
+      "per_training_seed_loss": {
+        "0": 0.6599458359236224,
+        "1": 0.6599458359236224,
+        "2": 0.6599458359236224
+      },
+      "mean_online_seconds": 0.005936396444515897
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "bayesian/source_global",
+      "budget": 5,
+      "mean_loss": 0.6152094078608467,
+      "per_training_seed_loss": {
+        "0": 0.6152094078608467,
+        "1": 0.6152094078608467,
+        "2": 0.6152094078608467
+      },
+      "mean_online_seconds": 0.032590468777976236
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "bayesian/source_global",
+      "budget": 9,
+      "mean_loss": 0.6018330134766945,
+      "per_training_seed_loss": {
+        "0": 0.6018330134766945,
+        "1": 0.6018330134766945,
+        "2": 0.6018330134766945
+      },
+      "mean_online_seconds": 0.053202457777868195
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "bayesian/source_global",
+      "budget": 17,
+      "mean_loss": 0.5978435701924402,
+      "per_training_seed_loss": {
+        "0": 0.5978435701924402,
+        "1": 0.5978435701924402,
+        "2": 0.5978435701924402
+      },
+      "mean_online_seconds": 0.09793406555574317
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "bayesian/source_global",
+      "budget": 25,
+      "mean_loss": 0.5876406904475889,
+      "per_training_seed_loss": {
+        "0": 0.5876406904475889,
+        "1": 0.5876406904475889,
+        "2": 0.5876406904475889
+      },
+      "mean_online_seconds": 0.1663651052501286
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "direct",
+      "budget": 0,
+      "mean_loss": 0.6529978159739466,
+      "per_training_seed_loss": {
+        "0": 0.6535479119455871,
+        "1": 0.6572857530947004,
+        "2": 0.6481597828815522
+      },
+      "mean_online_seconds": 0.0011609423887522197
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "finzgar_gp_ucb/bank",
+      "budget": 1,
+      "mean_loss": 0.6599458359236224,
+      "per_training_seed_loss": {
+        "0": 0.6599458359236224,
+        "1": 0.6599458359236224,
+        "2": 0.6599458359236224
+      },
+      "mean_online_seconds": 0.008678526666876173
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "finzgar_gp_ucb/bank",
+      "budget": 5,
+      "mean_loss": 0.6251602604211411,
+      "per_training_seed_loss": {
+        "0": 0.6251602604211411,
+        "1": 0.6251602604211411,
+        "2": 0.6251602604211411
+      },
+      "mean_online_seconds": 0.03196158347254317
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "finzgar_gp_ucb/bank",
+      "budget": 9,
+      "mean_loss": 0.6149060627611729,
+      "per_training_seed_loss": {
+        "0": 0.6149060627611729,
+        "1": 0.6149060627611729,
+        "2": 0.6149060627611729
+      },
+      "mean_online_seconds": 0.05559865508356173
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "finzgar_gp_ucb/bank",
+      "budget": 17,
+      "mean_loss": 0.5928606814389537,
+      "per_training_seed_loss": {
+        "0": 0.5928606814389537,
+        "1": 0.5928606814389537,
+        "2": 0.5928606814389537
+      },
+      "mean_online_seconds": 0.17475372641696493
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "finzgar_gp_ucb/bank",
+      "budget": 25,
+      "mean_loss": 0.5889123049462762,
+      "per_training_seed_loss": {
+        "0": 0.5889123049462762,
+        "1": 0.5889123049462762,
+        "2": 0.5889123049462762
+      },
+      "mean_online_seconds": 0.33429367830581214
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "finzgar_gp_ucb/cold",
+      "budget": 1,
+      "mean_loss": 0.6599458359236224,
+      "per_training_seed_loss": {
+        "0": 0.6599458359236224,
+        "1": 0.6599458359236224,
+        "2": 0.6599458359236224
+      },
+      "mean_online_seconds": 0.007044708694542754
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "finzgar_gp_ucb/cold",
+      "budget": 5,
+      "mean_loss": 0.6329590759424676,
+      "per_training_seed_loss": {
+        "0": 0.6329590759424676,
+        "1": 0.6329590759424676,
+        "2": 0.6329590759424676
+      },
+      "mean_online_seconds": 0.02958452658334762
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "finzgar_gp_ucb/cold",
+      "budget": 9,
+      "mean_loss": 0.6181006601561475,
+      "per_training_seed_loss": {
+        "0": 0.6181006601561475,
+        "1": 0.6181006601561475,
+        "2": 0.6181006601561475
+      },
+      "mean_online_seconds": 0.05135984341672561
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "finzgar_gp_ucb/cold",
+      "budget": 17,
+      "mean_loss": 0.595560040392481,
+      "per_training_seed_loss": {
+        "0": 0.595560040392481,
+        "1": 0.595560040392481,
+        "2": 0.595560040392481
+      },
+      "mean_online_seconds": 0.22514512944450063
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "finzgar_gp_ucb/cold",
+      "budget": 25,
+      "mean_loss": 0.590638431409224,
+      "per_training_seed_loss": {
+        "0": 0.590638431409224,
+        "1": 0.590638431409224,
+        "2": 0.590638431409224
+      },
+      "mean_online_seconds": 0.378662649722249
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "finzgar_gp_ucb/direct",
+      "budget": 1,
+      "mean_loss": 0.6599458359236224,
+      "per_training_seed_loss": {
+        "0": 0.6599458359236224,
+        "1": 0.6599458359236224,
+        "2": 0.6599458359236224
+      },
+      "mean_online_seconds": 0.010110776972169333
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "finzgar_gp_ucb/direct",
+      "budget": 5,
+      "mean_loss": 0.6312912764952463,
+      "per_training_seed_loss": {
+        "0": 0.6311060398334875,
+        "1": 0.6325863764589686,
+        "2": 0.6301814131932829
+      },
+      "mean_online_seconds": 0.037261813527796527
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "finzgar_gp_ucb/direct",
+      "budget": 9,
+      "mean_loss": 0.6180464771479653,
+      "per_training_seed_loss": {
+        "0": 0.6177239089533254,
+        "1": 0.6181735570077386,
+        "2": 0.6182419654828323
+      },
+      "mean_online_seconds": 0.06304024752775049
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "finzgar_gp_ucb/direct",
+      "budget": 17,
+      "mean_loss": 0.5973770194704231,
+      "per_training_seed_loss": {
+        "0": 0.5963715905225756,
+        "1": 0.5944184898129024,
+        "2": 0.6013409780757912
+      },
+      "mean_online_seconds": 0.19087494452782672
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "finzgar_gp_ucb/direct",
+      "budget": 25,
+      "mean_loss": 0.5939816938833907,
+      "per_training_seed_loss": {
+        "0": 0.5922903904778588,
+        "1": 0.5914135989055148,
+        "2": 0.5982410922667988
+      },
+      "mean_online_seconds": 0.33872983222216946
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "finzgar_gp_ucb/source_global",
+      "budget": 1,
+      "mean_loss": 0.6599458359236224,
+      "per_training_seed_loss": {
+        "0": 0.6599458359236224,
+        "1": 0.6599458359236224,
+        "2": 0.6599458359236224
+      },
+      "mean_online_seconds": 0.00857074227797562
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "finzgar_gp_ucb/source_global",
+      "budget": 5,
+      "mean_loss": 0.6251602628747089,
+      "per_training_seed_loss": {
+        "0": 0.6251602628747089,
+        "1": 0.6251602628747089,
+        "2": 0.6251602628747089
+      },
+      "mean_online_seconds": 0.035333806055708315
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "finzgar_gp_ucb/source_global",
+      "budget": 9,
+      "mean_loss": 0.6149060629669039,
+      "per_training_seed_loss": {
+        "0": 0.6149060629669039,
+        "1": 0.6149060629669039,
+        "2": 0.6149060629669039
+      },
+      "mean_online_seconds": 0.0578606473335286
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "finzgar_gp_ucb/source_global",
+      "budget": 17,
+      "mean_loss": 0.5928607499079382,
+      "per_training_seed_loss": {
+        "0": 0.5928607499079382,
+        "1": 0.5928607499079382,
+        "2": 0.5928607499079382
+      },
+      "mean_online_seconds": 0.17857426502796947
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "finzgar_gp_ucb/source_global",
+      "budget": 25,
+      "mean_loss": 0.5889123121668637,
+      "per_training_seed_loss": {
+        "0": 0.5889123121668637,
+        "1": 0.5889123121668637,
+        "2": 0.5889123121668637
+      },
+      "mean_online_seconds": 0.33656096866679447
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "linear",
+      "budget": 0,
+      "mean_loss": 0.6599458359236224,
+      "per_training_seed_loss": {
+        "0": 0.6599458359236224,
+        "1": 0.6599458359236224,
+        "2": 0.6599458359236224
+      },
+      "mean_online_seconds": 0.0
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "sobol_local/bank",
+      "budget": 1,
+      "mean_loss": 0.6599458359236224,
+      "per_training_seed_loss": {
+        "0": 0.6599458359236224,
+        "1": 0.6599458359236224,
+        "2": 0.6599458359236224
+      },
+      "mean_online_seconds": 0.0064498331668498094
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "sobol_local/bank",
+      "budget": 5,
+      "mean_loss": 0.6176550290727228,
+      "per_training_seed_loss": {
+        "0": 0.6176550290727228,
+        "1": 0.6176550290727228,
+        "2": 0.6176550290727228
+      },
+      "mean_online_seconds": 0.028680501083449095
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "sobol_local/bank",
+      "budget": 9,
+      "mean_loss": 0.5978054561949998,
+      "per_training_seed_loss": {
+        "0": 0.5978054561949998,
+        "1": 0.5978054561949998,
+        "2": 0.5978054561949998
+      },
+      "mean_online_seconds": 0.04799448150015451
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "sobol_local/bank",
+      "budget": 17,
+      "mean_loss": 0.5931488421334317,
+      "per_training_seed_loss": {
+        "0": 0.5931488421334317,
+        "1": 0.5931488421334317,
+        "2": 0.5931488421334317
+      },
+      "mean_online_seconds": 0.08719472066678058
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "sobol_local/bank",
+      "budget": 25,
+      "mean_loss": 0.5913820442097912,
+      "per_training_seed_loss": {
+        "0": 0.5913820442097912,
+        "1": 0.5913820442097912,
+        "2": 0.5913820442097912
+      },
+      "mean_online_seconds": 0.12684954452793643
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "sobol_local/cold",
+      "budget": 1,
+      "mean_loss": 0.6599458359236224,
+      "per_training_seed_loss": {
+        "0": 0.6599458359236224,
+        "1": 0.6599458359236224,
+        "2": 0.6599458359236224
+      },
+      "mean_online_seconds": 0.006510916527910619
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "sobol_local/cold",
+      "budget": 5,
+      "mean_loss": 0.6167343395971793,
+      "per_training_seed_loss": {
+        "0": 0.6167343395971793,
+        "1": 0.6167343395971793,
+        "2": 0.6167343395971793
+      },
+      "mean_online_seconds": 0.0274544953612753
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "sobol_local/cold",
+      "budget": 9,
+      "mean_loss": 0.6098367751365723,
+      "per_training_seed_loss": {
+        "0": 0.6098367751365723,
+        "1": 0.6098367751365723,
+        "2": 0.6098367751365723
+      },
+      "mean_online_seconds": 0.050647481583483665
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "sobol_local/cold",
+      "budget": 17,
+      "mean_loss": 0.593362990561223,
+      "per_training_seed_loss": {
+        "0": 0.593362990561223,
+        "1": 0.593362990561223,
+        "2": 0.593362990561223
+      },
+      "mean_online_seconds": 0.0933614139168084
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "sobol_local/cold",
+      "budget": 25,
+      "mean_loss": 0.591751036232072,
+      "per_training_seed_loss": {
+        "0": 0.591751036232072,
+        "1": 0.591751036232072,
+        "2": 0.591751036232072
+      },
+      "mean_online_seconds": 0.1293350894445919
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "sobol_local/direct",
+      "budget": 1,
+      "mean_loss": 0.6599458359236224,
+      "per_training_seed_loss": {
+        "0": 0.6599458359236224,
+        "1": 0.6599458359236224,
+        "2": 0.6599458359236224
+      },
+      "mean_online_seconds": 0.00695836077761669
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "sobol_local/direct",
+      "budget": 5,
+      "mean_loss": 0.6209191512846189,
+      "per_training_seed_loss": {
+        "0": 0.6174026602476503,
+        "1": 0.6239279792062674,
+        "2": 0.6214268143999392
+      },
+      "mean_online_seconds": 0.027892229722081333
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "sobol_local/direct",
+      "budget": 9,
+      "mean_loss": 0.5978831381019117,
+      "per_training_seed_loss": {
+        "0": 0.5968558755034004,
+        "1": 0.5972711331661167,
+        "2": 0.5995224056362181
+      },
+      "mean_online_seconds": 0.046858400194272086
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "sobol_local/direct",
+      "budget": 17,
+      "mean_loss": 0.5928518656253168,
+      "per_training_seed_loss": {
+        "0": 0.5924896528306296,
+        "1": 0.5926445500237147,
+        "2": 0.593421394021606
+      },
+      "mean_online_seconds": 0.08479819102752927
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "sobol_local/direct",
+      "budget": 25,
+      "mean_loss": 0.5903157966117707,
+      "per_training_seed_loss": {
+        "0": 0.5907208282779091,
+        "1": 0.5897216570401653,
+        "2": 0.5905049045172378
+      },
+      "mean_online_seconds": 0.12472665499977766
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "sobol_local/source_global",
+      "budget": 1,
+      "mean_loss": 0.6599458359236224,
+      "per_training_seed_loss": {
+        "0": 0.6599458359236224,
+        "1": 0.6599458359236224,
+        "2": 0.6599458359236224
+      },
+      "mean_online_seconds": 0.005695846250091563
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "sobol_local/source_global",
+      "budget": 5,
+      "mean_loss": 0.6176550315213812,
+      "per_training_seed_loss": {
+        "0": 0.6176550315213812,
+        "1": 0.6176550315213812,
+        "2": 0.6176550315213812
+      },
+      "mean_online_seconds": 0.027556417277840712
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "sobol_local/source_global",
+      "budget": 9,
+      "mean_loss": 0.5978054578471794,
+      "per_training_seed_loss": {
+        "0": 0.5978054578471794,
+        "1": 0.5978054578471794,
+        "2": 0.5978054578471794
+      },
+      "mean_online_seconds": 0.04630525311118719
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "sobol_local/source_global",
+      "budget": 17,
+      "mean_loss": 0.5931488420950857,
+      "per_training_seed_loss": {
+        "0": 0.5931488420950857,
+        "1": 0.5931488420950857,
+        "2": 0.5931488420950857
+      },
+      "mean_online_seconds": 0.08544974369455201
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "sobol_local/source_global",
+      "budget": 25,
+      "mean_loss": 0.5913820441714824,
+      "per_training_seed_loss": {
+        "0": 0.5913820441714824,
+        "1": 0.5913820441714824,
+        "2": 0.5913820441714824
+      },
+      "mean_online_seconds": 0.1252052288889192
+    },
+    {
+      "checkpoint_arm": "policy",
+      "method": "source_global",
+      "budget": 0,
+      "mean_loss": 0.6431365282194598,
+      "per_training_seed_loss": {
+        "0": 0.6431365282194598,
+        "1": 0.6431365282194598,
+        "2": 0.6431365282194598
+      },
+      "mean_online_seconds": 0.0
+    }
+  ],
+  "horizon25_contrasts": [
+    {
+      "checkpoint_arm": "control",
+      "schema_version": 1,
+      "method_a": "sobol_local/cold",
+      "method_b": "sobol_local/bank",
+      "mode": "budget_25",
+      "key": "loss",
+      "n_parents": 3,
+      "n_seeds": 3,
+      "mean_difference": -0.00036899202228074524,
+      "per_seed_mean_difference": {
+        "0": -0.00036899202228074524,
+        "1": -0.00036899202228074524,
+        "2": -0.00036899202228074524
+      },
+      "ci_low": -0.008040453590491325,
+      "ci_high": 0.00489113632148136,
+      "confidence": 0.95,
+      "resamples": 2000,
+      "correction": "none",
+      "p_value": null,
+      "unit_of_resampling": "crossed_logical_parent_and_training_seed",
+      "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+      "reference": "https://arxiv.org/abs/0712.1111",
+      "scope": "descriptive crossed-factor percentile interval; parents and training seeds resampled independently; conditional on the fixed training dataset and recipe; not a multiplicity-adjusted test or evidence of equivalence; uncertainty with few seeds is poorly resolved",
+      "status": "ok"
+    },
+    {
+      "checkpoint_arm": "control",
+      "schema_version": 1,
+      "method_a": "sobol_local/source_global",
+      "method_b": "sobol_local/bank",
+      "mode": "budget_25",
+      "key": "loss",
+      "n_parents": 3,
+      "n_seeds": 3,
+      "mean_difference": 3.830885608735457e-11,
+      "per_seed_mean_difference": {
+        "0": 3.830885608735457e-11,
+        "1": 3.830885608735457e-11,
+        "2": 3.830885608735457e-11
+      },
+      "ci_low": -4.887201754399939e-13,
+      "ci_high": 1.1544792899442768e-10,
+      "confidence": 0.95,
+      "resamples": 2000,
+      "correction": "none",
+      "p_value": null,
+      "unit_of_resampling": "crossed_logical_parent_and_training_seed",
+      "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+      "reference": "https://arxiv.org/abs/0712.1111",
+      "scope": "descriptive crossed-factor percentile interval; parents and training seeds resampled independently; conditional on the fixed training dataset and recipe; not a multiplicity-adjusted test or evidence of equivalence; uncertainty with few seeds is poorly resolved",
+      "status": "ok"
+    },
+    {
+      "checkpoint_arm": "control",
+      "schema_version": 1,
+      "method_a": "sobol_local/cold",
+      "method_b": "sobol_local/direct",
+      "mode": "budget_25",
+      "key": "loss",
+      "n_parents": 3,
+      "n_seeds": 3,
+      "mean_difference": -0.001666235762881527,
+      "per_seed_mean_difference": {
+        "0": -0.0010302400738517181,
+        "1": -0.0010430903265489233,
+        "2": -0.0029253768882439393
+      },
+      "ci_low": -0.008044089830493983,
+      "ci_high": 0.0026192742953022995,
+      "confidence": 0.95,
+      "resamples": 2000,
+      "correction": "none",
+      "p_value": null,
+      "unit_of_resampling": "crossed_logical_parent_and_training_seed",
+      "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+      "reference": "https://arxiv.org/abs/0712.1111",
+      "scope": "descriptive crossed-factor percentile interval; parents and training seeds resampled independently; conditional on the fixed training dataset and recipe; not a multiplicity-adjusted test or evidence of equivalence; uncertainty with few seeds is poorly resolved",
+      "status": "ok"
+    },
+    {
+      "checkpoint_arm": "control",
+      "schema_version": 1,
+      "method_a": "sobol_local/source_global",
+      "method_b": "sobol_local/direct",
+      "mode": "budget_25",
+      "key": "loss",
+      "n_parents": 3,
+      "n_seeds": 3,
+      "mean_difference": -0.0012972437022919256,
+      "per_seed_mean_difference": {
+        "0": -0.0006612480132621168,
+        "1": -0.000674098265959322,
+        "2": -0.002556384827654338
+      },
+      "ci_low": -0.0033008885416102216,
+      "ci_high": -2.226294610441215e-06,
+      "confidence": 0.95,
+      "resamples": 2000,
+      "correction": "none",
+      "p_value": null,
+      "unit_of_resampling": "crossed_logical_parent_and_training_seed",
+      "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+      "reference": "https://arxiv.org/abs/0712.1111",
+      "scope": "descriptive crossed-factor percentile interval; parents and training seeds resampled independently; conditional on the fixed training dataset and recipe; not a multiplicity-adjusted test or evidence of equivalence; uncertainty with few seeds is poorly resolved",
+      "status": "ok"
+    },
+    {
+      "checkpoint_arm": "control",
+      "schema_version": 1,
+      "method_a": "bayesian/cold",
+      "method_b": "bayesian/bank",
+      "mode": "budget_25",
+      "key": "loss",
+      "n_parents": 3,
+      "n_seeds": 3,
+      "mean_difference": -0.0008812591398479896,
+      "per_seed_mean_difference": {
+        "0": -0.0008812591398479896,
+        "1": -0.0008812591398479896,
+        "2": -0.0008812591398479896
+      },
+      "ci_low": -0.002615937287503478,
+      "ci_high": 1.5763044454386588e-05,
+      "confidence": 0.95,
+      "resamples": 2000,
+      "correction": "none",
+      "p_value": null,
+      "unit_of_resampling": "crossed_logical_parent_and_training_seed",
+      "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+      "reference": "https://arxiv.org/abs/0712.1111",
+      "scope": "descriptive crossed-factor percentile interval; parents and training seeds resampled independently; conditional on the fixed training dataset and recipe; not a multiplicity-adjusted test or evidence of equivalence; uncertainty with few seeds is poorly resolved",
+      "status": "ok"
+    },
+    {
+      "checkpoint_arm": "control",
+      "schema_version": 1,
+      "method_a": "bayesian/source_global",
+      "method_b": "bayesian/bank",
+      "mode": "budget_25",
+      "key": "loss",
+      "n_parents": 3,
+      "n_seeds": 3,
+      "mean_difference": 0.0,
+      "per_seed_mean_difference": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0
+      },
+      "ci_low": 0.0,
+      "ci_high": 0.0,
+      "confidence": 0.95,
+      "resamples": 2000,
+      "correction": "none",
+      "p_value": null,
+      "unit_of_resampling": "crossed_logical_parent_and_training_seed",
+      "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+      "reference": "https://arxiv.org/abs/0712.1111",
+      "scope": "descriptive crossed-factor percentile interval; parents and training seeds resampled independently; conditional on the fixed training dataset and recipe; not a multiplicity-adjusted test or evidence of equivalence; uncertainty with few seeds is poorly resolved",
+      "status": "ok"
+    },
+    {
+      "checkpoint_arm": "control",
+      "schema_version": 1,
+      "method_a": "bayesian/cold",
+      "method_b": "bayesian/direct",
+      "mode": "budget_25",
+      "key": "loss",
+      "n_parents": 3,
+      "n_seeds": 3,
+      "mean_difference": -0.00014644581559115756,
+      "per_seed_mean_difference": {
+        "0": -6.395205114580656e-05,
+        "1": 0.000185524867078087,
+        "2": -0.0005609102627057531
+      },
+      "ci_low": -0.0009388682156893369,
+      "ci_high": 0.0004612690388083133,
+      "confidence": 0.95,
+      "resamples": 2000,
+      "correction": "none",
+      "p_value": null,
+      "unit_of_resampling": "crossed_logical_parent_and_training_seed",
+      "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+      "reference": "https://arxiv.org/abs/0712.1111",
+      "scope": "descriptive crossed-factor percentile interval; parents and training seeds resampled independently; conditional on the fixed training dataset and recipe; not a multiplicity-adjusted test or evidence of equivalence; uncertainty with few seeds is poorly resolved",
+      "status": "ok"
+    },
+    {
+      "checkpoint_arm": "control",
+      "schema_version": 1,
+      "method_a": "bayesian/source_global",
+      "method_b": "bayesian/direct",
+      "mode": "budget_25",
+      "key": "loss",
+      "n_parents": 3,
+      "n_seeds": 3,
+      "mean_difference": 0.0007348133242568321,
+      "per_seed_mean_difference": {
+        "0": 0.000817307088702183,
+        "1": 0.0010667840069260766,
+        "2": 0.00032034887714223653
+      },
+      "ci_low": -0.0007133151852330371,
+      "ci_high": 0.002712718326224032,
+      "confidence": 0.95,
+      "resamples": 2000,
+      "correction": "none",
+      "p_value": null,
+      "unit_of_resampling": "crossed_logical_parent_and_training_seed",
+      "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+      "reference": "https://arxiv.org/abs/0712.1111",
+      "scope": "descriptive crossed-factor percentile interval; parents and training seeds resampled independently; conditional on the fixed training dataset and recipe; not a multiplicity-adjusted test or evidence of equivalence; uncertainty with few seeds is poorly resolved",
+      "status": "ok"
+    },
+    {
+      "checkpoint_arm": "control",
+      "schema_version": 1,
+      "method_a": "finzgar_gp_ucb/cold",
+      "method_b": "finzgar_gp_ucb/bank",
+      "mode": "budget_25",
+      "key": "loss",
+      "n_parents": 3,
+      "n_seeds": 3,
+      "mean_difference": -0.0017261264629478597,
+      "per_seed_mean_difference": {
+        "0": -0.0017261264629478597,
+        "1": -0.0017261264629478597,
+        "2": -0.0017261264629478597
+      },
+      "ci_low": -0.0047398666879540086,
+      "ci_high": 0.000560181015522021,
+      "confidence": 0.95,
+      "resamples": 2000,
+      "correction": "none",
+      "p_value": null,
+      "unit_of_resampling": "crossed_logical_parent_and_training_seed",
+      "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+      "reference": "https://arxiv.org/abs/0712.1111",
+      "scope": "descriptive crossed-factor percentile interval; parents and training seeds resampled independently; conditional on the fixed training dataset and recipe; not a multiplicity-adjusted test or evidence of equivalence; uncertainty with few seeds is poorly resolved",
+      "status": "ok"
+    },
+    {
+      "checkpoint_arm": "control",
+      "schema_version": 1,
+      "method_a": "finzgar_gp_ucb/source_global",
+      "method_b": "finzgar_gp_ucb/bank",
+      "mode": "budget_25",
+      "key": "loss",
+      "n_parents": 3,
+      "n_seeds": 3,
+      "mean_difference": -7.2205875352911635e-09,
+      "per_seed_mean_difference": {
+        "0": -7.2205875352911635e-09,
+        "1": -7.2205875352911635e-09,
+        "2": -7.2205875352911635e-09
+      },
+      "ci_low": -2.1310559095155668e-08,
+      "ci_high": 3.167954787386407e-11,
+      "confidence": 0.95,
+      "resamples": 2000,
+      "correction": "none",
+      "p_value": null,
+      "unit_of_resampling": "crossed_logical_parent_and_training_seed",
+      "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+      "reference": "https://arxiv.org/abs/0712.1111",
+      "scope": "descriptive crossed-factor percentile interval; parents and training seeds resampled independently; conditional on the fixed training dataset and recipe; not a multiplicity-adjusted test or evidence of equivalence; uncertainty with few seeds is poorly resolved",
+      "status": "ok"
+    },
+    {
+      "checkpoint_arm": "control",
+      "schema_version": 1,
+      "method_a": "finzgar_gp_ucb/cold",
+      "method_b": "finzgar_gp_ucb/direct",
+      "mode": "budget_25",
+      "key": "loss",
+      "n_parents": 3,
+      "n_seeds": 3,
+      "mean_difference": 0.0006686553219652626,
+      "per_seed_mean_difference": {
+        "0": 0.001986656720870339,
+        "1": -0.0006043746078088589,
+        "2": 0.0006236838528343077
+      },
+      "ci_low": -0.0020021486088286724,
+      "ci_high": 0.004330888944903966,
+      "confidence": 0.95,
+      "resamples": 2000,
+      "correction": "none",
+      "p_value": null,
+      "unit_of_resampling": "crossed_logical_parent_and_training_seed",
+      "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+      "reference": "https://arxiv.org/abs/0712.1111",
+      "scope": "descriptive crossed-factor percentile interval; parents and training seeds resampled independently; conditional on the fixed training dataset and recipe; not a multiplicity-adjusted test or evidence of equivalence; uncertainty with few seeds is poorly resolved",
+      "status": "ok"
+    },
+    {
+      "checkpoint_arm": "control",
+      "schema_version": 1,
+      "method_a": "finzgar_gp_ucb/source_global",
+      "method_b": "finzgar_gp_ucb/direct",
+      "mode": "budget_25",
+      "key": "loss",
+      "n_parents": 3,
+      "n_seeds": 3,
+      "mean_difference": 0.002394774564325587,
+      "per_seed_mean_difference": {
+        "0": 0.0037127759632306634,
+        "1": 0.0011217446345514654,
+        "2": 0.0023498030951946323
+      },
+      "ci_low": 0.0006764991853999832,
+      "ci_high": 0.0048458097111595605,
+      "confidence": 0.95,
+      "resamples": 2000,
+      "correction": "none",
+      "p_value": null,
+      "unit_of_resampling": "crossed_logical_parent_and_training_seed",
+      "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+      "reference": "https://arxiv.org/abs/0712.1111",
+      "scope": "descriptive crossed-factor percentile interval; parents and training seeds resampled independently; conditional on the fixed training dataset and recipe; not a multiplicity-adjusted test or evidence of equivalence; uncertainty with few seeds is poorly resolved",
+      "status": "ok"
+    },
+    {
+      "checkpoint_arm": "policy",
+      "schema_version": 1,
+      "method_a": "sobol_local/cold",
+      "method_b": "sobol_local/bank",
+      "mode": "budget_25",
+      "key": "loss",
+      "n_parents": 3,
+      "n_seeds": 3,
+      "mean_difference": -0.00036899202228074524,
+      "per_seed_mean_difference": {
+        "0": -0.00036899202228074524,
+        "1": -0.00036899202228074524,
+        "2": -0.00036899202228074524
+      },
+      "ci_low": -0.008040453590491325,
+      "ci_high": 0.00489113632148136,
+      "confidence": 0.95,
+      "resamples": 2000,
+      "correction": "none",
+      "p_value": null,
+      "unit_of_resampling": "crossed_logical_parent_and_training_seed",
+      "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+      "reference": "https://arxiv.org/abs/0712.1111",
+      "scope": "descriptive crossed-factor percentile interval; parents and training seeds resampled independently; conditional on the fixed training dataset and recipe; not a multiplicity-adjusted test or evidence of equivalence; uncertainty with few seeds is poorly resolved",
+      "status": "ok"
+    },
+    {
+      "checkpoint_arm": "policy",
+      "schema_version": 1,
+      "method_a": "sobol_local/source_global",
+      "method_b": "sobol_local/bank",
+      "mode": "budget_25",
+      "key": "loss",
+      "n_parents": 3,
+      "n_seeds": 3,
+      "mean_difference": 3.830885608735457e-11,
+      "per_seed_mean_difference": {
+        "0": 3.830885608735457e-11,
+        "1": 3.830885608735457e-11,
+        "2": 3.830885608735457e-11
+      },
+      "ci_low": -4.887201754399939e-13,
+      "ci_high": 1.1544792899442768e-10,
+      "confidence": 0.95,
+      "resamples": 2000,
+      "correction": "none",
+      "p_value": null,
+      "unit_of_resampling": "crossed_logical_parent_and_training_seed",
+      "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+      "reference": "https://arxiv.org/abs/0712.1111",
+      "scope": "descriptive crossed-factor percentile interval; parents and training seeds resampled independently; conditional on the fixed training dataset and recipe; not a multiplicity-adjusted test or evidence of equivalence; uncertainty with few seeds is poorly resolved",
+      "status": "ok"
+    },
+    {
+      "checkpoint_arm": "policy",
+      "schema_version": 1,
+      "method_a": "sobol_local/cold",
+      "method_b": "sobol_local/direct",
+      "mode": "budget_25",
+      "key": "loss",
+      "n_parents": 3,
+      "n_seeds": 3,
+      "mean_difference": -0.001435239620301269,
+      "per_seed_mean_difference": {
+        "0": -0.001030207954162976,
+        "1": -0.0020293791919067106,
+        "2": -0.00124613171483412
+      },
+      "ci_low": -0.00804126993873211,
+      "ci_high": 0.0027010242650941344,
+      "confidence": 0.95,
+      "resamples": 2000,
+      "correction": "none",
+      "p_value": null,
+      "unit_of_resampling": "crossed_logical_parent_and_training_seed",
+      "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+      "reference": "https://arxiv.org/abs/0712.1111",
+      "scope": "descriptive crossed-factor percentile interval; parents and training seeds resampled independently; conditional on the fixed training dataset and recipe; not a multiplicity-adjusted test or evidence of equivalence; uncertainty with few seeds is poorly resolved",
+      "status": "ok"
+    },
+    {
+      "checkpoint_arm": "policy",
+      "schema_version": 1,
+      "method_a": "sobol_local/source_global",
+      "method_b": "sobol_local/direct",
+      "mode": "budget_25",
+      "key": "loss",
+      "n_parents": 3,
+      "n_seeds": 3,
+      "mean_difference": -0.0010662475597116676,
+      "per_seed_mean_difference": {
+        "0": -0.0006612158935733747,
+        "1": -0.0016603871313171092,
+        "2": -0.0008771396542445187
+      },
+      "ci_low": -0.003956678726539524,
+      "ci_high": 0.0010233900902388848,
+      "confidence": 0.95,
+      "resamples": 2000,
+      "correction": "none",
+      "p_value": null,
+      "unit_of_resampling": "crossed_logical_parent_and_training_seed",
+      "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+      "reference": "https://arxiv.org/abs/0712.1111",
+      "scope": "descriptive crossed-factor percentile interval; parents and training seeds resampled independently; conditional on the fixed training dataset and recipe; not a multiplicity-adjusted test or evidence of equivalence; uncertainty with few seeds is poorly resolved",
+      "status": "ok"
+    },
+    {
+      "checkpoint_arm": "policy",
+      "schema_version": 1,
+      "method_a": "bayesian/cold",
+      "method_b": "bayesian/bank",
+      "mode": "budget_25",
+      "key": "loss",
+      "n_parents": 3,
+      "n_seeds": 3,
+      "mean_difference": -0.0008812591398479896,
+      "per_seed_mean_difference": {
+        "0": -0.0008812591398479896,
+        "1": -0.0008812591398479896,
+        "2": -0.0008812591398479896
+      },
+      "ci_low": -0.002615937287503478,
+      "ci_high": 1.5763044454386588e-05,
+      "confidence": 0.95,
+      "resamples": 2000,
+      "correction": "none",
+      "p_value": null,
+      "unit_of_resampling": "crossed_logical_parent_and_training_seed",
+      "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+      "reference": "https://arxiv.org/abs/0712.1111",
+      "scope": "descriptive crossed-factor percentile interval; parents and training seeds resampled independently; conditional on the fixed training dataset and recipe; not a multiplicity-adjusted test or evidence of equivalence; uncertainty with few seeds is poorly resolved",
+      "status": "ok"
+    },
+    {
+      "checkpoint_arm": "policy",
+      "schema_version": 1,
+      "method_a": "bayesian/source_global",
+      "method_b": "bayesian/bank",
+      "mode": "budget_25",
+      "key": "loss",
+      "n_parents": 3,
+      "n_seeds": 3,
+      "mean_difference": 0.0,
+      "per_seed_mean_difference": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0
+      },
+      "ci_low": 0.0,
+      "ci_high": 0.0,
+      "confidence": 0.95,
+      "resamples": 2000,
+      "correction": "none",
+      "p_value": null,
+      "unit_of_resampling": "crossed_logical_parent_and_training_seed",
+      "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+      "reference": "https://arxiv.org/abs/0712.1111",
+      "scope": "descriptive crossed-factor percentile interval; parents and training seeds resampled independently; conditional on the fixed training dataset and recipe; not a multiplicity-adjusted test or evidence of equivalence; uncertainty with few seeds is poorly resolved",
+      "status": "ok"
+    },
+    {
+      "checkpoint_arm": "policy",
+      "schema_version": 1,
+      "method_a": "bayesian/cold",
+      "method_b": "bayesian/direct",
+      "mode": "budget_25",
+      "key": "loss",
+      "n_parents": 3,
+      "n_seeds": 3,
+      "mean_difference": 0.00018117963730659683,
+      "per_seed_mean_difference": {
+        "0": 0.0005762428200816553,
+        "1": 0.0001170204829160267,
+        "2": -0.0001497243910778915
+      },
+      "ci_low": -0.0004130973927998956,
+      "ci_high": 0.0011183810095934327,
+      "confidence": 0.95,
+      "resamples": 2000,
+      "correction": "none",
+      "p_value": null,
+      "unit_of_resampling": "crossed_logical_parent_and_training_seed",
+      "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+      "reference": "https://arxiv.org/abs/0712.1111",
+      "scope": "descriptive crossed-factor percentile interval; parents and training seeds resampled independently; conditional on the fixed training dataset and recipe; not a multiplicity-adjusted test or evidence of equivalence; uncertainty with few seeds is poorly resolved",
+      "status": "ok"
+    },
+    {
+      "checkpoint_arm": "policy",
+      "schema_version": 1,
+      "method_a": "bayesian/source_global",
+      "method_b": "bayesian/direct",
+      "mode": "budget_25",
+      "key": "loss",
+      "n_parents": 3,
+      "n_seeds": 3,
+      "mean_difference": 0.0010624387771545865,
+      "per_seed_mean_difference": {
+        "0": 0.001457501959929645,
+        "1": 0.0009982796227640163,
+        "2": 0.0007315347487700982
+      },
+      "ci_low": -0.00036949421630501816,
+      "ci_high": 0.003564778098957444,
+      "confidence": 0.95,
+      "resamples": 2000,
+      "correction": "none",
+      "p_value": null,
+      "unit_of_resampling": "crossed_logical_parent_and_training_seed",
+      "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+      "reference": "https://arxiv.org/abs/0712.1111",
+      "scope": "descriptive crossed-factor percentile interval; parents and training seeds resampled independently; conditional on the fixed training dataset and recipe; not a multiplicity-adjusted test or evidence of equivalence; uncertainty with few seeds is poorly resolved",
+      "status": "ok"
+    },
+    {
+      "checkpoint_arm": "policy",
+      "schema_version": 1,
+      "method_a": "finzgar_gp_ucb/cold",
+      "method_b": "finzgar_gp_ucb/bank",
+      "mode": "budget_25",
+      "key": "loss",
+      "n_parents": 3,
+      "n_seeds": 3,
+      "mean_difference": -0.0017261264629478597,
+      "per_seed_mean_difference": {
+        "0": -0.0017261264629478597,
+        "1": -0.0017261264629478597,
+        "2": -0.0017261264629478597
+      },
+      "ci_low": -0.0047398666879540086,
+      "ci_high": 0.000560181015522021,
+      "confidence": 0.95,
+      "resamples": 2000,
+      "correction": "none",
+      "p_value": null,
+      "unit_of_resampling": "crossed_logical_parent_and_training_seed",
+      "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+      "reference": "https://arxiv.org/abs/0712.1111",
+      "scope": "descriptive crossed-factor percentile interval; parents and training seeds resampled independently; conditional on the fixed training dataset and recipe; not a multiplicity-adjusted test or evidence of equivalence; uncertainty with few seeds is poorly resolved",
+      "status": "ok"
+    },
+    {
+      "checkpoint_arm": "policy",
+      "schema_version": 1,
+      "method_a": "finzgar_gp_ucb/source_global",
+      "method_b": "finzgar_gp_ucb/bank",
+      "mode": "budget_25",
+      "key": "loss",
+      "n_parents": 3,
+      "n_seeds": 3,
+      "mean_difference": -7.2205875352911635e-09,
+      "per_seed_mean_difference": {
+        "0": -7.2205875352911635e-09,
+        "1": -7.2205875352911635e-09,
+        "2": -7.2205875352911635e-09
+      },
+      "ci_low": -2.1310559095155668e-08,
+      "ci_high": 3.167954787386407e-11,
+      "confidence": 0.95,
+      "resamples": 2000,
+      "correction": "none",
+      "p_value": null,
+      "unit_of_resampling": "crossed_logical_parent_and_training_seed",
+      "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+      "reference": "https://arxiv.org/abs/0712.1111",
+      "scope": "descriptive crossed-factor percentile interval; parents and training seeds resampled independently; conditional on the fixed training dataset and recipe; not a multiplicity-adjusted test or evidence of equivalence; uncertainty with few seeds is poorly resolved",
+      "status": "ok"
+    },
+    {
+      "checkpoint_arm": "policy",
+      "schema_version": 1,
+      "method_a": "finzgar_gp_ucb/cold",
+      "method_b": "finzgar_gp_ucb/direct",
+      "mode": "budget_25",
+      "key": "loss",
+      "n_parents": 3,
+      "n_seeds": 3,
+      "mean_difference": 0.0033432624741667563,
+      "per_seed_mean_difference": {
+        "0": 0.0016519590686348007,
+        "1": 0.0007751674962907703,
+        "2": 0.0076026608575746986
+      },
+      "ci_low": -0.001606097207074929,
+      "ci_high": 0.008771136413448498,
+      "confidence": 0.95,
+      "resamples": 2000,
+      "correction": "none",
+      "p_value": null,
+      "unit_of_resampling": "crossed_logical_parent_and_training_seed",
+      "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+      "reference": "https://arxiv.org/abs/0712.1111",
+      "scope": "descriptive crossed-factor percentile interval; parents and training seeds resampled independently; conditional on the fixed training dataset and recipe; not a multiplicity-adjusted test or evidence of equivalence; uncertainty with few seeds is poorly resolved",
+      "status": "ok"
+    },
+    {
+      "checkpoint_arm": "policy",
+      "schema_version": 1,
+      "method_a": "finzgar_gp_ucb/source_global",
+      "method_b": "finzgar_gp_ucb/direct",
+      "mode": "budget_25",
+      "key": "loss",
+      "n_parents": 3,
+      "n_seeds": 3,
+      "mean_difference": 0.005069381716527081,
+      "per_seed_mean_difference": {
+        "0": 0.003378078310995125,
+        "1": 0.002501286738651095,
+        "2": 0.009328780099935022
+      },
+      "ci_low": 0.001013186078448025,
+      "ci_high": 0.011744313174802092,
+      "confidence": 0.95,
+      "resamples": 2000,
+      "correction": "none",
+      "p_value": null,
+      "unit_of_resampling": "crossed_logical_parent_and_training_seed",
+      "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+      "reference": "https://arxiv.org/abs/0712.1111",
+      "scope": "descriptive crossed-factor percentile interval; parents and training seeds resampled independently; conditional on the fixed training dataset and recipe; not a multiplicity-adjusted test or evidence of equivalence; uncertainty with few seeds is poorly resolved",
+      "status": "ok"
+    }
+  ],
+  "calls": {
+    "online_search": 21600,
+    "offline_diagnostic": 144
+  },
+  "failures": 0,
+  "interrupted_calls": 0,
+  "optimizer_adaptation": {
+    "complete_trajectories_per_strategy": 288,
+    "gp_ucb_adaptive_steps_per_trajectory": 15,
+    "gp_ei_adaptive_steps_per_trajectory": 8,
+    "basis": "frozen initial-design rules and all 25 outcomes successful; no model-step claim at lower horizons"
+  },
+  "discarded_horizon17_diagnostic_attempt": {
+    "requested_calls": 1622,
+    "finished_calls": 1621,
+    "interrupted_calls": 1,
+    "known_objective_seconds": 8.719358137985182,
+    "quality_results_used": false,
+    "total_cost_is_lower_bound": true
+  },
+  "campaign_observed_seconds": 189.1058318389987,
+  "archive_sha256": "0a1f1b9ee35372e3ae2614582d696747e91fa1e1906c1260b03866b8bc3890bc"
+}

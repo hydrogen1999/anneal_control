@@ -1,0 +1,11 @@
+{
+  "scope": "Owned campaign process returned status complete and exit code0 before this check; both earlier execution sessions ended. Stale lock recovery does not alter scientific artifacts.",
+  "completed_process_exit_code": 0,
+  "removed_stale_lock": true,
+  "stale_lock_contents": {
+    "pid": 6
+  },
+  "exact_artifacts_unchanged": true,
+  "n_files": 2071,
+  "campaign_status": "complete"
+}
