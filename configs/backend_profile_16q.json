@@ -38,7 +38,7 @@
     4.0
   ],
   "candidates": 8,
-  "candidate_batch_size": 8,
+  "candidate_batch_size": 4,
   "spectral_points": 3,
   "teacher": {
     "mode": "none"
@@ -47,8 +47,8 @@
   "max_steps": 16384,
   "label_state_tolerance": 0.0002,
   "max_physical_qubits": 16,
-  "endpoint_memory_mb": 4096,
-  "state_memory_mb": 16384,
+  "endpoint_memory_mb": 2050,
+  "state_memory_mb": 4104,
   "endpoint_max_qubits": 16,
-  "_note": "Backend crossover at 16 physical qubits, 6 parents x 8 candidates = 48 labels over 2 families. Parents must be at least three per family (6 here) or generation.parent_splits cannot fill train/validation/test. teacher.mode=none, so this measures propagation throughput. Fewer labels at large sizes amortise CuPy's fixed startup over less work, biasing the ratio DOWN against the GPU -- the conservative direction."
+  "_note": "Backend throughput at 16 physical qubits. The point of this ladder is that only the spectral teacher is exponentially capped: a full eigendecomposition needs 6.9e+01 GB at this size, while the state vector needs 0.001 GB and the basis observables 0.003 GB. teacher.mode=none, so this measures the propagation path that every non-oracle claim in the project actually uses."
 }
