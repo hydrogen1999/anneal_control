@@ -1,0 +1,583 @@
+{
+ "schema_version": 1,
+ "n_records": 24,
+ "rows": [
+  {
+   "record_id": "parent_0016_e0_k0_t0",
+   "parent_id": "parent_0016",
+   "physical_n": 6,
+   "runtime": 1.0,
+   "best": {
+    "peak_entropy": 0.9259220189153199,
+    "fraction_of_volume_law": 0.4452743683130097,
+    "required_bond_dimension": 3,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "worst": {
+    "peak_entropy": 1.2788464640159742,
+    "fraction_of_volume_law": 0.6149951505647441,
+    "required_bond_dimension": 4,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "linear": {
+    "peak_entropy": 1.0266408789634471,
+    "fraction_of_volume_law": 0.4937099016181506,
+    "required_bond_dimension": 3,
+    "volume_law_entropy": 2.0794415416798357
+   }
+  },
+  {
+   "record_id": "parent_0016_e0_k0_t1",
+   "parent_id": "parent_0016",
+   "physical_n": 6,
+   "runtime": 4.0,
+   "best": {
+    "peak_entropy": 1.3627178308327532,
+    "fraction_of_volume_law": 0.6553287522244595,
+    "required_bond_dimension": 4,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "worst": {
+    "peak_entropy": 1.0867819143570694,
+    "fraction_of_volume_law": 0.522631626123586,
+    "required_bond_dimension": 3,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "linear": {
+    "peak_entropy": 1.2450931291447993,
+    "fraction_of_volume_law": 0.5987632276207079,
+    "required_bond_dimension": 4,
+    "volume_law_entropy": 2.0794415416798357
+   }
+  },
+  {
+   "record_id": "parent_0016_e0_k0_t2",
+   "parent_id": "parent_0016",
+   "physical_n": 6,
+   "runtime": 12.0,
+   "best": {
+    "peak_entropy": 1.2233356281901582,
+    "fraction_of_volume_law": 0.5883000813775754,
+    "required_bond_dimension": 4,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "worst": {
+    "peak_entropy": 0.9044384509641928,
+    "fraction_of_volume_law": 0.4349429559984457,
+    "required_bond_dimension": 3,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "linear": {
+    "peak_entropy": 1.050466724065409,
+    "fraction_of_volume_law": 0.5051677111426803,
+    "required_bond_dimension": 3,
+    "volume_law_entropy": 2.0794415416798357
+   }
+  },
+  {
+   "record_id": "parent_0016_e0_k1_t0",
+   "parent_id": "parent_0016",
+   "physical_n": 6,
+   "runtime": 1.0,
+   "best": {
+    "peak_entropy": 0.6569706209747259,
+    "fraction_of_volume_law": 0.3159360856299933,
+    "required_bond_dimension": 2,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "worst": {
+    "peak_entropy": 1.128922939399015,
+    "fraction_of_volume_law": 0.5428971754055836,
+    "required_bond_dimension": 4,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "linear": {
+    "peak_entropy": 0.7411308953067072,
+    "fraction_of_volume_law": 0.3564086224361947,
+    "required_bond_dimension": 3,
+    "volume_law_entropy": 2.0794415416798357
+   }
+  },
+  {
+   "record_id": "parent_0016_e0_k1_t1",
+   "parent_id": "parent_0016",
+   "physical_n": 6,
+   "runtime": 4.0,
+   "best": {
+    "peak_entropy": 1.0083895833139032,
+    "fraction_of_volume_law": 0.48493288371035215,
+    "required_bond_dimension": 3,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "worst": {
+    "peak_entropy": 0.8540605437222359,
+    "fraction_of_volume_law": 0.41071630368233386,
+    "required_bond_dimension": 3,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "linear": {
+    "peak_entropy": 1.1209806262899051,
+    "fraction_of_volume_law": 0.5390777301603502,
+    "required_bond_dimension": 4,
+    "volume_law_entropy": 2.0794415416798357
+   }
+  },
+  {
+   "record_id": "parent_0016_e0_k1_t2",
+   "parent_id": "parent_0016",
+   "physical_n": 6,
+   "runtime": 12.0,
+   "best": {
+    "peak_entropy": 0.8038620208320342,
+    "fraction_of_volume_law": 0.38657591700445215,
+    "required_bond_dimension": 3,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "worst": {
+    "peak_entropy": 1.0860286714074494,
+    "fraction_of_volume_law": 0.5222693928342523,
+    "required_bond_dimension": 3,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "linear": {
+    "peak_entropy": 0.8481772069672886,
+    "fraction_of_volume_law": 0.4078870167622531,
+    "required_bond_dimension": 3,
+    "volume_law_entropy": 2.0794415416798357
+   }
+  },
+  {
+   "record_id": "parent_0016_e0_k2_t0",
+   "parent_id": "parent_0016",
+   "physical_n": 6,
+   "runtime": 1.0,
+   "best": {
+    "peak_entropy": 0.24871369828664183,
+    "fraction_of_volume_law": 0.11960600637309736,
+    "required_bond_dimension": 2,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "worst": {
+    "peak_entropy": 0.431216963645826,
+    "fraction_of_volume_law": 0.20737152499967657,
+    "required_bond_dimension": 2,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "linear": {
+    "peak_entropy": 0.2856386253971579,
+    "fraction_of_volume_law": 0.13736314278227335,
+    "required_bond_dimension": 2,
+    "volume_law_entropy": 2.0794415416798357
+   }
+  },
+  {
+   "record_id": "parent_0016_e0_k2_t1",
+   "parent_id": "parent_0016",
+   "physical_n": 6,
+   "runtime": 4.0,
+   "best": {
+    "peak_entropy": 0.7249030272443578,
+    "fraction_of_volume_law": 0.3486046675102774,
+    "required_bond_dimension": 3,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "worst": {
+    "peak_entropy": 0.3675724150273104,
+    "fraction_of_volume_law": 0.1767649667758269,
+    "required_bond_dimension": 2,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "linear": {
+    "peak_entropy": 0.7936611912015074,
+    "fraction_of_volume_law": 0.38167035489748075,
+    "required_bond_dimension": 3,
+    "volume_law_entropy": 2.0794415416798357
+   }
+  },
+  {
+   "record_id": "parent_0016_e0_k2_t2",
+   "parent_id": "parent_0016",
+   "physical_n": 6,
+   "runtime": 12.0,
+   "best": {
+    "peak_entropy": 0.749430654574216,
+    "fraction_of_volume_law": 0.3603999629481304,
+    "required_bond_dimension": 3,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "worst": {
+    "peak_entropy": 0.8001869643917501,
+    "fraction_of_volume_law": 0.38480858843732385,
+    "required_bond_dimension": 3,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "linear": {
+    "peak_entropy": 0.8421962200959983,
+    "fraction_of_volume_law": 0.40501077006264224,
+    "required_bond_dimension": 3,
+    "volume_law_entropy": 2.0794415416798357
+   }
+  },
+  {
+   "record_id": "parent_0016_e1_k0_t0",
+   "parent_id": "parent_0016",
+   "physical_n": 6,
+   "runtime": 1.0,
+   "best": {
+    "peak_entropy": 0.795482892202175,
+    "fraction_of_volume_law": 0.38254640789736266,
+    "required_bond_dimension": 3,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "worst": {
+    "peak_entropy": 1.3516372714808544,
+    "fraction_of_volume_law": 0.6500001295487061,
+    "required_bond_dimension": 4,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "linear": {
+    "peak_entropy": 0.9069022729736732,
+    "fraction_of_volume_law": 0.4361278039300158,
+    "required_bond_dimension": 3,
+    "volume_law_entropy": 2.0794415416798357
+   }
+  },
+  {
+   "record_id": "parent_0016_e1_k0_t1",
+   "parent_id": "parent_0016",
+   "physical_n": 6,
+   "runtime": 4.0,
+   "best": {
+    "peak_entropy": 0.9589622635650512,
+    "fraction_of_volume_law": 0.4611633673483182,
+    "required_bond_dimension": 3,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "worst": {
+    "peak_entropy": 0.8753231024147129,
+    "fraction_of_volume_law": 0.42094143300974957,
+    "required_bond_dimension": 3,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "linear": {
+    "peak_entropy": 1.120224100708108,
+    "fraction_of_volume_law": 0.5387139182586287,
+    "required_bond_dimension": 4,
+    "volume_law_entropy": 2.0794415416798357
+   }
+  },
+  {
+   "record_id": "parent_0016_e1_k0_t2",
+   "parent_id": "parent_0016",
+   "physical_n": 6,
+   "runtime": 12.0,
+   "best": {
+    "peak_entropy": 0.8127603627871203,
+    "fraction_of_volume_law": 0.39085511494136443,
+    "required_bond_dimension": 3,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "worst": {
+    "peak_entropy": 1.0602200201749858,
+    "fraction_of_volume_law": 0.5098580551192163,
+    "required_bond_dimension": 3,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "linear": {
+    "peak_entropy": 0.7494441649589695,
+    "fraction_of_volume_law": 0.3604064600698252,
+    "required_bond_dimension": 3,
+    "volume_law_entropy": 2.0794415416798357
+   }
+  },
+  {
+   "record_id": "parent_0016_e1_k1_t0",
+   "parent_id": "parent_0016",
+   "physical_n": 6,
+   "runtime": 1.0,
+   "best": {
+    "peak_entropy": 0.49681596552959156,
+    "fraction_of_volume_law": 0.23891797656800134,
+    "required_bond_dimension": 2,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "worst": {
+    "peak_entropy": 0.923976759570042,
+    "fraction_of_volume_law": 0.4443388963094513,
+    "required_bond_dimension": 3,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "linear": {
+    "peak_entropy": 0.56540540803548,
+    "fraction_of_volume_law": 0.271902526088196,
+    "required_bond_dimension": 2,
+    "volume_law_entropy": 2.0794415416798357
+   }
+  },
+  {
+   "record_id": "parent_0016_e1_k1_t1",
+   "parent_id": "parent_0016",
+   "physical_n": 6,
+   "runtime": 4.0,
+   "best": {
+    "peak_entropy": 0.8312264169988142,
+    "fraction_of_volume_law": 0.3997354098866969,
+    "required_bond_dimension": 3,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "worst": {
+    "peak_entropy": 0.6170726963791553,
+    "fraction_of_volume_law": 0.2967492396447295,
+    "required_bond_dimension": 2,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "linear": {
+    "peak_entropy": 1.0239857276170277,
+    "fraction_of_volume_law": 0.4924330437247209,
+    "required_bond_dimension": 3,
+    "volume_law_entropy": 2.0794415416798357
+   }
+  },
+  {
+   "record_id": "parent_0016_e1_k1_t2",
+   "parent_id": "parent_0016",
+   "physical_n": 6,
+   "runtime": 12.0,
+   "best": {
+    "peak_entropy": 0.7605163781119988,
+    "fraction_of_volume_law": 0.3657310690723389,
+    "required_bond_dimension": 3,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "worst": {
+    "peak_entropy": 0.9789562480833469,
+    "fraction_of_volume_law": 0.4707784414523702,
+    "required_bond_dimension": 3,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "linear": {
+    "peak_entropy": 0.7583337792286942,
+    "fraction_of_volume_law": 0.3646814608772744,
+    "required_bond_dimension": 3,
+    "volume_law_entropy": 2.0794415416798357
+   }
+  },
+  {
+   "record_id": "parent_0016_e1_k2_t0",
+   "parent_id": "parent_0016",
+   "physical_n": 6,
+   "runtime": 1.0,
+   "best": {
+    "peak_entropy": 0.18655484769535524,
+    "fraction_of_volume_law": 0.0897139178746283,
+    "required_bond_dimension": 2,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "worst": {
+    "peak_entropy": 0.3225536834762023,
+    "fraction_of_volume_law": 0.15511553319052848,
+    "required_bond_dimension": 2,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "linear": {
+    "peak_entropy": 0.21223038678836653,
+    "fraction_of_volume_law": 0.102061242181841,
+    "required_bond_dimension": 2,
+    "volume_law_entropy": 2.0794415416798357
+   }
+  },
+  {
+   "record_id": "parent_0016_e1_k2_t1",
+   "parent_id": "parent_0016",
+   "physical_n": 6,
+   "runtime": 4.0,
+   "best": {
+    "peak_entropy": 0.7017419729305326,
+    "fraction_of_volume_law": 0.3374665547768389,
+    "required_bond_dimension": 3,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "worst": {
+    "peak_entropy": 0.2792795298667198,
+    "fraction_of_volume_law": 0.13430506425350594,
+    "required_bond_dimension": 2,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "linear": {
+    "peak_entropy": 0.7159443761340242,
+    "fraction_of_volume_law": 0.3442964670002998,
+    "required_bond_dimension": 3,
+    "volume_law_entropy": 2.0794415416798357
+   }
+  },
+  {
+   "record_id": "parent_0016_e1_k2_t2",
+   "parent_id": "parent_0016",
+   "physical_n": 6,
+   "runtime": 12.0,
+   "best": {
+    "peak_entropy": 0.7467442212826931,
+    "fraction_of_volume_law": 0.3591080616190107,
+    "required_bond_dimension": 3,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "worst": {
+    "peak_entropy": 0.7384073467826593,
+    "fraction_of_volume_law": 0.35509887245310656,
+    "required_bond_dimension": 3,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "linear": {
+    "peak_entropy": 0.8331349400238848,
+    "fraction_of_volume_law": 0.4006532154545942,
+    "required_bond_dimension": 3,
+    "volume_law_entropy": 2.0794415416798357
+   }
+  },
+  {
+   "record_id": "parent_0042_e0_k0_t0",
+   "parent_id": "parent_0042",
+   "physical_n": 7,
+   "runtime": 1.0,
+   "best": {
+    "peak_entropy": 0.7898149267484507,
+    "fraction_of_volume_law": 0.3798206926800233,
+    "required_bond_dimension": 3,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "worst": {
+    "peak_entropy": 1.1826754215680917,
+    "fraction_of_volume_law": 0.5687466552258501,
+    "required_bond_dimension": 4,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "linear": {
+    "peak_entropy": 0.8885603122613586,
+    "fraction_of_volume_law": 0.4273071853434036,
+    "required_bond_dimension": 3,
+    "volume_law_entropy": 2.0794415416798357
+   }
+  },
+  {
+   "record_id": "parent_0042_e0_k0_t1",
+   "parent_id": "parent_0042",
+   "physical_n": 7,
+   "runtime": 4.0,
+   "best": {
+    "peak_entropy": 1.396155143071556,
+    "fraction_of_volume_law": 0.6714087004069851,
+    "required_bond_dimension": 5,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "worst": {
+    "peak_entropy": 1.0241514531899778,
+    "fraction_of_volume_law": 0.49251274087880215,
+    "required_bond_dimension": 3,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "linear": {
+    "peak_entropy": 1.587697901969382,
+    "fraction_of_volume_law": 0.7635212965336797,
+    "required_bond_dimension": 5,
+    "volume_law_entropy": 2.0794415416798357
+   }
+  },
+  {
+   "record_id": "parent_0042_e0_k0_t2",
+   "parent_id": "parent_0042",
+   "physical_n": 7,
+   "runtime": 12.0,
+   "best": {
+    "peak_entropy": 1.213211959194553,
+    "fraction_of_volume_law": 0.5834316256923884,
+    "required_bond_dimension": 4,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "worst": {
+    "peak_entropy": 1.595299822828737,
+    "fraction_of_volume_law": 0.767177047708687,
+    "required_bond_dimension": 5,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "linear": {
+    "peak_entropy": 1.4972012649201674,
+    "fraction_of_volume_law": 0.7200016133710029,
+    "required_bond_dimension": 5,
+    "volume_law_entropy": 2.0794415416798357
+   }
+  },
+  {
+   "record_id": "parent_0042_e0_k1_t0",
+   "parent_id": "parent_0042",
+   "physical_n": 7,
+   "runtime": 1.0,
+   "best": {
+    "peak_entropy": 0.953630208809897,
+    "fraction_of_volume_law": 0.4585991910306484,
+    "required_bond_dimension": 3,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "worst": {
+    "peak_entropy": 1.4358225976299361,
+    "fraction_of_volume_law": 0.6904847137323396,
+    "required_bond_dimension": 5,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "linear": {
+    "peak_entropy": 1.0750398374837955,
+    "fraction_of_volume_law": 0.5169848807653163,
+    "required_bond_dimension": 3,
+    "volume_law_entropy": 2.0794415416798357
+   }
+  },
+  {
+   "record_id": "parent_0042_e0_k1_t1",
+   "parent_id": "parent_0042",
+   "physical_n": 7,
+   "runtime": 4.0,
+   "best": {
+    "peak_entropy": 1.4122081004407774,
+    "fraction_of_volume_law": 0.679128541069711,
+    "required_bond_dimension": 5,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "worst": {
+    "peak_entropy": 1.2359043434571517,
+    "fraction_of_volume_law": 0.594344355772921,
+    "required_bond_dimension": 4,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "linear": {
+    "peak_entropy": 1.723958239157283,
+    "fraction_of_volume_law": 0.8290486674439607,
+    "required_bond_dimension": 6,
+    "volume_law_entropy": 2.0794415416798357
+   }
+  },
+  {
+   "record_id": "parent_0042_e0_k1_t2",
+   "parent_id": "parent_0042",
+   "physical_n": 7,
+   "runtime": 12.0,
+   "best": {
+    "peak_entropy": 1.082386353350464,
+    "fraction_of_volume_law": 0.5205178081015346,
+    "required_bond_dimension": 3,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "worst": {
+    "peak_entropy": 1.7265769630402645,
+    "fraction_of_volume_law": 0.830308007430439,
+    "required_bond_dimension": 6,
+    "volume_law_entropy": 2.0794415416798357
+   },
+   "linear": {
+    "peak_entropy": 1.2353021183403126,
+    "fraction_of_volume_law": 0.5940547467097335,
+    "required_bond_dimension": 4,
+    "volume_law_entropy": 2.0794415416798357
+   }
+  }
+ ],
+ "wall_seconds": 0.9679112434387207
+}
