@@ -33,7 +33,7 @@ FAMILIES = ("one_window", "two_window", "eight_bin")
 
 def _run_record(args):
     (data_dir, split, record_id, checkpoint, budget, oversample, seed,
-     tolerance, max_steps) = args
+     tolerance, max_steps, chooser) = args
     import numpy as np
     import torch
 
@@ -60,13 +60,25 @@ def _run_record(args):
         return float(score_schedule(record, schedule, tolerance=tolerance,
                                     max_steps=max_steps, max_ds_dtau=1e9)["loss"])
 
-    def surrogate(schedules):
+    def critic(schedules):
         waves = np.stack([np.clip(np.interp(grid, s.tau_knots, s.s_knots), 0.0, 1.0)
                           for s in schedules])
         waves[:, 0], waves[:, -1] = 0.0, 1.0
         with torch.no_grad():
             return model.predict_losses(
                 graph, torch.as_tensor(waves, dtype=torch.float32), encoded).cpu().numpy()
+
+    # The control that decides whether the model earned the improvement. The
+    # filtered arm sees `oversample` times as many proposals, so it walks a
+    # wider slice of the Sobol sequence than the baseline does. If picking one
+    # of eight AT RANDOM also wins, the gain is the wider slice and not the
+    # critic, and the whole claim collapses.
+    control_rng = np.random.default_rng(abs(hash((record_id, seed))) % (2**32))
+
+    def random_chooser(schedules):
+        return control_rng.random(len(schedules))
+
+    surrogate = critic if chooser == "critic" else random_chooser
 
     out = {"record_id": record_id,
            "parent_id": str(np.asarray(record["parent_id"]).item()), "split": split,
@@ -105,6 +117,9 @@ def main(argv=None) -> int:
     parser.add_argument("--workers", type=int, default=6)
     parser.add_argument("--tolerance", type=float, default=5e-4)
     parser.add_argument("--max-steps", type=int, default=8192)
+    parser.add_argument("--chooser", choices=("critic", "random"), default="critic",
+                        help="'random' is the control: same oversampled proposal stream, "
+                             "chosen without the model")
     args = parser.parse_args(argv)
 
     from annealctrl.headroom import _bootstrap, _describe, _parent_means
@@ -126,7 +141,7 @@ def main(argv=None) -> int:
     print(f"{len(chosen)} records, one per parent, <= {args.max_qubits} qubits", flush=True)
 
     jobs = [(args.data, args.split, rid, args.checkpoint, args.budget, args.oversample,
-             args.seed, args.tolerance, args.max_steps) for rid in chosen]
+             args.seed, args.tolerance, args.max_steps, args.chooser) for rid in chosen]
     rows = []
     with ProcessPoolExecutor(max_workers=min(args.workers, len(jobs))) as pool:
         for row in pool.map(_run_record, jobs):
@@ -150,7 +165,7 @@ def main(argv=None) -> int:
     payload = {
         "schema_version": 1, "data": args.data, "split": args.split,
         "checkpoint": args.checkpoint, "budget": args.budget,
-        "oversample": args.oversample, "seed": args.seed,
+        "oversample": args.oversample, "seed": args.seed, "chooser": args.chooser,
         "n_records": len(rows), "n_parents": len(parents),
         "budget_mismatches": len(mismatched),
         "improvement_best_over_families": block,
