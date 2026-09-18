@@ -193,11 +193,15 @@ def collect_labelled_proposals(data_dir, checkpoint, *, split: str = "train", de
 
 
 def collect_bank_extension(data_dir, *, split: str = "train", n_extra: int = 3,
-                           bank_seed: int, bank_size: int, n_segments: int = 8,
+                           bank_seed: int | None = None, bank_size: int, n_segments: int = 8,
                            backend: str = "numpy", tolerance: float = 5e-4,
                            initial_steps: int = 128, max_steps: int = 8192,
                            max_ds_dtau: float = 4.0, round_id: str = "round1") -> dict:
-    """Continue the original Sobol bank after checking its entire stored prefix."""
+    """Continue the original Sobol bank after checking its entire stored prefix.
+
+    If omitted, the bank seed comes from the dataset's independent candidate
+    seed, with the legacy parent-generation seed as fallback.
+    """
     _train_only(split)
     _positive_count(n_extra, "n_extra")
     _positive_count(bank_size, "bank_size")
@@ -205,6 +209,11 @@ def collect_bank_extension(data_dir, *, split: str = "train", n_extra: int = 3,
     from .search import shared_candidate_bank
 
     records = _training_records(data_dir, split)
+    if bank_seed is None:
+        config = json.loads((Path(data_dir) / "manifest.json").read_text())["config"]
+        bank_seed = config.get("candidate_seed", config["seed"])
+    if isinstance(bank_seed, bool) or not isinstance(bank_seed, (int, np.integer)) or bank_seed < 0:
+        raise ValueError("bank_seed must be a nonnegative integer")
 
     def propose(record):
         runtime = float(np.asarray(record["runtime"]).item())

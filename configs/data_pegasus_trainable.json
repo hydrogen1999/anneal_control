@@ -1,0 +1,55 @@
+{
+  "_comment": "TRAINABLE dataset on REAL Pegasus connectivity. data_pegasus.json exists to measure headroom and deliberately fixes one variant, one chain strength and an eight-candidate bank, so it cannot train a bank selector and offers no embedding variation for an encoder to exploit. This config restores the axes the learned comparison needs -- two field/coupling variants, three chain strengths, a 64-candidate bank -- while keeping the hardware growth route, so a model can be trained and evaluated at 10-14 physical qubits on vendor connectivity rather than on synthetic quotient graphs. Still not a calibrated device: no working-graph exclusions, no per-qubit calibration, no noise. teacher.mode=none is forced above 10 qubits.",
+  "seed": 20260918,
+  "parents": 96,
+  "families": [
+    "spin_glass",
+    "weighted_maxcut",
+    "planted_loops",
+    "weak_field"
+  ],
+  "logical_sizes": [
+    5,
+    6,
+    7
+  ],
+  "generation_route": "hardware_growth",
+  "hardware": {
+    "topology": "pegasus",
+    "m": 16,
+    "patch_sites": 96
+  },
+  "chain_lengths": 2,
+  "variants": [
+    {
+      "field_distribution": "uniform",
+      "coupling_distribution": "uniform"
+    },
+    {
+      "field_distribution": "concentrated",
+      "coupling_distribution": "random"
+    }
+  ],
+  "chain_strengths": [
+    0.75,
+    1.5,
+    3.0
+  ],
+  "runtimes": [
+    4.0,
+    12.0
+  ],
+  "candidates": 64,
+  "candidate_batch_size": 8,
+  "spectral_points": 3,
+  "teacher": {
+    "mode": "none"
+  },
+  "steps": 64,
+  "max_steps": 16384,
+  "label_state_tolerance": 0.0002,
+  "max_physical_qubits": 14,
+  "endpoint_max_qubits": 14,
+  "endpoint_memory_mb": 8192,
+  "state_memory_mb": 16384
+}

@@ -1,4 +1,4 @@
-# More proposals is the wrong lever
+# Proposal-count experiment: mixed evidence
 
 The direct policy emits three waveforms and its critic picks one. Two fixes were
 proposed for its weakness: **emit more waveforms**, and **train on the waveforms
@@ -40,21 +40,24 @@ seeds (−0.0195, −0.0238, −0.0243). See `reports/dagger_2026-09-17/`.
 | lever | cost | effect | separated |
 |---|---|---:|---|
 | 3 → 16 proposals | 5.3× generation, 16 critic scores instead of 3 | −0.0038 | **no** |
-| one DAgger round | 10,368 true propagations, offline | −0.0226 | yes, all seeds |
+| one historical aggregation round | 10,368 objective evaluations, offline | −0.0226 | same sign on three seeds; paired CI unavailable |
 
-Aggregation is roughly six times the effect, and it is the one that survives its
-control. That is a useful pairing to report: the obvious lever, applied
-generously, does almost nothing, while the one that changes *what the model is
-trained on* moves the number.
+These effects cannot support a sixfold efficacy claim: the proposal contrast
+pools five encoders with unequal seed counts; aggregation uses only summary and
+also changes validation. A common population, recipe, and uncertainty analysis
+is required for a direct comparison.
 
 ## What this does not say
 
-Bank-mode selection is unaffected by proposal count and is not compared here —
-the bank is fixed at 64 candidates regardless.
+The candidate bank remains fixed at 64, but changing proposal count can affect
+the shared encoder during training and hence bank selection. Bank-mode changes
+were not evaluated in this report.
 
 `hierarchy_physics` contributes one matched seed, not three, so its −0.00597 is
 the least supported row in the table and is not evidence on its own.
 
 This tests one specific increase, 3 to 16, on one dataset. It does not show that
-proposal count can never matter, only that at this scale the lever is close to
-exhausted while the aggregation lever is not.
+proposal count can never matter, only that this pooled contrast did not separate. Failure to reject is not
+evidence that the proposal-count mechanism is exhausted. Raw per-parent paired
+rows are not archived here, so the historical interval cannot be regenerated
+from this summary alone.

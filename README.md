@@ -6,6 +6,13 @@ tables/figures. Working software is not evidence of superiority or A* acceptance
 
 **Start with `RUNBOOK_VI.md`** for the complete Vietnamese operating guide.
 
+The integrated [paper campaign](docs/paper_campaign.md) runs controlled
+acquisition mechanisms, verified transfer, budget-matched learned warm starts,
+the literature adaptation and learned noise robustness. Start with
+`python -m annealctrl paper-campaign --config configs/paper_campaign_smoke.json --output runs/paper_smoke`.
+Current audited historical tables are in
+[the evidence reanalysis](reports/evidence_audit_2026-09-18/RESULTS.md).
+
 ## Controlled acquisition and paper evidence
 
 The acquisition study tests whether labelling a frozen policy's proposals helps

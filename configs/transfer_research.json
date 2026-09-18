@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "source_data": "../runs/transfer_source_research/data",
+  "checkpoints": [
+    {
+      "method": "summary",
+      "seed": 0,
+      "path": "../runs/transfer_source_research/models/summary/seed_0/best.pt"
+    },
+    {
+      "method": "summary",
+      "seed": 1,
+      "path": "../runs/transfer_source_research/models/summary/seed_1/best.pt"
+    },
+    {
+      "method": "summary",
+      "seed": 2,
+      "path": "../runs/transfer_source_research/models/summary/seed_2/best.pt"
+    },
+    {
+      "method": "summary",
+      "seed": 3,
+      "path": "../runs/transfer_source_research/models/summary/seed_3/best.pt"
+    },
+    {
+      "method": "summary",
+      "seed": 4,
+      "path": "../runs/transfer_source_research/models/summary/seed_4/best.pt"
+    },
+    {
+      "method": "logical",
+      "seed": 0,
+      "path": "../runs/transfer_source_research/models/logical/seed_0/best.pt"
+    },
+    {
+      "method": "logical",
+      "seed": 1,
+      "path": "../runs/transfer_source_research/models/logical/seed_1/best.pt"
+    },
+    {
+      "method": "logical",
+      "seed": 2,
+      "path": "../runs/transfer_source_research/models/logical/seed_2/best.pt"
+    },
+    {
+      "method": "logical",
+      "seed": 3,
+      "path": "../runs/transfer_source_research/models/logical/seed_3/best.pt"
+    },
+    {
+      "method": "logical",
+      "seed": 4,
+      "path": "../runs/transfer_source_research/models/logical/seed_4/best.pt"
+    },
+    {
+      "method": "physical",
+      "seed": 0,
+      "path": "../runs/transfer_source_research/models/physical/seed_0/best.pt"
+    },
+    {
+      "method": "physical",
+      "seed": 1,
+      "path": "../runs/transfer_source_research/models/physical/seed_1/best.pt"
+    },
+    {
+      "method": "physical",
+      "seed": 2,
+      "path": "../runs/transfer_source_research/models/physical/seed_2/best.pt"
+    },
+    {
+      "method": "physical",
+      "seed": 3,
+      "path": "../runs/transfer_source_research/models/physical/seed_3/best.pt"
+    },
+    {
+      "method": "physical",
+      "seed": 4,
+      "path": "../runs/transfer_source_research/models/physical/seed_4/best.pt"
+    },
+    {
+      "method": "hierarchy_outcome",
+      "seed": 0,
+      "path": "../runs/transfer_source_research/models/hierarchy_outcome/seed_0/best.pt"
+    },
+    {
+      "method": "hierarchy_outcome",
+      "seed": 1,
+      "path": "../runs/transfer_source_research/models/hierarchy_outcome/seed_1/best.pt"
+    },
+    {
+      "method": "hierarchy_outcome",
+      "seed": 2,
+      "path": "../runs/transfer_source_research/models/hierarchy_outcome/seed_2/best.pt"
+    },
+    {
+      "method": "hierarchy_outcome",
+      "seed": 3,
+      "path": "../runs/transfer_source_research/models/hierarchy_outcome/seed_3/best.pt"
+    },
+    {
+      "method": "hierarchy_outcome",
+      "seed": 4,
+      "path": "../runs/transfer_source_research/models/hierarchy_outcome/seed_4/best.pt"
+    }
+  ],
+  "targets": [
+    {
+      "name": "source_heldout",
+      "data": "../runs/transfer_source_research/data",
+      "axes": [
+        "heldout_parents"
+      ]
+    },
+    {
+      "name": "pegasus_unseen_topology",
+      "data": "../runs/transfer_target_pegasus/data",
+      "axes": [
+        "topology"
+      ]
+    },
+    {
+      "name": "zephyr_unseen_topology",
+      "data": "../runs/transfer_target_zephyr/data",
+      "axes": [
+        "topology"
+      ]
+    }
+  ],
+  "device": "cpu",
+  "threads": 1,
+  "bootstrap_resamples": 10000,
+  "bootstrap_seed": 1729,
+  "_scope": "Prerequisites: source five-seed checkpoints; independent target logical parents; shared candidate_seed, count and control contract. Edit paths before freezing. Topology transfer does not establish pure topology causality when other distribution axes change. No completed research result is implied."
+}

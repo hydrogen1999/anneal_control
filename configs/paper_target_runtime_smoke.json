@@ -1,0 +1,36 @@
+{
+  "seed": 2026091805,
+  "parents": 12,
+  "families": [
+    "spin_glass",
+    "weighted_maxcut"
+  ],
+  "logical_qubits": 3,
+  "chain_lengths": [
+    1,
+    1,
+    1
+  ],
+  "variants": [
+    {
+      "shape": "path",
+      "ports": 1
+    }
+  ],
+  "chain_strengths": [
+    1.5
+  ],
+  "runtimes": [
+    5.0
+  ],
+  "candidates": 4,
+  "spectral_points": 3,
+  "teacher": {
+    "mode": "none"
+  },
+  "steps": 16,
+  "max_steps": 1024,
+  "label_state_tolerance": 0.005,
+  "max_physical_qubits": 3,
+  "candidate_seed": 1801
+}

@@ -1,4 +1,4 @@
-# Headroom on real Pegasus connectivity, and it does not decay with size
+# Headroom on Pegasus connectivity through 14 physical qubits
 
 `configs/data_pegasus.json` builds instances on **genuine D-Wave Pegasus P16
 connectivity** taken from `dwave-networkx` (5640 qubits, 40484 couplers), not on
@@ -27,8 +27,9 @@ bootstrap CI **[0.1047, 0.1891]**.
 | 12 | 8 | 4 | 0.1649 | [0.0760, 0.2538] |
 | 14 | 8 | 4 | 0.1312 | [0.0701, 0.2042] |
 
-**The signal does not decay from 10 to 14 physical qubits.** Sizes are never
-pooled: pooling would hide exactly the question being asked.
+Positive headroom is observed at each measured size. Wide intervals and four
+parents per stratum do not establish no decay, equality, or a monotone size trend.
+The pooled statistic above answers a different question from these strata.
 
 ## Train split, in progress
 
@@ -45,19 +46,19 @@ pooled: pooling would hide exactly the question being asked.
 
 | family | mean restriction loss | wins |
 |---|---:|---:|
-| `two_window` | 0.0063 | 12 / 12 |
+| `two_window` | 0.0063 | 12 / 24 records |
 | `one_window` | 0.0194 | 11 |
 | `eight_bin` | 0.0254 | 1 |
 | `linear` | 0.1441 | 0 |
 
-`two_window` wins on every parent and costs 0.0063 against the overall best,
-reproducing on real connectivity what the synthetic campaign found: a two-window
-family is close to sufficient, and the richer `eight_bin` family is *worse* at
-equal budget.
+The stored `best_family_counts` sum to 24 records: two_window wins 12,
+one_window 11, and eight_bin 1. They are not parent-level win counts. The mean
+restriction loss describes performance under this finite budget, not a proof
+that a family is sufficient or its expressiveness is superior.
 
 ## What this does and does not establish
 
-**Does.** Control headroom is present, resolved, and roughly flat in size across
+**Does.** Control headroom is present and numerically resolved at
 10, 12 and 14 physical qubits on real device connectivity. The 3–10 qubit result
 is not an artifact of working only at the smallest sizes.
 
@@ -74,5 +75,5 @@ drift, no readout error, no QPU job was ever submitted.
 **Does not — a like-for-like budget comparison.** Budget 32 here against 64 in
 the main campaign. The comparison across campaigns is qualitative.
 
-**Small.** 12 parents in validation. The per-size intervals are wide and overlap
-each other; "does not decay" is supported, "is constant" is not.
+**Small.** 12 parents in validation. The per-size intervals are wide. Neither "does not decay" nor
+"is constant" is established by overlap of confidence intervals.

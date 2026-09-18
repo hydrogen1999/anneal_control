@@ -22,15 +22,22 @@ def main():
     target = Path(args.output)
     if target.exists():
         raise FileExistsError(target)
-    fig, axes = plt.subplots(1, 2, figsize=(10, 4.2), layout="constrained")
+    mechanisms = data.get("mechanism_contrasts", {})
+    fig, axes = plt.subplots(1, 3 if mechanisms else 2,
+                             figsize=(15, 4.8) if mechanisms else (10, 4.2), layout="constrained")
     panels = [
         (axes[0], [(name.replace("policy_minus_", "POLICY − ").upper(), row)
                    for name, row in data["acquisition_contrasts"].items()],
          "Acquisition effect on direct loss"),
         (axes[1], [(name.upper(), value["direct_minus_bank"])
-                   for name, value in data["deployment_contrasts"].items()],
+                   for name, value in data["deployment_contrasts"].items()
+                   if not name.startswith("mechanism_")],
          "Direct minus bank loss"),
     ]
+    if mechanisms:
+        panels.append((axes[2], [(f"{scope.upper()}: {mode}", contrast)
+                                 for scope, modes in mechanisms.items() for mode, contrast in modes.items()],
+                       "Frozen-backbone label effect\nAcquired minus original"))
     for ax, entries, title in panels:
         for index, (label, row) in enumerate(entries):
             mean = row["mean_difference"]

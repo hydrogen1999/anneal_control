@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "dataset": "data_pegasus_trainable.json",
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "methods": [
+    {
+      "name": "summary",
+      "model": {
+        "encoder_variant": "summary",
+        "width": 64
+      },
+      "training": {
+        "response_weight": 0.0
+      }
+    },
+    {
+      "name": "logical",
+      "model": {
+        "encoder_variant": "logical",
+        "width": 64
+      },
+      "training": {
+        "response_weight": 0.0
+      }
+    },
+    {
+      "name": "physical",
+      "model": {
+        "encoder_variant": "physical",
+        "width": 64
+      },
+      "training": {
+        "response_weight": 0.0
+      }
+    },
+    {
+      "name": "hierarchy_outcome",
+      "model": {
+        "encoder_variant": "hierarchical",
+        "width": 64
+      },
+      "training": {
+        "response_weight": 0.0
+      }
+    },
+    {
+      "name": "hierarchy_physics",
+      "model": {
+        "encoder_variant": "hierarchical",
+        "width": 64
+      },
+      "training": {
+        "response_weight": 0.05
+      }
+    }
+  ],
+  "training": {
+    "epochs": 200,
+    "patience": 25,
+    "learning_rate": 0.001,
+    "batch_size": 8,
+    "accumulation_steps": 2,
+    "weight_decay": 0.0001,
+    "policy_weight": 0.2,
+    "ranking_weight": 0.1
+  },
+  "execution": {
+    "device": "cpu",
+    "backend": "numpy",
+    "threads": 1,
+    "workers": 12
+  },
+  "evaluation": {
+    "direct": true,
+    "tolerance": 0.0002,
+    "initial_steps": 128,
+    "max_steps": 16384,
+    "n_resamples": 10000
+  },
+  "report": {
+    "plots": true,
+    "bootstrap_resamples": 10000
+  },
+  "_execution_note": "CPU with many workers. The backend crossover measured CuPy at 7.41 labels/s against NumPy's 2.62 at 12 qubits but capped at one parent worker, so eight CPU workers win by about 3x.",
+  "_scope_note": "The learned comparison on REAL Pegasus connectivity, 10-14 physical qubits. The main experiment runs on synthetic quotient graphs at 3-10 qubits; this asks the same questions -- does bank selection beat a fixed schedule, and does an embedding-aware encoder beat a blind one -- where the coupling graph is the vendor's. 96 parents split 72/12/24 by parent, 864 train records. Three seeds rather than five because each record is 10-14 qubits instead of 3-10. No spectral teacher is possible above 10 qubits, so the privileged-oracle comparison does NOT extend here and must not be quoted from this run."
+}

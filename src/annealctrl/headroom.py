@@ -32,7 +32,7 @@ import numpy as np
 
 from .search import CONTROL_FAMILIES
 from .sweeps import SweepUnit, run_sweep
-from .telemetry import _safe
+from .telemetry import _safe, unknown_config_keys
 
 QUANTILES = (10, 25, 50, 75, 90)
 
@@ -216,14 +216,13 @@ def load_frontier_config(config: Mapping[str, Any] | str | Path) -> tuple[dict, 
     # the reason a config exists. They are ignored by the sweep and kept out of
     # the settings hash. Everything else must be a known key, so a typo like
     # "budgte" is still refused rather than silently taking the default.
-    unknown = {key for key in config if not str(key).startswith("_")} \
-        - set(FRONTIER_DEFAULTS) - {"report"}
+    unknown = unknown_config_keys(config, set(FRONTIER_DEFAULTS) | {"report"})
     if unknown:
-        raise ValueError(f"unknown frontier configuration keys: {sorted(unknown)}")
+        raise ValueError(f"unknown frontier configuration keys: {unknown}")
     report = dict(config.get("report") or {})
-    unknown_report = {key for key in report if not str(key).startswith("_")} - set(REPORT_DEFAULTS)
+    unknown_report = unknown_config_keys(report, REPORT_DEFAULTS)
     if unknown_report:
-        raise ValueError(f"unknown frontier report keys: {sorted(unknown_report)}")
+        raise ValueError(f"unknown frontier report keys: {unknown_report}")
     sweep = {**FRONTIER_DEFAULTS,
              **{k: v for k, v in config.items() if k != "report" and not str(k).startswith("_")}}
     sweep["families"] = list(sweep["families"])

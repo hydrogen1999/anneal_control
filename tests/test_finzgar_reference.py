@@ -67,3 +67,15 @@ def test_paired_initial_design_and_budget():
     assert result["total_failed_queries"] == 0
     assert [r["parameters"] for r in bo["history"]] == [r["parameters"] for r in random["history"]]
     assert bo["best_loss"] == random["best_loss"]
+    assert result["paired_summary"]["mean_difference"] == 0.
+    assert result["cost"]["known_trajectory_calls"] == 12
+    assert result["setting"] == "custom_original_model_setting"
+
+
+@pytest.mark.parametrize("settings", [{"seeds": [0, 0]}, {"seeds": []},
+                                      {"seeds": [-1]}, {"runtime": 0.}, {"zeta": 0.}])
+def test_reference_rejects_invalid_campaign_before_queries(settings):
+    events = []
+    with pytest.raises(ValueError):
+        run_reference(budget=1, event_callback=events.append, **settings)
+    assert not events

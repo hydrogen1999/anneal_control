@@ -86,6 +86,76 @@ there is no silent rejection sampling, truncation, or substitution of average
 diagnostics. Failed scorer work whose internal count is unavailable is marked
 incomplete. Artifact hashes prevent resuming from modified labels/checkpoints.
 
+## Head-isolated mechanism experiment
+
+Enable `mechanism.enabled` in the study configuration to run a separate,
+paired continuation experiment. The four primary from-scratch acquisition arms
+above are unchanged. For each seed, all mechanism arms start from the *same
+validation-selected baseline checkpoint and its exact training normalizer*.
+The baseline's acquired POLICY labels are reused byte-for-byte, with the same
+artifact hash. No mechanism arm requests a new acquisition label.
+
+| Trainable scope | Parameters updated | Paired datasets |
+|---|---|---|
+| `critic` | Schedule encoder and critic head | Original bank; original bank plus frozen POLICY labels |
+| `policy` | Policy query and policy head | Original bank; original bank plus frozen POLICY labels |
+| `heads` | Both sets above | Original bank; original bank plus frozen POLICY labels |
+
+The instance encoder, shared attention, response head, response-query encoder,
+and feature normalization remain frozen. Freezing shared attention matters:
+otherwise a nominally critic-only update could also change policy proposals.
+Critic-only arms have identical generated waveforms to the baseline; policy-only
+arms have an identical critic as a function of any fixed waveform. Regression
+tests check both properties and exact unchanged shared parameter tensors.
+
+Let $D$ denote the fixed training bank, $A_0$ the true simulator outcomes of the
+frozen baseline's proposals, and $(\theta_s^0,\theta_c^0,\theta_\pi^0)$ its shared,
+critic, and policy parameters. For $D'\in\{D,D\cup A_0\}$, fit each scope from
+that same checkpoint:
+
+$$
+L_c(D')=L_{\mathrm{Huber}}(D')+\lambda_r L_{\mathrm{rank}}(D'),\qquad
+L_\pi(D')=\lambda_\pi\operatorname{CE}(p_{D'},q_{\theta_\pi}),
+$$
+
+where $p_{D'}$ is the existing uncertainty-aware soft target derived from **true
+fixed simulator losses**. The updated or frozen critic does not supply policy
+pseudo-labels. Critic-only optimizes $L_c$, policy-only optimizes $L_\pi$, and
+heads-joint optimizes their sum. No response auxiliary loss is optimized here.
+
+The continuation epoch count is declared in `mechanism.epochs` before outcomes
+are read. Every scope selects its **final fixed-budget epoch** and disables
+early stopping. Applying validation-bank regret selection to policy-only
+training would always observe an unchanged critic and would arbitrarily prefer
+its first epoch. Validation banks remain unchanged and their metrics are logged
+for diagnosis, never used to select these mechanism checkpoints. Original and
+acquired pairs share initialization, seed, optimizer recipe, record order,
+number of updates, and fixed epoch count. Their per-update FLOPs differ because
+the acquired bank contains more candidates; measured training time is reported.
+
+For each scope, the reported paired effect is loss(acquired) minus
+loss(original), separately for bank and direct deployment, aggregated with
+equal parent/seed-cell weights. The original-bank continuation is essential:
+comparing only to the pre-continuation baseline would mix acquisition with
+additional optimizer exposure. These within-scope effects and the frozen
+proposal diagnosis identify which head can exploit the extra labels under a
+fixed representation. They do **not** prove that critic distribution shift is
+the unique cause of a general failure, or that this effect persists when the
+shared representation is retrained. Comparing a head-only arm directly against
+a primary from-scratch arm does not isolate a head effect.
+
+The manifest records initialization checkpoint hashes, trainable scope, label
+source, checkpoint-selection rule, and shared acquisition ownership. Acquisition
+cost is charged once to POLICY; mechanism evaluation and training have their own
+measured costs. All primary and mechanism fits for all seeds finish before any
+test outcome is opened. Mechanism intervals are descriptive and unadjusted;
+multiple head comparisons are not automatically confirmatory discoveries.
+
+`configs/acquisition_smoke.json` enables all three scopes for integration checks;
+`configs/acquisition_research.json` enables the same design across five seeds.
+Neither configuration nor passing tests constitutes a scientific result. The
+relevant hypotheses may fail, and negative results must remain in the report.
+
 ## Exact diagnosis and conditional bounds
 
 For one task let $C$ be the generated proposal set, $\hat s$ the critic-selected

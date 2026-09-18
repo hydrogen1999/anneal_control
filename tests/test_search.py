@@ -217,3 +217,279 @@ def test_random_policy_family_candidates_do_not_close_the_manifold_gap():
         f"be unnecessary: {with_family:.4f} vs {without:.4f}")
 
 
+
+
+# --- the policy-gradient strategy --------------------------------------------
+
+def test_policy_gradient_is_a_registered_strategy():
+    from annealctrl.search import STRATEGIES
+
+    assert "policy_gradient" in STRATEGIES
+
+
+def test_policy_gradient_spends_exactly_the_budget():
+    """Equal budget is the whole point of comparing search strategies."""
+    from annealctrl.search import optimize_control_family
+
+    calls = []
+
+    def loss_fn(schedule):
+        calls.append(1)
+        return float(np.abs(schedule(np.linspace(0, 1, 9)) - 0.5).sum())
+
+    for family, budget in (("one_window", 17), ("two_window", 33), ("eight_bin", 25)):
+        calls.clear()
+        result = optimize_control_family(loss_fn, family, budget=budget, seed=0,
+                                         strategy="policy_gradient")
+        assert len(calls) == budget, (family, len(calls), budget)
+        assert len(result.records) == budget
+
+
+def test_policy_gradient_is_deterministic_given_a_seed():
+    from annealctrl.search import optimize_control_family
+
+    def loss_fn(schedule):
+        return float(np.abs(schedule(np.linspace(0, 1, 9)) - 0.3).sum())
+
+    a = optimize_control_family(loss_fn, "one_window", budget=17, seed=3,
+                                strategy="policy_gradient")
+    b = optimize_control_family(loss_fn, "one_window", budget=17, seed=3,
+                                strategy="policy_gradient")
+    assert [r.loss for r in a.records] == [r.loss for r in b.records]
+
+
+def test_policy_gradient_improves_on_its_own_first_trial():
+    """A learner that never beats its initial incumbent is not learning."""
+    from annealctrl.search import optimize_control_family
+
+    def loss_fn(schedule):
+        tau = np.linspace(0, 1, 33)
+        return float(np.abs(schedule(tau) - np.sqrt(tau)).mean())
+
+    result = optimize_control_family(loss_fn, "eight_bin", budget=65, seed=0,
+                                     strategy="policy_gradient")
+    losses = [r.loss for r in result.records]
+    assert min(losses) < losses[0]
+
+
+def test_policy_gradient_labels_its_proposals():
+    from annealctrl.search import optimize_control_family
+
+    def loss_fn(schedule):
+        return float(schedule(np.linspace(0, 1, 9)).sum())
+
+    result = optimize_control_family(loss_fn, "one_window", budget=17, seed=0,
+                                     strategy="policy_gradient")
+    tags = {r.candidate.parameters.get("proposal") for r in result.records[1:]}
+    assert tags == {"policy_gradient"}
+    assert result.records[0].candidate.parameters.get("initial_incumbent") == "linear"
+
+
+def test_policy_gradient_records_its_own_hyperparameters():
+    """A baseline whose settings are not recorded cannot be reproduced or attacked."""
+    from annealctrl.search import optimize_control_family
+
+    def loss_fn(schedule):
+        return float(schedule(np.linspace(0, 1, 9)).sum())
+
+    result = optimize_control_family(loss_fn, "two_window", budget=33, seed=0,
+                                     strategy="policy_gradient")
+    meta = result.records[1].candidate.parameters
+    for key in ("batch_size", "learning_rate", "sigma"):
+        assert key in meta, key
+
+
+def test_linear_family_ignores_the_strategy():
+    """Linear has no free parameters; no strategy may pad it with fake calls."""
+    from annealctrl.search import optimize_control_family
+
+    calls = []
+
+    def loss_fn(schedule):
+        calls.append(1)
+        return 0.5
+
+    result = optimize_control_family(loss_fn, "linear", budget=32, seed=0,
+                                     strategy="policy_gradient")
+    assert len(calls) == 1
+    assert len(result.records) == 1
+
+
+# --- cross-entropy method: a learned search built for a small budget ----------
+
+def test_cem_is_a_registered_strategy():
+    from annealctrl.search import STRATEGIES
+
+    assert "cem" in STRATEGIES
+
+
+def test_cem_spends_exactly_the_budget():
+    from annealctrl.search import optimize_control_family
+
+    calls = []
+
+    def loss_fn(schedule):
+        calls.append(1)
+        return float(np.abs(schedule(np.linspace(0, 1, 9)) - 0.5).sum())
+
+    for family, budget in (("one_window", 17), ("two_window", 33), ("eight_bin", 64)):
+        calls.clear()
+        result = optimize_control_family(loss_fn, family, budget=budget, seed=0, strategy="cem")
+        assert len(calls) == budget, (family, len(calls), budget)
+        assert len(result.records) == budget
+
+
+def test_policy_gradient_uses_the_correct_gaussian_score():
+    """d/dmu log N(z; mu, sigma^2 I) = (z - mu) / sigma^2, not / sigma.
+
+    The first version divided once. Every step therefore shrank as sigma decayed,
+    the policy barely moved, and the arm lost on the real test split on 0 of 48
+    parents -- a result that was published and then retracted, because it measured
+    the bug rather than the method. This pins the scaling by checking that the
+    mean moves toward the better half of a deliberately one-sided batch by an
+    amount the wrong scaling cannot produce.
+    """
+    from annealctrl.search import optimize_control_family
+
+    def make_loss():
+        def loss_fn(schedule):
+            tau = np.linspace(0, 1, 65)
+            return float(np.abs(schedule(tau) - np.sqrt(tau)).mean())
+        return loss_fn
+
+    corrected = [min(r.loss for r in optimize_control_family(
+        make_loss(), "eight_bin", budget=64, seed=seed,
+        strategy="policy_gradient").records) for seed in range(6)]
+    baseline = [min(r.loss for r in optimize_control_family(
+        make_loss(), "eight_bin", budget=64, seed=seed,
+        strategy="sobol_local").records) for seed in range(6)]
+    # With the correct score the policy gradient beats quasi-random search on the
+    # highest-dimensional family at campaign budget. With the wrong one it did not.
+    assert np.mean(corrected) < np.mean(baseline), (np.mean(corrected), np.mean(baseline))
+
+
+def test_cem_labels_its_proposals_and_records_its_elite_fraction():
+    from annealctrl.search import optimize_control_family
+
+    def loss_fn(schedule):
+        return float(schedule(np.linspace(0, 1, 9)).sum())
+
+    result = optimize_control_family(loss_fn, "two_window", budget=33, seed=0, strategy="cem")
+    meta = result.records[1].candidate.parameters
+    assert meta["proposal"] == "cem"
+    for key in ("batch_size", "elite_fraction"):
+        assert key in meta, key
+
+
+def test_cem_is_deterministic_given_a_seed():
+    from annealctrl.search import optimize_control_family
+
+    def loss_fn(schedule):
+        return float(np.abs(schedule(np.linspace(0, 1, 9)) - 0.3).sum())
+
+    a = optimize_control_family(loss_fn, "one_window", budget=17, seed=5, strategy="cem")
+    b = optimize_control_family(loss_fn, "one_window", budget=17, seed=5, strategy="cem")
+    assert [r.loss for r in a.records] == [r.loss for r in b.records]
+
+
+# --- warm starting a search from a learned selection -------------------------
+
+def test_warm_start_keeps_the_linear_reference_and_spends_one_call_on_the_hint():
+    """Trial 0 must stay linear: every headroom number in this project is defined against it."""
+    from annealctrl.search import optimize_control_family
+
+    seen = []
+
+    def loss_fn(schedule):
+        seen.append(schedule(np.linspace(0, 1, 9)).copy())
+        return float(np.abs(schedule(np.linspace(0, 1, 9)) - 0.5).sum())
+
+    hint = np.full(3, 0.7)
+    result = optimize_control_family(loss_fn, "one_window", budget=17, seed=0,
+                                     warm_start=hint)
+    assert len(seen) == 17
+    assert np.allclose(seen[0], np.linspace(0, 1, 9)), "trial 0 is not the linear schedule"
+    assert result.records[1].candidate.parameters.get("proposal") == "warm_start"
+    assert result.records[1].candidate.parameters["unit_parameters"] == pytest.approx(list(hint))
+
+
+def _cubic_loss():
+    def loss_fn(schedule):
+        tau = np.linspace(0, 1, 33)
+        return float(np.abs(schedule(tau) - tau ** 3).mean())
+    return loss_fn
+
+
+def _best_parameters(family, budget=257, seed=0):
+    """A genuinely good hint, found by search rather than guessed."""
+    from annealctrl.search import optimize_control_family
+
+    result = optimize_control_family(_cubic_loss(), family, budget=budget, seed=seed)
+    best = min((r for r in result.records
+                if r.candidate.parameters.get("unit_parameters")), key=lambda r: r.loss)
+    return np.asarray(best.candidate.parameters["unit_parameters"], dtype=float)
+
+
+def test_a_good_warm_start_beats_a_cold_start_at_equal_budget():
+    """This is the whole premise of pairing a learned selector with a search."""
+    from annealctrl.search import optimize_control_family
+
+    hint = _best_parameters("one_window")
+    warm = [min(r.loss for r in optimize_control_family(
+        _cubic_loss(), "one_window", budget=9, seed=seed, warm_start=hint).records)
+        for seed in range(8)]
+    cold = [min(r.loss for r in optimize_control_family(
+        _cubic_loss(), "one_window", budget=9, seed=seed).records) for seed in range(8)]
+    assert np.mean(warm) < np.mean(cold), (np.mean(warm), np.mean(cold))
+
+
+def test_a_bad_warm_start_is_worse_than_a_cold_start():
+    """Warm starting trades exploration for exploitation, and the trade can lose.
+
+    With a cold start the incumbent is empty until an exploratory trial fills it,
+    so early trials all explore. A hint fills it immediately and half the budget
+    becomes local refinement around the hint. That is a win only if the hint is
+    good, and the experiment pairing a learned selector with a search has to be
+    read knowing this is the failure mode.
+    """
+    from annealctrl.search import optimize_control_family
+
+    bad = np.array([0.05, 0.95, 0.95])          # scores worse than the linear reference
+    warm = [min(r.loss for r in optimize_control_family(
+        _cubic_loss(), "one_window", budget=9, seed=seed, warm_start=bad).records)
+        for seed in range(8)]
+    cold = [min(r.loss for r in optimize_control_family(
+        _cubic_loss(), "one_window", budget=9, seed=seed).records) for seed in range(8)]
+    assert np.mean(warm) > np.mean(cold), (np.mean(warm), np.mean(cold))
+
+
+def test_warm_start_refuses_a_wrong_length_hint():
+    from annealctrl.search import optimize_control_family
+
+    with pytest.raises(ValueError, match="warm_start"):
+        optimize_control_family(lambda s: 0.5, "one_window", budget=9, seed=0,
+                                warm_start=np.zeros(5))
+
+
+def test_warm_start_is_rejected_before_query_for_linear_without_parameters():
+    from annealctrl.search import optimize_control_family
+
+    calls = []
+
+    def loss_fn(schedule):
+        calls.append(1)
+        return 0.5
+
+    with pytest.raises(ValueError, match="warm_start"):
+        optimize_control_family(loss_fn, "linear", budget=16, seed=0, warm_start=np.zeros(3))
+    assert len(calls) == 0
+
+
+def test_warm_start_is_refused_by_strategies_that_cannot_use_it():
+    """Silently dropping a hint would make a warm-start experiment measure nothing."""
+    from annealctrl.search import optimize_control_family
+
+    for strategy in ("policy_gradient", "cem"):
+        with pytest.raises(ValueError, match="warm_start"):
+            optimize_control_family(lambda s: 0.5, "one_window", budget=9, seed=0,
+                                    strategy=strategy, warm_start=np.full(3, 0.5))

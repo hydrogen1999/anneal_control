@@ -1,0 +1,58 @@
+{
+  "_comment": "RUNTIME LADDER for the privileged-baseline claim. The campaign measured the spectral oracles at runtimes 1, 4 and 12 and found the gap to equal-budget search at +0.054, +0.167 and +0.111 -- decisive at every point and not closing. That is three points over one decade, and the gap is non-monotonic, so it licenses no extrapolation in either direction. This extends the axis to 12, 36 and 108 to test directly whether the local-adiabatic rule catches up given more time, which is the single strongest objection to the finding. Physical size is capped at 10 because a full spectral teacher is, so this varies runtime and nothing else. Logical size is fixed at 4 and only the runtime varies: parents are split per (family, logical_size) cell, so three sizes over four families would need 12 cells and leave too few parents in each. Holding size fixed keeps the cells at four and the comparison one-dimensional, which is what a ladder is for.",
+  "seed": 20260919,
+  "parents": 32,
+  "families": [
+    "spin_glass",
+    "weighted_maxcut",
+    "planted_loops",
+    "weak_field"
+  ],
+  "logical_sizes": [
+    4
+  ],
+  "logical_support": {
+    "kind": "complete"
+  },
+  "chain_distribution": {
+    "distribution": "power_law",
+    "low": 1,
+    "high": 3,
+    "exponent": 2.0
+  },
+  "variants": [
+    {
+      "shape": "path",
+      "ports": 1,
+      "field_distribution": "uniform"
+    },
+    {
+      "shape": "random_tree",
+      "ports": 2,
+      "field_distribution": "concentrated",
+      "coupling_distribution": "random"
+    }
+  ],
+  "chain_strengths": [
+    0.75,
+    1.5,
+    3.0
+  ],
+  "runtimes": [
+    12.0,
+    36.0,
+    108.0
+  ],
+  "candidates": 8,
+  "candidate_batch_size": 8,
+  "spectral_points": 3,
+  "teacher": {
+    "mode": "none"
+  },
+  "steps": 64,
+  "max_steps": 262144,
+  "label_state_tolerance": 0.0002,
+  "max_physical_qubits": 10,
+  "endpoint_memory_mb": 1024,
+  "state_memory_mb": 2048
+}

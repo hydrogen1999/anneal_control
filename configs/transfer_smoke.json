@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "source_data": "../runs/transfer_source_smoke/data",
+  "checkpoints": [
+    {
+      "method": "summary",
+      "seed": 0,
+      "path": "../runs/transfer_source_smoke/models/summary/seed_0/best.pt"
+    },
+    {
+      "method": "summary",
+      "seed": 1,
+      "path": "../runs/transfer_source_smoke/models/summary/seed_1/best.pt"
+    }
+  ],
+  "targets": [
+    {
+      "name": "heldout_reference",
+      "data": "../runs/transfer_source_smoke/data",
+      "axes": [
+        "heldout_parents"
+      ]
+    }
+  ],
+  "device": "cpu",
+  "threads": 1,
+  "bootstrap_resamples": 300,
+  "bootstrap_seed": 0,
+  "_scope": "Executable after the documented smoke source run. This is an in-distribution held-out reference, not OOD evidence."
+}

@@ -33,6 +33,63 @@ def _config():
     }
 
 
+def test_mechanism_study_reuses_labels_and_pairs_frozen_initialization(tmp_path, monkeypatch):
+    cfg = _config()
+    cfg["seeds"] = [0]
+    cfg["mechanism"] = {"enabled": True, "epochs": 2, "scopes": ["critic", "policy", "heads"]}
+    assert study.plan_study(cfg)["training_runs"] == 11
+    data, output = tmp_path / "data", tmp_path / "study"
+    generate_dataset(cfg["dataset"], data)
+    acquire, calls = study._acquire, []
+
+    def counted(*args, **kwargs):
+        calls.append(args[2])
+        return acquire(*args, **kwargs)
+
+    monkeypatch.setattr(study, "_acquire", counted)
+    manifest = study.run_study(cfg, output, data_dir=data, stage="all")
+    assert calls == ["bankext", "decoder_random", "policy"]
+    baseline = manifest["runs"]["baseline/seed_0"]
+    acquired = manifest["runs"]["policy/seed_0"]
+    for scope in cfg["mechanism"]["scopes"]:
+        for labels in ("original", "acquired"):
+            arm = manifest["runs"][f"mechanism_{scope}_{labels}/seed_0"]
+            assert arm["initialization_checkpoint_sha256"] == baseline["checkpoint_sha256"]
+            assert arm["best_epoch"] == arm["last_epoch"] == 1
+            assert arm["selection_mode"] == "fixed_epochs"
+            if labels == "acquired":
+                assert arm["acquisition_sha256"] == acquired["acquisition_sha256"]
+                assert arm["acquisition_cost"]["objective_calls"] == 0
+                assert arm["shared_acquisition_from"] == "policy/seed_0"
+            else:
+                assert "acquisition" not in arm
+    summary = json.loads((output / "summary.json").read_text())
+    assert set(summary["mechanism_contrasts"]) == {"critic", "policy", "heads"}
+    # Frozen policy is exactly the same in both critic-only fits, so the oracle
+    # best proposal loss is identical; only ranking may change.
+    a = summary["diagnostics"]["mechanism_critic_original/seed_0"]["proposal_diagnostics"]
+    b = summary["diagnostics"]["mechanism_critic_acquired/seed_0"]["proposal_diagnostics"]
+    assert [row["best_proposal_loss"] for row in a["rows"]] == [row["best_proposal_loss"] for row in b["rows"]]
+
+
+def test_bank_extension_uses_independent_candidate_seed(tmp_path):
+    from annealctrl.dagger import collect_bank_extension
+    from annealctrl.search import shared_candidate_bank
+
+    cfg = _config()
+    cfg["dataset"]["candidate_seed"] = 901  # logical parents still use seed 17
+    generate_dataset(cfg["dataset"], tmp_path / "data")
+    obtained = study._acquire(tmp_path / "data", None, "bankext", cfg, cfg["dataset"], "cpu")
+    inferred = collect_bank_extension(tmp_path / "data", bank_size=4, n_extra=3,
+                                      tolerance=0.005, initial_steps=16, max_steps=1024)
+    expected = shared_candidate_bank(n=7, n_segments=8, seed=901, runtime=2., max_slope=2.)
+    waves = np.stack([candidate.schedule(np.linspace(0., 1., 9)) for candidate in expected[4:]])
+    assert obtained["provenance"]["bank_seed"] == inferred["provenance"]["bank_seed"] == 901
+    for identifier, row in obtained["records"].items():
+        np.testing.assert_allclose(row["waveforms"], waves, rtol=0, atol=1e-12)
+        np.testing.assert_array_equal(row["waveforms"], inferred["records"][identifier]["waveforms"])
+
+
 @pytest.fixture(scope="module")
 def completed_study(tmp_path_factory):
     from annealctrl import pipeline

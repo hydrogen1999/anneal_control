@@ -164,8 +164,11 @@ def test_no_oracle_labels_or_identifiers_enter_model_inputs():
 
 
 def test_tiny_training_checkpoint_round_trip(tmp_path):
+    validation = record("c", "validation")
+    validation["logical_h"] = np.array([0.2, 0., 0.])
+    validation["physical_h"] = np.array([0.1, 0.1, 0., 0.])
     fit = fit_records([record("a", "train"), record("b", "train", True)],
-                       [record("c", "validation")], model=small_model(), epochs=2,
+                       [validation], model=small_model(), epochs=2,
                        checkpoint=tmp_path / "model.pt", seed=9)
     model, normalizer = load_checkpoint(tmp_path / "model.pt")
     before = evaluate_records(fit.model, [record("d", "test")], fit.normalizer)

@@ -10,7 +10,7 @@ from time import perf_counter
 from typing import Callable, Sequence
 
 import numpy as np
-from scipy.special import ndtri
+from scipy.special import ndtri, ndtr
 from scipy.stats import qmc
 
 from .schedules import Schedule, decode_durations, pause_schedule, slow_window_schedule, window_schedule
@@ -224,14 +224,71 @@ def equal_budget_refinement(
 CONTROL_FAMILIES = ("linear", "one_window", "two_window", "eight_bin", "pause")
 
 
-STRATEGIES = ("sobol_local", "bayesian")
+STRATEGIES = ("sobol_local", "bayesian", "policy_gradient", "cem")
+
+
+def decode_eight_bin(parameters, *, runtime=1., max_slope=4.) -> Schedule:
+    """The identical unit-box decoder used by all budget-study optimizers."""
+    p = np.asarray(parameters, dtype=float)
+    if p.shape != (8,) or not np.isfinite(p).all() or np.any((p < 0) | (p > 1)):
+        raise ValueError("eight_bin needs eight finite parameters in [0,1]")
+    return decode_durations(2 * ndtri(np.clip(p, 1e-6, 1 - 1e-6)),
+                            runtime=runtime, max_slope=max_slope)
+
+
+def eight_bin_hint(schedule: Schedule, *, runtime=1., max_slope=4.,
+                   mode="reject", tolerance=1e-7) -> dict:
+    """Invert fixed-s duration controls; explicitly project other waveforms.
+
+    A policy's fixed-time knots generally do NOT belong to this family. Sampling
+    the inverse t(s) at the family's nine s knots defines a deterministic
+    projection. Pauses use the midpoint of their inverse interval. Residual
+    durations are floored for the finite unit-box decoder. Both changes are
+    included in the exact piecewise-linear sup-norm error (union of knots).
+    This is not an optimal approximation. The projected control must be scored
+    as a charged query; the original waveform's outcome cannot be reused.
+    """
+    if mode not in {"reject", "project"}:
+        raise ValueError("hint mode must be reject or project")
+    if not np.isfinite(tolerance) or tolerance < 0:
+        raise ValueError("tolerance must be finite and nonnegative")
+    # Only float32 construction tolerance; projection retains exact family bound.
+    schedule.validate_slope(runtime=runtime, max_slope=max_slope * (1 + 1e-6))
+    grid = np.linspace(0., 1., 9)
+    # Exact mid-inverse at repeated s knots; interpolation elsewhere.
+    values = np.unique(schedule.s_knots)
+    times = np.array([schedule.tau_knots[schedule.s_knots == s].mean() for s in values])
+    inverse = np.interp(grid, values, times)
+    inverse[0], inverse[-1] = 0., 1.
+    minimum = np.diff(grid) / (runtime * max_slope)
+    spare = 1. - minimum.sum()
+    if spare < -1e-12:
+        raise ValueError("infeasible slope/runtime")
+    if spare <= 1e-12:
+        point = np.full(8, .5)
+    else:
+        residual = np.maximum((np.diff(inverse) - minimum) / spare, 1e-12)
+        logits = np.log(residual)
+        # Common offset is a gauge; centering extremes uses finite range best.
+        logits -= .5 * (logits.max() + logits.min())
+        point = np.clip(ndtr(logits / 2), 1e-6, 1 - 1e-6)
+    projected = decode_eight_bin(point, runtime=runtime, max_slope=max_slope)
+    knots = np.union1d(schedule.tau_knots, projected.tau_knots)
+    error = float(np.max(np.abs(schedule(knots) - projected(knots))))
+    if mode == "reject" and error > tolerance:
+        raise ValueError(f"waveform is not exactly representable by eight_bin (sup error {error:g}); use explicit project mode")
+    return {"unit_parameters": point.tolist(), "waveform": projected.to_dict(),
+            "original_waveform": schedule.to_dict(), "sup_waveform_error": error,
+            "exact_within_tolerance": error <= tolerance, "tolerance": tolerance,
+            "mapping": "inverse_grid_midpoint_pause_residual_duration_projection",
+            "mode": mode, "evaluation_required": True}
 
 
 def optimize_control_family(
     loss_fn: Callable[[Schedule], float], family: str, *, budget: int = 32,
     runtime: float = 1.0, max_slope: float = 4.0, seed: int = 0,
     split: str = "train", allow_test_adaptation: bool = False,
-    strategy: str = "sobol_local",
+    strategy: str = "sobol_local", warm_start=None,
 ) -> SearchResult:
     """Exact-waveform Sobol exploration plus incumbent-centered random search.
 
@@ -250,10 +307,21 @@ def optimize_control_family(
         raise ValueError(f"unknown control family {family!r}")
     if strategy not in STRATEGIES:
         raise ValueError(f"unknown search strategy {strategy!r}; available: {list(STRATEGIES)}")
+    if warm_start is not None and strategy not in {"sobol_local", "bayesian"}:
+        raise ValueError(f"warm_start is only implemented for sobol_local and bayesian, not {strategy!r}; "
+                         "dropping the hint silently would make a warm-start experiment "
+                         "measure nothing")
     if isinstance(budget, bool) or not isinstance(budget, int) or budget < 1:
         raise ValueError("budget must be a positive integer")
     decode_durations([0.0], runtime=runtime, max_slope=max_slope)
     dimension = {"linear": 0, "one_window": 3, "two_window": 6, "eight_bin": 8, "pause": 2}[family]
+    hint = None
+    if warm_start is not None:
+        hint = np.asarray(warm_start, dtype=float)
+        if family == "linear" or budget < 2:
+            raise ValueError("warm_start needs a tunable family and budget >= 2; linear and hint are charged")
+        if hint.shape != (dimension,) or not np.isfinite(hint).all() or np.any((hint < 1e-6) | (hint > 1 - 1e-6)):
+            raise ValueError(f"warm_start must be {dimension} finite parameters in [1e-6, 1-1e-6]")
     first = _evaluate(loss_fn, Candidate(f"{family}_0000", family, Schedule.linear(),
                                       {"initial_incumbent": "linear"}), 0)
     if family == "linear" or budget == 1:
@@ -263,6 +331,8 @@ def optimize_control_family(
         int(np.ceil(np.log2(budget - 1))))[:budget - 1]
     best_parameters, best_loss = None, first.loss
     records = [first]
+
+    warm_offset = int(hint is not None)
 
     def decode(parameters):
         p = np.clip(parameters, 1e-6, 1 - 1e-6)
@@ -297,22 +367,122 @@ def optimize_control_family(
             index[0] += 1
             candidate = Candidate(f"{family}_{position:04d}", family, schedule,
                                   {"unit_parameters": np.asarray(parameters).tolist(),
-                                   "proposal": "bayesian_design" if position <= design_marker[0]
-                                   else "expected_improvement"})
+                                   "proposal": ("warm_start" if hint is not None and position == 1 else
+                                                "bayesian_design" if position <= design_marker[0]
+                                                else "expected_improvement")})
             record = _evaluate(loss_fn, candidate, position)
             records.append(record)
             return record.loss
 
         design_marker = [min(max(4, 2 * dimension), budget - 1)]
-        minimise(objective, dimension=dimension, budget=budget - 1, seed=seed)
+        minimise(objective, dimension=dimension, budget=budget - 1, seed=seed,
+                 initial=None if hint is None else [hint])
         return SearchResult(tuple(records), split, split == "test")
 
-    for index in range(1, budget):
+    if hint is not None:
+        # Charged like any other call, and it becomes the incumbent that the
+        # local moves refine from.
+        schedule = decode(hint)
+        schedule.validate_slope(runtime=runtime, max_slope=max_slope)
+        record = _evaluate(loss_fn, Candidate(f"{family}_0001", family, schedule,
+                                              {"unit_parameters": hint.tolist(),
+                                               "proposal": "warm_start"}), 1)
+        records.append(record)
+        if record.loss < best_loss:
+            best_parameters, best_loss = hint.copy(), record.loss
+
+    if strategy == "policy_gradient":
+        # REINFORCE on a diagonal Gaussian over the unconstrained parameter
+        # vector, squashed to the unit cube. This is the learned counterpart of
+        # the other two strategies and exists so the comparison contains a
+        # method that *learns* rather than only searches: a reviewer asking
+        # "against which learned baseline?" has an answer at equal budget.
+        #
+        # Batch size grows with dimension because a policy gradient estimated
+        # from fewer samples than parameters is mostly noise, and sigma decays
+        # so late trials exploit what early ones found. The linear incumbent is
+        # already charged as trial 0 and the policy never sees a loss before it
+        # proposes.
+        batch = int(max(4, min(dimension + 2, budget - 1)))
+        learning_rate, sigma, decay = 0.4, 1.0, 0.92
+        mean = np.zeros(dimension)
+        index = 1
+        while index < budget:
+            size = min(batch, budget - index)
+            draws = mean + sigma * rng.normal(size=(size, dimension))
+            losses = np.empty(size)
+            for offset in range(size):
+                parameters = 1.0 / (1.0 + np.exp(-draws[offset]))
+                schedule = decode(parameters)
+                schedule.validate_slope(runtime=runtime, max_slope=max_slope)
+                candidate = Candidate(f"{family}_{index + offset:04d}", family, schedule,
+                                      {"unit_parameters": parameters.tolist(),
+                                       "proposal": "policy_gradient",
+                                       "batch_size": batch,
+                                       "learning_rate": learning_rate,
+                                       "sigma": float(sigma)})
+                record = _evaluate(loss_fn, candidate, index + offset)
+                records.append(record)
+                losses[offset] = record.loss
+            index += size
+            # Standardised advantage: lower loss is better, so the sign is
+            # flipped. A degenerate batch carries no gradient and is skipped
+            # rather than dividing by a vanishing standard deviation.
+            spread = float(losses.std())
+            if size > 1 and spread > 1e-12:
+                advantage = -(losses - losses.mean()) / spread
+                # d/dmu log N(z; mu, sigma^2 I) = (z - mu) / sigma^2. An earlier
+                # version divided by sigma once, which shrank every step as sigma
+                # decayed and left the policy almost stationary.
+                mean = mean + learning_rate * (
+                    advantage[:, None] * (draws - mean)).mean(axis=0) / (sigma * sigma)
+            sigma *= decay
+        return SearchResult(tuple(records), split, split == "test")
+
+    if strategy == "cem":
+        # Cross-entropy method: sample, keep the best fraction, refit the Gaussian
+        # to those elites. It exists here because the first learned baseline in
+        # this project was REINFORCE, and at a campaign budget of 64 calls that
+        # gets seven gradient updates on eight parameters -- a test of the budget,
+        # not of learned search. CEM is the standard choice in exactly this
+        # regime: it needs no gradient estimate and improves from the first
+        # generation.
+        batch = int(max(6, min(4 * dimension, max(6, (budget - 1) // 4))))
+        elite_fraction = 0.25
+        mean, sigma = np.zeros(dimension), np.ones(dimension)
+        index = 1
+        while index < budget:
+            size = min(batch, budget - index)
+            draws = mean + sigma * rng.normal(size=(size, dimension))
+            losses = np.empty(size)
+            for offset in range(size):
+                parameters = 1.0 / (1.0 + np.exp(-draws[offset]))
+                schedule = decode(parameters)
+                schedule.validate_slope(runtime=runtime, max_slope=max_slope)
+                candidate = Candidate(f"{family}_{index + offset:04d}", family, schedule,
+                                      {"unit_parameters": parameters.tolist(),
+                                       "proposal": "cem",
+                                       "batch_size": batch,
+                                       "elite_fraction": elite_fraction})
+                record = _evaluate(loss_fn, candidate, index + offset)
+                records.append(record)
+                losses[offset] = record.loss
+            index += size
+            n_elite = max(2, int(round(elite_fraction * size)))
+            if size >= 2:
+                elite = draws[np.argsort(losses)[:min(n_elite, size)]]
+                mean = elite.mean(axis=0)
+                # A floor on sigma keeps the search from collapsing onto one
+                # point when a generation happens to be tightly clustered.
+                sigma = np.maximum(elite.std(axis=0), 0.05)
+        return SearchResult(tuple(records), split, split == "test")
+
+    for index in range(1 + warm_offset, budget):
         # The linear closure incumbent has no interior parameter vector for
         # window/pause families. Explore until a genuine parameter incumbent
         # exists, instead of pretending arbitrary 0.5 coordinates encode it.
         exploratory = index % 2 == 1 or best_parameters is None
-        parameters = points[index - 1] if exploratory else np.clip(
+        parameters = points[index - 1 - warm_offset] if exploratory else np.clip(
             best_parameters + rng.normal(0., 0.15, dimension), 1e-6, 1 - 1e-6)
         schedule = decode(parameters)
         schedule.validate_slope(runtime=runtime, max_slope=max_slope)

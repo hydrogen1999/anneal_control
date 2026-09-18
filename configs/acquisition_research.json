@@ -4,6 +4,7 @@
   "seeds": [0, 1, 2, 3, 4],
   "model": {"encoder_variant": "summary", "width": 64, "proposals": 16},
   "training": {"epochs": 200, "patience": 25, "learning_rate": 0.001, "batch_size": 8, "accumulation_steps": 2, "weight_decay": 0.0001, "policy_weight": 0.2, "ranking_weight": 0.1, "response_weight": 0.0},
+  "mechanism": {"enabled": true, "epochs": 20, "scopes": ["critic", "policy", "heads"]},
   "acquisition": {"n_extra": 16, "random_seed": 1701, "logit_std": 1.0},
   "execution": {"device": "cpu", "backend": "numpy", "threads": 1, "workers": 8},
   "evaluation": {"direct": true, "tolerance": 0.0002, "initial_steps": 128, "max_steps": 16384, "n_resamples": 10000},

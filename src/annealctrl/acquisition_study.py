@@ -17,6 +17,23 @@ from .experiments import _assert_frozen, _device, content_hash, output_lock, sou
 from .pipeline import environment, generate_dataset, jsonable, load_records, write_json
 
 ARMS = ("control", "bankext", "decoder_random", "policy")
+MECHANISM_SCOPES = ("critic", "policy", "heads")
+
+
+def mechanism_arms(cfg):
+    mechanism = cfg.get("mechanism", {})
+    if not mechanism.get("enabled", False):
+        return ()
+    return tuple(f"mechanism_{scope}_{labels}" for scope in mechanism.get("scopes", MECHANISM_SCOPES)
+                 for labels in ("original", "acquired"))
+
+
+def study_arms(cfg):
+    return ARMS + mechanism_arms(cfg)
+
+
+def _has_acquisition(arm):
+    return arm in ARMS[1:] or arm.endswith("_acquired")
 
 
 def load_study(path):
@@ -30,7 +47,7 @@ def load_study(path):
 
 def validate_study(cfg):
     allowed = {"schema_version", "dataset", "model", "training", "execution", "evaluation",
-               "seeds", "acquisition", "latency", "bootstrap_resamples"}
+               "seeds", "acquisition", "latency", "bootstrap_resamples", "mechanism"}
     unknown = {k for k in cfg if not k.startswith("_")} - allowed
     if unknown:
         raise ValueError(f"Unknown acquisition-study keys: {sorted(unknown)}")
@@ -55,6 +72,20 @@ def validate_study(cfg):
         raise ValueError("acquisition study requires direct evaluation")
     if cfg.get("evaluation", {}).get("norm_tolerance", 1e-9) != 1e-9:
         raise ValueError("matched acquisition currently fixes norm_tolerance=1e-9")
+    mechanism = cfg.get("mechanism", {})
+    if set(mechanism) - {"enabled", "epochs", "scopes"}:
+        raise ValueError("Unknown mechanism key")
+    if type(mechanism.get("enabled", False)) is not bool:
+        raise ValueError("mechanism.enabled must be boolean")
+    if type(mechanism.get("epochs", 20)) is not int or mechanism.get("epochs", 20) < 1:
+        raise ValueError("mechanism.epochs must be a positive predeclared integer")
+    scopes = mechanism.get("scopes", list(MECHANISM_SCOPES))
+    if (not isinstance(scopes, (list, tuple)) or not scopes or
+            any(s not in MECHANISM_SCOPES for s in scopes) or len(set(scopes)) != len(scopes)):
+        raise ValueError("mechanism.scopes must contain unique critic, policy, and/or heads scopes")
+    if mechanism.get("enabled") and any(s in {"policy", "heads"} for s in scopes):
+        if cfg.get("training", {}).get("policy_weight", 0.2) <= 0:
+            raise ValueError("Policy mechanism requires positive training.policy_weight")
     latency = cfg.get("latency", {})
     if set(latency) - {"warmup", "repeats"}:
         raise ValueError("Unknown latency key")
@@ -67,12 +98,20 @@ def validate_study(cfg):
 def plan_study(cfg):
     validate_study(cfg)
     seeds = cfg.get("seeds", [0, 1, 2])
-    return {"arms": list(ARMS), "seeds": seeds, "training_runs": 5 * len(seeds),
+    arms = study_arms(cfg)
+    return {"arms": list(arms), "primary_arms": list(ARMS), "mechanism_arms": list(mechanism_arms(cfg)),
+            "seeds": seeds, "training_runs": (1 + len(arms)) * len(seeds),
             "added_labels_per_training_record_per_acquisition_arm": cfg.get("acquisition", {}).get(
                 "n_extra", cfg.get("model", {}).get("proposals", 3)),
-            "retraining": "from scratch, identical initialization seed and recipe for all arms",
-            "selection": "original validation bank regret",
+            "retraining": "primary arms: from scratch, identical initialization seed and recipe",
+            "selection": "primary arms: original validation bank regret; mechanism arms: fixed final epoch",
             "primary_contrasts": ["policy minus bankext", "policy minus decoder_random"],
+            "mechanism_design": {"initialization": "same frozen baseline weights and normalizer",
+                                 "fixed_epochs": cfg.get("mechanism", {}).get("epochs", 20),
+                                 "paired_control": "same head scope trained on original labels",
+                                 "label_source": "one shared frozen-baseline policy acquisition",
+                                 "shared_modules": "encoder, attention, response head all frozen",
+                                 "targets": "soft targets from true fixed simulator outcomes, never critic pseudo-labels"},
             "scope": "one matched round; plan is not experimental evidence"}
 
 
@@ -165,19 +204,26 @@ def _acquire_recorded(root, manifest, state, *, data, baseline, arm, seed, cfg, 
     return collected
 
 
-def _fit(root, state, records, validation, cfg, seed, device, resume):
+def _fit(root, state, records, validation, cfg, seed, device, resume, *, initialize_from=None, scope="all"):
     from .learning import fit_records
     folder = root / state["folder"]
     folder.mkdir(parents=True, exist_ok=True)
     best, latest = folder / "best.pt", folder / "latest.pt"
     restarting = resume and latest.exists()
     began = perf_counter()
+    settings = dict(cfg.get("training", {}))
+    if scope != "all":
+        settings.update(epochs=cfg.get("mechanism", {}).get("epochs", 20), response_weight=0.,
+                        initialize_from=initialize_from, trainable_scope=scope, selection_mode="fixed_epochs")
     fitted = fit_records(records, validation, model_config=cfg.get("model", {}), seed=seed,
                          device=device, checkpoint=best, latest_checkpoint=latest,
-                         resume_from=latest if restarting else None, **cfg.get("training", {}))
+                         resume_from=latest if restarting else None, **settings)
     state.update(trained=True, checkpoint=str(best.relative_to(root)), checkpoint_sha256=_sha(best),
                  training_seconds=perf_counter() - began, training_cost_complete=not restarting,
                  best_epoch=fitted.best_epoch, last_epoch=fitted.last_epoch)
+    if scope != "all":
+        state.update(initialization_checkpoint_sha256=_sha(initialize_from), trainable_scope=scope,
+                     selection_mode="fixed_epochs", target_source="fixed_simulator_outcomes")
     write_json(folder / "history.json", {"history": fitted.history, **state})
 
 
@@ -192,7 +238,8 @@ def _acquire(data, baseline, arm, cfg, data_config, device):
     if arm == "policy":
         return collect_labelled_proposals(data, baseline, device=device, **common)
     if arm == "bankext":
-        return collect_bank_extension(data, n_extra=count, bank_seed=data_config["seed"],
+        return collect_bank_extension(data, n_extra=count,
+                                      bank_seed=data_config.get("candidate_seed", data_config["seed"]),
                                       bank_size=data_config["candidates"], **common)
     if arm == "decoder_random":
         return collect_decoder_random(data, n_extra=count, seed=acquisition.get("random_seed", 1701),
@@ -217,7 +264,7 @@ def summarize_study(root, manifest):
     root = Path(root)
     rows, costs, diagnostics = [], {}, {}
     for seed in manifest["config"].get("seeds", [0, 1, 2]):
-        for arm in ARMS:
+        for arm in study_arms(manifest["config"]):
             name = f"{arm}/seed_{seed}"
             state = manifest["runs"][name]
             result = json.loads(_verify_artifact(root, state, "evaluation").read_text())
@@ -227,6 +274,7 @@ def summarize_study(root, manifest):
                            "shared_frozen_baseline_training_seconds": base["training_seconds"],
                            "shared_frozen_baseline_training_cost_complete": base["training_cost_complete"],
                            "cost_note": "baseline training is shared within a seed; charge it once, not once per arm",
+                           "shared_acquisition_from": state.get("shared_acquisition_from"),
                            "training_cost_complete": state["training_cost_complete"],
                            "acquisition": (_attempt_costs(root, state) if state.get("acquisition_attempts")
                                            else state.get("acquisition_cost", {"objective_calls": 0})),
@@ -239,13 +287,19 @@ def summarize_study(root, manifest):
         contrasts[f"policy_minus_{comparator}"] = paired_parent_seed_contrast(
             rows, comparator, "policy", mode="direct", bootstrap_resamples=count)
     deployment = {}
-    for arm in ARMS:
+    mechanisms = {}
+    for scope in manifest["config"].get("mechanism", {}).get("scopes", MECHANISM_SCOPES):
+        original, acquired = f"mechanism_{scope}_original", f"mechanism_{scope}_acquired"
+        if original in study_arms(manifest["config"]):
+            mechanisms[scope] = {mode: paired_parent_seed_contrast(
+                rows, original, acquired, mode=mode, bootstrap_resamples=count) for mode in ("bank", "direct")}
+    for arm in study_arms(manifest["config"]):
         selected = [dict(row, method=row["mode"], mode="deployment") for row in rows
                     if row["method"] == arm and row["mode"] in {"bank", "direct", "global"}]
         deployment[arm] = {f"direct_minus_{ref}": paired_parent_seed_contrast(
             selected, ref, "direct", mode="deployment", bootstrap_resamples=count) for ref in ("bank", "global")}
     means = {}
-    for arm in ARMS:
+    for arm in study_arms(manifest["config"]):
         means[arm] = {}
         for mode in ("bank", "direct", "global", "linear"):
             cells = {}
@@ -255,6 +309,8 @@ def summarize_study(root, manifest):
             means[arm][mode] = float(np.mean([np.mean(v) for v in cells.values()]))
     result = {"schema_version": 1, "config_hash": manifest["config_hash"], "source_hash": manifest["source_hash"],
               "means": means, "acquisition_contrasts": contrasts, "deployment_contrasts": deployment,
+              "mechanism_contrasts": mechanisms,
+              "mechanism_scope": "acquired minus original labels within the same frozen-backbone head scope; fixed-budget continuation, not primary from-scratch arms",
               "costs": costs, "diagnostics": diagnostics, "records": rows,
               "inference": "crossed parent/seed percentile intervals are descriptive and unadjusted; no automatic discovery claim",
               "scope": "closed-system one-round experiment; shared-bank random extension and decoder-random are distinct controls"}
@@ -266,8 +322,12 @@ def summarize_study(root, manifest):
     lines += ["", "Full paired contrasts, raw rows, diagnostics and costs: `summary.json`.", "",
               "These results do not establish architectural superiority, hardware performance, or conference readiness.",
               "Primary attribution requires policy acquisition to improve over BOTH bank extension and decoder-random across independent parents and seeds.",
-              "All checkpoints use the original validation bank; test labels enter only the frozen evaluation stage.",
+              "Primary checkpoints use the original validation bank; mechanism checkpoints use the predeclared final epoch. Test labels enter only frozen evaluation.",
               "Both bank and direct deployment require zero online simulator calls. Offline diagnostic scoring is separate."]
+    if mechanisms:
+        lines += ["", "Mechanism arms share the frozen baseline, normalizer, policy-acquired labels, and fixed epoch budget.",
+                  "Only designated heads change; encoder/attention/response remain fixed. Compare acquired vs original within each scope.",
+                  "Policy targets use true simulator labels; updated critics never create pseudo-labels. No mechanism result by itself proves distribution-shift causality."]
     (root / "RESULTS.md").write_text("\n".join(lines) + "\n")
     return result
 
@@ -345,14 +405,23 @@ def run_study(cfg, output, *, data_dir=None, stage="all", resume=False):
                         _fit(root, base, training, validation, cfg, seed, device, resume)
                         write_json(path, manifest)
                     baseline = _verify_artifact(root, base, "checkpoint")
-                    for arm in ARMS:
+                    for arm in study_arms(cfg):
                         name = f"{arm}/seed_{seed}"
                         state = manifest["runs"].setdefault(name, {"folder": f"models/{name}"})
                         if state.get("trained"):
                             continue
                         _assert_frozen(manifest)
                         records = training
-                        if arm != "control":
+                        if _has_acquisition(arm):
+                            if arm.startswith("mechanism_"):
+                                source_name = f"policy/seed_{seed}"
+                                source = manifest["runs"][source_name]
+                                _verify_artifact(root, source, "acquisition")
+                                state.update(acquisition=source["acquisition"], acquisition_sha256=source["acquisition_sha256"],
+                                             shared_acquisition_from=source_name,
+                                             acquisition_cost={"objective_calls": 0, "cost_counts_complete": True,
+                                                 "objective_calls_complete": True,
+                                                 "scope": "shared policy acquisition charged once to the primary policy arm"})
                             if "acquisition" not in state:
                                 print(f"[acquire] {name}", flush=True)
                                 _acquire_recorded(root, manifest, state, data=data, baseline=baseline,
@@ -361,7 +430,11 @@ def run_study(cfg, output, *, data_dir=None, stage="all", resume=False):
                             collected = json.loads(_verify_artifact(root, state, "acquisition").read_text())
                             records = augment_records(training, collected)
                         print(f"[retrain] {name}", flush=True)
-                        _fit(root, state, records, validation, cfg, seed, device, resume)
+                        if arm.startswith("mechanism_"):
+                            _fit(root, state, records, validation, cfg, seed, device, resume,
+                                 initialize_from=baseline, scope=arm.split("_")[1])
+                        else:
+                            _fit(root, state, records, validation, cfg, seed, device, resume)
                         write_json(path, manifest)
                 manifest["training_complete"] = True
                 _assert_frozen(manifest)
@@ -372,12 +445,12 @@ def run_study(cfg, output, *, data_dir=None, stage="all", resume=False):
                 from .acquisition_evaluation import evaluate_acquisition_arm
                 for seed in cfg.get("seeds", [0, 1, 2]):
                     baseline = _verify_artifact(root, manifest["runs"][f"baseline/seed_{seed}"], "checkpoint")
-                    for arm in ARMS:
+                    for arm in study_arms(cfg):
                         state = manifest["runs"][f"{arm}/seed_{seed}"]
                         if "evaluation" in state:
                             continue
                         _assert_frozen(manifest)
-                        records = training if arm == "control" else augment_records(training,
+                        records = training if not _has_acquisition(arm) else augment_records(training,
                             json.loads(_verify_artifact(root, state, "acquisition").read_text()))
                         evaluation = {k: v for k, v in cfg.get("evaluation", {}).items()
                                       if k not in {"direct", "norm_tolerance"}}

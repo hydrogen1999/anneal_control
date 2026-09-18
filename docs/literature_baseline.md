@@ -132,3 +132,67 @@ gives fidelity approximately `0.02346844`; the published caption quotes roughly
 three seeds do **not** establish numerical reproduction of the published
 distribution. In particular, our bounded check does not replace the paper's
 larger repetition study, tuned optimizer comparison, or experimental results.
+
+## Frozen matched campaign
+
+The `literature-study` command runs both GP-UCB and uniform random at each
+prespecified budget, on exactly the same records and optimizer seeds:
+
+```bash
+annealctrl literature-study --config configs/literature_smoke.json --out runs/literature_smoke
+annealctrl literature-study --config configs/literature_research.json --out runs/literature_research
+```
+
+Set `data` in the JSON to an existing generated dataset. A relative `data` path
+is resolved against the configuration file's directory. The research example
+uses the final test split with explicitly charged online adaptation; settle
+settings using a validation copy of the configuration first. Its five seeds,
+three independent budgets (10, 30, 60), and two arms require **1,000 objective
+calls per record** before retries. This is a cost declaration, not an experiment
+already completed. The smoke configuration deliberately uses weaker optimizer
+settings and fewer parents. It only verifies execution.
+
+Both arms share the linear query and all random initialization points. They
+each pay for their own calls, including the common initial design and numerical
+failures. Method order alternates across record/seed pairs. GP-UCB's exploration
+decay depends on its budget, so each budget is optimized independently. Uniform
+random shares its initialization and search space but does not fit a surrogate.
+The warm-start API additionally accepts an `initial_point`: it replaces the
+second initial query, leaves the linear first query and remaining random draws
+unchanged, and consumes one call. It is labelled explicitly in the trace.
+
+`campaign.json` freezes configuration, source, dataset manifest, and all selected
+record payloads. Every expensive query has a flushed, synced start/finish receipt.
+With `--resume`, completed results are verified by hash and reused; failed or
+interrupted runs create new attempts. Earlier spent calls are retained in total
+cost. A start receipt without a finish is an unresolved reservation, because an
+interruption could occur immediately before or during the objective. Its internal
+solver cost is unknown and is never silently counted as zero actual work.
+Changes to source, configuration, manifest, completed results or recorded ledgers
+stop the campaign. Do not modify a source checkout while a campaign runs.
+
+`summary.json` reports descriptive GP-UCB-minus-random loss intervals using the
+complete paired logical-parent/optimizer-seed panel. Each parent has equal weight;
+runtime and embedding records remain within their parent. Intervals are not
+adjusted across budgets, and no best seed or budget is selected. A run with no
+valid incumbent suppresses that budget's complete-population contrast instead of
+silently discarding the failed run. Query failures and cumulative costs remain
+visible even when the campaign eventually completes.
+
+For the separate original-system check:
+
+```bash
+python -m annealctrl.finzgar_reference \
+  --config configs/literature_pspin_reference.json \
+  --out runs/literature_pspin_80_seeds.json
+```
+
+This configuration requests 80 paired seeds and 9,600 total queries. The result
+includes fidelity quartiles, all per-seed BO-minus-random differences, a
+descriptive optimizer-seed interval, and integration work. The adjacent
+`.queries.jsonl` preserves query receipts if the process stops; the original
+reference CLI does not silently restart or overwrite an interrupted run. The
+previous three-seed archive, including BO's one win out of three, remains
+unchanged. Additional repetitions can reduce uncertainty but do not retroactively
+turn an independent implementation into the authors' code or verify agreement
+with their reported numerical distribution.

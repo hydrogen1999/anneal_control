@@ -45,11 +45,34 @@ rule, given the exact spectrum, is also **worse than a linear ramp**
 | 4.0 | +0.0625 | 45.1% | +0.0232 | 56.7% |
 | 12.0 | −0.0001 | 51.6% | **−0.0341** | 66.0% |
 
-The gap-based rules improve monotonically with runtime and only reach parity
-with a linear ramp at the longest runtime tested. This is not a defect in the
-implementation — it is the adiabatic theorem behaving as advertised. The rule is
-asymptotically correct, and the asymptotic regime is not where any of these
-runtimes are.
+Against a **linear ramp** the rules do catch up: the fraction of instances where
+`gap_inverse_square` beats linear rises monotonically (37.1%, 45.1%, 51.6%) and
+the mean difference reaches parity at runtime 12. That is the adiabatic theorem
+behaving as advertised.
+
+**Against the search it does not.** That is the comparison the finding rests on,
+and it is the one to read:
+
+| runtime | `gap_inverse_square` − search | `d2` − search |
+|---:|---|---|
+| 1 | +0.0540 [+0.0462, +0.0623] | +0.0677 [+0.0598, +0.0758] |
+| 4 | +0.1671 [+0.1428, +0.1926] | +0.1393 [+0.1229, +0.1561] |
+| 12 | +0.1105 [+0.0955, +0.1259] | +0.0879 [+0.0748, +0.1016] |
+
+Every interval excludes zero, and the gap at runtime 12 is roughly **twice** the
+gap at runtime 1. `gap_inverse_square` beats the search on 0.7% of records and
+`d2` on 3.8%.
+
+An earlier revision of this report quoted only the vs-linear column and described
+it as evidence that the finding would reverse at longer runtime. That was reading
+the trend of one quantity to undermine a claim that rests on a different one. The
+gap to search is what the claim is about, and across the runtimes tested it does
+not close.
+
+It is also **non-monotonic**, peaking at runtime 4, so it licenses no
+extrapolation in either direction — including the favourable one. A runtime
+ladder at 12, 36 and 108 (`configs/data_runtime_ladder.json`) is running to test
+that directly rather than argue about it.
 
 ## What this licenses, and what it does not
 

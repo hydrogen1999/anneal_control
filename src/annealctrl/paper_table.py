@@ -12,8 +12,8 @@ So every row carries what it had to consume:
 ``fixed``
     One waveform for every instance. No per-instance work at all.
 ``privileged_spectrum``
-    Needs the exact instantaneous spectrum along the path. Exponential, and
-    unavailable to anything deployed. Consults no outcome.
+    Needs the exact instantaneous spectrum along the path. Expensive at scale;
+    the current implementation is capped at small systems. Consults no outcome.
 ``amortised``
     Offline training, then inference. Consults no outcome at deployment.
 ``online_adaptation``
@@ -34,6 +34,17 @@ from .headroom import _bootstrap, _parent_means
 from .telemetry import _safe
 
 COST_CLASSES = ("fixed", "privileged_spectrum", "amortised", "online_adaptation")
+
+
+def _validate_search_row(row: Mapping[str, Any], *, name: str) -> None:
+    if row.get("split") != "test":
+        raise ValueError(f"search {name!r} must use the test split")
+    for key in ("linear_loss", "best_found_loss"):
+        if row.get(key) is None or not np.isfinite(float(row[key])):
+            raise ValueError(f"search {name!r} {key} must be finite and non-null")
+    calls = row.get("total_objective_calls")
+    if isinstance(calls, bool) or not isinstance(calls, (int, np.integer)) or calls < 1:
+        raise ValueError(f"search {name!r} total_objective_calls must be a positive integer")
 
 
 def _audited_teacher_loss(row, teacher):
@@ -102,6 +113,30 @@ def assemble_comparison(ml_rows: Sequence[Mapping[str, Any]],
     two slightly different values for the same quantity.
     """
     ml_rows, frontier_rows = list(ml_rows), list(frontier_rows)
+    if isinstance(bootstrap_resamples, bool) or not isinstance(bootstrap_resamples, (int, np.integer)) or bootstrap_resamples < 1:
+        raise ValueError("bootstrap_resamples must be a positive integer")
+    ml_keys = [(str(row["method"]), str(row["mode"]), str(row["record_id"])) for row in ml_rows]
+    if len(set(ml_keys)) != len(ml_keys):
+        raise ValueError("duplicate learned method/mode/record_id")
+    for row in ml_rows:
+        for key in ("loss", "linear_loss", "global_loss"):
+            if row.get(key) is not None and not np.isfinite(float(row[key])):
+                raise ValueError(f"learned {key} must be finite")
+    constants_by_id = {}
+    for row in ml_rows:
+        record = str(row["record_id"])
+        if record in constants_by_id:
+            previous = constants_by_id[record]
+            for key in ("parent_id", "runtime", "family", "logical_n", "physical_n"):
+                if row.get(key) != previous.get(key):
+                    raise ValueError(f"learned {key} inconsistent across methods for {record}")
+            for key in ("linear_loss", "global_loss"):
+                a, b = row.get(key), previous.get(key)
+                if (a is None) != (b is None) or (a is not None and not np.isclose(a, b, rtol=0, atol=1e-12)):
+                    raise ValueError(f"learned {key} inconsistent across methods for {record}")
+        constants_by_id[record] = row
+    for row in frontier_rows:
+        _validate_search_row(row, name="reference")
     splits = {str(row.get("split")) for row in ml_rows}
     if splits != {"test"}:
         raise ValueError(f"comparison table is a held-out measurement; got splits {sorted(splits)}")
@@ -210,8 +245,32 @@ def assemble_comparison(ml_rows: Sequence[Mapping[str, Any]],
         search["objective_calls_per_instance"] = float(np.mean(calls)) if calls else None
         rows.append(search)
 
+    search_audit = {}
     for name, extra_rows in sorted((searches or {}).items()):
+        extra_rows = list(extra_rows)
+        extra_ids = [str(row["record_id"]) for row in extra_rows]
+        if len(set(extra_ids)) != len(extra_ids):
+            raise ValueError(f"search {name!r} has duplicate record_id")
+        for row in extra_rows:
+            _validate_search_row(row, name=name)
+            record = str(row["record_id"])
+            if record not in shared:
+                continue
+            reference_row = frontier_by_id[record]
+            for key in ("parent_id", "runtime", "family", "logical_n", "physical_n"):
+                if row.get(key) != reference_row.get(key):
+                    raise ValueError(f"search {name!r} {key} mismatch for {record}")
+            if row["total_objective_calls"] != reference_row["total_objective_calls"]:
+                raise ValueError(f"search {name!r} objective budget mismatch for {record}")
+            if not np.isclose(row["linear_loss"], reference_row["linear_loss"], atol=1e-12, rtol=0):
+                raise ValueError(f"search {name!r} linear reference mismatch for {record}")
         by_id = {str(row["record_id"]): row for row in extra_rows if str(row["record_id"]) in shared}
+        search_audit[name] = {"n_input_records": len(extra_rows), "n_common_records": len(by_id),
+                              "n_outside_common_population": len(set(extra_ids) - shared),
+                              "n_missing_common_records": len(shared - set(extra_ids)),
+                              "per_record_objective_budgets_match": True,
+                              "identity_fields_checked": ["parent_id", "split", "runtime", "family", "logical_n", "physical_n"],
+                              "search_seed_scope": "archive may omit search seeds; matching seeds is not inferred"}
         entries = [{"parent_id": row["parent_id"], "record_id": record,
                     "linear_loss": row.get("linear_loss"), "global_loss": None,
                     "best_found_loss": row.get("best_found_loss"),
@@ -248,6 +307,7 @@ def assemble_comparison(ml_rows: Sequence[Mapping[str, Any]],
         "n_dropped_no_ml_row": len(set(frontier_by_id) - shared),
         "rows": rows,
         "teacher_populations": teacher_populations,
+        "search_input_audit": search_audit,
         "matched_teacher_contrasts": teacher_contrasts,
         "ranked_within_cost_class": ranked,
         "ranking_scope": "full common population only; conditional rows are not ranked against another population",

@@ -17,7 +17,8 @@ COMMANDS = {"run", "tune", "report", "audit", "doctor", "train-config", "infer",
             "control-sweep", "frontier-report", "screen",
             "intervention-sweep", "intervention-report",
             "model-intervention-sweep", "model-intervention-report", "cost-report",
-            "method-contrast", "acquisition-study", "teacher-baseline-report", "comparison-table"}
+            "method-contrast", "acquisition-study", "teacher-baseline-report", "comparison-table",
+            "transfer-study", "budget-study", "literature-study", "noise-study", "paper-campaign"}
 
 
 def _json(path):
@@ -70,6 +71,20 @@ def doctor(require_gpu=False):
 def main(argv):
     parser = argparse.ArgumentParser(prog="annealctrl")
     sub = parser.add_subparsers(dest="command", required=True)
+    for name, help_text in (
+        ("transfer-study", "frozen-checkpoint transfer with logical-parent disjointness"),
+        ("budget-study", "matched online-query budgets and explicit learned warm starts"),
+        ("literature-study", "paired published-recipe adaptation and random controls"),
+        ("noise-study", "frozen learned decisions under small phenomenological noise"),
+        ("paper-campaign", "frozen local generation, training and evaluation campaign"),
+    ):
+        campaign = sub.add_parser(name, help=help_text)
+        campaign.add_argument("--config", required=True)
+        campaign.add_argument("--output", "--out", dest="output", required=True)
+        campaign.add_argument("--resume", action="store_true")
+        if name == "paper-campaign":
+            campaign.add_argument("--dry-run", action="store_true")
+            campaign.add_argument("--through", help="finish through this declared step and stop")
     study = sub.add_parser("acquisition-study", help="matched policy/bank/decoder-random acquisition controls")
     study.add_argument("--config", required=True)
     study.add_argument("--output", required=True)
@@ -246,7 +261,23 @@ def main(argv):
     opened.add_argument("--config", required=True)
     opened.add_argument("--output", required=True)
     args = parser.parse_args(argv)
-    if args.command == "acquisition-study":
+    if args.command == "paper-campaign":
+        from .paper_campaign import plan_campaign, run_campaign
+        result = (plan_campaign(args.config, args.output) if args.dry_run else
+                  run_campaign(args.config, args.output, resume=args.resume, through=args.through))
+        print(json.dumps(result if args.dry_run else {"status": result["status"], "output": args.output}, indent=2))
+    elif args.command in {"transfer-study", "budget-study", "literature-study", "noise-study"}:
+        if args.command == "transfer-study":
+            from .transfer_study import run_transfer_study as runner
+        elif args.command == "budget-study":
+            from .budget_study import run_budget_study as runner
+        elif args.command == "noise-study":
+            from .noise_study import run_noise_study as runner
+        else:
+            from .literature_baselines import run_literature_study as runner
+        result = runner(args.config, args.output, resume=args.resume)
+        print(json.dumps({"status": result.get("status", "complete"), "output": args.output}, indent=2))
+    elif args.command == "acquisition-study":
         from .acquisition_study import load_study, plan_study, run_study
         cfg = load_study(args.config)
         result = plan_study(cfg) if args.dry_run else run_study(

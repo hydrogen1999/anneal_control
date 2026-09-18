@@ -1,3 +1,5 @@
+> Updated inference: use [the 2026-09-18 reanalysis](../evidence_audit_2026-09-18/RESULTS.md). Historical contrast p-values below used the previous test; they are retained for provenance, not current hypothesis decisions. The pooled information contrast is outside the pairwise Holm family.
+
 # Held-out comparison: does the architecture beat the simpler encoders?
 
 Source: `research_v1`, 5 encoders × 5 training seeds = 25 runs, all trained and
@@ -68,7 +70,7 @@ separated.
 ## 4. What this supports, and what it does not
 
 **Supported.** An encoder that can see the embedding beats one that cannot, when
-selecting from a bank: −0.0078 [−0.0111, −0.0045], parent-paired, Holm-corrected
+selecting from a bank: −0.0078 [−0.0111, −0.0045], parent-paired, exploratory and unadjusted
 against the full family of comparisons. This is the learned-model counterpart of
 the G3 intervention result, measured on held-out parents, and it is the claim
 the paper can make.
@@ -76,7 +78,7 @@ the paper can make.
 **Not supported.** That the hierarchical architecture is better than a pooled
 summary encoder. `summary` is the cheapest embedding-aware encoder in the set and
 it is first in the ranking; the four aware encoders are mutually
-indistinguishable at this sample size. The honest reading is that the *encoder
+not separated at this sample size (not an equivalence finding). The honest reading is that the *encoder
 architecture* does not matter once the embedding is visible at all — the
 information does the work, not the elaboration.
 
