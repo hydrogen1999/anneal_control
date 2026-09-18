@@ -64,6 +64,25 @@ def test_a_single_proposal_has_no_ranking_to_get_wrong():
     assert result["critic_rank_correlation"] is None
 
 
+def test_rank_correlation_uses_average_ranks_for_ties():
+    # Average ranks are [1.5, 1.5, 3] and [1, 2.5, 2.5], yielding rho=.5.
+    result = decompose_proposals(true_losses=[0.1, 0.1, 0.3],
+                                 predicted_losses=[0.1, 0.2, 0.2],
+                                 selected_index=0, bank_loss=0.4, linear_loss=0.6)
+    assert result["critic_rank_correlation"] == pytest.approx(0.5)
+    permuted = decompose_proposals(true_losses=[0.1, 0.3, 0.1],
+                                   predicted_losses=[0.2, 0.2, 0.1],
+                                   selected_index=2, bank_loss=0.4, linear_loss=0.6)
+    assert permuted["critic_rank_correlation"] == pytest.approx(0.5)
+
+
+def test_constant_losses_have_undefined_rank_correlation():
+    result = decompose_proposals(true_losses=[0.3, 0.3, 0.3],
+                                 predicted_losses=[0.1, 0.2, 0.2],
+                                 selected_index=0, bank_loss=0.4, linear_loss=0.6)
+    assert result["critic_rank_correlation"] is None
+
+
 def test_mismatched_lengths_are_refused():
     with pytest.raises(ValueError, match="same length"):
         decompose_proposals(true_losses=[0.3, 0.4], predicted_losses=[0.1],
@@ -112,7 +131,7 @@ def test_aggregate_refuses_an_empty_row_set():
         aggregate_proposal_decomposition([])
 
 
-def test_diagnose_checkpoint_scores_every_proposal_on_a_real_dataset(tmp_path):
+def test_diagnose_checkpoint_scores_every_proposal_on_a_real_dataset(tmp_path, monkeypatch):
     from annealctrl.learning import fit_records
     from annealctrl.pipeline import generate_dataset, load_records
     from annealctrl.policy_diagnostics import diagnose_checkpoint
@@ -138,3 +157,23 @@ def test_diagnose_checkpoint_scores_every_proposal_on_a_real_dataset(tmp_path):
     assert row["best_proposal_loss"] <= row["selected_proposal_loss"] + 1e-12
     summary = aggregate_proposal_decomposition(result["rows"], bootstrap_resamples=100)
     assert summary["dominant_cause"] in {"critic_ranking", "policy_generation"}
+
+    import annealctrl.benchmarking as benchmarking
+    def broken_physics(*args, **kwargs):
+        raise ValueError("invalid physics provenance")
+    monkeypatch.setattr(benchmarking, "score_schedule", broken_physics)
+    with pytest.raises(ValueError, match="physics provenance"):
+        diagnose_checkpoint(tmp_path / "data", tmp_path / "m.pt", split="test",
+                            tolerance=5e-3, initial_steps=16, max_steps=512)
+
+
+def test_diagnostics_reject_bad_backend_before_loading_data(tmp_path):
+    from annealctrl.policy_diagnostics import diagnose_checkpoint
+    with pytest.raises(ValueError, match="backend"):
+        diagnose_checkpoint(tmp_path / "missing", tmp_path / "missing.pt", backend="bad")
+
+
+def test_decomposition_refuses_nonfinite_reference_losses():
+    with pytest.raises(ValueError, match="reference losses"):
+        decompose_proposals(true_losses=[0.3], predicted_losses=[0.3],
+                            selected_index=0, bank_loss=float("nan"), linear_loss=0.6)

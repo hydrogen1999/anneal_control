@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "dataset": {
+    "seed": 2026091801,
+    "parents": 12,
+    "families": [
+      "spin_glass",
+      "weighted_maxcut"
+    ],
+    "logical_qubits": 3,
+    "chain_lengths": [
+      1,
+      1,
+      1
+    ],
+    "variants": [
+      {
+        "shape": "path",
+        "ports": 1
+      }
+    ],
+    "chain_strengths": [
+      1.5
+    ],
+    "runtimes": [
+      2.0
+    ],
+    "candidates": 4,
+    "spectral_points": 3,
+    "teacher": {
+      "mode": "none"
+    },
+    "steps": 16,
+    "max_steps": 1024,
+    "label_state_tolerance": 0.005,
+    "max_physical_qubits": 3,
+    "candidate_seed": 1801
+  },
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "model": {
+    "encoder_variant": "summary",
+    "width": 16,
+    "proposals": 3
+  },
+  "training": {
+    "epochs": 4,
+    "patience": 4,
+    "batch_size": 2,
+    "response_weight": 0.0
+  },
+  "mechanism": {
+    "enabled": true,
+    "epochs": 2,
+    "scopes": [
+      "critic",
+      "policy",
+      "heads"
+    ]
+  },
+  "acquisition": {
+    "n_extra": 3,
+    "random_seed": 1701,
+    "logit_std": 1.0
+  },
+  "execution": {
+    "device": "cpu",
+    "backend": "numpy",
+    "threads": 1,
+    "workers": 1
+  },
+  "evaluation": {
+    "direct": true,
+    "tolerance": 0.005,
+    "initial_steps": 16,
+    "max_steps": 1024,
+    "n_resamples": 200
+  },
+  "latency": {
+    "warmup": 1,
+    "repeats": 3
+  },
+  "bootstrap_resamples": 500,
+  "_scope": "Integration smoke only: 3-qubit population and four training epochs cannot support scientific performance claims."
+}

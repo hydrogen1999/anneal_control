@@ -1,0 +1,1776 @@
+{
+  "schema_version": 1,
+  "status": "complete",
+  "config": {
+    "seed": 2026091701,
+    "parents": 60,
+    "families": [
+      "spin_glass",
+      "weighted_maxcut",
+      "planted_loops",
+      "weak_field"
+    ],
+    "logical_sizes": [
+      3,
+      4,
+      5
+    ],
+    "logical_support": {
+      "kind": "complete"
+    },
+    "chain_distribution": {
+      "distribution": "power_law",
+      "low": 1,
+      "high": 2,
+      "exponent": 2.0
+    },
+    "variants": [
+      {
+        "shape": "path",
+        "ports": 1,
+        "field_distribution": "uniform"
+      }
+    ],
+    "chain_strengths": [
+      1.5
+    ],
+    "runtimes": [
+      2.0,
+      5.0
+    ],
+    "candidates": 16,
+    "candidate_batch_size": 8,
+    "spectral_points": 3,
+    "teacher": {
+      "mode": "none"
+    },
+    "steps": 32,
+    "max_steps": 4096,
+    "label_state_tolerance": 0.0005,
+    "max_physical_qubits": 10,
+    "endpoint_memory_mb": 512,
+    "state_memory_mb": 1024,
+    "backend": "numpy"
+  },
+  "config_hash": "69a9dc261e1f23859860aa6d51582d77a721736ea8c9b68e6b63ff8c136308c3",
+  "source_fingerprint": "a07e7a1ff339c0428b4df7582fc36a9304cecb575b40729ae915ba206779c84d",
+  "environment": {
+    "python": "3.12.14",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+    "packages": {
+      "numpy": "2.3.5",
+      "scipy": "1.17.0",
+      "networkx": "3.6.1",
+      "torch": "2.14.0+cpu",
+      "pytest": "9.1.1"
+    }
+  },
+  "execution": {
+    "workers": 1,
+    "backend": "numpy"
+  },
+  "splits": {
+    "parent_0026": "validation",
+    "parent_0014": "test",
+    "parent_0002": "train",
+    "parent_0038": "train",
+    "parent_0050": "train",
+    "parent_0042": "validation",
+    "parent_0030": "test",
+    "parent_0054": "train",
+    "parent_0006": "train",
+    "parent_0018": "train",
+    "parent_0034": "validation",
+    "parent_0058": "test",
+    "parent_0010": "train",
+    "parent_0046": "train",
+    "parent_0022": "train",
+    "parent_0036": "validation",
+    "parent_0024": "test",
+    "parent_0000": "train",
+    "parent_0012": "train",
+    "parent_0048": "train",
+    "parent_0004": "validation",
+    "parent_0040": "test",
+    "parent_0016": "train",
+    "parent_0028": "train",
+    "parent_0052": "train",
+    "parent_0020": "validation",
+    "parent_0044": "test",
+    "parent_0008": "train",
+    "parent_0032": "train",
+    "parent_0056": "train",
+    "parent_0027": "validation",
+    "parent_0039": "test",
+    "parent_0003": "train",
+    "parent_0051": "train",
+    "parent_0015": "train",
+    "parent_0055": "validation",
+    "parent_0031": "test",
+    "parent_0007": "train",
+    "parent_0019": "train",
+    "parent_0043": "train",
+    "parent_0047": "validation",
+    "parent_0011": "test",
+    "parent_0059": "train",
+    "parent_0035": "train",
+    "parent_0023": "train",
+    "parent_0025": "validation",
+    "parent_0013": "test",
+    "parent_0001": "train",
+    "parent_0037": "train",
+    "parent_0049": "train",
+    "parent_0017": "validation",
+    "parent_0029": "test",
+    "parent_0053": "train",
+    "parent_0005": "train",
+    "parent_0041": "train",
+    "parent_0009": "validation",
+    "parent_0045": "test",
+    "parent_0057": "train",
+    "parent_0021": "train",
+    "parent_0033": "train"
+  },
+  "records": [
+    {
+      "record_id": "parent_0000_e0_k0_t0",
+      "parent_id": "parent_0000",
+      "split": "train",
+      "path": "records/parent_0000_e0_k0_t0.npz",
+      "fingerprint": "f41fe4014707b498502b94674347f60865e964a2b599d5678928e996c85f1f61",
+      "logical_fingerprint": "1f77952cad9d5143086c9f4884be6824f5db4ce1a525c30b31344b5fb2dc45ff",
+      "logical_qubits": 3,
+      "file_sha256": "95e043d1b84fc060ad3d04f9c4093aa2e3e5b3cdd8d5c9b75ef8a255e91ece27"
+    },
+    {
+      "record_id": "parent_0000_e0_k0_t1",
+      "parent_id": "parent_0000",
+      "split": "train",
+      "path": "records/parent_0000_e0_k0_t1.npz",
+      "fingerprint": "44f2ff6eb9002c4cc4af66a3bb258d46cca05e8b490be816d7b85916f38115ab",
+      "logical_fingerprint": "1f77952cad9d5143086c9f4884be6824f5db4ce1a525c30b31344b5fb2dc45ff",
+      "logical_qubits": 3,
+      "file_sha256": "f5297d14bb3955a5d49010bc35d3354c1bdf46a3c62f1aef3a36fb4b57d6213a"
+    },
+    {
+      "record_id": "parent_0001_e0_k0_t0",
+      "parent_id": "parent_0001",
+      "split": "train",
+      "path": "records/parent_0001_e0_k0_t0.npz",
+      "fingerprint": "276c9fb80fdc1b5899185a1557d858767563798f22a796a6cb67a9c7f45b0822",
+      "logical_fingerprint": "ef5231386bb58af45dfce6f05e33dbf36a0fef16fcb661e2807086750fe0c55a",
+      "logical_qubits": 3,
+      "file_sha256": "5d4d23f90d62808009322adc7fe23a855285d7ccca441db52fb6966db38c5f72"
+    },
+    {
+      "record_id": "parent_0001_e0_k0_t1",
+      "parent_id": "parent_0001",
+      "split": "train",
+      "path": "records/parent_0001_e0_k0_t1.npz",
+      "fingerprint": "9315320be475f14fba9bcf852522b29fb0967a3b696b0584cb01728cbf55b281",
+      "logical_fingerprint": "ef5231386bb58af45dfce6f05e33dbf36a0fef16fcb661e2807086750fe0c55a",
+      "logical_qubits": 3,
+      "file_sha256": "d61a93e199d5d82c30c05cfdbac09d00bbf2526be1a20e7261ace843aff10cfa"
+    },
+    {
+      "record_id": "parent_0002_e0_k0_t0",
+      "parent_id": "parent_0002",
+      "split": "train",
+      "path": "records/parent_0002_e0_k0_t0.npz",
+      "fingerprint": "477b563d2acf84e2cac13848288dfd50dff37ccd93c8a8eaa1a39f48836c1bf2",
+      "logical_fingerprint": "1c6a1df5c1c2561d2e0c63a8e11544250df732f7f184f9cc33cdafdc9fd07145",
+      "logical_qubits": 3,
+      "file_sha256": "7cb02af5ffacdbc030186fe9c0e31ea87206a398bb0e39adec0669a72e45b5ff"
+    },
+    {
+      "record_id": "parent_0002_e0_k0_t1",
+      "parent_id": "parent_0002",
+      "split": "train",
+      "path": "records/parent_0002_e0_k0_t1.npz",
+      "fingerprint": "2b67fb0205abaf966e8f0910cf2d7f99cdc5d5fc1850b1d921a17edd85966d57",
+      "logical_fingerprint": "1c6a1df5c1c2561d2e0c63a8e11544250df732f7f184f9cc33cdafdc9fd07145",
+      "logical_qubits": 3,
+      "file_sha256": "841b1123d2e251f54ea243bc16cb9a40f8afdc0f3448cb1dca122465e651ebd5"
+    },
+    {
+      "record_id": "parent_0003_e0_k0_t0",
+      "parent_id": "parent_0003",
+      "split": "train",
+      "path": "records/parent_0003_e0_k0_t0.npz",
+      "fingerprint": "83e246432c6932de2fc2a5755a928a826529514fc8b66309c199deca86d0db64",
+      "logical_fingerprint": "272ded5d301baf8114afccade4233922653d94f43125a4fda3caaf44456266d6",
+      "logical_qubits": 3,
+      "file_sha256": "ddcbddaab23c458d0f18badbf2e969835c1ed07393cc17b474ad7e317f313a4a"
+    },
+    {
+      "record_id": "parent_0003_e0_k0_t1",
+      "parent_id": "parent_0003",
+      "split": "train",
+      "path": "records/parent_0003_e0_k0_t1.npz",
+      "fingerprint": "909a921392c686c7c401c471bcbc9b674561a9a90bf01f09fcdef1f461b6a544",
+      "logical_fingerprint": "272ded5d301baf8114afccade4233922653d94f43125a4fda3caaf44456266d6",
+      "logical_qubits": 3,
+      "file_sha256": "1afe046f2d33f32723636d08b9adf958776beba76333e6e521be0df256d572ff"
+    },
+    {
+      "record_id": "parent_0004_e0_k0_t0",
+      "parent_id": "parent_0004",
+      "split": "validation",
+      "path": "records/parent_0004_e0_k0_t0.npz",
+      "fingerprint": "59791ae39f41dee0858b457be01030d4df15a094ade8b3819aca9e3d0f6aab32",
+      "logical_fingerprint": "f8899b71d1b55223e710b2f385cdcd0978b69f7abb613aa6b4d2fceadc2a4341",
+      "logical_qubits": 4,
+      "file_sha256": "e5d0505b5a8f25368defbce812f7ba26ef5ad4957b1642beedfaa5c02758af4a"
+    },
+    {
+      "record_id": "parent_0004_e0_k0_t1",
+      "parent_id": "parent_0004",
+      "split": "validation",
+      "path": "records/parent_0004_e0_k0_t1.npz",
+      "fingerprint": "809e77cc77f93e274b04a01c9c69c90e6acbf13444b10ae75c43fc8f125d0242",
+      "logical_fingerprint": "f8899b71d1b55223e710b2f385cdcd0978b69f7abb613aa6b4d2fceadc2a4341",
+      "logical_qubits": 4,
+      "file_sha256": "573f3f9a064f0bfb2b9370242e5da622505083ff0bd7e2abe00a3eb3bf69c591"
+    },
+    {
+      "record_id": "parent_0005_e0_k0_t0",
+      "parent_id": "parent_0005",
+      "split": "train",
+      "path": "records/parent_0005_e0_k0_t0.npz",
+      "fingerprint": "0823eecbd336f789c8a8dc5eb558bedc489b583c654c06a28466739635fc4eef",
+      "logical_fingerprint": "c7b7959b530947d8cf282c341e24ae101c627f6e8ea8bba50f5b32b2204ec8b0",
+      "logical_qubits": 4,
+      "file_sha256": "4fe8ca22638d22a3ca6d3dd8fdddcf1f82677f4a1990f7e08fc2ebfbb7e988dc"
+    },
+    {
+      "record_id": "parent_0005_e0_k0_t1",
+      "parent_id": "parent_0005",
+      "split": "train",
+      "path": "records/parent_0005_e0_k0_t1.npz",
+      "fingerprint": "cce8fc10a7b6258e7d427995130cab792a8466ff5d8473f450347e5c97a9658e",
+      "logical_fingerprint": "c7b7959b530947d8cf282c341e24ae101c627f6e8ea8bba50f5b32b2204ec8b0",
+      "logical_qubits": 4,
+      "file_sha256": "85d2f9450ca6c53a3289d21cb7734030869e93630e630b77d439834be4b1a7eb"
+    },
+    {
+      "record_id": "parent_0006_e0_k0_t0",
+      "parent_id": "parent_0006",
+      "split": "train",
+      "path": "records/parent_0006_e0_k0_t0.npz",
+      "fingerprint": "9ea292936b6e5cf262dcc459a45e3c810a15c2f0678873dc4ba9c9ad485bd131",
+      "logical_fingerprint": "190ee5c4c34de1d4e62a2fc7f365f34ad2dd7477b0aa73d8e4edd9ec57ef1958",
+      "logical_qubits": 4,
+      "file_sha256": "2c39f6d37416ee4cfa12ddf409c1922b7255c11e5f5e7696369bb16058744dbe"
+    },
+    {
+      "record_id": "parent_0006_e0_k0_t1",
+      "parent_id": "parent_0006",
+      "split": "train",
+      "path": "records/parent_0006_e0_k0_t1.npz",
+      "fingerprint": "842e31b4d0a8f19560e3090110f0c66fc49ad1f0a41018acd6e03df0ab20ef1b",
+      "logical_fingerprint": "190ee5c4c34de1d4e62a2fc7f365f34ad2dd7477b0aa73d8e4edd9ec57ef1958",
+      "logical_qubits": 4,
+      "file_sha256": "b85461c0abe61081a9777dbd6abfbde4635331245685fb03949ac5f83f4a81fc"
+    },
+    {
+      "record_id": "parent_0007_e0_k0_t0",
+      "parent_id": "parent_0007",
+      "split": "train",
+      "path": "records/parent_0007_e0_k0_t0.npz",
+      "fingerprint": "15dbb63b7804566eb483bd9e4bca798cad014f0e83549e25e5af7b15fcff98a9",
+      "logical_fingerprint": "bb97b365ed98304013ad58fbf51938d206acc398cd9ab24e503b190b45f4672b",
+      "logical_qubits": 4,
+      "file_sha256": "078f91c7608810724267ebffc0910ec1bfe36bc6ddc3c842e46d57cfc76f1ebc"
+    },
+    {
+      "record_id": "parent_0007_e0_k0_t1",
+      "parent_id": "parent_0007",
+      "split": "train",
+      "path": "records/parent_0007_e0_k0_t1.npz",
+      "fingerprint": "d934b5966a5efe5fc378964cafa77e7f90d2c20af6a290d5883511b634a42486",
+      "logical_fingerprint": "bb97b365ed98304013ad58fbf51938d206acc398cd9ab24e503b190b45f4672b",
+      "logical_qubits": 4,
+      "file_sha256": "d6ddca6e2cad609182860cfacbe7b8bec2db189e56833419c95cc7d04bfc9604"
+    },
+    {
+      "record_id": "parent_0008_e0_k0_t0",
+      "parent_id": "parent_0008",
+      "split": "train",
+      "path": "records/parent_0008_e0_k0_t0.npz",
+      "fingerprint": "7b987d1b29351e26d6297ad9e0aef95f7c8817d41d9bb6ef3f1d5587ddc2a629",
+      "logical_fingerprint": "d6bf28e203a81b3bf4b89af1c8f225aee0704f90b439c6e8a5491b7dc2099752",
+      "logical_qubits": 5,
+      "file_sha256": "23db45e3c7736739c2e9edda5882b65c2f9a852c85c5512bf2a38ab920a6c937"
+    },
+    {
+      "record_id": "parent_0008_e0_k0_t1",
+      "parent_id": "parent_0008",
+      "split": "train",
+      "path": "records/parent_0008_e0_k0_t1.npz",
+      "fingerprint": "a737c037150d90048c9b5727327d62aa0ff9df2fc5ba111e1d3b02de6eb67668",
+      "logical_fingerprint": "d6bf28e203a81b3bf4b89af1c8f225aee0704f90b439c6e8a5491b7dc2099752",
+      "logical_qubits": 5,
+      "file_sha256": "6ec98304df993618042e4a4e471ed56d9b7a89c84e633cf23507d2cd3977b1cf"
+    },
+    {
+      "record_id": "parent_0009_e0_k0_t0",
+      "parent_id": "parent_0009",
+      "split": "validation",
+      "path": "records/parent_0009_e0_k0_t0.npz",
+      "fingerprint": "fca6374435d96eb92d985d2e200933d119439c061c74bf568a99b42a55b99da6",
+      "logical_fingerprint": "6b648a340affd83a5e08c15ad554e8d754f52c61c6915d2601a0fdcc5b1f2dbf",
+      "logical_qubits": 5,
+      "file_sha256": "ec3986c0d06583ab55a8941d5a75954770bc266b645fbf8ae7ce35cff0537178"
+    },
+    {
+      "record_id": "parent_0009_e0_k0_t1",
+      "parent_id": "parent_0009",
+      "split": "validation",
+      "path": "records/parent_0009_e0_k0_t1.npz",
+      "fingerprint": "1f3dcec752012d3978ccfa8e9e3dd1bcae7b58d15bc24b55d8fab2efd1a45ff0",
+      "logical_fingerprint": "6b648a340affd83a5e08c15ad554e8d754f52c61c6915d2601a0fdcc5b1f2dbf",
+      "logical_qubits": 5,
+      "file_sha256": "e61803ad97d4e31b415181dd17653034def01746463fbbd8c7ae0faac49eb84b"
+    },
+    {
+      "record_id": "parent_0010_e0_k0_t0",
+      "parent_id": "parent_0010",
+      "split": "train",
+      "path": "records/parent_0010_e0_k0_t0.npz",
+      "fingerprint": "55f740180d229f5712ce59d83b24f2cfebebb184b5cc9069c05e1d88f3ae1ccc",
+      "logical_fingerprint": "11f6470a4f4a1df2afbaa6392f96bad56a3013eb5f264cba9268572c840b5a13",
+      "logical_qubits": 5,
+      "file_sha256": "9ab488b95a7abb5dcfbd2f49373be5373d665aa1332babce64ac910700367d0b"
+    },
+    {
+      "record_id": "parent_0010_e0_k0_t1",
+      "parent_id": "parent_0010",
+      "split": "train",
+      "path": "records/parent_0010_e0_k0_t1.npz",
+      "fingerprint": "64d948941fd8c673d96ace9f8e693df1bf2cd05eed1a3cc4d06b7122c47bc14f",
+      "logical_fingerprint": "11f6470a4f4a1df2afbaa6392f96bad56a3013eb5f264cba9268572c840b5a13",
+      "logical_qubits": 5,
+      "file_sha256": "bbb8940f4e706b4e06d56f871490ffc3a566beab9e9351c0d0771a0bf7cc71b5"
+    },
+    {
+      "record_id": "parent_0011_e0_k0_t0",
+      "parent_id": "parent_0011",
+      "split": "test",
+      "path": "records/parent_0011_e0_k0_t0.npz",
+      "fingerprint": "f96a99016d851935b4ec14497ba7145ae18a8ab2e2320baea3d5ac3b6076cbbf",
+      "logical_fingerprint": "59ff45c73e011acc8c8f860f1ff94282bbb8b4be3159f69d1a6106ca5e346e58",
+      "logical_qubits": 5,
+      "file_sha256": "ff0c0b4c0a2c429b2d7fb5fe02ca70f40a5e825375454a12e20baf833c1c9bd7"
+    },
+    {
+      "record_id": "parent_0011_e0_k0_t1",
+      "parent_id": "parent_0011",
+      "split": "test",
+      "path": "records/parent_0011_e0_k0_t1.npz",
+      "fingerprint": "63ead22117dd0fe58eb6be2a2e81dc436e79d807988ced8a7bcf7cd043b11209",
+      "logical_fingerprint": "59ff45c73e011acc8c8f860f1ff94282bbb8b4be3159f69d1a6106ca5e346e58",
+      "logical_qubits": 5,
+      "file_sha256": "bf43849d341da97fcc6f0dd532f554fd194e5f80997733d4658c88436f136823"
+    },
+    {
+      "record_id": "parent_0012_e0_k0_t0",
+      "parent_id": "parent_0012",
+      "split": "train",
+      "path": "records/parent_0012_e0_k0_t0.npz",
+      "fingerprint": "c17e6f28f8fac0c9f51455ab850eef3f68a9bad49dd7999d2ed01e94c4ab1339",
+      "logical_fingerprint": "38d78b8c79271ddd05215f94b389de2c596967cd5294ccb81c176e3b0de53c47",
+      "logical_qubits": 3,
+      "file_sha256": "c9d2de76ebe795d7b71ff6f02cd9a3f5c227a2c6902cefb5e554d2f9e68e45a9"
+    },
+    {
+      "record_id": "parent_0012_e0_k0_t1",
+      "parent_id": "parent_0012",
+      "split": "train",
+      "path": "records/parent_0012_e0_k0_t1.npz",
+      "fingerprint": "9da06fc4013e13a3198612cbbe7c62757198ca5fbdaf9a17d368a54a11e8dc93",
+      "logical_fingerprint": "38d78b8c79271ddd05215f94b389de2c596967cd5294ccb81c176e3b0de53c47",
+      "logical_qubits": 3,
+      "file_sha256": "a1eebd6ad695708989b1015f05644e98b202349d988534fd07f749fb5ff61670"
+    },
+    {
+      "record_id": "parent_0013_e0_k0_t0",
+      "parent_id": "parent_0013",
+      "split": "test",
+      "path": "records/parent_0013_e0_k0_t0.npz",
+      "fingerprint": "899e36b26c2f40c6389de2ab875c77552ba005030a1ec633d94ca83c10fc20ff",
+      "logical_fingerprint": "b8757736f79285cb102cf13c9f3674c2b9b40898d5ad4aa309c152700b1a1200",
+      "logical_qubits": 3,
+      "file_sha256": "f8a42c04df9e82802ed29f918d32f85e8338143b0ea3f501c2bb1823a0d5066e"
+    },
+    {
+      "record_id": "parent_0013_e0_k0_t1",
+      "parent_id": "parent_0013",
+      "split": "test",
+      "path": "records/parent_0013_e0_k0_t1.npz",
+      "fingerprint": "6719825fd1ea61c814abccbde4195f197dcccb70d85285521e46c6652a904a4a",
+      "logical_fingerprint": "b8757736f79285cb102cf13c9f3674c2b9b40898d5ad4aa309c152700b1a1200",
+      "logical_qubits": 3,
+      "file_sha256": "3dc247df9bc7ff07d38279a515b44270c67c74ab4a16281b6d0a23d869a1b301"
+    },
+    {
+      "record_id": "parent_0014_e0_k0_t0",
+      "parent_id": "parent_0014",
+      "split": "test",
+      "path": "records/parent_0014_e0_k0_t0.npz",
+      "fingerprint": "5ee44858fe0a12dcb08dbd7ab8e5a6f8bafe0685470234dc084d28dd9da5e6b1",
+      "logical_fingerprint": "0d9a49469fccc5c4758a3a23035a95c206c67548ac16ce775cda01b8de5e43c9",
+      "logical_qubits": 3,
+      "file_sha256": "81eba17a77e045fb064d314b986b7b5bea2834eb75b69bb41adf79dd828e2c1a"
+    },
+    {
+      "record_id": "parent_0014_e0_k0_t1",
+      "parent_id": "parent_0014",
+      "split": "test",
+      "path": "records/parent_0014_e0_k0_t1.npz",
+      "fingerprint": "29999687b16b1b4d6eb002e488fc8802932cc48cc7addc3358a80cced4e030b8",
+      "logical_fingerprint": "0d9a49469fccc5c4758a3a23035a95c206c67548ac16ce775cda01b8de5e43c9",
+      "logical_qubits": 3,
+      "file_sha256": "7771d46f8c2c7143272a62f69eacf7f069fcbb01c454f19919e41c389c3f374c"
+    },
+    {
+      "record_id": "parent_0015_e0_k0_t0",
+      "parent_id": "parent_0015",
+      "split": "train",
+      "path": "records/parent_0015_e0_k0_t0.npz",
+      "fingerprint": "c0b6433751e1d2c391f9691e936370e1fbfa47a5cf435c881b66be9e0e455a27",
+      "logical_fingerprint": "0ec5b2429058d41a0e25044b018cf233b4609969037cc1576aa502d067cd0363",
+      "logical_qubits": 3,
+      "file_sha256": "2df2322b9c15dd15c44eb66d96261a2abd968b03702f915e22e3f7366880eb58"
+    },
+    {
+      "record_id": "parent_0015_e0_k0_t1",
+      "parent_id": "parent_0015",
+      "split": "train",
+      "path": "records/parent_0015_e0_k0_t1.npz",
+      "fingerprint": "a66c36bea6b6311b0e221729c7aec9afb4f92a54d9859c56ce46fb49136298fd",
+      "logical_fingerprint": "0ec5b2429058d41a0e25044b018cf233b4609969037cc1576aa502d067cd0363",
+      "logical_qubits": 3,
+      "file_sha256": "9e231688c7ea14fa45f16bb4dd2afc4f999d36b2d4fcdf2b8cd0890576fae79d"
+    },
+    {
+      "record_id": "parent_0016_e0_k0_t0",
+      "parent_id": "parent_0016",
+      "split": "train",
+      "path": "records/parent_0016_e0_k0_t0.npz",
+      "fingerprint": "c3dfba4502cd210dfd4714a2431a039fb55e13d01ce8e79d05a972e9f451ad1e",
+      "logical_fingerprint": "c32834dba7d61d0dd8872b5352adf5a20af661b5f684c91fc63328d3fbc800c7",
+      "logical_qubits": 4,
+      "file_sha256": "24f9d1879490b88b3c697d3fbc258f36d92fa6a6cde357c2c4d59530b6949df4"
+    },
+    {
+      "record_id": "parent_0016_e0_k0_t1",
+      "parent_id": "parent_0016",
+      "split": "train",
+      "path": "records/parent_0016_e0_k0_t1.npz",
+      "fingerprint": "a460a0c3e1d20a86cacb1d78f8b89b13c839c2c458e57cf20ba94d78ef1f7d0d",
+      "logical_fingerprint": "c32834dba7d61d0dd8872b5352adf5a20af661b5f684c91fc63328d3fbc800c7",
+      "logical_qubits": 4,
+      "file_sha256": "897794458aa1f288ad9822d1f82ca3442473205f25f3ae8ff77f237b076997a8"
+    },
+    {
+      "record_id": "parent_0017_e0_k0_t0",
+      "parent_id": "parent_0017",
+      "split": "validation",
+      "path": "records/parent_0017_e0_k0_t0.npz",
+      "fingerprint": "070e81ead2f964f16027b0a11366fa0d74184742f379eb35c1693b3533bdfb18",
+      "logical_fingerprint": "a21daa879ee27dad3d1d7f50a36734af66feb49dad426977fc983897a2da71d1",
+      "logical_qubits": 4,
+      "file_sha256": "d85ab824c3aee536493dd55303d4ecb92f080141380acd8da4f7814b3f776d94"
+    },
+    {
+      "record_id": "parent_0017_e0_k0_t1",
+      "parent_id": "parent_0017",
+      "split": "validation",
+      "path": "records/parent_0017_e0_k0_t1.npz",
+      "fingerprint": "a2abfe50523be341fc32bf6aafb322716348273a3f2f268cdb992fc8b8dbf024",
+      "logical_fingerprint": "a21daa879ee27dad3d1d7f50a36734af66feb49dad426977fc983897a2da71d1",
+      "logical_qubits": 4,
+      "file_sha256": "0ef6d286240ef92b938021aa9065b1618ae11105a4ec6fc7e2d58a00fd578a82"
+    },
+    {
+      "record_id": "parent_0018_e0_k0_t0",
+      "parent_id": "parent_0018",
+      "split": "train",
+      "path": "records/parent_0018_e0_k0_t0.npz",
+      "fingerprint": "59163500a3fdd891f7b4124bc12e6982012f52ffc483c70f5fa0f19d6ec89800",
+      "logical_fingerprint": "223a29636147a8a9d40dbfffe2560b5538b41b953565ccf74fd4096a676f9bac",
+      "logical_qubits": 4,
+      "file_sha256": "9f52ee4bbc30ea2b42ebcb2ba348b7d15abb4dda0febb729bda82eadfbaf5eed"
+    },
+    {
+      "record_id": "parent_0018_e0_k0_t1",
+      "parent_id": "parent_0018",
+      "split": "train",
+      "path": "records/parent_0018_e0_k0_t1.npz",
+      "fingerprint": "595d481c0c3a286be89f638f3eaabb167047b68dc2b7824bc919b2ad74badd1f",
+      "logical_fingerprint": "223a29636147a8a9d40dbfffe2560b5538b41b953565ccf74fd4096a676f9bac",
+      "logical_qubits": 4,
+      "file_sha256": "624238c8b091b049ce0f4bc32f6316775417c3ef6ffb1c19179f0d461c1c22e7"
+    },
+    {
+      "record_id": "parent_0019_e0_k0_t0",
+      "parent_id": "parent_0019",
+      "split": "train",
+      "path": "records/parent_0019_e0_k0_t0.npz",
+      "fingerprint": "ca75292cdfaa9e786c83c36a50a84e8498daaa709c2ab99336a74460f28bea78",
+      "logical_fingerprint": "18ca4e31b39003167827bb48c13939bbd097b221949f5a631da3ce70368fb775",
+      "logical_qubits": 4,
+      "file_sha256": "87762184414185cb3ae726061e908ba86b0c379a21c55a67f44097d2535c93fd"
+    },
+    {
+      "record_id": "parent_0019_e0_k0_t1",
+      "parent_id": "parent_0019",
+      "split": "train",
+      "path": "records/parent_0019_e0_k0_t1.npz",
+      "fingerprint": "48c55b10b125fcb0997333a82080d1800ddaf7b78fb4649e22cf35880c9adc1e",
+      "logical_fingerprint": "18ca4e31b39003167827bb48c13939bbd097b221949f5a631da3ce70368fb775",
+      "logical_qubits": 4,
+      "file_sha256": "797d5c75beaf867710226e97bb73ef59a130d6d5cbbeb7f71667e96876eff0c3"
+    },
+    {
+      "record_id": "parent_0020_e0_k0_t0",
+      "parent_id": "parent_0020",
+      "split": "validation",
+      "path": "records/parent_0020_e0_k0_t0.npz",
+      "fingerprint": "ed1f9f13df377f0fd4306e20cf82303c5fca0cd6b79ca765234f9d2601679c23",
+      "logical_fingerprint": "749c1decba167fac3049d1bb73343ebf26fa8597a2a5fc723336559fa4562ff1",
+      "logical_qubits": 5,
+      "file_sha256": "9e9e5450355ade021980d87fc7dc16872e873441d92b28a3cd112ee6ed514eb5"
+    },
+    {
+      "record_id": "parent_0020_e0_k0_t1",
+      "parent_id": "parent_0020",
+      "split": "validation",
+      "path": "records/parent_0020_e0_k0_t1.npz",
+      "fingerprint": "fa4728bfad1ed8ee8d823b71b41c2d796c1cc718f278a95c494768a81a23fc06",
+      "logical_fingerprint": "749c1decba167fac3049d1bb73343ebf26fa8597a2a5fc723336559fa4562ff1",
+      "logical_qubits": 5,
+      "file_sha256": "eb6bf431d7e6e32ff3471381ed31eb77ebea96dbfd95f1b8fb84ee31b02f0fd9"
+    },
+    {
+      "record_id": "parent_0021_e0_k0_t0",
+      "parent_id": "parent_0021",
+      "split": "train",
+      "path": "records/parent_0021_e0_k0_t0.npz",
+      "fingerprint": "be6b5bf36aad0bbc9c4a6f28bed0144655e77c08383a52db8986ff33ec85a852",
+      "logical_fingerprint": "ea8c5a77669e4a797a806b1afee773f26cf7a846218835dfbe9f0bf4cb660738",
+      "logical_qubits": 5,
+      "file_sha256": "fe48cdfe4cca0954450661d1f70d7436d4dac68899361dd5ce3690cdc0b58bc8"
+    },
+    {
+      "record_id": "parent_0021_e0_k0_t1",
+      "parent_id": "parent_0021",
+      "split": "train",
+      "path": "records/parent_0021_e0_k0_t1.npz",
+      "fingerprint": "d792ce5970faae8edc30bcd2f71020a41e50513b27aee9d40cdd933c28bf2531",
+      "logical_fingerprint": "ea8c5a77669e4a797a806b1afee773f26cf7a846218835dfbe9f0bf4cb660738",
+      "logical_qubits": 5,
+      "file_sha256": "93f269d4a67e24028f253f542ea77b379dd4a9407dc39a720eaf700966ceedbe"
+    },
+    {
+      "record_id": "parent_0022_e0_k0_t0",
+      "parent_id": "parent_0022",
+      "split": "train",
+      "path": "records/parent_0022_e0_k0_t0.npz",
+      "fingerprint": "5ce7261a6bb3aeddee65b4448b013560353ea0c575ce470112d0c20c3d82181f",
+      "logical_fingerprint": "f27f3a14a77ef37030144d56ce3333fef2984a0dc5c6c13f8def63cf2f407ff4",
+      "logical_qubits": 5,
+      "file_sha256": "bb3b4b34dfe1811f4cc435a05636eb6e74a905c28dbd070d2708f0949de22706"
+    },
+    {
+      "record_id": "parent_0022_e0_k0_t1",
+      "parent_id": "parent_0022",
+      "split": "train",
+      "path": "records/parent_0022_e0_k0_t1.npz",
+      "fingerprint": "c06f50a40edd892d1c10928d7ee7d8e3d622eb56a992d1f5985ca290746e6afa",
+      "logical_fingerprint": "f27f3a14a77ef37030144d56ce3333fef2984a0dc5c6c13f8def63cf2f407ff4",
+      "logical_qubits": 5,
+      "file_sha256": "9e7c164d190c4869a3771711d01da38d57352f51f9c2402488486e6f19480c8e"
+    },
+    {
+      "record_id": "parent_0023_e0_k0_t0",
+      "parent_id": "parent_0023",
+      "split": "train",
+      "path": "records/parent_0023_e0_k0_t0.npz",
+      "fingerprint": "bac65816a2a8fdb69844bec58307354f264ec5edb60ba0143e554c83565f6e97",
+      "logical_fingerprint": "be47dd7afd7df3b6e87e1e78dfa5b4fe5f5b7f666064674e43782d475751d892",
+      "logical_qubits": 5,
+      "file_sha256": "014fca03553ac7bb61ef2d0ca719f8ee155496b25a9d95eae58e591f94e40ec5"
+    },
+    {
+      "record_id": "parent_0023_e0_k0_t1",
+      "parent_id": "parent_0023",
+      "split": "train",
+      "path": "records/parent_0023_e0_k0_t1.npz",
+      "fingerprint": "e23c3f41a7a3edf2949b212f157ac6c7c3945881151a5b1f42c2140f0f29c544",
+      "logical_fingerprint": "be47dd7afd7df3b6e87e1e78dfa5b4fe5f5b7f666064674e43782d475751d892",
+      "logical_qubits": 5,
+      "file_sha256": "a24be863e53b8ebd0b5663af5c0b6f197663f0348dbee1ab1d649a40a7385cb3"
+    },
+    {
+      "record_id": "parent_0024_e0_k0_t0",
+      "parent_id": "parent_0024",
+      "split": "test",
+      "path": "records/parent_0024_e0_k0_t0.npz",
+      "fingerprint": "84eb0b2b32acd0b9f5ce424f8b9a57ede0e0b4cdca01ba9ab6fa88899aab3cd8",
+      "logical_fingerprint": "399a2396057a2792d7fae7dcef9fbabd11e250dc38e11b3d67fecfd99eeb2a26",
+      "logical_qubits": 3,
+      "file_sha256": "1442aa366d9abd43cec16108dbd43328227ab3eb1340ed04f3e7be5cfd661327"
+    },
+    {
+      "record_id": "parent_0024_e0_k0_t1",
+      "parent_id": "parent_0024",
+      "split": "test",
+      "path": "records/parent_0024_e0_k0_t1.npz",
+      "fingerprint": "cbee9475fbbf016e999e72b0a96c25a1c25b6f59b20a55403f9f89e439806edb",
+      "logical_fingerprint": "399a2396057a2792d7fae7dcef9fbabd11e250dc38e11b3d67fecfd99eeb2a26",
+      "logical_qubits": 3,
+      "file_sha256": "8dfc2aaf1c2dff7b7d385b9fafae34c21ffd9e33503b381958e48f59eaa995f3"
+    },
+    {
+      "record_id": "parent_0025_e0_k0_t0",
+      "parent_id": "parent_0025",
+      "split": "validation",
+      "path": "records/parent_0025_e0_k0_t0.npz",
+      "fingerprint": "a30f7a4b8fd35d8ed4969f7cc837968a7e2cb22b6f4c0f015a21d2a8c933e03c",
+      "logical_fingerprint": "bc2a52f8c2a24646e78857b119fffdfeaa5cc62c4f10ed88b3ba107f95a04a0a",
+      "logical_qubits": 3,
+      "file_sha256": "1d01de3d2db9d998f5eac1d2ddad300464d0a8ddc368d14a6a6d0065691b661e"
+    },
+    {
+      "record_id": "parent_0025_e0_k0_t1",
+      "parent_id": "parent_0025",
+      "split": "validation",
+      "path": "records/parent_0025_e0_k0_t1.npz",
+      "fingerprint": "7f9a02a303180176e3dd097caabd70b58b806ddba7b39a3e62f9cac37fba5449",
+      "logical_fingerprint": "bc2a52f8c2a24646e78857b119fffdfeaa5cc62c4f10ed88b3ba107f95a04a0a",
+      "logical_qubits": 3,
+      "file_sha256": "26b56e82e61319765b403731abf5d8a2f46d63e943565ee3940ebb08d757ca62"
+    },
+    {
+      "record_id": "parent_0026_e0_k0_t0",
+      "parent_id": "parent_0026",
+      "split": "validation",
+      "path": "records/parent_0026_e0_k0_t0.npz",
+      "fingerprint": "a3f26cd2e4200c32118ed2148dfa584696c1c234db7e7b2583b79c92f3469044",
+      "logical_fingerprint": "e9d5e126eeae8f1ff612e5f2ee34e899bc2bad90ee1bc5aca40fbbd4a822a37a",
+      "logical_qubits": 3,
+      "file_sha256": "2cb311f9f350eaa78a92690da689e8d981606e1275a7f9910e2fdc8d4402c159"
+    },
+    {
+      "record_id": "parent_0026_e0_k0_t1",
+      "parent_id": "parent_0026",
+      "split": "validation",
+      "path": "records/parent_0026_e0_k0_t1.npz",
+      "fingerprint": "05c8d24780be30129885c8456f905d15457830b3bc0ec325a6de2b476f366bb1",
+      "logical_fingerprint": "e9d5e126eeae8f1ff612e5f2ee34e899bc2bad90ee1bc5aca40fbbd4a822a37a",
+      "logical_qubits": 3,
+      "file_sha256": "6cbd6bebac6257335b957fc32e840187e745e851ece1ece5b23617104341225e"
+    },
+    {
+      "record_id": "parent_0027_e0_k0_t0",
+      "parent_id": "parent_0027",
+      "split": "validation",
+      "path": "records/parent_0027_e0_k0_t0.npz",
+      "fingerprint": "c4a744ff33413f9e8f71ce3c3b5c21b4d52e64170bb750792318000965c7c01b",
+      "logical_fingerprint": "12e7ea55e4236fb994f3ec51bc805a1615ca871d0c7812995ff81be25c362290",
+      "logical_qubits": 3,
+      "file_sha256": "2508687aef23e24e10ba69312ab98fb41f061eb3e704e758cc985e779ac361d1"
+    },
+    {
+      "record_id": "parent_0027_e0_k0_t1",
+      "parent_id": "parent_0027",
+      "split": "validation",
+      "path": "records/parent_0027_e0_k0_t1.npz",
+      "fingerprint": "236f28ddffd013dc9e560649ea84ba74c32821e4d74cf34b700421cb55d3b4c9",
+      "logical_fingerprint": "12e7ea55e4236fb994f3ec51bc805a1615ca871d0c7812995ff81be25c362290",
+      "logical_qubits": 3,
+      "file_sha256": "a50f3e3f22a7ef1bbe5de2d645c2616fd2ab56e5e8f11ba529fa30759b895170"
+    },
+    {
+      "record_id": "parent_0028_e0_k0_t0",
+      "parent_id": "parent_0028",
+      "split": "train",
+      "path": "records/parent_0028_e0_k0_t0.npz",
+      "fingerprint": "4b9dbab775f7e36ae05d6878498fc12eb741607630b18cee680d07952b45a008",
+      "logical_fingerprint": "523c44d3b423c7bff4c40511b4faf20e785e71baf7e568d8ebdd838b220f3fc0",
+      "logical_qubits": 4,
+      "file_sha256": "0fb356c793eed4c3074e9802612bcb4ea8a7be257b4f928b6ed70b77adc53eaf"
+    },
+    {
+      "record_id": "parent_0028_e0_k0_t1",
+      "parent_id": "parent_0028",
+      "split": "train",
+      "path": "records/parent_0028_e0_k0_t1.npz",
+      "fingerprint": "0516dd87d21d7d4a8a533c1e9870cb8554d6508e76bf083468f459c43c474c30",
+      "logical_fingerprint": "523c44d3b423c7bff4c40511b4faf20e785e71baf7e568d8ebdd838b220f3fc0",
+      "logical_qubits": 4,
+      "file_sha256": "9d44e1d11717a90963c5e8f8a09e3f0018df8095becde0a72975c9f8dd8e1945"
+    },
+    {
+      "record_id": "parent_0029_e0_k0_t0",
+      "parent_id": "parent_0029",
+      "split": "test",
+      "path": "records/parent_0029_e0_k0_t0.npz",
+      "fingerprint": "1ff60c9a605a148f25691838b50eac363a85d35a3a3e5819ee62f2e2dbbb9afa",
+      "logical_fingerprint": "0b900ad05eede6da8ec2c228229e1378bc3bb98ed5c0eaf224dfb1f9f58fba07",
+      "logical_qubits": 4,
+      "file_sha256": "715669be1ba99307cd6eb5a6a21b9e4be82f59a5882932805147aa23fd968955"
+    },
+    {
+      "record_id": "parent_0029_e0_k0_t1",
+      "parent_id": "parent_0029",
+      "split": "test",
+      "path": "records/parent_0029_e0_k0_t1.npz",
+      "fingerprint": "39350b78979bd062737ce5cacfe4ab27439974da2b6b055aae580c5968830cd8",
+      "logical_fingerprint": "0b900ad05eede6da8ec2c228229e1378bc3bb98ed5c0eaf224dfb1f9f58fba07",
+      "logical_qubits": 4,
+      "file_sha256": "77ddc1d61b19edfa81db2fec0e9e9fb3e4f857a5a04faf05a1c7fc6eef6b107e"
+    },
+    {
+      "record_id": "parent_0030_e0_k0_t0",
+      "parent_id": "parent_0030",
+      "split": "test",
+      "path": "records/parent_0030_e0_k0_t0.npz",
+      "fingerprint": "d8b4b1ff9ca860aee1b76466857a2091cd32c3619fae48cf29e38a6db11394d4",
+      "logical_fingerprint": "4ad2d9b030bf2cfeaffabdbb2cdd956e2950b18ef26638f03a2ef7bdff012dcb",
+      "logical_qubits": 4,
+      "file_sha256": "0867ee12ac014fdfa7ef3b47a078b736edb07e846cceb6932a99d298ae6c698c"
+    },
+    {
+      "record_id": "parent_0030_e0_k0_t1",
+      "parent_id": "parent_0030",
+      "split": "test",
+      "path": "records/parent_0030_e0_k0_t1.npz",
+      "fingerprint": "6c48cd3b131d392c5996226308ddd6d19c58e66996d38be2c7e2c5a977d5aa36",
+      "logical_fingerprint": "4ad2d9b030bf2cfeaffabdbb2cdd956e2950b18ef26638f03a2ef7bdff012dcb",
+      "logical_qubits": 4,
+      "file_sha256": "bd2e3e67db8b6db7038ff9db40d3bedb5fcb4df4d08defe12e89d5a5ad7d7bf0"
+    },
+    {
+      "record_id": "parent_0031_e0_k0_t0",
+      "parent_id": "parent_0031",
+      "split": "test",
+      "path": "records/parent_0031_e0_k0_t0.npz",
+      "fingerprint": "d57d78d3ef2ad8a9b3bb93aa59f913b834d71fa8c104ff0fd3d4a0bd31ebd56b",
+      "logical_fingerprint": "521cc896aba69e62820a5723daf7f1d4588ae2b862f746ea793a1bf141a3483d",
+      "logical_qubits": 4,
+      "file_sha256": "0d4d662161a6cc4a302d05f8a032aaf5f732a178d08105b5a97d85cfccb99ca7"
+    },
+    {
+      "record_id": "parent_0031_e0_k0_t1",
+      "parent_id": "parent_0031",
+      "split": "test",
+      "path": "records/parent_0031_e0_k0_t1.npz",
+      "fingerprint": "c0d4ccf92e40a9643a13275a0742d7e05c0d864cd71b6f90d133c52498537ce8",
+      "logical_fingerprint": "521cc896aba69e62820a5723daf7f1d4588ae2b862f746ea793a1bf141a3483d",
+      "logical_qubits": 4,
+      "file_sha256": "8b2c0884c72ae18705464358dc86e0b16bec0fb796bd15484c16bf29d8d8ab87"
+    },
+    {
+      "record_id": "parent_0032_e0_k0_t0",
+      "parent_id": "parent_0032",
+      "split": "train",
+      "path": "records/parent_0032_e0_k0_t0.npz",
+      "fingerprint": "825c61d9b030bbdf37be00dbe6a775e29c825bc604c6049b560e0a32064eb99b",
+      "logical_fingerprint": "2ac61aa3c9f0a6a73347b79098c9fd04fd80b8f3405e12124a3dc9386a3fee1c",
+      "logical_qubits": 5,
+      "file_sha256": "cdfa5a306e0ec3c615e3b37f85dc1603dab0a9c4e95ec536d8f7c2f30898c849"
+    },
+    {
+      "record_id": "parent_0032_e0_k0_t1",
+      "parent_id": "parent_0032",
+      "split": "train",
+      "path": "records/parent_0032_e0_k0_t1.npz",
+      "fingerprint": "f60a3939dc9d6cb9b8094632f3d508d4893d702500238f8475eb0943453b65cd",
+      "logical_fingerprint": "2ac61aa3c9f0a6a73347b79098c9fd04fd80b8f3405e12124a3dc9386a3fee1c",
+      "logical_qubits": 5,
+      "file_sha256": "0985a9cf52c0beefe7e23e6dac00044066764e42ae3bf907e1fd40bab1f07b3a"
+    },
+    {
+      "record_id": "parent_0033_e0_k0_t0",
+      "parent_id": "parent_0033",
+      "split": "train",
+      "path": "records/parent_0033_e0_k0_t0.npz",
+      "fingerprint": "80877a461bd11ba6fa83d5b6b3b73feefca0512c8620837aa112794a0f9874c7",
+      "logical_fingerprint": "5698a7d885feb1e067439f023422674aba083b36426dd874e378bd43eb88aada",
+      "logical_qubits": 5,
+      "file_sha256": "68b2c1981506b1fbe655a88555df523117ebbfc90844d12af3710dbcd768a870"
+    },
+    {
+      "record_id": "parent_0033_e0_k0_t1",
+      "parent_id": "parent_0033",
+      "split": "train",
+      "path": "records/parent_0033_e0_k0_t1.npz",
+      "fingerprint": "68114666aca646ac1d10635063a1b97e495836f2c30f18d742699e4a69fe3fd5",
+      "logical_fingerprint": "5698a7d885feb1e067439f023422674aba083b36426dd874e378bd43eb88aada",
+      "logical_qubits": 5,
+      "file_sha256": "9728e3d2be8e50b7ac8b69ad2734417e01b3aeb969632e2e83f43ceffe723605"
+    },
+    {
+      "record_id": "parent_0034_e0_k0_t0",
+      "parent_id": "parent_0034",
+      "split": "validation",
+      "path": "records/parent_0034_e0_k0_t0.npz",
+      "fingerprint": "9cfedc4957445f1c426220af15f7a535ceb73fd47b71f41697d3e136a15fec66",
+      "logical_fingerprint": "d210546058cee6e59ff3248942560b5da937f7396660cd1c6d4579bd6535537a",
+      "logical_qubits": 5,
+      "file_sha256": "558d2929555cd673604cc1e010d4d9ab8c3a21b7db7c46a5144db70a4a1707c0"
+    },
+    {
+      "record_id": "parent_0034_e0_k0_t1",
+      "parent_id": "parent_0034",
+      "split": "validation",
+      "path": "records/parent_0034_e0_k0_t1.npz",
+      "fingerprint": "d571241d5ed44d68c10b9b1507ca0c71b769faa991ff30b5079b0e8270b811eb",
+      "logical_fingerprint": "d210546058cee6e59ff3248942560b5da937f7396660cd1c6d4579bd6535537a",
+      "logical_qubits": 5,
+      "file_sha256": "74c829be08e896c3611aeaf4418e0367fb380089ddadcd4a8b723be56ac2692d"
+    },
+    {
+      "record_id": "parent_0035_e0_k0_t0",
+      "parent_id": "parent_0035",
+      "split": "train",
+      "path": "records/parent_0035_e0_k0_t0.npz",
+      "fingerprint": "3eddf664f10daad9cf82f908e2c38c5275f51bb2fe751bac84c3bf54366606f3",
+      "logical_fingerprint": "ddd2c9f017e144dec3472bdf58e86b20a35f25f75f20bde20b9cecec13172067",
+      "logical_qubits": 5,
+      "file_sha256": "17a67d37002f45d76f741851266731478ef07117e5698472d3dc6abdb897e4bc"
+    },
+    {
+      "record_id": "parent_0035_e0_k0_t1",
+      "parent_id": "parent_0035",
+      "split": "train",
+      "path": "records/parent_0035_e0_k0_t1.npz",
+      "fingerprint": "19e06e0d4a2dae7949febacaa969e3ca77a42a4f64247f32ea9ac54af1362432",
+      "logical_fingerprint": "ddd2c9f017e144dec3472bdf58e86b20a35f25f75f20bde20b9cecec13172067",
+      "logical_qubits": 5,
+      "file_sha256": "ff5d07883e512d54cfb5443f36845ef183d39fc7a550c55306f91297aa081b2c"
+    },
+    {
+      "record_id": "parent_0036_e0_k0_t0",
+      "parent_id": "parent_0036",
+      "split": "validation",
+      "path": "records/parent_0036_e0_k0_t0.npz",
+      "fingerprint": "e91957eee1b7e7c7186eb53d6797be69f4af326b5a079e4c7c75c3bc396cbc16",
+      "logical_fingerprint": "10249e8855fec2f07c21bb006224adfe3b32c62f679b18dec67da887ee739c84",
+      "logical_qubits": 3,
+      "file_sha256": "e08b3989819f548d792e10bae05d44db88059c744cd7c2e3c2625692f75a3cdf"
+    },
+    {
+      "record_id": "parent_0036_e0_k0_t1",
+      "parent_id": "parent_0036",
+      "split": "validation",
+      "path": "records/parent_0036_e0_k0_t1.npz",
+      "fingerprint": "d4d042cb03fe92ee84ac5520a0574c1b74df44fc4c3370c1e9c8c33cba3aa21e",
+      "logical_fingerprint": "10249e8855fec2f07c21bb006224adfe3b32c62f679b18dec67da887ee739c84",
+      "logical_qubits": 3,
+      "file_sha256": "c174726310d3dd0aa3e08683acb4eaded31d58672263d94c07b39ea31782129d"
+    },
+    {
+      "record_id": "parent_0037_e0_k0_t0",
+      "parent_id": "parent_0037",
+      "split": "train",
+      "path": "records/parent_0037_e0_k0_t0.npz",
+      "fingerprint": "0f8d2a5e290c23ed6a9e49334e3cfd227e168a14b365d443a90453de0708ab12",
+      "logical_fingerprint": "ad900088c48b00927222a5558a64b69d42c83e30a527697ebb7f7d6c32f06dc5",
+      "logical_qubits": 3,
+      "file_sha256": "ddb1e52d57e694721ad521697d21db6799f372e935a0492ef66700940dc079c3"
+    },
+    {
+      "record_id": "parent_0037_e0_k0_t1",
+      "parent_id": "parent_0037",
+      "split": "train",
+      "path": "records/parent_0037_e0_k0_t1.npz",
+      "fingerprint": "ea765ba8318479bd7e960b3b9ed32126b2d936ba748983e9e0009abadf9ac4a9",
+      "logical_fingerprint": "ad900088c48b00927222a5558a64b69d42c83e30a527697ebb7f7d6c32f06dc5",
+      "logical_qubits": 3,
+      "file_sha256": "07c7c50c3c52a8b900e58c7e0bac76dcb27553de4d63b48f5bc7f04f4440ac6b"
+    },
+    {
+      "record_id": "parent_0038_e0_k0_t0",
+      "parent_id": "parent_0038",
+      "split": "train",
+      "path": "records/parent_0038_e0_k0_t0.npz",
+      "fingerprint": "dd4a42d327c607579bb71a271bbaecccae40d0437b39031359e8999b28fb6dfd",
+      "logical_fingerprint": "657d19e3b6a6af85e347e493dbd00d42991bb86859cf9f1579abb40e88234ee1",
+      "logical_qubits": 3,
+      "file_sha256": "41c0704014f2ad9b90bd1183434fd47e88a74e85527a67c78f8600c88227ea66"
+    },
+    {
+      "record_id": "parent_0038_e0_k0_t1",
+      "parent_id": "parent_0038",
+      "split": "train",
+      "path": "records/parent_0038_e0_k0_t1.npz",
+      "fingerprint": "e700873372f103808013dbb6cf00f1ecb70b1e53d32a3e537739f14e7d5b4a1f",
+      "logical_fingerprint": "657d19e3b6a6af85e347e493dbd00d42991bb86859cf9f1579abb40e88234ee1",
+      "logical_qubits": 3,
+      "file_sha256": "e371db28df709bd6daddbc4fb6b9c4987381cc04a58fd6d55d93e833c0073ea2"
+    },
+    {
+      "record_id": "parent_0039_e0_k0_t0",
+      "parent_id": "parent_0039",
+      "split": "test",
+      "path": "records/parent_0039_e0_k0_t0.npz",
+      "fingerprint": "d8e22f896a91b516b2157aad9d5e68e19bc5a8c22f5291d2b95d19354df7ce4b",
+      "logical_fingerprint": "60aa4169cc0080a57a2e731773124f9585c94a6dc9fbec9d5500fd55e04aee41",
+      "logical_qubits": 3,
+      "file_sha256": "ae96b960f9cc4edad3e80703a40b168912912b144c5374fde06c23daa205b1b3"
+    },
+    {
+      "record_id": "parent_0039_e0_k0_t1",
+      "parent_id": "parent_0039",
+      "split": "test",
+      "path": "records/parent_0039_e0_k0_t1.npz",
+      "fingerprint": "7acc2f3d296b75bff128b70dc0b4ba337cdbc4bb0a4e59994f9e4fbe63ef4a1f",
+      "logical_fingerprint": "60aa4169cc0080a57a2e731773124f9585c94a6dc9fbec9d5500fd55e04aee41",
+      "logical_qubits": 3,
+      "file_sha256": "6d475c2fa483c89a137be1720e1e97ed27ba4db1b848a1aabc8ab0b3389ca639"
+    },
+    {
+      "record_id": "parent_0040_e0_k0_t0",
+      "parent_id": "parent_0040",
+      "split": "test",
+      "path": "records/parent_0040_e0_k0_t0.npz",
+      "fingerprint": "948396dbbce193274a0567145a1917f7c642a55ddca7d69721ea0691a2e83ac7",
+      "logical_fingerprint": "00427865337cc9001a9340a31d305f1195c47cb9181b3f34a408f39ea6c89a61",
+      "logical_qubits": 4,
+      "file_sha256": "3c7676bdc887503ad734aa49261646cba89ad53f48269d5966cdad405e7f0994"
+    },
+    {
+      "record_id": "parent_0040_e0_k0_t1",
+      "parent_id": "parent_0040",
+      "split": "test",
+      "path": "records/parent_0040_e0_k0_t1.npz",
+      "fingerprint": "c09be044fe46684b5ef759fe9eecae35855fa9d9f12be5aaf3c10e4520930ac6",
+      "logical_fingerprint": "00427865337cc9001a9340a31d305f1195c47cb9181b3f34a408f39ea6c89a61",
+      "logical_qubits": 4,
+      "file_sha256": "db31a896342164a895bdd2e0956261857458bc0770bef3524c2f8e018b06a8c4"
+    },
+    {
+      "record_id": "parent_0041_e0_k0_t0",
+      "parent_id": "parent_0041",
+      "split": "train",
+      "path": "records/parent_0041_e0_k0_t0.npz",
+      "fingerprint": "f6bfb4fa310c81621c030d1070a8f01a7d01c13b34dd5935369f0bc5b44869e4",
+      "logical_fingerprint": "d38ccf2fb8989451833706fcfb964793afb9984ed468015fc6b6d507c4f9c248",
+      "logical_qubits": 4,
+      "file_sha256": "b9c0cf7b8eb3324ec4abdf520b257640653c9e6a7a6fb79be7800e96b388fcdb"
+    },
+    {
+      "record_id": "parent_0041_e0_k0_t1",
+      "parent_id": "parent_0041",
+      "split": "train",
+      "path": "records/parent_0041_e0_k0_t1.npz",
+      "fingerprint": "2a062678384c374e5355888a4099eebf361d8104c3206379e1712d8714db6a88",
+      "logical_fingerprint": "d38ccf2fb8989451833706fcfb964793afb9984ed468015fc6b6d507c4f9c248",
+      "logical_qubits": 4,
+      "file_sha256": "be7fee735edaf91a2cbf37dedfebaed59aefe283e6d7362743e3e9cc440a6526"
+    },
+    {
+      "record_id": "parent_0042_e0_k0_t0",
+      "parent_id": "parent_0042",
+      "split": "validation",
+      "path": "records/parent_0042_e0_k0_t0.npz",
+      "fingerprint": "a5a5e22762daa056dd8b7f2993e1cc4793fb973b12ac9e3bdfd2b6397d509db8",
+      "logical_fingerprint": "b092dd5be8d71ec41ad4cf2f20ccb7c33a47350d3ee161b0583ab8ccc17ed5d8",
+      "logical_qubits": 4,
+      "file_sha256": "5f5d5a851543be79099ef1325c15dd7ec64a95bb892be7ef2d1f4ffee7bcd165"
+    },
+    {
+      "record_id": "parent_0042_e0_k0_t1",
+      "parent_id": "parent_0042",
+      "split": "validation",
+      "path": "records/parent_0042_e0_k0_t1.npz",
+      "fingerprint": "906fa61be14cfdc8b8b6180210975ca29b9e09d2ab750fd9f461215414402757",
+      "logical_fingerprint": "b092dd5be8d71ec41ad4cf2f20ccb7c33a47350d3ee161b0583ab8ccc17ed5d8",
+      "logical_qubits": 4,
+      "file_sha256": "aaf87b66e2c2bf73d489fc13c0679243965ed543848d8485a1e5e6a69229e80c"
+    },
+    {
+      "record_id": "parent_0043_e0_k0_t0",
+      "parent_id": "parent_0043",
+      "split": "train",
+      "path": "records/parent_0043_e0_k0_t0.npz",
+      "fingerprint": "79868a5e7360bdba5993ccb54d9f07a1a0741bba02b4ea39611f85a664452e8f",
+      "logical_fingerprint": "e936532624b08d98d201fe04d0f39a5d78715ef3f246a63c84bac6773ffb2f5d",
+      "logical_qubits": 4,
+      "file_sha256": "5844c51624a3238d770e17c07d2f015a9668c468dd05c72fcf0162fd82bf5770"
+    },
+    {
+      "record_id": "parent_0043_e0_k0_t1",
+      "parent_id": "parent_0043",
+      "split": "train",
+      "path": "records/parent_0043_e0_k0_t1.npz",
+      "fingerprint": "a583d219b53d0cf2f1e500c2b05cd62eb2ceddddfebffa45d44ad551feeea3f7",
+      "logical_fingerprint": "e936532624b08d98d201fe04d0f39a5d78715ef3f246a63c84bac6773ffb2f5d",
+      "logical_qubits": 4,
+      "file_sha256": "a7a795cab797de3a6b11d2625eea2f36d4f6d40d62ce4584112c0a1170669303"
+    },
+    {
+      "record_id": "parent_0044_e0_k0_t0",
+      "parent_id": "parent_0044",
+      "split": "test",
+      "path": "records/parent_0044_e0_k0_t0.npz",
+      "fingerprint": "deadb25a21b13f14357311893736f4eeb30a0c2fefd820c5f406b7f2d535632d",
+      "logical_fingerprint": "441e13ad66af945fc2c2668168acc731168ab8795407cda5957e53cadca897e7",
+      "logical_qubits": 5,
+      "file_sha256": "b64f3506a8fd1f0a10b8fe790f8da47c64631f9d5f699bb527d5056d383cd1ee"
+    },
+    {
+      "record_id": "parent_0044_e0_k0_t1",
+      "parent_id": "parent_0044",
+      "split": "test",
+      "path": "records/parent_0044_e0_k0_t1.npz",
+      "fingerprint": "8ef954c92f35b057969979961852288c4bae8d018d6f971cd7666c150f567a91",
+      "logical_fingerprint": "441e13ad66af945fc2c2668168acc731168ab8795407cda5957e53cadca897e7",
+      "logical_qubits": 5,
+      "file_sha256": "8ef3f8f8f937b6d7aae83c4ffcb0dd6c642efbc5c8b65a61f127965db8296a38"
+    },
+    {
+      "record_id": "parent_0045_e0_k0_t0",
+      "parent_id": "parent_0045",
+      "split": "test",
+      "path": "records/parent_0045_e0_k0_t0.npz",
+      "fingerprint": "8a7c74404c06560752caae0697a51ee3cb95949fa1398b50c57f23b259a6db48",
+      "logical_fingerprint": "2ecdd95b4ef3ef618b98e6fd3d3accfbf8be1262d7ce95550a85ffed906ac22f",
+      "logical_qubits": 5,
+      "file_sha256": "6c196dc72f9f73669340171eb20a8f06993e13124c3a8bb3eb7c3671d66c447d"
+    },
+    {
+      "record_id": "parent_0045_e0_k0_t1",
+      "parent_id": "parent_0045",
+      "split": "test",
+      "path": "records/parent_0045_e0_k0_t1.npz",
+      "fingerprint": "c17bd05a4e4c9d63a8a8aef16315eab741ce50f8a7ed74428735f2862189ee35",
+      "logical_fingerprint": "2ecdd95b4ef3ef618b98e6fd3d3accfbf8be1262d7ce95550a85ffed906ac22f",
+      "logical_qubits": 5,
+      "file_sha256": "1ddd11c862fd65da55a93c56b9fcb62290b61cf322902ddbb6d746c06bfd9ff2"
+    },
+    {
+      "record_id": "parent_0046_e0_k0_t0",
+      "parent_id": "parent_0046",
+      "split": "train",
+      "path": "records/parent_0046_e0_k0_t0.npz",
+      "fingerprint": "846857fdf4d3d69afbf982758b211adb15040d7be43ac404a2ef64b625a0c98e",
+      "logical_fingerprint": "015e4c74ffe8360b6d830f245f027221c7f09ddc2a824f7d3468503872a243bb",
+      "logical_qubits": 5,
+      "file_sha256": "42177b8f057851896d422a78266f64f4d0d3eaf93b23742d6ec83301bf7f1d29"
+    },
+    {
+      "record_id": "parent_0046_e0_k0_t1",
+      "parent_id": "parent_0046",
+      "split": "train",
+      "path": "records/parent_0046_e0_k0_t1.npz",
+      "fingerprint": "887a779975db6d2b4bf448eb27c1da9f7ce2cf1225087231cfbf39068edb9794",
+      "logical_fingerprint": "015e4c74ffe8360b6d830f245f027221c7f09ddc2a824f7d3468503872a243bb",
+      "logical_qubits": 5,
+      "file_sha256": "962aa0409cdf025fd6eac79683b87a6346a58d1dc64f6962dabf69b2f1e471f3"
+    },
+    {
+      "record_id": "parent_0047_e0_k0_t0",
+      "parent_id": "parent_0047",
+      "split": "validation",
+      "path": "records/parent_0047_e0_k0_t0.npz",
+      "fingerprint": "3cfe19585cfa651b8dbc48258c3a77c7c6e695f94593daf0bfb9f0cd1b48d8c7",
+      "logical_fingerprint": "d7d86235d85201b3b418f7642d718c2dab1f41c42f49a5b6c701451525829c1e",
+      "logical_qubits": 5,
+      "file_sha256": "ef8afe7306c61375d25e52ed35f7f41ea0cb427f952e34ded71c3824ba688663"
+    },
+    {
+      "record_id": "parent_0047_e0_k0_t1",
+      "parent_id": "parent_0047",
+      "split": "validation",
+      "path": "records/parent_0047_e0_k0_t1.npz",
+      "fingerprint": "f265508cd6963fc93696e83603d1bc41a3e8dc7074c84566654b1b2e2b28791f",
+      "logical_fingerprint": "d7d86235d85201b3b418f7642d718c2dab1f41c42f49a5b6c701451525829c1e",
+      "logical_qubits": 5,
+      "file_sha256": "8c86c653014a44076323b55c6ed807dabc9d9caf9af31ea47a5b210e20abd4af"
+    },
+    {
+      "record_id": "parent_0048_e0_k0_t0",
+      "parent_id": "parent_0048",
+      "split": "train",
+      "path": "records/parent_0048_e0_k0_t0.npz",
+      "fingerprint": "2ef5aaa87b7f2b15be6dcdd66970b0d6b92a3163aaad5d6e7fef76c6ef10b3bd",
+      "logical_fingerprint": "f9afe8f77e1f566eb2bcb47647e981474737a78ba8d23e11052d71de4e14fbcd",
+      "logical_qubits": 3,
+      "file_sha256": "c9b75dd6d340e9450f344a3d66b1aa03fce7b09e283cbabbf16b49147beda866"
+    },
+    {
+      "record_id": "parent_0048_e0_k0_t1",
+      "parent_id": "parent_0048",
+      "split": "train",
+      "path": "records/parent_0048_e0_k0_t1.npz",
+      "fingerprint": "dfcf765fde6ac4e23465776719651667b7aa065e42ee2b3a394d3b3f4c030da2",
+      "logical_fingerprint": "f9afe8f77e1f566eb2bcb47647e981474737a78ba8d23e11052d71de4e14fbcd",
+      "logical_qubits": 3,
+      "file_sha256": "7caec78cdbc373e7261fed2b08dbabc89383bf030813b6e2a5e3ad5cb6e6d605"
+    },
+    {
+      "record_id": "parent_0049_e0_k0_t0",
+      "parent_id": "parent_0049",
+      "split": "train",
+      "path": "records/parent_0049_e0_k0_t0.npz",
+      "fingerprint": "2fc1800120523b03abcbc09d3b631ca8551ddc0845f3cceb1fbcbf8fcf7508ed",
+      "logical_fingerprint": "e4470d51bd6b2022e09882fa8e1bbaca90a12b6dbb03f1d3924e4eabd73e62a8",
+      "logical_qubits": 3,
+      "file_sha256": "462ba2f6199094c6d9adf94b0b79ad400167b0721af35865017305be85d8f85f"
+    },
+    {
+      "record_id": "parent_0049_e0_k0_t1",
+      "parent_id": "parent_0049",
+      "split": "train",
+      "path": "records/parent_0049_e0_k0_t1.npz",
+      "fingerprint": "64f7b273d6f4282d0df863d63c74967eb06f89a20e4800c765b35f2f3bf407be",
+      "logical_fingerprint": "e4470d51bd6b2022e09882fa8e1bbaca90a12b6dbb03f1d3924e4eabd73e62a8",
+      "logical_qubits": 3,
+      "file_sha256": "3c4018e622047159cbc7cfd5d924b78d4460561a75cd0652a8bed8020d125b01"
+    },
+    {
+      "record_id": "parent_0050_e0_k0_t0",
+      "parent_id": "parent_0050",
+      "split": "train",
+      "path": "records/parent_0050_e0_k0_t0.npz",
+      "fingerprint": "29edc6cc5f0aa6247f9be76b9e8fb5a12afec13abf6c38c06d27f971a4fc99cf",
+      "logical_fingerprint": "21822a729d404bb88541e021b7a1d85a383d7b1f7000ab56991db8d455c50975",
+      "logical_qubits": 3,
+      "file_sha256": "55bcd2d40f2c02c0e7cbd8a2347c468aadd296c288ff6eba8573ffd105794d4f"
+    },
+    {
+      "record_id": "parent_0050_e0_k0_t1",
+      "parent_id": "parent_0050",
+      "split": "train",
+      "path": "records/parent_0050_e0_k0_t1.npz",
+      "fingerprint": "2aea7d5a0abae99ddbc7aa7738208e61c11772a340f379bb08019cd8280af187",
+      "logical_fingerprint": "21822a729d404bb88541e021b7a1d85a383d7b1f7000ab56991db8d455c50975",
+      "logical_qubits": 3,
+      "file_sha256": "4a7f854900f21b8f2fd677652bf0740271337dfb237803dffcd50eeb696bc19c"
+    },
+    {
+      "record_id": "parent_0051_e0_k0_t0",
+      "parent_id": "parent_0051",
+      "split": "train",
+      "path": "records/parent_0051_e0_k0_t0.npz",
+      "fingerprint": "1e937bd100104143387aac82770ac867833ab4ccb6ac6a674f03c08ac2d374ef",
+      "logical_fingerprint": "c3f7b17add854248fb043bdacb274722db9b7fa733c3d19642a95721947b4ca0",
+      "logical_qubits": 3,
+      "file_sha256": "44427c9226b35f99f98f675ed56a57fc2900bbde95e6f8fea280e5a5701441c0"
+    },
+    {
+      "record_id": "parent_0051_e0_k0_t1",
+      "parent_id": "parent_0051",
+      "split": "train",
+      "path": "records/parent_0051_e0_k0_t1.npz",
+      "fingerprint": "633761581d4ac7fec7d29613d981d518cb597d11a95616870f2fb6df9db7d1d4",
+      "logical_fingerprint": "c3f7b17add854248fb043bdacb274722db9b7fa733c3d19642a95721947b4ca0",
+      "logical_qubits": 3,
+      "file_sha256": "63cc089ccb6a705526c96aa49bd9d90cc33e2b537e89904bbb892d1631c57d5f"
+    },
+    {
+      "record_id": "parent_0052_e0_k0_t0",
+      "parent_id": "parent_0052",
+      "split": "train",
+      "path": "records/parent_0052_e0_k0_t0.npz",
+      "fingerprint": "8fdbc879f1d94ffafdbeb94737f1aa59dee102cd42aed9aba1925ebc501241d6",
+      "logical_fingerprint": "01569e2d1ba9bc7f665f6947e61712fe100533ba5faa818a0a2fdb99e1226ea7",
+      "logical_qubits": 4,
+      "file_sha256": "18dcb4bde85ed2939aba57470bb1d95d4bb9479b671c4cf8f85180728135efce"
+    },
+    {
+      "record_id": "parent_0052_e0_k0_t1",
+      "parent_id": "parent_0052",
+      "split": "train",
+      "path": "records/parent_0052_e0_k0_t1.npz",
+      "fingerprint": "d7b3fe8f12ca2c59159c61038c7f46be2af515075a031bdb99a097176f8d2ada",
+      "logical_fingerprint": "01569e2d1ba9bc7f665f6947e61712fe100533ba5faa818a0a2fdb99e1226ea7",
+      "logical_qubits": 4,
+      "file_sha256": "7e7f13d1b50fa09c99068288024e391d81228a34a4e53cc4310c9b410098ece6"
+    },
+    {
+      "record_id": "parent_0053_e0_k0_t0",
+      "parent_id": "parent_0053",
+      "split": "train",
+      "path": "records/parent_0053_e0_k0_t0.npz",
+      "fingerprint": "ec7c4b2e39ff5f8be51d3e54445749cda2596422fde579b7239edfc7383c7621",
+      "logical_fingerprint": "a90e9b680a30e8568a832c9b6e042dd8fa844fbc4f45374c262708b6831ec218",
+      "logical_qubits": 4,
+      "file_sha256": "f54afac53a3967ccfb408904411a12ab664cc129c5ff73de437705e0131407e1"
+    },
+    {
+      "record_id": "parent_0053_e0_k0_t1",
+      "parent_id": "parent_0053",
+      "split": "train",
+      "path": "records/parent_0053_e0_k0_t1.npz",
+      "fingerprint": "c0e96a9a77b3de0c509344f144ebaba6528854e112532e25b8a30a3722d5dacf",
+      "logical_fingerprint": "a90e9b680a30e8568a832c9b6e042dd8fa844fbc4f45374c262708b6831ec218",
+      "logical_qubits": 4,
+      "file_sha256": "7ad1877525f4b2dafe8f9cfae520d032a69bcd428e32799cbbdc4507bd4d06fd"
+    },
+    {
+      "record_id": "parent_0054_e0_k0_t0",
+      "parent_id": "parent_0054",
+      "split": "train",
+      "path": "records/parent_0054_e0_k0_t0.npz",
+      "fingerprint": "06546d7380f1afba60517851b83c7b8b6944e4965c6b415d8cb655966b19f31e",
+      "logical_fingerprint": "8cb97bcbe6c4fd2fe3545344d7dd5c02f6c1b095314d323c6ccb06c220cb3a53",
+      "logical_qubits": 4,
+      "file_sha256": "ddc6ca5ffdd57622e64740571a634c1a4851408d284323c3f7fee00bdb801717"
+    },
+    {
+      "record_id": "parent_0054_e0_k0_t1",
+      "parent_id": "parent_0054",
+      "split": "train",
+      "path": "records/parent_0054_e0_k0_t1.npz",
+      "fingerprint": "b09125bff24bc677f33e49cb3acf425a45afadc2c60b2a9b4746fd97446b92b9",
+      "logical_fingerprint": "8cb97bcbe6c4fd2fe3545344d7dd5c02f6c1b095314d323c6ccb06c220cb3a53",
+      "logical_qubits": 4,
+      "file_sha256": "045d124578f1bf0ec254bb9b476454253c27a9a638b3543ac9432c36b03655cb"
+    },
+    {
+      "record_id": "parent_0055_e0_k0_t0",
+      "parent_id": "parent_0055",
+      "split": "validation",
+      "path": "records/parent_0055_e0_k0_t0.npz",
+      "fingerprint": "c227a54348dd64e4d574a63d948ef7ded576ec1da092e1bd77abf31c0a79df11",
+      "logical_fingerprint": "42e5f0592f6dbec9792a14334bb16e2611646dd11e018708f30a10f3c8344ba0",
+      "logical_qubits": 4,
+      "file_sha256": "e70361571d6b3bd562e692a869288013b9bdbde06721b24e7851cca5698e52e5"
+    },
+    {
+      "record_id": "parent_0055_e0_k0_t1",
+      "parent_id": "parent_0055",
+      "split": "validation",
+      "path": "records/parent_0055_e0_k0_t1.npz",
+      "fingerprint": "ef27c8edfed10074ff18740b8ceca490c797fefc5bdec3ae50f5d03bc30bf859",
+      "logical_fingerprint": "42e5f0592f6dbec9792a14334bb16e2611646dd11e018708f30a10f3c8344ba0",
+      "logical_qubits": 4,
+      "file_sha256": "4eb04c99dca9e59616989f03e308e00785bb5e047173491fc0aa66a7b1d2b926"
+    },
+    {
+      "record_id": "parent_0056_e0_k0_t0",
+      "parent_id": "parent_0056",
+      "split": "train",
+      "path": "records/parent_0056_e0_k0_t0.npz",
+      "fingerprint": "0b4b8d8ffa484d8edf9b902e4bbb12c19935fe64efee95be55914e09b31f7ca9",
+      "logical_fingerprint": "15691404fb64c85454c21c79f5a7cb4c7423d615e8aca70fa9ca3ac0af2e5797",
+      "logical_qubits": 5,
+      "file_sha256": "2f5061dfa8302b77af2ff1baeb2e82d9e56f5b60000789972056e02c0fa9806e"
+    },
+    {
+      "record_id": "parent_0056_e0_k0_t1",
+      "parent_id": "parent_0056",
+      "split": "train",
+      "path": "records/parent_0056_e0_k0_t1.npz",
+      "fingerprint": "5479a4873c3398dee3efaf12878e0c9bc4fe0b8a8f8f1f9b7acd0c164f368618",
+      "logical_fingerprint": "15691404fb64c85454c21c79f5a7cb4c7423d615e8aca70fa9ca3ac0af2e5797",
+      "logical_qubits": 5,
+      "file_sha256": "40ea60c0986a3c752ea2a264ad1aea7b676039beb33a60ccc83d8359f954f14c"
+    },
+    {
+      "record_id": "parent_0057_e0_k0_t0",
+      "parent_id": "parent_0057",
+      "split": "train",
+      "path": "records/parent_0057_e0_k0_t0.npz",
+      "fingerprint": "11cd33161fa4ceed879147dafbdd72c1c82a587066ed4ce8f74b88a86dc3d7d9",
+      "logical_fingerprint": "ed4447da815a00430c549587b6da9d68261c55d27e061cf3d2102a990a61a56b",
+      "logical_qubits": 5,
+      "file_sha256": "7c31a39ed51849c556b5a7780c56e94732d4a73bcb9ab83f642100b06478a4c3"
+    },
+    {
+      "record_id": "parent_0057_e0_k0_t1",
+      "parent_id": "parent_0057",
+      "split": "train",
+      "path": "records/parent_0057_e0_k0_t1.npz",
+      "fingerprint": "e47b83b10b4b1291fa407ad0edd37012252fbd133d89d635afc2f3bbaa92f22e",
+      "logical_fingerprint": "ed4447da815a00430c549587b6da9d68261c55d27e061cf3d2102a990a61a56b",
+      "logical_qubits": 5,
+      "file_sha256": "9680442ace387cc639daf496e84c4f7d58b377d528fff20dbc77acc1d850bdca"
+    },
+    {
+      "record_id": "parent_0058_e0_k0_t0",
+      "parent_id": "parent_0058",
+      "split": "test",
+      "path": "records/parent_0058_e0_k0_t0.npz",
+      "fingerprint": "f2bb5786605150ee9d7104187ad0a611c8ac58a7220e18c975857a903c65343a",
+      "logical_fingerprint": "65824506feadd80f3e618b2ed77005984ac29ea9d65956b006f028e53eae23b1",
+      "logical_qubits": 5,
+      "file_sha256": "12efc93ff4dd1365099dec9b2601e955bd76643c3db6e70ab7a58dd1caf647a5"
+    },
+    {
+      "record_id": "parent_0058_e0_k0_t1",
+      "parent_id": "parent_0058",
+      "split": "test",
+      "path": "records/parent_0058_e0_k0_t1.npz",
+      "fingerprint": "8b0e249f55d2e06643864d0047ecc19c073e60fcd3b554c41db645e4a4659bf0",
+      "logical_fingerprint": "65824506feadd80f3e618b2ed77005984ac29ea9d65956b006f028e53eae23b1",
+      "logical_qubits": 5,
+      "file_sha256": "c0c4fec271ff0d85342a1e9759e2ea1aa8d92aa1984e9de41c29af9dd5aa36be"
+    },
+    {
+      "record_id": "parent_0059_e0_k0_t0",
+      "parent_id": "parent_0059",
+      "split": "train",
+      "path": "records/parent_0059_e0_k0_t0.npz",
+      "fingerprint": "cfbc02de0deb3a1f3f73e87f4f20b849560406d39223eb3dd3dd13b280ec63b3",
+      "logical_fingerprint": "07d4bfe7d37b459301e204c1fdb4ffc0bf87517b071fa4e174853b0443c6cba9",
+      "logical_qubits": 5,
+      "file_sha256": "ea93dbca5db4bbe0ef2b009b998c591a7b9106009862d7a0b88b4011812f92c4"
+    },
+    {
+      "record_id": "parent_0059_e0_k0_t1",
+      "parent_id": "parent_0059",
+      "split": "train",
+      "path": "records/parent_0059_e0_k0_t1.npz",
+      "fingerprint": "988c83a8a59d498361ac9a786edc5d00909f1ded3cc2dd0355e16d2aec3dee65",
+      "logical_fingerprint": "07d4bfe7d37b459301e204c1fdb4ffc0bf87517b071fa4e174853b0443c6cba9",
+      "logical_qubits": 5,
+      "file_sha256": "029836ac17a0f05e171b083eefb9c73ef9da2d0df82504ec020720831c585268"
+    }
+  ],
+  "scope": "synthetic_lift_closed_system",
+  "teacher_mode": "none",
+  "decoder": "majority_tie_plus_v1",
+  "parents": [
+    {
+      "parent_id": "parent_0000",
+      "family": "spin_glass",
+      "logical_qubits": 3,
+      "logical_fingerprint": "1f77952cad9d5143086c9f4884be6824f5db4ce1a525c30b31344b5fb2dc45ff",
+      "split": "train"
+    },
+    {
+      "parent_id": "parent_0001",
+      "family": "weighted_maxcut",
+      "logical_qubits": 3,
+      "logical_fingerprint": "ef5231386bb58af45dfce6f05e33dbf36a0fef16fcb661e2807086750fe0c55a",
+      "split": "train"
+    },
+    {
+      "parent_id": "parent_0002",
+      "family": "planted_loops",
+      "logical_qubits": 3,
+      "logical_fingerprint": "1c6a1df5c1c2561d2e0c63a8e11544250df732f7f184f9cc33cdafdc9fd07145",
+      "split": "train"
+    },
+    {
+      "parent_id": "parent_0003",
+      "family": "weak_field",
+      "logical_qubits": 3,
+      "logical_fingerprint": "272ded5d301baf8114afccade4233922653d94f43125a4fda3caaf44456266d6",
+      "split": "train"
+    },
+    {
+      "parent_id": "parent_0004",
+      "family": "spin_glass",
+      "logical_qubits": 4,
+      "logical_fingerprint": "f8899b71d1b55223e710b2f385cdcd0978b69f7abb613aa6b4d2fceadc2a4341",
+      "split": "validation"
+    },
+    {
+      "parent_id": "parent_0005",
+      "family": "weighted_maxcut",
+      "logical_qubits": 4,
+      "logical_fingerprint": "c7b7959b530947d8cf282c341e24ae101c627f6e8ea8bba50f5b32b2204ec8b0",
+      "split": "train"
+    },
+    {
+      "parent_id": "parent_0006",
+      "family": "planted_loops",
+      "logical_qubits": 4,
+      "logical_fingerprint": "190ee5c4c34de1d4e62a2fc7f365f34ad2dd7477b0aa73d8e4edd9ec57ef1958",
+      "split": "train"
+    },
+    {
+      "parent_id": "parent_0007",
+      "family": "weak_field",
+      "logical_qubits": 4,
+      "logical_fingerprint": "bb97b365ed98304013ad58fbf51938d206acc398cd9ab24e503b190b45f4672b",
+      "split": "train"
+    },
+    {
+      "parent_id": "parent_0008",
+      "family": "spin_glass",
+      "logical_qubits": 5,
+      "logical_fingerprint": "d6bf28e203a81b3bf4b89af1c8f225aee0704f90b439c6e8a5491b7dc2099752",
+      "split": "train"
+    },
+    {
+      "parent_id": "parent_0009",
+      "family": "weighted_maxcut",
+      "logical_qubits": 5,
+      "logical_fingerprint": "6b648a340affd83a5e08c15ad554e8d754f52c61c6915d2601a0fdcc5b1f2dbf",
+      "split": "validation"
+    },
+    {
+      "parent_id": "parent_0010",
+      "family": "planted_loops",
+      "logical_qubits": 5,
+      "logical_fingerprint": "11f6470a4f4a1df2afbaa6392f96bad56a3013eb5f264cba9268572c840b5a13",
+      "split": "train"
+    },
+    {
+      "parent_id": "parent_0011",
+      "family": "weak_field",
+      "logical_qubits": 5,
+      "logical_fingerprint": "59ff45c73e011acc8c8f860f1ff94282bbb8b4be3159f69d1a6106ca5e346e58",
+      "split": "test"
+    },
+    {
+      "parent_id": "parent_0012",
+      "family": "spin_glass",
+      "logical_qubits": 3,
+      "logical_fingerprint": "38d78b8c79271ddd05215f94b389de2c596967cd5294ccb81c176e3b0de53c47",
+      "split": "train"
+    },
+    {
+      "parent_id": "parent_0013",
+      "family": "weighted_maxcut",
+      "logical_qubits": 3,
+      "logical_fingerprint": "b8757736f79285cb102cf13c9f3674c2b9b40898d5ad4aa309c152700b1a1200",
+      "split": "test"
+    },
+    {
+      "parent_id": "parent_0014",
+      "family": "planted_loops",
+      "logical_qubits": 3,
+      "logical_fingerprint": "0d9a49469fccc5c4758a3a23035a95c206c67548ac16ce775cda01b8de5e43c9",
+      "split": "test"
+    },
+    {
+      "parent_id": "parent_0015",
+      "family": "weak_field",
+      "logical_qubits": 3,
+      "logical_fingerprint": "0ec5b2429058d41a0e25044b018cf233b4609969037cc1576aa502d067cd0363",
+      "split": "train"
+    },
+    {
+      "parent_id": "parent_0016",
+      "family": "spin_glass",
+      "logical_qubits": 4,
+      "logical_fingerprint": "c32834dba7d61d0dd8872b5352adf5a20af661b5f684c91fc63328d3fbc800c7",
+      "split": "train"
+    },
+    {
+      "parent_id": "parent_0017",
+      "family": "weighted_maxcut",
+      "logical_qubits": 4,
+      "logical_fingerprint": "a21daa879ee27dad3d1d7f50a36734af66feb49dad426977fc983897a2da71d1",
+      "split": "validation"
+    },
+    {
+      "parent_id": "parent_0018",
+      "family": "planted_loops",
+      "logical_qubits": 4,
+      "logical_fingerprint": "223a29636147a8a9d40dbfffe2560b5538b41b953565ccf74fd4096a676f9bac",
+      "split": "train"
+    },
+    {
+      "parent_id": "parent_0019",
+      "family": "weak_field",
+      "logical_qubits": 4,
+      "logical_fingerprint": "18ca4e31b39003167827bb48c13939bbd097b221949f5a631da3ce70368fb775",
+      "split": "train"
+    },
+    {
+      "parent_id": "parent_0020",
+      "family": "spin_glass",
+      "logical_qubits": 5,
+      "logical_fingerprint": "749c1decba167fac3049d1bb73343ebf26fa8597a2a5fc723336559fa4562ff1",
+      "split": "validation"
+    },
+    {
+      "parent_id": "parent_0021",
+      "family": "weighted_maxcut",
+      "logical_qubits": 5,
+      "logical_fingerprint": "ea8c5a77669e4a797a806b1afee773f26cf7a846218835dfbe9f0bf4cb660738",
+      "split": "train"
+    },
+    {
+      "parent_id": "parent_0022",
+      "family": "planted_loops",
+      "logical_qubits": 5,
+      "logical_fingerprint": "f27f3a14a77ef37030144d56ce3333fef2984a0dc5c6c13f8def63cf2f407ff4",
+      "split": "train"
+    },
+    {
+      "parent_id": "parent_0023",
+      "family": "weak_field",
+      "logical_qubits": 5,
+      "logical_fingerprint": "be47dd7afd7df3b6e87e1e78dfa5b4fe5f5b7f666064674e43782d475751d892",
+      "split": "train"
+    },
+    {
+      "parent_id": "parent_0024",
+      "family": "spin_glass",
+      "logical_qubits": 3,
+      "logical_fingerprint": "399a2396057a2792d7fae7dcef9fbabd11e250dc38e11b3d67fecfd99eeb2a26",
+      "split": "test"
+    },
+    {
+      "parent_id": "parent_0025",
+      "family": "weighted_maxcut",
+      "logical_qubits": 3,
+      "logical_fingerprint": "bc2a52f8c2a24646e78857b119fffdfeaa5cc62c4f10ed88b3ba107f95a04a0a",
+      "split": "validation"
+    },
+    {
+      "parent_id": "parent_0026",
+      "family": "planted_loops",
+      "logical_qubits": 3,
+      "logical_fingerprint": "e9d5e126eeae8f1ff612e5f2ee34e899bc2bad90ee1bc5aca40fbbd4a822a37a",
+      "split": "validation"
+    },
+    {
+      "parent_id": "parent_0027",
+      "family": "weak_field",
+      "logical_qubits": 3,
+      "logical_fingerprint": "12e7ea55e4236fb994f3ec51bc805a1615ca871d0c7812995ff81be25c362290",
+      "split": "validation"
+    },
+    {
+      "parent_id": "parent_0028",
+      "family": "spin_glass",
+      "logical_qubits": 4,
+      "logical_fingerprint": "523c44d3b423c7bff4c40511b4faf20e785e71baf7e568d8ebdd838b220f3fc0",
+      "split": "train"
+    },
+    {
+      "parent_id": "parent_0029",
+      "family": "weighted_maxcut",
+      "logical_qubits": 4,
+      "logical_fingerprint": "0b900ad05eede6da8ec2c228229e1378bc3bb98ed5c0eaf224dfb1f9f58fba07",
+      "split": "test"
+    },
+    {
+      "parent_id": "parent_0030",
+      "family": "planted_loops",
+      "logical_qubits": 4,
+      "logical_fingerprint": "4ad2d9b030bf2cfeaffabdbb2cdd956e2950b18ef26638f03a2ef7bdff012dcb",
+      "split": "test"
+    },
+    {
+      "parent_id": "parent_0031",
+      "family": "weak_field",
+      "logical_qubits": 4,
+      "logical_fingerprint": "521cc896aba69e62820a5723daf7f1d4588ae2b862f746ea793a1bf141a3483d",
+      "split": "test"
+    },
+    {
+      "parent_id": "parent_0032",
+      "family": "spin_glass",
+      "logical_qubits": 5,
+      "logical_fingerprint": "2ac61aa3c9f0a6a73347b79098c9fd04fd80b8f3405e12124a3dc9386a3fee1c",
+      "split": "train"
+    },
+    {
+      "parent_id": "parent_0033",
+      "family": "weighted_maxcut",
+      "logical_qubits": 5,
+      "logical_fingerprint": "5698a7d885feb1e067439f023422674aba083b36426dd874e378bd43eb88aada",
+      "split": "train"
+    },
+    {
+      "parent_id": "parent_0034",
+      "family": "planted_loops",
+      "logical_qubits": 5,
+      "logical_fingerprint": "d210546058cee6e59ff3248942560b5da937f7396660cd1c6d4579bd6535537a",
+      "split": "validation"
+    },
+    {
+      "parent_id": "parent_0035",
+      "family": "weak_field",
+      "logical_qubits": 5,
+      "logical_fingerprint": "ddd2c9f017e144dec3472bdf58e86b20a35f25f75f20bde20b9cecec13172067",
+      "split": "train"
+    },
+    {
+      "parent_id": "parent_0036",
+      "family": "spin_glass",
+      "logical_qubits": 3,
+      "logical_fingerprint": "10249e8855fec2f07c21bb006224adfe3b32c62f679b18dec67da887ee739c84",
+      "split": "validation"
+    },
+    {
+      "parent_id": "parent_0037",
+      "family": "weighted_maxcut",
+      "logical_qubits": 3,
+      "logical_fingerprint": "ad900088c48b00927222a5558a64b69d42c83e30a527697ebb7f7d6c32f06dc5",
+      "split": "train"
+    },
+    {
+      "parent_id": "parent_0038",
+      "family": "planted_loops",
+      "logical_qubits": 3,
+      "logical_fingerprint": "657d19e3b6a6af85e347e493dbd00d42991bb86859cf9f1579abb40e88234ee1",
+      "split": "train"
+    },
+    {
+      "parent_id": "parent_0039",
+      "family": "weak_field",
+      "logical_qubits": 3,
+      "logical_fingerprint": "60aa4169cc0080a57a2e731773124f9585c94a6dc9fbec9d5500fd55e04aee41",
+      "split": "test"
+    },
+    {
+      "parent_id": "parent_0040",
+      "family": "spin_glass",
+      "logical_qubits": 4,
+      "logical_fingerprint": "00427865337cc9001a9340a31d305f1195c47cb9181b3f34a408f39ea6c89a61",
+      "split": "test"
+    },
+    {
+      "parent_id": "parent_0041",
+      "family": "weighted_maxcut",
+      "logical_qubits": 4,
+      "logical_fingerprint": "d38ccf2fb8989451833706fcfb964793afb9984ed468015fc6b6d507c4f9c248",
+      "split": "train"
+    },
+    {
+      "parent_id": "parent_0042",
+      "family": "planted_loops",
+      "logical_qubits": 4,
+      "logical_fingerprint": "b092dd5be8d71ec41ad4cf2f20ccb7c33a47350d3ee161b0583ab8ccc17ed5d8",
+      "split": "validation"
+    },
+    {
+      "parent_id": "parent_0043",
+      "family": "weak_field",
+      "logical_qubits": 4,
+      "logical_fingerprint": "e936532624b08d98d201fe04d0f39a5d78715ef3f246a63c84bac6773ffb2f5d",
+      "split": "train"
+    },
+    {
+      "parent_id": "parent_0044",
+      "family": "spin_glass",
+      "logical_qubits": 5,
+      "logical_fingerprint": "441e13ad66af945fc2c2668168acc731168ab8795407cda5957e53cadca897e7",
+      "split": "test"
+    },
+    {
+      "parent_id": "parent_0045",
+      "family": "weighted_maxcut",
+      "logical_qubits": 5,
+      "logical_fingerprint": "2ecdd95b4ef3ef618b98e6fd3d3accfbf8be1262d7ce95550a85ffed906ac22f",
+      "split": "test"
+    },
+    {
+      "parent_id": "parent_0046",
+      "family": "planted_loops",
+      "logical_qubits": 5,
+      "logical_fingerprint": "015e4c74ffe8360b6d830f245f027221c7f09ddc2a824f7d3468503872a243bb",
+      "split": "train"
+    },
+    {
+      "parent_id": "parent_0047",
+      "family": "weak_field",
+      "logical_qubits": 5,
+      "logical_fingerprint": "d7d86235d85201b3b418f7642d718c2dab1f41c42f49a5b6c701451525829c1e",
+      "split": "validation"
+    },
+    {
+      "parent_id": "parent_0048",
+      "family": "spin_glass",
+      "logical_qubits": 3,
+      "logical_fingerprint": "f9afe8f77e1f566eb2bcb47647e981474737a78ba8d23e11052d71de4e14fbcd",
+      "split": "train"
+    },
+    {
+      "parent_id": "parent_0049",
+      "family": "weighted_maxcut",
+      "logical_qubits": 3,
+      "logical_fingerprint": "e4470d51bd6b2022e09882fa8e1bbaca90a12b6dbb03f1d3924e4eabd73e62a8",
+      "split": "train"
+    },
+    {
+      "parent_id": "parent_0050",
+      "family": "planted_loops",
+      "logical_qubits": 3,
+      "logical_fingerprint": "21822a729d404bb88541e021b7a1d85a383d7b1f7000ab56991db8d455c50975",
+      "split": "train"
+    },
+    {
+      "parent_id": "parent_0051",
+      "family": "weak_field",
+      "logical_qubits": 3,
+      "logical_fingerprint": "c3f7b17add854248fb043bdacb274722db9b7fa733c3d19642a95721947b4ca0",
+      "split": "train"
+    },
+    {
+      "parent_id": "parent_0052",
+      "family": "spin_glass",
+      "logical_qubits": 4,
+      "logical_fingerprint": "01569e2d1ba9bc7f665f6947e61712fe100533ba5faa818a0a2fdb99e1226ea7",
+      "split": "train"
+    },
+    {
+      "parent_id": "parent_0053",
+      "family": "weighted_maxcut",
+      "logical_qubits": 4,
+      "logical_fingerprint": "a90e9b680a30e8568a832c9b6e042dd8fa844fbc4f45374c262708b6831ec218",
+      "split": "train"
+    },
+    {
+      "parent_id": "parent_0054",
+      "family": "planted_loops",
+      "logical_qubits": 4,
+      "logical_fingerprint": "8cb97bcbe6c4fd2fe3545344d7dd5c02f6c1b095314d323c6ccb06c220cb3a53",
+      "split": "train"
+    },
+    {
+      "parent_id": "parent_0055",
+      "family": "weak_field",
+      "logical_qubits": 4,
+      "logical_fingerprint": "42e5f0592f6dbec9792a14334bb16e2611646dd11e018708f30a10f3c8344ba0",
+      "split": "validation"
+    },
+    {
+      "parent_id": "parent_0056",
+      "family": "spin_glass",
+      "logical_qubits": 5,
+      "logical_fingerprint": "15691404fb64c85454c21c79f5a7cb4c7423d615e8aca70fa9ca3ac0af2e5797",
+      "split": "train"
+    },
+    {
+      "parent_id": "parent_0057",
+      "family": "weighted_maxcut",
+      "logical_qubits": 5,
+      "logical_fingerprint": "ed4447da815a00430c549587b6da9d68261c55d27e061cf3d2102a990a61a56b",
+      "split": "train"
+    },
+    {
+      "parent_id": "parent_0058",
+      "family": "planted_loops",
+      "logical_qubits": 5,
+      "logical_fingerprint": "65824506feadd80f3e618b2ed77005984ac29ea9d65956b006f028e53eae23b1",
+      "split": "test"
+    },
+    {
+      "parent_id": "parent_0059",
+      "family": "weak_field",
+      "logical_qubits": 5,
+      "logical_fingerprint": "07d4bfe7d37b459301e204c1fdb4ffc0bf87517b071fa4e174853b0443c6cba9",
+      "split": "train"
+    }
+  ],
+  "duplicate_audit": {
+    "exact_labelled_coefficients": true,
+    "duplicates": 0,
+    "graph_or_gauge_isomorphism_checked": false
+  },
+  "training_labels_not_deployment_inputs": [
+    "response_*",
+    "candidate_losses",
+    "ground_energy",
+    "planted_spins"
+  ],
+  "budget_note": "spectral labels privileged; common bank independent of test spectrum",
+  "elapsed_seconds": 11.842684212999302,
+  "record_count": 120,
+  "dataset_fingerprint": "1ee27e2df87ae4fd22280da43866011a507e16f13b3f03a65241c67bbaf01c09"
+}

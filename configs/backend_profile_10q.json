@@ -44,6 +44,7 @@
   "max_steps": 16384,
   "label_state_tolerance": 0.0002,
   "max_physical_qubits": 10,
+  "endpoint_max_qubits": 10,
   "endpoint_memory_mb": 1024,
   "state_memory_mb": 4096,
   "_note": "Backend crossover at 10 physical qubits, 12 parents x 64 candidates = 768 labels over 2 families. Parents must be at least three per family (6 here) or generation.parent_splits cannot fill train/validation/test. teacher.mode=none, so this measures propagation throughput. Fewer labels at large sizes amortise CuPy's fixed startup over less work, biasing the ratio DOWN against the GPU -- the conservative direction."

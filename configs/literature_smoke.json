@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "data": "../runs/acquisition_smoke/data",
+  "split": "validation",
+  "seeds": [0, 1],
+  "budgets": [4, 6],
+  "max_parents": 2,
+  "search": {
+    "n_segments": 8,
+    "parameterization": "policy_decoder",
+    "n_initial": 4,
+    "acquisition_candidates": 32,
+    "acquisition_restarts": 1,
+    "gp_restarts": 1
+  },
+  "simulator": {
+    "backend": "numpy",
+    "tolerance": 0.005,
+    "initial_steps": 16,
+    "max_steps": 1024
+  },
+  "bootstrap_resamples": 200,
+  "_scope": "Execution smoke only; reduced optimizer settings and small sample cannot support efficacy claims."
+}

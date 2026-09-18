@@ -1,0 +1,55 @@
+{
+  "seed": 2026091806,
+  "parents": 240,
+  "families": [
+    "spin_glass",
+    "weighted_maxcut",
+    "planted_loops"
+  ],
+  "logical_sizes": [
+    8,
+    9,
+    10
+  ],
+  "logical_support": {
+    "kind": "complete"
+  },
+  "variants": [
+    {
+      "shape": "path",
+      "ports": 1,
+      "field_distribution": "uniform"
+    },
+    {
+      "shape": "random_tree",
+      "ports": 2,
+      "field_distribution": "concentrated",
+      "coupling_distribution": "random"
+    }
+  ],
+  "chain_strengths": [
+    0.75,
+    1.5,
+    3.0
+  ],
+  "runtimes": [
+    1.0,
+    4.0,
+    12.0
+  ],
+  "candidates": 64,
+  "candidate_batch_size": 4,
+  "spectral_points": 9,
+  "teacher": {
+    "mode": "none"
+  },
+  "steps": 64,
+  "max_steps": 16384,
+  "label_state_tolerance": 0.0002,
+  "max_physical_qubits": 20,
+  "endpoint_memory_mb": 8192,
+  "state_memory_mb": 16384,
+  "candidate_seed": 1801,
+  "chain_lengths": 2,
+  "endpoint_max_qubits": 20
+}

@@ -66,6 +66,8 @@ def fake_backends(monkeypatch, *, gpu_records=None, failure=None):
     monkeypatch.setattr(profiling, "load_records", lambda path: deepcopy(
         gpu_records if Path(path).name == "cupy" and gpu_records is not None else records()))
     monkeypatch.setattr(profiling, "backend_device_info", lambda backend: {"backend": backend, "device": "test-double"})
+    monkeypatch.setattr(profiling, "_synchronize", lambda backend: None)
+    monkeypatch.setattr(profiling, "_allocator_status", lambda backend: None)
     ticks = iter([10., 14., 20., 22.])
     monkeypatch.setattr(profiling, "perf_counter", lambda: next(ticks))
     return seen
@@ -190,3 +192,117 @@ def test_invalid_execution_settings_fail_before_output_creation(tmp_path, kwargs
     with pytest.raises(ValueError):
         profiling.profile_generation(config(), target, **kwargs)
     assert not target.exists()
+
+
+def test_load_rejected_before_generating_any_dataset(monkeypatch, tmp_path):
+    calls = fake_backends(monkeypatch)
+    monkeypatch.setattr(profiling, "_host_status", lambda: {"load_average_1_5_15_minutes": [12., 8., 5.]})
+    with pytest.raises(RuntimeError, match="host load"):
+        profiling.profile_generation(config(), tmp_path / "busy", max_load=2.)
+    assert calls == []
+    saved = json.loads((tmp_path / "busy" / "profile.json").read_text())
+    assert saved["status"] == "failed"
+    assert saved["backends"]["numpy"]["host_before"]["load_average_1_5_15_minutes"][0] == 12.
+
+
+def test_gpu_synchronization_brackets_generation(monkeypatch, tmp_path):
+    calls = fake_backends(monkeypatch)
+    sync_positions = []
+    monkeypatch.setattr(profiling, "_synchronize", lambda backend: sync_positions.append((backend, len(calls))))
+    profiling.profile_generation(config(), tmp_path / "sync", backends=("cupy",))
+    assert sync_positions == [("cupy", 0), ("cupy", 1)]
+
+
+def _fake_repeated_profile(monkeypatch, *, parity_error=0.):
+    calls = []
+    def run(cfg, destination, *, backends, workers, max_load):
+        calls.append(tuple(backends))
+        # Warm-up deliberately differs, so accidentally aggregating it is caught.
+        times = {"numpy": 100. if len(calls) == 1 else 4., "cupy": 1. if len(calls) == 1 else 2.}
+        return {"source_fingerprint": "profile-test-source",
+                "cpu_gpu_comparison": {
+                    "outcome_differences": {"candidate_losses": {"max_absolute": parity_error}},
+                    "observed_end_to_end_throughput_ratio_cupy_over_numpy": times["numpy"] / times["cupy"]},
+                "backends": {backend: {"accepted_candidate_labels": 6,
+                    "generation_wall_seconds": times[backend], "accepted_labels_per_second": 6 / times[backend],
+                    "host_before": {}, "host_after": {}, "observed_memory": {}, "coordinator_cpu_seconds": .1}
+                    for backend in backends}}
+    monkeypatch.setattr(profiling, "profile_generation", run)
+    return calls
+
+
+def test_repetitions_exclude_warmup_and_balance_order(monkeypatch, tmp_path):
+    calls = _fake_repeated_profile(monkeypatch)
+    result = profiling.profile_repeated_generation(config(), tmp_path / "repeat", repeats=4,
+                                                   warmups=1, max_load=2.)
+    assert len(calls) == 5
+    assert calls[1] == calls[3]
+    assert calls[2] == calls[4] == calls[1][::-1]
+    aggregate = result["aggregate"]
+    assert aggregate["backends"]["numpy"]["wall_seconds_median"] == 4.
+    assert aggregate["backends"]["numpy"]["total_measured_generation_seconds"] == 16.
+    assert aggregate["cpu_gpu_ratio"]["paired_ratios"] == [2.] * 4
+    assert aggregate["cpu_gpu_ratio"]["eligible_for_load_guarded_timing_claim"]
+    assert not aggregate["cpu_gpu_ratio"]["is_hardware_or_generalization_claim"]
+
+
+def test_precision_disagreement_blocks_ratio_aggregate(monkeypatch, tmp_path):
+    calls = _fake_repeated_profile(monkeypatch, parity_error=.01)
+    with pytest.raises(ArithmeticError, match="parity tolerance"):
+        profiling.profile_repeated_generation(config(), tmp_path / "mismatch")
+    assert len(calls) == 1
+    saved = json.loads((tmp_path / "mismatch" / "repeated_profile.json").read_text())
+    assert saved["status"] == "failed"
+    assert saved["aggregate"] is None
+    assert saved["warmups"][0]["parity_passed"] is False
+
+
+def test_unrestricted_host_measurement_is_marked_exploratory(monkeypatch, tmp_path):
+    _fake_repeated_profile(monkeypatch)
+    result = profiling.profile_repeated_generation(config(), tmp_path / "unrestricted")
+    assert not result["aggregate"]["cpu_gpu_ratio"]["eligible_for_load_guarded_timing_claim"]
+
+
+@pytest.mark.parametrize("qubits", [10, 12, 14, 16, 18, 20])
+def test_shipped_scaling_configs_pass_allocation_contract(qubits):
+    root = Path(__file__).resolve().parents[1]
+    cfg = json.loads((root / "configs" / f"backend_profile_{qubits}q.json").read_text())
+    preflight = profiling.preflight_generation(cfg)
+    assert preflight["status"] == "passed"
+    assert all(count >= 3 for count in preflight["parents_per_family"].values())
+    assert all(count > 0 for count in preflight["split_counts"].values())
+    assert cfg["teacher"]["mode"] == "none"
+    assert cfg.get("endpoint_max_qubits", 20) >= cfg["max_physical_qubits"] == qubits
+    assert cfg["logical_qubits"] * 2 == qubits
+
+
+@pytest.mark.parametrize("entrypoint", ["profile_generation", "profile_repeated_generation"])
+def test_real_parent_family_split_rejected_before_output(tmp_path, entrypoint):
+    cfg = config()
+    cfg["families"] = ["spin_glass", "weighted_maxcut"]
+    # This is precisely the configuration-schema blind spot: three total
+    # parents passes, although the real stratified split needs six here.
+    pipeline._validate_config(cfg)
+    destination = tmp_path / "not_started"
+    with pytest.raises(ValueError, match="three logical parents per family"):
+        getattr(profiling, entrypoint)(cfg, destination)
+    assert not destination.exists()
+
+
+def test_preflight_uses_real_family_size_cells_not_only_family_counts():
+    cfg = config()
+    cfg.update(parents=6, families=["spin_glass", "weighted_maxcut"],
+               logical_sizes=[3, 4], chain_lengths=1)
+    # Three parents per family is insufficient when each family is divided
+    # across two size cells and every cell needs train/validation/test.
+    pipeline._validate_config(cfg)
+    with pytest.raises(ValueError, match="too few parents in family-size cell"):
+        profiling.preflight_generation(cfg)
+
+
+@pytest.mark.parametrize("kwargs", [{"repeats": 2}, {"warmups": 0}, {"workers": 2},
+                                     {"max_load": -1.}, {"parity_tolerance": float("nan")}])
+def test_repeated_invalid_settings_rejected_before_output(tmp_path, kwargs):
+    with pytest.raises(ValueError):
+        profiling.profile_repeated_generation(config(), tmp_path / "invalid", **kwargs)
+    assert not (tmp_path / "invalid").exists()

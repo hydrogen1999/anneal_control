@@ -10,7 +10,7 @@ Three seeds, four arms each, all evaluated on the 864 held-out test records over
 | `BANKEXT` | 67 | +3 candidates from the **same Sobol sequence** — measures bank size |
 | `DAGGER` | 67 | +3 of the policy's **own labelled proposals** |
 
-The attributable effect of aggregation is `DAGGER − BANKEXT`, not
+The observed contrast associated with proposal-source replacement is `DAGGER − BANKEXT`, not
 `DAGGER − CONTROL`. Aggregation changes the bank's size and its source at once,
 and only `BANKEXT` holds the size fixed while varying the source.
 
@@ -24,13 +24,13 @@ and only `BANKEXT` holds the size fixed while varying the source.
 | ranking regret | 0.018965 | 0.016561 | 0.013416 | −0.003146 | −0.0062, −0.0002, −0.0030 |
 | critic rho | 0.575 | 0.630 | 0.633 | **+0.003** | +0.034, +0.062, **−0.085** |
 
-**Retrain noise is exactly zero.** `CONTROL` reproduced `BEFORE` to every printed
-digit on every metric and every seed, so the comparison is not absorbing
-optimiser variance.
+`CONTROL` reproduced `BEFORE` for the same deterministic seed and recipe.
+This checks replay consistency; it does not imply zero uncertainty across
+training seeds, initializations, data draws, or hyperparameter choices.
 
-**Aggregation is worth −0.0226 in selected loss**, the same sign and roughly the
+**DAGGER − BANKEXT is −0.0226 in selected loss**, the same sign and roughly the
 same size on all three seeds. Of the −0.0288 total improvement over the shipped
-checkpoint, **78% is aggregation and 22% is the bank merely growing** from 64
+checkpoint, the arithmetic decomposition attributes **78% to the DAGGER–BANKEXT contrast and 22% to BANKEXT–CONTROL** from 64
 candidates to 67. Without the `BANKEXT` arm the whole −0.0288 would have been
 credited to the method.
 
@@ -60,7 +60,7 @@ critic alone.
 
 ## Cost, and what this is not
 
-Each aggregation arm spends **10,368 true propagations** labelling proposals on
+Each aggregation arm spends **10,368 objective evaluations** labelling proposals on
 train and validation. This is charged, not free, and it must enter any
 amortisation claim.
 
@@ -75,3 +75,20 @@ against the original.
 
 This is one round on one encoder (`summary`). Whether a second round continues to
 help, and whether the effect survives on the hierarchical encoders, is untested.
+
+## Correction to causal and reproducibility scope
+
+This historical campaign augmented both training and validation banks, so it
+changed checkpoint selection as well as the training labels. The source contrast
+is not an isolated train-only acquisition effect. `dagger_arms.json` retains
+aggregate metrics, not the paired record-by-parent-by-seed outcomes needed to
+recompute uncertainty or tied Spearman statistics. All three seed differences
+have the same sign; this alone is not a paired parent significance test.
+
+The current acquisition runner uses train-only labels and frozen validation/test
+banks, includes decoder-random controls, and archives raw evaluations. Its
+independent small fixed-validation pilot is negative; see
+`reports/acquisition_pilot_2026-09-17/README.md`. Different recipes prevent treating
+that pilot as a direct replication or refutation of this historical campaign.
+The revised collector now refuses validation acquisition; this report describes
+the earlier collector and must not be presented as a run of the current code.

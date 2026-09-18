@@ -9,9 +9,10 @@ because it conflates two failures with different fixes:
 No ranker can rescue that; the policy head or its loss needs work.
 
 **Ranking.** The policy *does* produce a good control, and the critic picks the
-wrong one of its own proposals. That is a distribution-shift failure — the critic
-is trained on bank waveforms and must extrapolate to waveforms it has never
-scored — and it is fixable without touching the policy.
+wrong one of its own proposals. Distribution shift between bank and proposal
+waveforms is one possible cause. This decomposition alone cannot distinguish
+shift from limited critic capacity, optimization error, or label noise. Matched
+acquisition controls and fixed-proposal evaluation are needed for that claim.
 
 Separating them costs one extra true simulator call per proposal, which is small
 against what the comparison buys. Two quantities do the work:
@@ -33,11 +34,13 @@ from .telemetry import _safe
 
 
 def _rank_correlation(a: np.ndarray, b: np.ndarray) -> float | None:
-    """Spearman rho without scipy.stats overhead; None when undefined."""
+    """Spearman rho with average ranks for ties; None when undefined."""
+    from scipy.stats import rankdata
+
     if a.size < 2 or np.all(a == a[0]) or np.all(b == b[0]):
         return None
-    ra = np.argsort(np.argsort(a)).astype(float)
-    rb = np.argsort(np.argsort(b)).astype(float)
+    ra = rankdata(a, method="average")
+    rb = rankdata(b, method="average")
     ra -= ra.mean()
     rb -= rb.mean()
     denominator = float(np.sqrt((ra**2).sum() * (rb**2).sum()))
@@ -58,6 +61,8 @@ def decompose_proposals(*, true_losses: Sequence[float], predicted_losses: Seque
         raise ValueError("true and predicted losses must be nonempty and the same length")
     if not np.isfinite(true).all() or not np.isfinite(predicted).all():
         raise ValueError("losses must be finite")
+    if not np.isfinite(bank_loss) or not np.isfinite(linear_loss):
+        raise ValueError("reference losses must be finite")
     if isinstance(selected_index, bool) or not isinstance(selected_index, int) \
             or not 0 <= selected_index < true.size:
         raise ValueError(f"selected_index must index the {true.size} proposals")
@@ -81,7 +86,8 @@ def decompose_proposals(*, true_losses: Sequence[float], predicted_losses: Seque
         "oracle_beats_linear": bool(best < float(linear_loss)),
         "critic_rank_correlation": _rank_correlation(predicted, true),
         "scope": ("proposal losses are true simulator outcomes scored after selection; "
-                  "the selection itself saw no outcome"),
+                  "the selection itself saw no outcome; ranking error alone does not "
+                  "identify distribution shift as its cause"),
     })
 
 
@@ -140,12 +146,15 @@ def diagnose_checkpoint(data_dir, checkpoint, *, split: str = "test", device: st
     """
     import torch
 
-    from .benchmarking import score_schedule
+    from .benchmarking import _numerical_settings, score_schedule
     from .learning import load_checkpoint
     from .models import graph_from_record
     from .pipeline import load_records
     from .schedules import Schedule
 
+    _numerical_settings(tolerance, initial_steps, max_steps, 1e-9, backend)
+    if not np.isfinite(max_ds_dtau) or max_ds_dtau < 1:
+        raise ValueError("max_ds_dtau must be finite and >=1")
     records = load_records(data_dir, split)
     if record_ids is not None:
         wanted = set(record_ids)
@@ -171,14 +180,18 @@ def diagnose_checkpoint(data_dir, checkpoint, *, split: str = "test", device: st
         for row in proposals.detach().cpu().double().numpy():
             wave = row.copy()
             wave[0], wave[-1] = 0.0, 1.0
-            schedule = Schedule(np.linspace(0.0, 1.0, len(wave)), wave)
             try:
-                outcome = score_schedule(record, schedule, backend=backend, tolerance=tolerance,
-                                         initial_steps=initial_steps, max_steps=max_steps,
-                                         max_ds_dtau=max_ds_dtau * (1 + 1e-6))
+                schedule = Schedule(np.linspace(0.0, 1.0, len(wave)), wave)
+                schedule.validate_slope(runtime=1., max_slope=max_ds_dtau * (1 + 1e-6))
             except ValueError:
                 skipped = True
                 break
+            # Only malformed/infeasible controls are censored. Configuration,
+            # physics provenance, or simulator failures must not masquerade as
+            # an infeasible proposal and disappear from an evaluation.
+            outcome = score_schedule(record, schedule, backend=backend, tolerance=tolerance,
+                                     initial_steps=initial_steps, max_steps=max_steps,
+                                     max_ds_dtau=max_ds_dtau * (1 + 1e-6))
             true_losses.append(float(outcome["loss"]))
         if skipped:
             infeasible += 1

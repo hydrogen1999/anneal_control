@@ -8,13 +8,117 @@ from __future__ import annotations
 from copy import deepcopy
 import hashlib
 import json
+import os
 from pathlib import Path
-from time import perf_counter
+import threading
+from time import perf_counter, process_time
 
 import numpy as np
 
 from .physics import backend_device_info, estimate_state_workspace
-from .pipeline import _validate_config, environment, generate_dataset, load_records, source_fingerprint, write_json
+from .pipeline import (_plan_parents, _split_parents, _validate_config, environment,
+                       generate_dataset, load_records, source_fingerprint, write_json)
+
+
+def preflight_generation(config: dict) -> dict:
+    """Exercise the actual parent planner and split contract before timing.
+
+    A syntactically valid configuration can still lack three parents per
+    family, or enough parents in a family/size cell. Reusing the real planner
+    and splitter prevents this preflight from drifting into a weaker duplicate
+    of their checks. This does not propagate states or allocate dense spectra.
+    """
+    _validate_config(config)
+    parents = _plan_parents(config)
+    splits = _split_parents(parents, config)
+    return {"status": "passed", "parents": len(parents),
+            "parents_per_family": {family: sum(p["family"] == family for p in parents)
+                                   for family in sorted(config["families"])},
+            "split_counts": {name: sum(value == name for value in splits.values())
+                             for name in ("train", "validation", "test")},
+            "scope": "Actual logical-parent planning and split validation, excluded from measured generation wall time. Generation reruns these steps fresh; state propagation and spectral allocation are not preflighted."}
+
+
+def _host_status() -> dict:
+    """Observed host pressure, not a guarantee that a machine is exclusively idle."""
+    load = list(os.getloadavg()) if hasattr(os, "getloadavg") else None
+    affinity = len(os.sched_getaffinity(0)) if hasattr(os, "sched_getaffinity") else os.cpu_count()
+    try:
+        cgroup_cpu_max = Path("/sys/fs/cgroup/cpu.max").read_text().strip()
+    except OSError:
+        cgroup_cpu_max = None
+    return {"load_average_1_5_15_minutes": load, "cpu_count": os.cpu_count(),
+            "affinity_cpu_count": affinity,
+            "cgroup_v2_cpu_max": cgroup_cpu_max,
+            "thread_environment": {key: os.environ.get(key) for key in
+                ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "NUMEXPR_NUM_THREADS")}}
+
+
+def _check_load(status: dict, maximum: float | None) -> None:
+    if maximum is None:
+        return
+    observed = status["load_average_1_5_15_minutes"]
+    if observed is None:
+        raise RuntimeError("load guard requested but host load is unavailable")
+    if observed[0] > maximum:
+        raise RuntimeError(f"host load {observed[0]:.3f} exceeds declared maximum {maximum:.3f}; timing rejected")
+
+
+def _synchronize(backend: str) -> None:
+    if backend == "cupy":
+        from .physics import _array_module
+        _array_module(backend).cuda.Device().synchronize()
+
+
+def _allocator_status(backend: str) -> dict | None:
+    if backend != "cupy":
+        return None
+    from .physics import _array_module
+    xp = _array_module(backend)
+    pool = xp.get_default_memory_pool()
+    return {"cupy_pool_used_bytes": int(pool.used_bytes()),
+            "cupy_pool_reserved_bytes": int(pool.total_bytes()),
+            "is_peak": False,
+            "scope": "Endpoint snapshot of this process's default CuPy pool; not device peak memory."}
+
+
+class _ResidentMemorySampler:
+    """Sample Linux process RSS without pretending it is a GPU/all-worker peak."""
+    def __init__(self):
+        self.stop = threading.Event()
+        self.peak = None
+        self.samples = 0
+        self.thread = threading.Thread(target=self._run, daemon=True)
+
+    def _sample(self):
+        try:
+            for line in Path("/proc/self/status").read_text().splitlines():
+                if line.startswith("VmRSS:"):
+                    value = int(line.split()[1]) * 1024
+                    self.peak = max(value, self.peak or 0)
+                    self.samples += 1
+                    return
+        except (OSError, ValueError):
+            pass
+
+    def _run(self):
+        while not self.stop.wait(.01):
+            self._sample()
+
+    def __enter__(self):
+        self._sample()
+        self.thread.start()
+        return self
+
+    def __exit__(self, *args):
+        self.stop.set()
+        self.thread.join()
+        self._sample()
+
+    def report(self) -> dict:
+        return {"sampled_process_rss_peak_bytes": self.peak, "samples": self.samples,
+                "sampling_interval_seconds": .01, "measured_gpu_peak_memory": False,
+                "scope": "Sampled process RSS including retained datasets/runtime; excludes child workers and GPU. Short peaks can be missed; not an allocation certificate."}
 
 
 def _scalar(record, key):
@@ -72,10 +176,12 @@ def _summarize(records: list[dict], config: dict, elapsed: float, workers: int) 
     maximum_work = max(item["numeric_work_bytes"] for item in work_estimates)
     return {
         "records": len(records), "physical_paths": len(per_path),
+        "observed_logical_qubits": sorted({len(record["logical_h"]) for record in records}),
+        "observed_physical_qubits": sorted({len(record["physical_h"]) for record in records}),
         "accepted_candidate_labels": label_count,
         "generation_wall_seconds": float(elapsed),
         "accepted_labels_per_second": label_count / elapsed,
-        "timing_scope": "entire generate_dataset call: initialization, assembly, endpoint labels, spectral teacher/audit, convergence retries, independent dense dynamics audit and disk writes",
+        "timing_scope": "entire generate_dataset call and RSS monitoring overhead: initialization, assembly, endpoint labels, spectral teacher/audit, convergence retries, independent dense dynamics audit, disk writes and GPU synchronization",
         "cost_components": {
             "spectral_including_random_audit_worker_seconds": spectral_seconds,
             "propagation_shared_cost_worker_seconds": propagation_seconds,
@@ -151,7 +257,8 @@ def _compare(cpu: list[dict], gpu: list[dict]) -> dict:
     }
 
 
-def profile_generation(config: dict, output: str | Path, *, backends=("numpy",), workers: int = 1) -> dict:
+def profile_generation(config: dict, output: str | Path, *, backends=("numpy",), workers: int = 1,
+                       max_load: float | None = None) -> dict:
     """Generate fresh identical configured workloads on explicitly requested backends.
 
     Every backend uses a separate new subdirectory. An error/interrupt writes
@@ -160,7 +267,7 @@ def profile_generation(config: dict, output: str | Path, *, backends=("numpy",),
     must not inherit cached generation costs. Dataset recovery remains possible
     through the generation command, but is not comparable fresh-run timing.
     """
-    _validate_config(config)
+    preflight = preflight_generation(config)
     requested = tuple(backends)
     if not requested or len(set(requested)) != len(requested) or any(item not in {"numpy", "cupy"} for item in requested):
         raise ValueError("backends must be unique explicitly requested numpy/cupy names")
@@ -168,15 +275,20 @@ def profile_generation(config: dict, output: str | Path, *, backends=("numpy",),
         raise ValueError("workers must be a positive integer")
     if "cupy" in requested and workers != 1:
         raise ValueError("CuPy profiling requires workers=1; no implicit worker/backend changes")
+    if max_load is not None and (not np.isfinite(max_load) or max_load <= 0):
+        raise ValueError("max_load must be positive finite or None")
     frozen = json.loads(json.dumps(deepcopy(config), allow_nan=False))
     root = Path(output).resolve()
     root.mkdir(parents=True, exist_ok=False)
     report_path = root / "profile.json"
     report = {
-        "schema_version": 1, "status": "in_progress", "config": frozen,
+        "schema_version": 2, "status": "in_progress", "config": frozen,
         "config_hash": hashlib.sha256(json.dumps(frozen, sort_keys=True).encode()).hexdigest(),
         "source_fingerprint": source_fingerprint(), "environment": environment(),
-        "requested_backends": list(requested), "workers": workers,
+        "requested_backends": list(requested), "workers": workers, "max_load": max_load,
+        "preflight": preflight,
+        "precision": {"coefficients": "float64", "state": "complex128"},
+        "gpu_timing_synchronized": "cupy" in requested,
         "backends": {backend: {"status": "planned", "dataset": str(root / backend)} for backend in requested},
         "cpu_gpu_comparison": None,
         "notes": [
@@ -197,10 +309,22 @@ def profile_generation(config: dict, output: str | Path, *, backends=("numpy",),
             entry = report["backends"][backend]
             entry["status"] = "running"
             write_json(report_path, report)
+            entry["host_before"] = _host_status()
+            _check_load(entry["host_before"], max_load)
             entry["device_before"] = backend_device_info(backend)
+            _synchronize(backend)
+            cpu_started = process_time()
             started = perf_counter()
-            manifest = generate_dataset(frozen, root / backend, backend=backend, workers=workers)
+            with _ResidentMemorySampler() as memory:
+                manifest = generate_dataset(frozen, root / backend, backend=backend, workers=workers)
+                _synchronize(backend)
             elapsed = perf_counter() - started
+            entry["observed_generation_wall_seconds"] = elapsed
+            entry["coordinator_cpu_seconds"] = process_time() - cpu_started
+            entry["host_after"] = _host_status()
+            entry["observed_memory"] = memory.report()
+            entry["allocator_after"] = _allocator_status(backend)
+            _check_load(entry["host_after"], max_load)
             records = load_records(root / backend)
             if source_fingerprint() != report["source_fingerprint"]:
                 raise RuntimeError("source changed during profiling; measurements cannot use the frozen source identity")
@@ -233,3 +357,119 @@ def profile_generation(config: dict, output: str | Path, *, backends=("numpy",),
             report["backends"][active_backend]["status"] = status
         write_json(report_path, report)
         raise
+
+
+def profile_repeated_generation(config: dict, output: str | Path, *, backends=("numpy", "cupy"),
+                                repeats: int = 4, warmups: int = 1, workers: int = 1,
+                                order_seed: int = 0, max_load: float | None = None,
+                                parity_tolerance: float = 1e-8) -> dict:
+    """Retain every fresh workload and distinguish warm-up from repeated evidence.
+
+    Two-backend order alternates from a seeded random first order. This balances
+    order for even repeats, but does not eliminate host drift or establish that
+    any size/generalization claim holds outside the measured workload.
+    """
+    preflight = preflight_generation(config)
+    requested = tuple(backends)
+    if not requested or len(set(requested)) != len(requested) or set(requested) - {"numpy", "cupy"}:
+        raise ValueError("backends must be unique numpy/cupy names")
+    for name, value, minimum in (("repeats", repeats, 3), ("warmups", warmups, 1)):
+        if isinstance(value, bool) or not isinstance(value, int) or value < minimum:
+            raise ValueError(f"{name} must be an integer >= {minimum}")
+    if workers != 1 or isinstance(workers, bool) or not isinstance(workers, int):
+        raise ValueError("repeated backend comparison uses workers=1 for matched allocation")
+    if isinstance(order_seed, bool) or not isinstance(order_seed, int) or order_seed < 0:
+        raise ValueError("order_seed must be a nonnegative integer")
+    if not np.isfinite(parity_tolerance) or parity_tolerance <= 0:
+        raise ValueError("parity_tolerance must be positive finite")
+    if max_load is not None and (not np.isfinite(max_load) or max_load <= 0):
+        raise ValueError("max_load must be positive finite or None")
+    root = Path(output).resolve()
+    root.mkdir(parents=True, exist_ok=False)
+    initial_order = list(np.random.default_rng(order_seed).permutation(requested))
+    report = {"schema_version": 1, "status": "in_progress", "config": deepcopy(config),
+              "source_fingerprint": source_fingerprint(), "environment": environment(),
+              "preflight": preflight,
+              "repeats_requested": repeats, "warmups_requested": warmups,
+              "order_seed": order_seed, "max_load": max_load,
+              "parity_tolerance": parity_tolerance, "warmups": [], "repetitions": [],
+              "aggregate": None,
+              "scope": "Fresh full-dataset repeated timings; warm-ups retained but excluded. GPU timers synchronized; float64 coefficients/complex128 dynamics. Existing output is never reused.",
+              "limits": ["Host load is checked at each arm's endpoints, not continuously; it is not proof of exclusive CPU or GPU use.",
+                         "Warm-up and measured runs share a process, retaining runtime/allocator caches; record observed memory rather than interpreting analytical bounds as peaks.",
+                         "Repetitions quantify timing variability for the same seeded workload; they are not independent scientific instances or evidence of generalization.",
+                         "No GPU peak memory claim: process RSS is sampled and CuPy allocator snapshots are endpoints."]}
+    destination = root / "repeated_profile.json"
+    write_json(destination, report)
+    try:
+        for phase, count in (("warmups", warmups), ("repetitions", repeats)):
+            for index in range(count):
+                order = initial_order if index % 2 == 0 else initial_order[::-1]
+                child = root / f"{phase}_{index:03d}"
+                result = profile_generation(config, child, backends=tuple(order), workers=workers,
+                                            max_load=max_load)
+                if result["source_fingerprint"] != report["source_fingerprint"]:
+                    raise RuntimeError("source changed across benchmark repetitions")
+                comparison = result["cpu_gpu_comparison"]
+                parity = None if comparison is None else all(
+                    item["max_absolute"] <= parity_tolerance
+                    for item in comparison["outcome_differences"].values())
+                report[phase].append({"index": index, "order": order, "profile": str(child / "profile.json"),
+                    "parity_passed": parity, "cpu_gpu_comparison": comparison,
+                    "backends": {backend: {key: result["backends"][backend][key] for key in
+                        ("accepted_candidate_labels", "generation_wall_seconds", "accepted_labels_per_second",
+                         "host_before", "host_after", "observed_memory", "coordinator_cpu_seconds")}
+                                 for backend in requested}})
+                write_json(destination, report)
+                if parity is False:
+                    raise ArithmeticError("CPU/GPU outcomes exceed declared absolute parity tolerance; no ratio aggregate")
+        aggregate = {"backends": {}, "timing_repetitions": repeats,
+                     "warmups_excluded": warmups,
+                     "load_guard_enabled": max_load is not None,
+                     "precision_parity_passed": None,
+                     "cpu_gpu_ratio": None}
+        for backend in requested:
+            times = np.array([item["backends"][backend]["generation_wall_seconds"] for item in report["repetitions"]])
+            aggregate["backends"][backend] = {"wall_seconds_median": float(np.median(times)),
+                "wall_seconds_min": float(times.min()), "wall_seconds_max": float(times.max()),
+                "total_measured_generation_seconds": float(times.sum()),
+                "total_measured_accepted_labels": sum(item["backends"][backend]["accepted_candidate_labels"] for item in report["repetitions"])}
+        if set(requested) == {"numpy", "cupy"}:
+            ratios = np.array([item["cpu_gpu_comparison"]["observed_end_to_end_throughput_ratio_cupy_over_numpy"]
+                               for item in report["repetitions"]])
+            aggregate["precision_parity_passed"] = True
+            aggregate["cpu_gpu_ratio"] = {"paired_ratios": ratios.tolist(),
+                "median": float(np.median(ratios)), "geometric_mean": float(np.exp(np.mean(np.log(ratios)))),
+                "minimum": float(ratios.min()), "maximum": float(ratios.max()),
+                "eligible_for_load_guarded_timing_claim": max_load is not None,
+                "is_hardware_or_generalization_claim": False}
+        report.update(status="complete", aggregate=aggregate)
+        write_json(destination, report)
+        return report
+    except BaseException as error:
+        report.update(status="interrupted" if isinstance(error, (KeyboardInterrupt, SystemExit)) else "failed",
+                      error={"type": type(error).__name__, "message": str(error)})
+        write_json(destination, report)
+        raise
+
+
+def main(argv=None):
+    import argparse
+    parser = argparse.ArgumentParser(description="Repeated, synchronized backend crossover with retained warm-ups")
+    parser.add_argument("--config", required=True)
+    parser.add_argument("--output", required=True)
+    parser.add_argument("--backends", nargs="+", choices=("numpy", "cupy"), default=["numpy", "cupy"])
+    parser.add_argument("--repeats", type=int, default=4)
+    parser.add_argument("--warmups", type=int, default=1)
+    parser.add_argument("--order-seed", type=int, default=0)
+    parser.add_argument("--max-load", type=float)
+    parser.add_argument("--parity-tolerance", type=float, default=1e-8)
+    args = parser.parse_args(argv)
+    result = profile_repeated_generation(json.loads(Path(args.config).read_text()), args.output,
+        backends=args.backends, repeats=args.repeats, warmups=args.warmups,
+        order_seed=args.order_seed, max_load=args.max_load, parity_tolerance=args.parity_tolerance)
+    print(json.dumps({"status": result["status"], "aggregate": result["aggregate"]}, allow_nan=False))
+
+
+if __name__ == "__main__":
+    main()

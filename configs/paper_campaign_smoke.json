@@ -1,0 +1,247 @@
+{
+  "schema_version": 1,
+  "name": "controlled_annealing_smoke",
+  "scope": "Integration only; no efficacy claims.",
+  "steps": [
+    {
+      "id": "source",
+      "kind": "acquisition",
+      "config": "paper_source_smoke.json",
+      "output": "source"
+    },
+    {
+      "id": "unseen_family",
+      "kind": "generate",
+      "config": "paper_target_family_smoke.json",
+      "output": "unseen_family",
+      "depends": [
+        "source"
+      ],
+      "backend": "numpy",
+      "workers": 1
+    },
+    {
+      "id": "unseen_runtime",
+      "kind": "generate",
+      "config": "paper_target_runtime_smoke.json",
+      "output": "unseen_runtime",
+      "depends": [
+        "source"
+      ],
+      "backend": "numpy",
+      "workers": 1
+    },
+    {
+      "id": "transfer",
+      "kind": "transfer",
+      "config": {
+        "schema_version": 1,
+        "source_data": "${RUN}/source/data",
+        "checkpoints": [
+          {
+            "method": "control",
+            "seed": 0,
+            "path": "${RUN}/source/models/control/seed_0/best.pt"
+          },
+          {
+            "method": "control",
+            "seed": 1,
+            "path": "${RUN}/source/models/control/seed_1/best.pt"
+          },
+          {
+            "method": "control",
+            "seed": 2,
+            "path": "${RUN}/source/models/control/seed_2/best.pt"
+          },
+          {
+            "method": "policy",
+            "seed": 0,
+            "path": "${RUN}/source/models/policy/seed_0/best.pt"
+          },
+          {
+            "method": "policy",
+            "seed": 1,
+            "path": "${RUN}/source/models/policy/seed_1/best.pt"
+          },
+          {
+            "method": "policy",
+            "seed": 2,
+            "path": "${RUN}/source/models/policy/seed_2/best.pt"
+          }
+        ],
+        "targets": [
+          {
+            "name": "source_heldout",
+            "data": "${RUN}/source/data",
+            "axes": [
+              "heldout_parents"
+            ]
+          },
+          {
+            "name": "unseen_family",
+            "data": "${RUN}/unseen_family",
+            "axes": [
+              "family"
+            ]
+          },
+          {
+            "name": "unseen_runtime",
+            "data": "${RUN}/unseen_runtime",
+            "axes": [
+              "runtime"
+            ]
+          }
+        ],
+        "device": "cpu",
+        "threads": 1,
+        "bootstrap_resamples": 500
+      },
+      "output": "transfer",
+      "depends": [
+        "source",
+        "unseen_family",
+        "unseen_runtime"
+      ]
+    },
+    {
+      "id": "budget_control_0",
+      "kind": "budget",
+      "config": {
+        "schema_version": 1,
+        "source_data": "${RUN}/source/data",
+        "target_data": "${RUN}/source/data",
+        "checkpoint": "${RUN}/source/models/control/seed_0/best.pt",
+        "split": "test",
+        "allow_test_adaptation": true,
+        "budgets": [
+          0,
+          2,
+          4
+        ],
+        "seeds": [
+          0,
+          1
+        ],
+        "strategies": [
+          "sobol_local",
+          "bayesian",
+          "finzgar_gp_ucb"
+        ],
+        "warm_modes": [
+          "bank",
+          "direct",
+          "source_global"
+        ],
+        "hint_mode": "project",
+        "family": "eight_bin",
+        "execution": {
+          "device": "cpu",
+          "backend": "numpy",
+          "threads": 1
+        },
+        "numerics": {
+          "tolerance": 0.005,
+          "initial_steps": 16,
+          "max_steps": 1024
+        },
+        "literature": {
+          "n_initial": 4,
+          "acquisition_candidates": 32,
+          "acquisition_restarts": 1,
+          "gp_restarts": 1
+        },
+        "latency": {
+          "warmup": 1,
+          "repeats": 3
+        },
+        "bootstrap_resamples": 200,
+        "offline_cost": {
+          "acquisition_study": "${RUN}/source",
+          "fixed_recipe": true
+        },
+        "quality_thresholds": [
+          0.4,
+          0.5,
+          0.6
+        ],
+        "max_records": 2
+      },
+      "output": "budget_control_0",
+      "depends": [
+        "source"
+      ]
+    },
+    {
+      "id": "literature",
+      "kind": "literature",
+      "config": {
+        "schema_version": 1,
+        "data": "${RUN}/source/data",
+        "split": "test",
+        "seeds": [
+          0,
+          1
+        ],
+        "budgets": [
+          4,
+          6
+        ],
+        "max_parents": 2,
+        "search": {
+          "n_segments": 8,
+          "parameterization": "policy_decoder",
+          "n_initial": 4,
+          "acquisition_candidates": 32,
+          "acquisition_restarts": 1,
+          "gp_restarts": 1
+        },
+        "simulator": {
+          "backend": "numpy",
+          "tolerance": 0.005,
+          "initial_steps": 16,
+          "max_steps": 1024
+        },
+        "bootstrap_resamples": 200,
+        "_scope": "Execution smoke only; reduced optimizer settings and small sample cannot support efficacy claims.",
+        "allow_test_adaptation": true
+      },
+      "output": "literature",
+      "depends": [
+        "source"
+      ]
+    },
+    {
+      "id": "noise",
+      "kind": "noise",
+      "config": {
+        "schema_version": 1,
+        "source_data": "${RUN}/source/data",
+        "data": "${RUN}/source/data",
+        "checkpoint": "${RUN}/source/models/control/seed_0/best.pt",
+        "rates": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.02,
+            0.0
+          ],
+          [
+            0.0,
+            0.02
+          ]
+        ],
+        "max_qubits": 3,
+        "overflow": "error",
+        "device": "cpu",
+        "tolerance": 0.0001,
+        "bootstrap_resamples": 200
+      },
+      "output": "noise",
+      "depends": [
+        "source"
+      ]
+    }
+  ]
+}

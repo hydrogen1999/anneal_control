@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "dataset": {
+    "seed": 2026091801,
+    "parents": 480,
+    "families": [
+      "spin_glass",
+      "weighted_maxcut",
+      "planted_loops"
+    ],
+    "logical_sizes": [
+      3,
+      4,
+      5
+    ],
+    "logical_support": {
+      "kind": "complete"
+    },
+    "chain_distribution": {
+      "distribution": "power_law",
+      "low": 1,
+      "high": 3,
+      "exponent": 2.0
+    },
+    "variants": [
+      {
+        "shape": "path",
+        "ports": 1,
+        "field_distribution": "uniform"
+      },
+      {
+        "shape": "random_tree",
+        "ports": 2,
+        "field_distribution": "concentrated",
+        "coupling_distribution": "random"
+      }
+    ],
+    "chain_strengths": [
+      0.75,
+      1.5,
+      3.0
+    ],
+    "runtimes": [
+      1.0,
+      4.0,
+      12.0
+    ],
+    "candidates": 64,
+    "candidate_batch_size": 8,
+    "spectral_points": 9,
+    "teacher": {
+      "mode": "none"
+    },
+    "steps": 64,
+    "max_steps": 16384,
+    "label_state_tolerance": 0.0002,
+    "max_physical_qubits": 10,
+    "endpoint_memory_mb": 1024,
+    "state_memory_mb": 2048,
+    "candidate_seed": 1801
+  },
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "model": {
+    "encoder_variant": "summary",
+    "width": 64,
+    "proposals": 16
+  },
+  "training": {
+    "epochs": 200,
+    "patience": 25,
+    "learning_rate": 0.001,
+    "batch_size": 8,
+    "accumulation_steps": 2,
+    "weight_decay": 0.0001,
+    "policy_weight": 0.2,
+    "ranking_weight": 0.1,
+    "response_weight": 0.0
+  },
+  "mechanism": {
+    "enabled": true,
+    "epochs": 20,
+    "scopes": [
+      "critic",
+      "policy",
+      "heads"
+    ]
+  },
+  "acquisition": {
+    "n_extra": 16,
+    "random_seed": 1701,
+    "logit_std": 1.0
+  },
+  "execution": {
+    "device": "cuda",
+    "backend": "cupy",
+    "threads": 1,
+    "workers": 1
+  },
+  "evaluation": {
+    "direct": true,
+    "tolerance": 0.0002,
+    "initial_steps": 128,
+    "max_steps": 16384,
+    "n_resamples": 10000
+  },
+  "latency": {
+    "warmup": 3,
+    "repeats": 10
+  },
+  "bootstrap_resamples": 10000,
+  "_scope": "Frozen one-round, equal extra-label-count study. Use --data to reuse original research data. Architecture replication requires a separate predeclared hierarchical config. Five seeds are not five independent test datasets."
+}

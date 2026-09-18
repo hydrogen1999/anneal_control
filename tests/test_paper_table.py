@@ -133,6 +133,50 @@ def test_an_unresolved_teacher_shrinks_only_its_own_row():
     assert by_method["summary/bank"]["measured_on_full_population"] is True
 
 
+def test_failed_interpolation_audit_excludes_even_finite_teacher_loss():
+    ml, frontier = paired(n=4)
+    frontier[0] = frontier_row("r0", "p0", gap=0.01, gap_status="interpolation_audit_failed")
+    table = assemble_comparison(ml, frontier, bootstrap_resamples=100)
+    gap = next(row for row in table["rows"] if row["method"] == "gap_inverse_square")
+    assert gap["n_records"] == 3
+    assert gap["mean_loss"] == pytest.approx(.63)
+    assert "gap_inverse_square" not in table["ranked_within_cost_class"].get("privileged_spectrum", [])
+    assert table["teacher_populations"]["gap_inverse_square"]["n_excluded_records"] == 1
+
+
+def test_teacher_contrasts_use_teacher_specific_paired_population():
+    ml, frontier = paired(n=3)
+    frontier[0] = frontier_row("r0", "p0", gap=.01, gap_status="interpolation_audit_failed")
+    # This unusually easy learned record must not enter the gap comparison.
+    ml[0]["loss"] = 0.
+    table = assemble_comparison(ml, frontier, bootstrap_resamples=100)
+    matched = {(row["method"], row["teacher"]): row for row in table["matched_teacher_contrasts"]}
+    gap = matched["summary/bank", "gap_inverse_square"]
+    assert gap["n_records"] == 2 and gap["record_ids"] == ["r1", "r2"]
+    assert gap["mean_difference"] == pytest.approx(.545 - .63)
+    assert gap["learned_mean_loss"] == pytest.approx(.545)
+    assert gap["method_cost_class"] == "amortised"
+    assert gap["teacher_cost_class"] == "privileged_spectrum"
+    assert matched["summary/bank", "d2"]["n_records"] == 3
+
+
+def test_all_failed_teacher_keeps_population_audit_without_a_loss_row():
+    ml, frontier = paired(n=3)
+    for row in frontier:
+        row["privileged_teachers"]["gap_inverse_square"]["status"] = "interpolation_audit_failed"
+    table = assemble_comparison(ml, frontier, bootstrap_resamples=100)
+    assert table["teacher_populations"]["gap_inverse_square"]["n_eligible_records"] == 0
+    assert not any(row["method"] == "gap_inverse_square" for row in table["rows"])
+    assert not any(row["teacher"] == "gap_inverse_square" for row in table["matched_teacher_contrasts"])
+
+
+def test_teacher_pairing_rejects_mismatched_parent_identity():
+    ml, frontier = paired(n=3)
+    frontier[0]["parent_id"] = "different"
+    with pytest.raises(ValueError, match="parent identity"):
+        assemble_comparison(ml, frontier, bootstrap_resamples=100)
+
+
 def test_table_is_json_serialisable():
     ml, frontier = paired()
     table = assemble_comparison(ml, frontier, bootstrap_resamples=200)
@@ -246,3 +290,39 @@ def test_comparison_table_cli_rejects_a_malformed_search_argument(tmp_path):
         main(["comparison-table", "--records", str(tmp_path / "heldout.json"),
               "--reference-sweep", str(directory), "--search", "justadir",
               "--output", str(tmp_path / "t.json")])
+
+
+@pytest.mark.parametrize("field,value,error", [
+    ("parent_id", "wrong", "parent_id mismatch"),
+    ("split", "validation", "test split"),
+    ("total_objective_calls", 256, "budget mismatch"),
+    ("total_objective_calls", None, "positive integer"),
+    ("runtime", 99., "runtime mismatch"),
+    ("linear_loss", .2, "linear reference mismatch"),
+    ("best_found_loss", float("nan"), "finite"),
+])
+def test_extra_search_rejects_mismatched_identity_budget_or_invalid_loss(field, value, error):
+    ml, frontier = paired(n=3)
+    extra = [{**row} for row in frontier]
+    extra[0][field] = value
+    with pytest.raises(ValueError, match=error):
+        assemble_comparison(ml, frontier, searches={"extra": extra}, bootstrap_resamples=20)
+
+
+def test_extra_search_duplicate_records_are_not_silently_overwritten():
+    ml, frontier = paired(n=3)
+    with pytest.raises(ValueError, match="duplicate"):
+        assemble_comparison(ml, frontier, searches={"extra": frontier + [frontier[0]]}, bootstrap_resamples=20)
+
+
+def test_duplicate_learned_rows_fail_before_any_population_averaging():
+    ml, frontier = paired(n=3)
+    with pytest.raises(ValueError, match="duplicate learned"):
+        assemble_comparison(ml + [ml[0]], frontier, bootstrap_resamples=20)
+
+
+def test_shared_fixed_baseline_cannot_depend_on_method_order():
+    ml, frontier = paired(n=3)
+    ml[3]["global_loss"] = .01
+    with pytest.raises(ValueError, match="global_loss inconsistent"):
+        assemble_comparison(ml, frontier, bootstrap_resamples=20)

@@ -1,115 +1,64 @@
-# What is claimed, what measured it, and what it does not cover
+# Evidence ledger
 
-One row per claim. If a claim is not in this table it is not supported by this
-repository. Every number is reproducible by the command in its artifact
-directory; every caveat is load-bearing, not decoration.
+This is the current claim index. New code, passing tests, and a planned campaign
+are not completed experimental evidence. The authoritative numerical reanalysis
+is [evidence_audit_2026-09-18/RESULTS.md](evidence_audit_2026-09-18/RESULTS.md).
+Rebuild or verify it with `python scripts/rebuild_evidence.py [--check]`.
+Historical JSON outcomes are preserved; superseded analyses and figures must not
+be copied into a paper without the corrections below.
 
----
+| Claim | Archived evidence | Supported scope and limitation |
+|---|---|---|
+| Instance-specific schedule search helps | Validation headroom 0.1061, parent CI [0.0953, 0.1172], 48 parents. [Campaign](CAMPAIGN_G2_G3_RESULTS.md). | Finite-budget simulator search at 3–10 physical qubits. Best-found control is not a global optimum. |
+| Embedding changes control preference | 610/1060 pairs show decisive reversal in the small campaign; 123/228 (53.9%) at 14 qubits on 20 parents. [14-qubit report](interventions14_2026-09-17/SCALE.md). | Report the denominator and censoring. Independent generated populations support replication, not a matched size trend or hardware claim. |
+| Scale preservation affects the embedding intervention | Matched small-system effect ratio 1.52, difference +0.0199 [0.0132, 0.0267], 214 pairs. | The old 2.6× ratio mixed factor populations and is withdrawn. |
+| Learned bank selection improves on a fixed global schedule | Synthetic summary/bank − global = −0.020775, CI [−0.027734, −0.014167], 48 parents; Pegasus = −0.022905 [−0.038362, −0.010572], 12 parents. [Reanalysis](evidence_audit_2026-09-18/RESULTS.md). | Closed-system held-out evaluation. Intervals condition on archived training-seed averages. Pegasus training and test both use Pegasus; this is not cross-topology transfer. |
+| Teacher comparison remains positive after excluding audit failures | Summary/bank − d2 = −0.050399 [−0.069051, −0.032866], 711 records/45 parents; minus gap schedule = −0.083240 [−0.114283, −0.052837], 339 records/23 parents. [Paired tables](evidence_audit_2026-09-18/RESULTS.md). | Each teacher uses its own audited population, paired against the learned method on exactly those records. Different cost classes; no general spectral-method dominance. The old 846/432 eligibility counts are invalid. |
+| Embedding information is useful on the synthetic bank task | Aware − blind = −0.007817 [−0.011093, −0.004471], 48 parents. [Reanalysis](evidence_audit_2026-09-18/RESULTS.md). | Exploratory pooled contrast, not Holm-adjusted. On Pegasus the interval [−0.020195, +0.001062] includes zero. Architecture superiority and equivalence are both unestablished. |
+| Aggregate transfer measurements are now archived | Commit 974207a reports synthetic→Pegasus bank selection: mean of three hierarchy_physics entries 0.658554 versus linear 0.707052; hierarchy_outcome 0.663326, physical 0.670822, summary 0.674128, logical 0.705839. [Aggregate audit](evidence_audit_2026-09-18/UPSTREAM_TRANSFER.md). | Provisional aggregate evidence. Both hierarchy methods have three favourable entry-level intervals; summary and physical have only two each. No raw paired rows, checkpoint/seed identities, logical-disjointness receipts, or global baseline are archived. No between-method architecture claim or pooled CI is established. |
+| Direct policy remains weak | Synthetic summary/direct − global = +0.025096; Pegasus +0.055564. [Reanalysis](evidence_audit_2026-09-18/RESULTS.md). | Lower loss is better. Bank selection currently provides stronger evidence than direct generation. |
+| Historical aggregation is promising but not an isolated train-only effect | DAGGER − BANKEXT = −0.022555, negative on all three seeds. [Historical campaign](dagger_2026-09-17/DAGGER.md). | Both training and validation banks changed. Raw parent-by-seed panels are absent; a new paired CI cannot be reconstructed. Deterministic CONTROL replay does not imply zero optimizer uncertainty. The [independent fixed-validation pilot](acquisition_pilot_2026-09-17/README.md) is negative and retained. |
+| Increasing proposal count has mixed evidence | 16 − 3 proposals: −0.00380 [−0.00835, +0.00032], 26/48 parents. [Report](proposals16_2026-09-17/PROPOSALS16.md). | Mixed encoder pool, unequal seed counts. No pooled separation; no equivalence or general saturation conclusion. Not directly comparable to the summary-only aggregation effect. |
+| Schedule-search headroom exists on hardware connectivity up to 14 qubits | Pegasus validation 0.1441 [0.1047, 0.1891]; Zephyr 0.1479 [0.1150, 0.1867]. [Pegasus](pegasus_2026-09-17/PEGASUS.md), [Zephyr](zephyr_2026-09-18/ZEPHYR.md). | Small subgraphs, no QPU. Per-size uncertainty does not establish no decay or constancy. Pegasus family winner counts are per record: two_window wins 12/24 records, not 12/12 parents. |
+| Three search algorithms provide stronger internal baselines | Same 864 records and 257 calls: Bayesian 0.505460, Sobol-local 0.507352, corrected policy gradient 0.511392. [Reanalysis](evidence_audit_2026-09-18/RESULTS.md). | Generic GP-EI and REINFORCE, not faithful reproductions of a specific paper. Only one archived search outcome per record/strategy; search-seed variability is unmeasured. The buggy PG 0.5130 result is withdrawn. |
+| Literature-oriented implementation is available | [Finžgar adaptation/reference smoke](literature_baseline_smoke_2026-09-17/SUMMARY.md). | Embedded-task GP-UCB is an explicitly adapted baseline. The original-system reduced-space reference wins over random in only 1/3 seeds; this is not reproduction of the paper's full numerical study. |
+| GPU throughput has a limited observed crossover | Archived 12-qubit ratio 2.83×; [crossover.json](backend_2026-09-17/crossover.json). | Raw timing profiles are not archived and parity deltas are null. Machine-idleness statements are author reports, not independently verifiable from this artifact. No verified 16–20-qubit throughput result. |
+| Small dephasing perturbations preserve searched-control ordering | Ten 4–6-qubit records; searched control wins all ten at rates 0, .02, .05, .1. [Report](open_system_2026-09-17/OPEN_SYSTEM.md). | One hand-chosen noise axis. No measured device calibration and no learned-policy robustness evaluation. |
 
-## 1. Choosing the control per instance is worth a lot
+## Completed controlled CPU pilot (18 September)
 
-| | |
-|---|---|
-| **Claim** | Optimising the annealing schedule per instance beats a linear ramp by ≈10.6 percentage points of logical success. |
-| **Evidence** | Validation headroom 0.1061, 95% parent CI [0.0953, 0.1172], 48 parents. Train 0.1025 over 144 parents. Linear wins 0 of 3456 records. |
-| **Artifact** | `campaign_2026-09-16/g2_validation/`, `CAMPAIGN_G2_G3_RESULTS.md` |
-| **Does not cover** | Simulator search, not a learned model. Budget-limited, so headroom is a lower bound. 3–10 physical qubits. |
+The [new bounded campaign](paper_campaign_2026-09-18/RESULTS.md) completed all
+11 stages, 33 fits and three training seeds with fixed validation/test data.
+POLICY−BANKEXT direct loss is +0.001154, descriptive crossed CI
+[−0.004890, +0.008823]; all three direct mechanism intervals contain zero.
+Unseen-family bank selection matches the source-global schedule. The six
+nine-query budget studies establish no break-even at their requested thresholds
+and stay inside Bayesian initialization. These are completed measurements with
+negative/inconclusive conclusions, not missing experiments. The separate
+[25-query diagnostic extension](paper_budget_validation_2026-09-18/SUMMARY.md) reuses the same data and checkpoints, so it is
+not an independent confirmatory study.
 
-## 2. The embedding decides which control wins
+Raw pilot reports and receipts, with per-file hashes, are archived in
+`paper_campaign_2026-09-18/pilot_evidence.json.gz`; the reproduction script
+rebuilds its tables without model binaries. The archive explicitly omits model
+weights and dataset NPZ files. The larger research configuration has passed
+[geometry/split preflight](paper_campaign_2026-09-18/RESEARCH_PREFLIGHT.md),
+but its GPU simulation and training have not been executed.
 
-| | |
-|---|---|
-| **Claim** | Changing one embedding factor reverses which control is preferred in 57.5% of paired interventions. |
-| **Evidence** | 610 of 1060 pairs show a decisive reversal, both directions decisive against their own numerical ambiguity. 24% censored and reported. |
-| **Artifact** | `campaign_2026-09-16/g3/`, ADR-0003 |
-| **Replicated at scale** | 14 physical qubits: 123 of 228 pairs (53.9%) over 20 parents, 21.9% censored, same verdict. The matched scale-arm contrast is 1.70× there against 1.52× at 8 qubits. `interventions14_2026-09-17/` |
-| **Does not cover** | Two sizes, 8 and 14, are not a ladder — they show the effect has not vanished between them, not a trend. 20 parents at 14 qubits, so per-factor cells are small. `P(reversal \| resolved) ≡ 1` by construction and is **not** the finding; the rate is against all pairs. The two campaigns generate their own parents, so this replicates the finding on a comparable distribution, not the same problems embedded twice. |
-| **Correction** | The scale-arm effect was first reported as **2.6×** by dividing two marginal means with different factor compositions. Matched value is **1.52×**, +0.0199 [0.0132, 0.0267] over 214 pairs. ADR-0008. |
+## What remains unestablished
 
-## 3. The privileged spectral schedule is not the ceiling
+A strong method claim needs reproducible positive evidence from controlled
+acquisition or warm-start experiments; the bounded completed campaign does not
+supply that evidence. Generalization beyond the small synthetic pilot requires
+the larger held-out distributions. Deployment value requires successful
+quality–budget comparisons that include offline costs. The new transfer aggregates need provenance and paired contrasts before a
+confirmatory cross-distribution claim. Full-paper-scale literature reproduction,
+learned robustness, 16–20-qubit learned evaluation, and QPU outcomes are not established
+by current archives. Code implementing these protocols does not change that
+status until raw completed outcomes are archived and audited.
 
-| | |
-|---|---|
-| **Claim** | The local-adiabatic rule, given the exact instantaneous gap, loses to a 64-candidate search by 0.110 and to a linear ramp by 0.023. |
-| **Evidence** | 3447 units, 192 parents. `gap_inverse_square` 0.7159 vs linear 0.7013 vs search 0.6116. Against **search** the gap is +0.0540, +0.1671, +0.1105 at runtimes 1, 4, 12 — every interval excludes zero and the gap at 12 is twice the gap at 1. The oracle beats search on 0.7% of records (`d2`: 3.8%). Against **linear** it does catch up, reaching parity at runtime 12. |
-| **Artifact** | `teacher_baselines_2026-09-17/` |
-| **Tested against its strongest objection** | The adiabatic rule is asymptotically correct, so the result might only reflect being far from that regime. A runtime ladder at **12, 36 and 108** — nine times the campaign's longest — finds the gap to search at +0.1410, +0.0840, +0.1004, every interval excluding zero. Against *linear* the oracle does win at long runtime (−0.0450, −0.0475), exactly as theory predicts; against *search* it does not close. `runtime_ladder_2026-09-17/` |
-| **Does not cover** | **Cannot extend above 10 physical qubits at all**: a full spectral teacher needs the Hamiltonian diagonalised at every path point and is exponentially capped. Runtime 108 is not infinity, and no finite ladder refutes a limit. The gap is non-monotonic (dips at 36), so the reading is "does not close", not "grows". `gap_inverse_square` resolves on 44.7% of the campaign and 46.2% of the ladder, and that subset is harder than the rest, so it is conditional. For `d2`, including audit failures flips its sign against linear. | `gap_inverse_square` resolves on only 44.7% of instances, and that subset is harder than the rest (linear 0.7085 vs 0.4565), so it is conditional. For `d2`, including audit failures flips its sign against linear. |
-
-## 4. An amortised selector beats the privileged oracles
-
-| | |
-|---|---|
-| **Claim** | On held-out parents, a learned bank selector reaches 0.5447 against the oracles' 0.5913 and 0.7750, needing only a forward pass at deployment. |
-| **Evidence** | 864 records, 48 parents, all methods on the **same** records, grouped by cost class. |
-| **Artifact** | `comparison_2026-09-17/` |
-| **Does not cover** | Online adaptation still wins at 0.5055 — the honest gap is 0.039 and is printed. Oracle rows are measured on 846 and 432 records and are marked conditional. |
-
-## 5. Embedding information matters; the architecture does not
-
-| | |
-|---|---|
-| **Claim** | Embedding-aware encoders beat the blind one by 0.00782 [0.00447, 0.01109]; no aware encoder separates from any other. |
-| **Evidence** | 10 pairwise contrasts, parent-paired, Holm-corrected. Every separation is the blind encoder losing. `summary`, the cheapest, ranks first. |
-| **Artifact** | `heldout_2026-09-17/` |
-| **On real connectivity: point estimate replicates, does not separate** | Trained on real Pegasus connectivity at 10–14 qubits, the aware-vs-blind effect is **−0.00835 [−0.02019, +0.00106]** against the synthetic −0.00782 — the same size, a 3.2× wider interval, crossing zero. 12 test parents; ~19 are needed for an effect this size. Bank-beats-global does replicate there on every encoder. `pegasus_learned_2026-09-18/` |
-| **Does not cover** | Failing to separate is not equality. With 48 parents the narrowest aware-vs-aware interval is ±0.0011; no equivalence test was run. On the Pegasus dataset no pair separates at all, and `hierarchy_physics` is **degenerate** there — its auxiliary loss acts on spectral response targets that a >10-qubit dataset cannot have — so the physics ablation is not a null result but an un-runnable one. |
-
-## 6. Amortised generation fails for a fixable reason
-
-| | |
-|---|---|
-| **Claim** | One round of dataset aggregation is worth −0.0226 in selected loss against a matched control; raising the proposal count 5.3× is worth −0.0038 and does not separate from zero. |
-| **Evidence** | Four arms × three seeds. `CONTROL` reproduced `BEFORE` to every printed digit, so retrain noise is zero. `BANKEXT` isolates bank size: 22% of the raw gain. 16-proposal arm: −0.0038, CI [−0.00835, +0.00032], 26/48 parents. |
-| **Artifact** | `dagger_2026-09-17/`, `proposals16_2026-09-17/` |
-| **Correction** | The module was written to fix **critic distribution shift**. It does not: rho moves +0.003 against the control and is negative on one seed of three. What moves is **generation** (−0.0183 gap). The mechanism claim was wrong and is retracted in the module docstring. |
-
-## 7. Headroom survives to 14 qubits on real device connectivity
-
-| | |
-|---|---|
-| **Claim** | On genuine Pegasus P16 connectivity, headroom is 0.1362 / 0.1649 / 0.1312 at 10 / 12 / 14 physical qubits — no decay. |
-| **Evidence** | 24 validation records over 12 parents, 0 censored, verdict `resolved_headroom_present`; train split complete at 144 records with the same picture (0.1466 / 0.1411 / 0.1471 / 0.1321 at 10 / 11 / 12 / 14). `two_window` wins 12 of 12 parents. |
-| **Second topology** | **Zephyr Z15** (7440 qubits, 71736 couplers), independently generated: validation headroom 0.1479 [0.1150, 0.1867] and train 0.1339 [0.1183, 0.1495], **0% censored on both splits**. The two vendor graphs agree on the headline to within 0.004. `zephyr_2026-09-18/` |
-| **Artifact** | `pegasus_2026-09-17/` |
-| **Does not cover** | Real connectivity is **not a real device**: closed-system simulation, no noise, no calibration drift, no QPU job ever submitted. Budget 32 here against 64 in the main campaign. Zephyr's train split declines mildly with size (0.1559, 0.1426, 0.1084 at 10/12/14) where its validation split does not (0.1178, 0.1830, 0.1430), so **"headroom persists" is supported and "headroom is flat in size" is not**. Sizes 9, 11 and 13 carry 1–2 parents and are not points on a curve. |
-
-## 8. The search baseline is not a straw man
-
-| | |
-|---|---|
-| **Claim** | Bayesian optimisation at the same 257-call budget beats the quasi-random search by only 0.0019. |
-| **Evidence** | 864 records; BO favoured on 47 of 48 parents. Consistent direction, small size. |
-| **Artifact** | `comparison_2026-09-17/bayes_rows.json` |
-| **Extended, after a retraction** | A third strategy, a **policy gradient**, reaches **0.5114** and is last of the three (1/48 parents over `sobol_local`, 0/48 over Bayesian, best control on 78 of 864 records). It loses on *every* control family. The first measurement of this arm used a wrong Gaussian score — (z−μ)/σ instead of (z−μ)/σ² — reported 0.5130, and was retracted; the corrected run confirms the direction. Note that on a smooth synthetic target the corrected method *wins* the eight-dimensional family, so the surrogate predicted the opposite of what real instances show. |
-| **Does not cover** | Three strategies at one budget on one distribution. No comparison against a published embedding-aware control method, and the policy gradient is a standard REINFORCE rather than a reproduction of a specific paper's method. |
-
-## 9. GPU throughput crosses over at 12 qubits
-
-| | |
-|---|---|
-| **Claim** | CuPy reaches 2.83× NumPy at 12 physical qubits; at 10 the ratio is within noise of 1. |
-| **Evidence** | numpy 2.62, cupy 7.41, repeat spread 3.6% and 2.1%, GPU exclusive with every other compute process paused, driver at nice 0. |
-| **Artifact** | `backend_2026-09-17/crossover.json` |
-| **Does not cover** | 14 and 16 qubits are **not measured**: repeated config failures, then the GPU was returned to the Pegasus sweep. The ratios 3.22×/10.67×/103.57× that appear in commit `eb9de9f` have no artifact and are withheld. The census in this artifact mislabels process ownership — see `census_labelling_defect` inside it. |
-
-## 10. The advantage is not an artefact of simulating no environment
-
-| | |
-|---|---|
-| **Claim** | Under local dephasing, the searched control still beats the linear ramp on every record tested, and the ordering never flips. |
-| **Evidence** | Ten held-out records at 4–6 physical qubits. Mean headroom 0.1389 / 0.1193 / 0.0966 / 0.0708 at dephasing rate 0 / 0.02 / 0.05 / 0.1; best-found wins 10/10 at every rate. At rate zero the open-system pipeline reproduces the closed-system headroom to within 2 × 10⁻⁵, from a solver sharing no integration code with it. |
-| **Artifact** | `open_system_2026-09-17/` |
-| **Does not cover** | Local dephasing at a hand-chosen rate is **not a device model**: no thermal bath, no measured T1/T2, no per-qubit calibration, no readout error. Relaxation held at zero, so one noise axis only. 4–6 qubits — two records at N=7 were refused by the solver's own cap and are reported absent. Compares the *searched* control against linear; the amortised selector's degradation is untested. |
-
----
-
-## Standing limitations that apply to everything above
-
-1. **No hardware.** Every campaign number is a closed-system simulation; §10 adds an
-   open-system check under hand-chosen local dephasing on ten small records, which
-   is a perturbation study and not a device model. Real Pegasus connectivity is
-   used in §7; a real Pegasus *machine* is not used anywhere.
-2. **Scale.** §1–6 and §8 are at most 10 physical qubits, i.e. 1024 amplitudes. §7 reaches 14. §3 cannot be extended by construction.
-3. **Budget-limited references.** Every "best found" is a finite-budget reference, never a global control optimum. Increasing the budget can only lower it, so headroom is a lower bound.
-4. **Parent-level independence.** Every interval resamples logical parents, and none of them include training-seed uncertainty, which is reported separately.
+All intervals must name the unit being resampled. The fresh reanalysis resamples
+logical parents, conditional on archived seed averages; it cannot recreate
+unarchived training uncertainty. Failure to reject a contrast is not evidence
+of equality, and a sample-size estimate made after seeing test effects is not a
+guarantee of future significance.

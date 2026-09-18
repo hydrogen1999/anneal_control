@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "data": "../runs/acquisition_research/data",
+  "split": "test",
+  "allow_test_adaptation": true,
+  "seeds": [0, 1, 2, 3, 4],
+  "budgets": [10, 30, 60],
+  "search": {
+    "n_segments": 8,
+    "parameterization": "policy_decoder",
+    "max_ds_dtau": 4.0,
+    "logit_bound": 6.0,
+    "n_initial": 10,
+    "acquisition_candidates": 1024,
+    "acquisition_restarts": 3,
+    "gp_restarts": 3,
+    "noise": 0.000001
+  },
+  "simulator": {
+    "backend": "numpy",
+    "tolerance": 0.0005,
+    "initial_steps": 128,
+    "max_steps": 8192
+  },
+  "bootstrap_resamples": 20000,
+  "_scope": "Frozen test-time task adaptation: five optimizer seeds, both GP-UCB and matched random, all selected test parents. Validate recipe before test. 1000 charged calls per record before retries."
+}
