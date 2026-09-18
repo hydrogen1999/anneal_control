@@ -79,7 +79,7 @@ directory; every caveat is load-bearing, not decoration.
 | **Claim** | Bayesian optimisation at the same 257-call budget beats the quasi-random search by only 0.0019. |
 | **Evidence** | 864 records; BO favoured on 47 of 48 parents. Consistent direction, small size. |
 | **Artifact** | `comparison_2026-09-17/bayes_rows.json` |
-| **Extended** | A third strategy, a **policy gradient** (REINFORCE over the schedule parameters), was run at the same budget on the same records. It reaches 0.5130 and loses to both others on **0/48 parents**, finding the best control on 80 of 864 records against Bayesian's 452. The learned search is the weakest of the three here, reported as measured — on a synthetic objective it had won the eight-dimensional family, and that did not survive contact with real instances. |
+| **Retracted, re-running** | A third strategy, a **policy gradient**, was run and reported as losing on 0/48 parents. That measurement used a wrong Gaussian score — (z−μ)/σ implemented instead of (z−μ)/σ² — so every step shrank as σ decayed and the policy barely moved. With the score corrected it wins the eight-dimensional family at campaign budget on a synthetic objective. The real-split arm is being re-run and no number from it is quoted until it lands. |
 | **Does not cover** | Three strategies at one budget on one distribution. No comparison against a published embedding-aware control method, and the policy gradient is a standard REINFORCE rather than a reproduction of a specific paper's method. |
 
 ## 9. GPU throughput crosses over at 12 qubits

@@ -313,3 +313,80 @@ def test_linear_family_ignores_the_strategy():
                                      strategy="policy_gradient")
     assert len(calls) == 1
     assert len(result.records) == 1
+
+
+# --- cross-entropy method: a learned search built for a small budget ----------
+
+def test_cem_is_a_registered_strategy():
+    from annealctrl.search import STRATEGIES
+
+    assert "cem" in STRATEGIES
+
+
+def test_cem_spends_exactly_the_budget():
+    from annealctrl.search import optimize_control_family
+
+    calls = []
+
+    def loss_fn(schedule):
+        calls.append(1)
+        return float(np.abs(schedule(np.linspace(0, 1, 9)) - 0.5).sum())
+
+    for family, budget in (("one_window", 17), ("two_window", 33), ("eight_bin", 64)):
+        calls.clear()
+        result = optimize_control_family(loss_fn, family, budget=budget, seed=0, strategy="cem")
+        assert len(calls) == budget, (family, len(calls), budget)
+        assert len(result.records) == budget
+
+
+def test_policy_gradient_uses_the_correct_gaussian_score():
+    """d/dmu log N(z; mu, sigma^2 I) = (z - mu) / sigma^2, not / sigma.
+
+    The first version divided once. Every step therefore shrank as sigma decayed,
+    the policy barely moved, and the arm lost on the real test split on 0 of 48
+    parents -- a result that was published and then retracted, because it measured
+    the bug rather than the method. This pins the scaling by checking that the
+    mean moves toward the better half of a deliberately one-sided batch by an
+    amount the wrong scaling cannot produce.
+    """
+    from annealctrl.search import optimize_control_family
+
+    def make_loss():
+        def loss_fn(schedule):
+            tau = np.linspace(0, 1, 65)
+            return float(np.abs(schedule(tau) - np.sqrt(tau)).mean())
+        return loss_fn
+
+    corrected = [min(r.loss for r in optimize_control_family(
+        make_loss(), "eight_bin", budget=64, seed=seed,
+        strategy="policy_gradient").records) for seed in range(6)]
+    baseline = [min(r.loss for r in optimize_control_family(
+        make_loss(), "eight_bin", budget=64, seed=seed,
+        strategy="sobol_local").records) for seed in range(6)]
+    # With the correct score the policy gradient beats quasi-random search on the
+    # highest-dimensional family at campaign budget. With the wrong one it did not.
+    assert np.mean(corrected) < np.mean(baseline), (np.mean(corrected), np.mean(baseline))
+
+
+def test_cem_labels_its_proposals_and_records_its_elite_fraction():
+    from annealctrl.search import optimize_control_family
+
+    def loss_fn(schedule):
+        return float(schedule(np.linspace(0, 1, 9)).sum())
+
+    result = optimize_control_family(loss_fn, "two_window", budget=33, seed=0, strategy="cem")
+    meta = result.records[1].candidate.parameters
+    assert meta["proposal"] == "cem"
+    for key in ("batch_size", "elite_fraction"):
+        assert key in meta, key
+
+
+def test_cem_is_deterministic_given_a_seed():
+    from annealctrl.search import optimize_control_family
+
+    def loss_fn(schedule):
+        return float(np.abs(schedule(np.linspace(0, 1, 9)) - 0.3).sum())
+
+    a = optimize_control_family(loss_fn, "one_window", budget=17, seed=5, strategy="cem")
+    b = optimize_control_family(loss_fn, "one_window", budget=17, seed=5, strategy="cem")
+    assert [r.loss for r in a.records] == [r.loss for r in b.records]

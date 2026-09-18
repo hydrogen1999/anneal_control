@@ -234,7 +234,7 @@ def equal_budget_refinement(
 CONTROL_FAMILIES = ("linear", "one_window", "two_window", "eight_bin", "pause")
 
 
-STRATEGIES = ("sobol_local", "bayesian", "policy_gradient")
+STRATEGIES = ("sobol_local", "bayesian", "policy_gradient", "cem")
 
 
 def optimize_control_family(
@@ -357,8 +357,50 @@ def optimize_control_family(
             spread = float(losses.std())
             if size > 1 and spread > 1e-12:
                 advantage = -(losses - losses.mean()) / spread
-                mean = mean + learning_rate * (advantage[:, None] * (draws - mean)).mean(axis=0) / sigma
+                # d/dmu log N(z; mu, sigma^2 I) = (z - mu) / sigma^2. An earlier
+                # version divided by sigma once, which shrank every step as sigma
+                # decayed and left the policy almost stationary.
+                mean = mean + learning_rate * (
+                    advantage[:, None] * (draws - mean)).mean(axis=0) / (sigma * sigma)
             sigma *= decay
+        return SearchResult(tuple(records), split, split == "test")
+
+    if strategy == "cem":
+        # Cross-entropy method: sample, keep the best fraction, refit the Gaussian
+        # to those elites. It exists here because the first learned baseline in
+        # this project was REINFORCE, and at a campaign budget of 64 calls that
+        # gets seven gradient updates on eight parameters -- a test of the budget,
+        # not of learned search. CEM is the standard choice in exactly this
+        # regime: it needs no gradient estimate and improves from the first
+        # generation.
+        batch = int(max(6, min(4 * dimension, max(6, (budget - 1) // 4))))
+        elite_fraction = 0.25
+        mean, sigma = np.zeros(dimension), np.ones(dimension)
+        index = 1
+        while index < budget:
+            size = min(batch, budget - index)
+            draws = mean + sigma * rng.normal(size=(size, dimension))
+            losses = np.empty(size)
+            for offset in range(size):
+                parameters = 1.0 / (1.0 + np.exp(-draws[offset]))
+                schedule = decode(parameters)
+                schedule.validate_slope(runtime=runtime, max_slope=max_slope)
+                candidate = Candidate(f"{family}_{index + offset:04d}", family, schedule,
+                                      {"unit_parameters": parameters.tolist(),
+                                       "proposal": "cem",
+                                       "batch_size": batch,
+                                       "elite_fraction": elite_fraction})
+                record = _evaluate(loss_fn, candidate, index + offset)
+                records.append(record)
+                losses[offset] = record.loss
+            index += size
+            n_elite = max(2, int(round(elite_fraction * size)))
+            if size >= 2:
+                elite = draws[np.argsort(losses)[:min(n_elite, size)]]
+                mean = elite.mean(axis=0)
+                # A floor on sigma keeps the search from collapsing onto one
+                # point when a generation happens to be tightly clustered.
+                sigma = np.maximum(elite.std(axis=0), 0.05)
         return SearchResult(tuple(records), split, split == "test")
 
     for index in range(1, budget):

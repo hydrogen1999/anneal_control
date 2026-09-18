@@ -29,7 +29,7 @@ annealctrl comparison-table \
 | amortised | best direct proposal | 0.5898–0.5978 | — | −0.0111…−0.0032 | 864 |
 | online adaptation | search, **Bayesian** | 0.5055 | [0.4374, 0.5709] | −0.0955 | 864 |
 | online adaptation | search, quasi-random (`sobol_local`) | 0.5074 | [0.4391, 0.5728] | −0.0936 | 864 |
-| online adaptation | search, **policy gradient** (learned) | 0.5130 | [0.4447, 0.5785] | −0.0880 | 864 |
+| online adaptation | search, **policy gradient** (learned) | *withdrawn, re-running* | — | — | — |
 
 There is deliberately **no global rank**. A linear ramp, an oracle whose
 construction is exponential in the number of qubits, a network that consults no
@@ -69,11 +69,19 @@ venue asks for.
 | `sobol_local` | 0.5074 | — | — | 332 |
 | policy gradient | 0.5130 | +0.00564 | 0/48 | 80 |
 
-Bayesian optimisation wins, consistently and by a small margin. **The policy
-gradient loses to both**, on every parent — a negative result for the learned
-search, reported as measured. On a synthetic objective it had won the
-eight-dimensional family at small budgets; at budget 64 per family on real
-instances it does not, and the synthetic result did not survive contact.
+Bayesian optimisation wins over `sobol_local`, consistently and by a small
+margin.
+
+**The policy-gradient row is withdrawn.** It was measured with a wrong gradient:
+the score of a Gaussian policy is (z − μ)/σ², and the implementation divided by
+σ once. Every step therefore shrank as σ decayed and the policy barely moved. The
+arm lost on 0 of 48 parents, and that number measured the bug, not the method.
+
+With the score corrected, on the same synthetic objective the policy gradient
+**wins** the eight-dimensional family at campaign budget (0.02431 against
+Bayesian's 0.02816) and wins 4 of 8 family/budget cells. The real test split is
+being re-run; the old rows are kept on disk under a directory named for the
+defect rather than deleted.
 
 The amortised methods should be read against the **best** of the three, which is
 Bayesian at 0.5055, making their gap 0.039 rather than 0.037.
