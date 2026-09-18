@@ -55,6 +55,15 @@ directory; every caveat is load-bearing, not decoration.
 | **On real connectivity: point estimate replicates, does not separate** | Trained on real Pegasus connectivity at 10–14 qubits, the aware-vs-blind effect is **−0.00835 [−0.02019, +0.00106]** against the synthetic −0.00782 — the same size, a 3.2× wider interval, crossing zero. 12 test parents; ~19 are needed for an effect this size. Bank-beats-global does replicate there on every encoder. `pegasus_learned_2026-09-18/` |
 | **Does not cover** | Failing to separate is not equality. With 48 parents the narrowest aware-vs-aware interval is ±0.0011; no equivalence test was run. On the Pegasus dataset no pair separates at all, and `hierarchy_physics` is **degenerate** there — its auxiliary loss acts on spectral response targets that a >10-qubit dataset cannot have — so the physics ablation is not a null result but an un-runnable one. |
 
+## 5b. The architecture pays for transfer, not in-distribution
+
+| | |
+|---|---|
+| **Claim** | Encoders trained on synthetic 3–10 qubit quotient graphs transfer to real Pegasus records at 10–14 qubits, and there the hierarchical encoders **separate** from the pooled-moment one that beat them in-distribution. |
+| **Evidence** | 144 held-out Pegasus records, disjoint from training by **content fingerprint**. `hierarchy_physics` 0.65855, `hierarchy_outcome` 0.66333, `physical` 0.67082, `summary` 0.67413, `logical` 0.70584 against linear 0.7071. Holm-corrected: `hierarchy_physics` vs `summary` +0.01557 [+0.00884, +0.02313] holm 0.0010; `hierarchy_outcome` vs `summary` +0.01080 [+0.00276, +0.01894] holm 0.0498. In-distribution the same pairs were −0.00036 and −0.00091 at holm 1.000. Aware vs blind is −0.03913 [−0.07219, −0.00889], **5× the in-distribution effect**. `logical` groups with `summary`. |
+| **Artifact** | `pegasus_learned_2026-09-18/TRANSFER.md`, `transfer_contrasts.json` |
+| **Does not cover** | 12 test parents and one target distribution: separation with 12 parents means the effect is large, not that the test is powerful, and it is not a like-for-like power comparison against the 48-parent in-distribution test. The two hierarchical variants do not separate from each other (−0.00477, holm 0.228), so the physics-auxiliary loss is not shown to help. Bank selection only; direct generation untested under transfer. The reading that pooled moments memorise a distribution while message passing learns transferable structure is a **hypothesis consistent with this measurement, not a second measurement**. |
+
 ## 6. Amortised generation fails for a fixable reason
 
 | | |
