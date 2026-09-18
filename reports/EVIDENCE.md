@@ -52,7 +52,8 @@ directory; every caveat is load-bearing, not decoration.
 | **Claim** | Embedding-aware encoders beat the blind one by 0.00782 [0.00447, 0.01109]; no aware encoder separates from any other. |
 | **Evidence** | 10 pairwise contrasts, parent-paired, Holm-corrected. Every separation is the blind encoder losing. `summary`, the cheapest, ranks first. |
 | **Artifact** | `heldout_2026-09-17/` |
-| **Does not cover** | Failing to separate is not equality. With 48 parents the narrowest aware-vs-aware interval is ±0.0011; no equivalence test was run. |
+| **On real connectivity: point estimate replicates, does not separate** | Trained on real Pegasus connectivity at 10–14 qubits, the aware-vs-blind effect is **−0.00835 [−0.02019, +0.00106]** against the synthetic −0.00782 — the same size, a 3.2× wider interval, crossing zero. 12 test parents; ~19 are needed for an effect this size. Bank-beats-global does replicate there on every encoder. `pegasus_learned_2026-09-18/` |
+| **Does not cover** | Failing to separate is not equality. With 48 parents the narrowest aware-vs-aware interval is ±0.0011; no equivalence test was run. On the Pegasus dataset no pair separates at all, and `hierarchy_physics` is **degenerate** there — its auxiliary loss acts on spectral response targets that a >10-qubit dataset cannot have — so the physics ablation is not a null result but an un-runnable one. |
 
 ## 6. Amortised generation fails for a fixable reason
 
