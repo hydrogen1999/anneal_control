@@ -1,0 +1,417 @@
+{
+ "summary": [
+  {
+   "schema_version": 1,
+   "n_records": 144,
+   "n_parents": 12,
+   "mean_selected_loss": 0.7023383967340074,
+   "mean_linear_loss": 0.7070519901180727,
+   "mean_bank_best_loss": 0.6115838701494583,
+   "mean_bank_regret": 0.09075452658454915,
+   "beats_linear_fraction": 0.5972222222222222,
+   "vs_linear": {
+    "mean_difference": -0.004713593384065441,
+    "parent_bootstrap_ci": {
+     "low": -0.024154362302099813,
+     "high": 0.01509127613092873,
+     "confidence": 0.95,
+     "resamples": 8000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "separated": false,
+    "sign_convention": "negative means the transferred selector is better"
+   },
+   "verdict": "beats_linear",
+   "unit_of_independence": "logical_parent",
+   "scope": "bank selection only, no outcome consulted before the choice; the checkpoint's own normalizer is used unrefitted, because refitting on the target is an adaptation and answers a different question"
+  },
+  {
+   "schema_version": 1,
+   "n_records": 144,
+   "n_parents": 12,
+   "mean_selected_loss": 0.6625740380168459,
+   "mean_linear_loss": 0.7070519901180727,
+   "mean_bank_best_loss": 0.6115838701494583,
+   "mean_bank_regret": 0.050990167867387665,
+   "beats_linear_fraction": 0.7847222222222222,
+   "vs_linear": {
+    "mean_difference": -0.0444779521012269,
+    "parent_bootstrap_ci": {
+     "low": -0.07370779481332707,
+     "high": -0.01632677305341921,
+     "confidence": 0.95,
+     "resamples": 8000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "separated": true,
+    "sign_convention": "negative means the transferred selector is better"
+   },
+   "verdict": "beats_linear",
+   "unit_of_independence": "logical_parent",
+   "scope": "bank selection only, no outcome consulted before the choice; the checkpoint's own normalizer is used unrefitted, because refitting on the target is an adaptation and answers a different question"
+  },
+  {
+   "schema_version": 1,
+   "n_records": 144,
+   "n_parents": 12,
+   "mean_selected_loss": 0.6574705964626748,
+   "mean_linear_loss": 0.7070519901180727,
+   "mean_bank_best_loss": 0.6115838701494583,
+   "mean_bank_regret": 0.045886726313216636,
+   "beats_linear_fraction": 0.8055555555555556,
+   "vs_linear": {
+    "mean_difference": -0.04958139365539793,
+    "parent_bootstrap_ci": {
+     "low": -0.07869146074608543,
+     "high": -0.021616363372762366,
+     "confidence": 0.95,
+     "resamples": 8000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "separated": true,
+    "sign_convention": "negative means the transferred selector is better"
+   },
+   "verdict": "beats_linear",
+   "unit_of_independence": "logical_parent",
+   "scope": "bank selection only, no outcome consulted before the choice; the checkpoint's own normalizer is used unrefitted, because refitting on the target is an adaptation and answers a different question"
+  }
+ ],
+ "logical": [
+  {
+   "schema_version": 1,
+   "n_records": 144,
+   "n_parents": 12,
+   "mean_selected_loss": 0.7196612301474444,
+   "mean_linear_loss": 0.7070519901180727,
+   "mean_bank_best_loss": 0.6115838701494583,
+   "mean_bank_regret": 0.10807735999798619,
+   "beats_linear_fraction": 0.7361111111111112,
+   "vs_linear": {
+    "mean_difference": 0.012609240029371612,
+    "parent_bootstrap_ci": {
+     "low": -0.0128533943619664,
+     "high": 0.03978080925395366,
+     "confidence": 0.95,
+     "resamples": 8000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "separated": false,
+    "sign_convention": "negative means the transferred selector is better"
+   },
+   "verdict": "indistinguishable_from_linear",
+   "unit_of_independence": "logical_parent",
+   "scope": "bank selection only, no outcome consulted before the choice; the checkpoint's own normalizer is used unrefitted, because refitting on the target is an adaptation and answers a different question"
+  },
+  {
+   "schema_version": 1,
+   "n_records": 144,
+   "n_parents": 12,
+   "mean_selected_loss": 0.6672507371767139,
+   "mean_linear_loss": 0.7070519901180727,
+   "mean_bank_best_loss": 0.6115838701494583,
+   "mean_bank_regret": 0.05566686702725562,
+   "beats_linear_fraction": 0.8194444444444444,
+   "vs_linear": {
+    "mean_difference": -0.03980125294135895,
+    "parent_bootstrap_ci": {
+     "low": -0.05504886391099214,
+     "high": -0.025688506096209762,
+     "confidence": 0.95,
+     "resamples": 8000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "separated": true,
+    "sign_convention": "negative means the transferred selector is better"
+   },
+   "verdict": "beats_linear",
+   "unit_of_independence": "logical_parent",
+   "scope": "bank selection only, no outcome consulted before the choice; the checkpoint's own normalizer is used unrefitted, because refitting on the target is an adaptation and answers a different question"
+  },
+  {
+   "schema_version": 1,
+   "n_records": 144,
+   "n_parents": 12,
+   "mean_selected_loss": 0.7306043790301832,
+   "mean_linear_loss": 0.7070519901180727,
+   "mean_bank_best_loss": 0.6115838701494583,
+   "mean_bank_regret": 0.11902050888072496,
+   "beats_linear_fraction": 0.6180555555555556,
+   "vs_linear": {
+    "mean_difference": 0.023552388912110377,
+    "parent_bootstrap_ci": {
+     "low": -0.01980148594253312,
+     "high": 0.0735476414894508,
+     "confidence": 0.95,
+     "resamples": 8000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "separated": false,
+    "sign_convention": "negative means the transferred selector is better"
+   },
+   "verdict": "indistinguishable_from_linear",
+   "unit_of_independence": "logical_parent",
+   "scope": "bank selection only, no outcome consulted before the choice; the checkpoint's own normalizer is used unrefitted, because refitting on the target is an adaptation and answers a different question"
+  }
+ ],
+ "physical": [
+  {
+   "schema_version": 1,
+   "n_records": 144,
+   "n_parents": 12,
+   "mean_selected_loss": 0.6702411064811479,
+   "mean_linear_loss": 0.7070519901180727,
+   "mean_bank_best_loss": 0.6115838701494583,
+   "mean_bank_regret": 0.05865723633168977,
+   "beats_linear_fraction": 0.7708333333333334,
+   "vs_linear": {
+    "mean_difference": -0.03681088363692481,
+    "parent_bootstrap_ci": {
+     "low": -0.05341840359339854,
+     "high": -0.020600719799714024,
+     "confidence": 0.95,
+     "resamples": 8000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "separated": true,
+    "sign_convention": "negative means the transferred selector is better"
+   },
+   "verdict": "beats_linear",
+   "unit_of_independence": "logical_parent",
+   "scope": "bank selection only, no outcome consulted before the choice; the checkpoint's own normalizer is used unrefitted, because refitting on the target is an adaptation and answers a different question"
+  },
+  {
+   "schema_version": 1,
+   "n_records": 144,
+   "n_parents": 12,
+   "mean_selected_loss": 0.6830107716966469,
+   "mean_linear_loss": 0.7070519901180727,
+   "mean_bank_best_loss": 0.6115838701494583,
+   "mean_bank_regret": 0.07142690154718877,
+   "beats_linear_fraction": 0.6111111111111112,
+   "vs_linear": {
+    "mean_difference": -0.024041218421425804,
+    "parent_bootstrap_ci": {
+     "low": -0.04700541554399934,
+     "high": 0.0011709839784529007,
+     "confidence": 0.95,
+     "resamples": 8000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "separated": false,
+    "sign_convention": "negative means the transferred selector is better"
+   },
+   "verdict": "beats_linear",
+   "unit_of_independence": "logical_parent",
+   "scope": "bank selection only, no outcome consulted before the choice; the checkpoint's own normalizer is used unrefitted, because refitting on the target is an adaptation and answers a different question"
+  },
+  {
+   "schema_version": 1,
+   "n_records": 144,
+   "n_parents": 12,
+   "mean_selected_loss": 0.6592142347857691,
+   "mean_linear_loss": 0.7070519901180727,
+   "mean_bank_best_loss": 0.6115838701494583,
+   "mean_bank_regret": 0.04763036463631087,
+   "beats_linear_fraction": 0.8125,
+   "vs_linear": {
+    "mean_difference": -0.047837755332303715,
+    "parent_bootstrap_ci": {
+     "low": -0.06961775218387521,
+     "high": -0.028589076146164658,
+     "confidence": 0.95,
+     "resamples": 8000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "separated": true,
+    "sign_convention": "negative means the transferred selector is better"
+   },
+   "verdict": "beats_linear",
+   "unit_of_independence": "logical_parent",
+   "scope": "bank selection only, no outcome consulted before the choice; the checkpoint's own normalizer is used unrefitted, because refitting on the target is an adaptation and answers a different question"
+  }
+ ],
+ "hierarchy_outcome": [
+  {
+   "schema_version": 1,
+   "n_records": 144,
+   "n_parents": 12,
+   "mean_selected_loss": 0.6811507883998894,
+   "mean_linear_loss": 0.7070519901180727,
+   "mean_bank_best_loss": 0.6115838701494583,
+   "mean_bank_regret": 0.06956691825043128,
+   "beats_linear_fraction": 0.7083333333333334,
+   "vs_linear": {
+    "mean_difference": -0.02590120171818329,
+    "parent_bootstrap_ci": {
+     "low": -0.04436032757994357,
+     "high": -0.008167081632556998,
+     "confidence": 0.95,
+     "resamples": 8000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "separated": true,
+    "sign_convention": "negative means the transferred selector is better"
+   },
+   "verdict": "beats_linear",
+   "unit_of_independence": "logical_parent",
+   "scope": "bank selection only, no outcome consulted before the choice; the checkpoint's own normalizer is used unrefitted, because refitting on the target is an adaptation and answers a different question"
+  },
+  {
+   "schema_version": 1,
+   "n_records": 144,
+   "n_parents": 12,
+   "mean_selected_loss": 0.658172298558587,
+   "mean_linear_loss": 0.7070519901180727,
+   "mean_bank_best_loss": 0.6115838701494583,
+   "mean_bank_regret": 0.046588428409128836,
+   "beats_linear_fraction": 0.8263888888888888,
+   "vs_linear": {
+    "mean_difference": -0.04887969155948574,
+    "parent_bootstrap_ci": {
+     "low": -0.06845603912487468,
+     "high": -0.029682988486451293,
+     "confidence": 0.95,
+     "resamples": 8000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "separated": true,
+    "sign_convention": "negative means the transferred selector is better"
+   },
+   "verdict": "beats_linear",
+   "unit_of_independence": "logical_parent",
+   "scope": "bank selection only, no outcome consulted before the choice; the checkpoint's own normalizer is used unrefitted, because refitting on the target is an adaptation and answers a different question"
+  },
+  {
+   "schema_version": 1,
+   "n_records": 144,
+   "n_parents": 12,
+   "mean_selected_loss": 0.6506552824199009,
+   "mean_linear_loss": 0.7070519901180727,
+   "mean_bank_best_loss": 0.6115838701494583,
+   "mean_bank_regret": 0.039071412270442744,
+   "beats_linear_fraction": 0.8958333333333334,
+   "vs_linear": {
+    "mean_difference": -0.05639670769817182,
+    "parent_bootstrap_ci": {
+     "low": -0.08040618846124792,
+     "high": -0.035506817942425516,
+     "confidence": 0.95,
+     "resamples": 8000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "separated": true,
+    "sign_convention": "negative means the transferred selector is better"
+   },
+   "verdict": "beats_linear",
+   "unit_of_independence": "logical_parent",
+   "scope": "bank selection only, no outcome consulted before the choice; the checkpoint's own normalizer is used unrefitted, because refitting on the target is an adaptation and answers a different question"
+  }
+ ],
+ "hierarchy_physics": [
+  {
+   "schema_version": 1,
+   "n_records": 144,
+   "n_parents": 12,
+   "mean_selected_loss": 0.6749308775218464,
+   "mean_linear_loss": 0.7070519901180727,
+   "mean_bank_best_loss": 0.6115838701494583,
+   "mean_bank_regret": 0.06334700737238814,
+   "beats_linear_fraction": 0.75,
+   "vs_linear": {
+    "mean_difference": -0.03212111259622642,
+    "parent_bootstrap_ci": {
+     "low": -0.048986144725241515,
+     "high": -0.014265041483291933,
+     "confidence": 0.95,
+     "resamples": 8000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "separated": true,
+    "sign_convention": "negative means the transferred selector is better"
+   },
+   "verdict": "beats_linear",
+   "unit_of_independence": "logical_parent",
+   "scope": "bank selection only, no outcome consulted before the choice; the checkpoint's own normalizer is used unrefitted, because refitting on the target is an adaptation and answers a different question"
+  },
+  {
+   "schema_version": 1,
+   "n_records": 144,
+   "n_parents": 12,
+   "mean_selected_loss": 0.6555510958008803,
+   "mean_linear_loss": 0.7070519901180727,
+   "mean_bank_best_loss": 0.6115838701494583,
+   "mean_bank_regret": 0.0439672256514222,
+   "beats_linear_fraction": 0.8333333333333334,
+   "vs_linear": {
+    "mean_difference": -0.05150089431719238,
+    "parent_bootstrap_ci": {
+     "low": -0.0740244507981914,
+     "high": -0.030861139185267086,
+     "confidence": 0.95,
+     "resamples": 8000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "separated": true,
+    "sign_convention": "negative means the transferred selector is better"
+   },
+   "verdict": "beats_linear",
+   "unit_of_independence": "logical_parent",
+   "scope": "bank selection only, no outcome consulted before the choice; the checkpoint's own normalizer is used unrefitted, because refitting on the target is an adaptation and answers a different question"
+  },
+  {
+   "schema_version": 1,
+   "n_records": 144,
+   "n_parents": 12,
+   "mean_selected_loss": 0.6451795523539671,
+   "mean_linear_loss": 0.7070519901180727,
+   "mean_bank_best_loss": 0.6115838701494583,
+   "mean_bank_regret": 0.033595682204508905,
+   "beats_linear_fraction": 0.9097222222222222,
+   "vs_linear": {
+    "mean_difference": -0.06187243776410567,
+    "parent_bootstrap_ci": {
+     "low": -0.0867308915594724,
+     "high": -0.039853259196833385,
+     "confidence": 0.95,
+     "resamples": 8000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "separated": true,
+    "sign_convention": "negative means the transferred selector is better"
+   },
+   "verdict": "beats_linear",
+   "unit_of_independence": "logical_parent",
+   "scope": "bank selection only, no outcome consulted before the choice; the checkpoint's own normalizer is used unrefitted, because refitting on the target is an adaptation and answers a different question"
+  }
+ ]
+}
