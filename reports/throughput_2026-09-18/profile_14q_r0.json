@@ -1,0 +1,220 @@
+{
+  "schema_version": 1,
+  "status": "complete",
+  "config": {
+    "seed": 20260916,
+    "parents": 6,
+    "families": [
+      "spin_glass",
+      "weighted_maxcut"
+    ],
+    "logical_qubits": 7,
+    "chain_lengths": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+    ],
+    "variants": [
+      {
+        "shape": "path",
+        "ports": 1,
+        "field_distribution": "uniform"
+      },
+      {
+        "shape": "random_tree",
+        "ports": 2,
+        "field_distribution": "concentrated",
+        "coupling_distribution": "random"
+      }
+    ],
+    "chain_strengths": [
+      0.75,
+      1.5,
+      3.0
+    ],
+    "runtimes": [
+      4.0
+    ],
+    "candidates": 16,
+    "candidate_batch_size": 8,
+    "spectral_points": 3,
+    "teacher": {
+      "mode": "none"
+    },
+    "steps": 64,
+    "max_steps": 16384,
+    "label_state_tolerance": 0.0002,
+    "max_physical_qubits": 14,
+    "endpoint_memory_mb": 2048,
+    "state_memory_mb": 8192,
+    "endpoint_max_qubits": 14,
+    "_note": "Backend crossover at 14 physical qubits, 6 parents x 16 candidates = 96 labels over 2 families. Parents must be at least three per family (6 here) or generation.parent_splits cannot fill train/validation/test. teacher.mode=none, so this measures propagation throughput. Fewer labels at large sizes amortise CuPy's fixed startup over less work, biasing the ratio DOWN against the GPU -- the conservative direction."
+  },
+  "config_hash": "0f5ad07017de4593745dc3577758390aef0957399e0254c62deb3e2c16661dd7",
+  "source_fingerprint": "80a858a7b77851e7b0a5b3280383d7bb6c6857b2566b662c3353ff410e12c6fa",
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-6.8.0-90-generic-x86_64-with-glibc2.39",
+    "packages": {
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "networkx": "3.6.1",
+      "torch": "2.14.0+cpu",
+      "pytest": "9.1.1"
+    }
+  },
+  "requested_backends": [
+    "numpy",
+    "cupy"
+  ],
+  "workers": 1,
+  "backends": {
+    "numpy": {
+      "status": "complete",
+      "dataset": "/home/nguyencongt/runs/crossover_large/profile_14q_r0/numpy",
+      "device_before": {
+        "backend": "numpy",
+        "device": "cpu",
+        "free_device_bytes": null,
+        "total_device_bytes": null,
+        "numpy_version": "2.5.3"
+      },
+      "records": 36,
+      "physical_paths": 36,
+      "accepted_candidate_labels": 576,
+      "generation_wall_seconds": 1735.0166817642748,
+      "accepted_labels_per_second": 0.3319852806338938,
+      "timing_scope": "entire generate_dataset call: initialization, assembly, endpoint labels, spectral teacher/audit, convergence retries, independent dense dynamics audit and disk writes",
+      "cost_components": {
+        "spectral_including_random_audit_worker_seconds": 0.0004178909584879875,
+        "propagation_shared_cost_worker_seconds": 1618.9672268461436,
+        "independent_dynamics_audit_worker_seconds": 0.0,
+        "worker_seconds_not_additive_wall_time": false,
+        "component_note": "Observed logged components; may exclude overhead. Runtime-shared teacher costs counted once per physical path."
+      },
+      "max_state_error_diagnostic": 0.00019923203823850712,
+      "max_norm_error": 8.79296635503124e-14,
+      "max_independent_dense_state_error": null,
+      "max_accepted_integration_steps": 512,
+      "all_candidate_labels_pass_numerical_gate": true,
+      "state_error_is_certificate": false,
+      "adaptive_paths_with_failed_sampled_checks": 0,
+      "memory": {
+        "estimated_numeric_work_peak_per_worker_bytes": 69861376,
+        "estimated_numeric_work_all_workers_bytes": 69861376,
+        "max_endpoint_workspace_bytes": 27918336,
+        "max_state_workspace_bytes": 41943040,
+        "max_dense_teacher_workspace_bytes": 0,
+        "active_worker_upper_bound": 1,
+        "measured_peak_memory": false,
+        "scope": "Analytical numeric-array estimate; excludes Python/process overhead, coordinator dataset residency and allocator pools. Dense teacher estimate uses 128*(2**N)**2 bytes and remains CPU-only."
+      },
+      "config_hash": "8978d518e6bb22f0df60d804502a635d1f103bee71ab6bc780e348c1595b6926",
+      "dataset_fingerprint": "7ba5d20aebeee7b5a417fa5a1b94b3c6d86c1e3d57e4144ef1a47d68f91ffaca",
+      "device_after": {
+        "backend": "numpy",
+        "device": "cpu",
+        "free_device_bytes": null,
+        "total_device_bytes": null,
+        "numpy_version": "2.5.3"
+      }
+    },
+    "cupy": {
+      "status": "complete",
+      "dataset": "/home/nguyencongt/runs/crossover_large/profile_14q_r0/cupy",
+      "device_before": {
+        "backend": "cupy",
+        "device": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
+        "device_id": 0,
+        "free_device_bytes": 101352996864,
+        "total_device_bytes": 101938757632,
+        "cupy_version": "14.2.0"
+      },
+      "records": 36,
+      "physical_paths": 36,
+      "accepted_candidate_labels": 576,
+      "generation_wall_seconds": 216.2102564899251,
+      "accepted_labels_per_second": 2.664073431811688,
+      "timing_scope": "entire generate_dataset call: initialization, assembly, endpoint labels, spectral teacher/audit, convergence retries, independent dense dynamics audit and disk writes",
+      "cost_components": {
+        "spectral_including_random_audit_worker_seconds": 0.0004946370609104633,
+        "propagation_shared_cost_worker_seconds": 100.71487020235509,
+        "independent_dynamics_audit_worker_seconds": 0.0,
+        "worker_seconds_not_additive_wall_time": false,
+        "component_note": "Observed logged components; may exclude overhead. Runtime-shared teacher costs counted once per physical path."
+      },
+      "max_state_error_diagnostic": 0.00019923203823851146,
+      "max_norm_error": 8.837375276016246e-14,
+      "max_independent_dense_state_error": null,
+      "max_accepted_integration_steps": 512,
+      "all_candidate_labels_pass_numerical_gate": true,
+      "state_error_is_certificate": false,
+      "adaptive_paths_with_failed_sampled_checks": 0,
+      "memory": {
+        "estimated_numeric_work_peak_per_worker_bytes": 69861376,
+        "estimated_numeric_work_all_workers_bytes": 69861376,
+        "max_endpoint_workspace_bytes": 27918336,
+        "max_state_workspace_bytes": 41943040,
+        "max_dense_teacher_workspace_bytes": 0,
+        "active_worker_upper_bound": 1,
+        "measured_peak_memory": false,
+        "scope": "Analytical numeric-array estimate; excludes Python/process overhead, coordinator dataset residency and allocator pools. Dense teacher estimate uses 128*(2**N)**2 bytes and remains CPU-only."
+      },
+      "config_hash": "2c01d006ac2fb8cc506314f770d525ba8ab4408c1184c5d3e8fd11518f65ce93",
+      "dataset_fingerprint": "4e0ec382774885ba95f730e367a71b16afafb9e4cfa77f49a21c4c422657e185",
+      "device_after": {
+        "backend": "cupy",
+        "device": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
+        "device_id": 0,
+        "free_device_bytes": 101334122496,
+        "total_device_bytes": 101938757632,
+        "cupy_version": "14.2.0"
+      }
+    }
+  },
+  "cpu_gpu_comparison": {
+    "records": 36,
+    "same_record_ids": true,
+    "same_physics_and_waveforms": true,
+    "record_fingerprints_expected_to_differ": true,
+    "outcome_differences": {
+      "candidate_losses": {
+        "max_absolute": 2.220446049250313e-16,
+        "mean_absolute": 4.163336342344337e-17
+      },
+      "candidate_success": {
+        "max_absolute": 2.636779683484747e-16,
+        "mean_absolute": 4.314522311952038e-17
+      },
+      "candidate_decoded_energy": {
+        "max_absolute": 4.440892098500626e-15,
+        "mean_absolute": 6.547376452731907e-16
+      },
+      "candidate_any_chain_break": {
+        "max_absolute": 6.661338147750939e-16,
+        "mean_absolute": 1.2147883008159806e-16
+      },
+      "candidate_chain_break_fraction": {
+        "max_absolute": 1.6653345369377348e-16,
+        "mean_absolute": 2.8369956846704035e-17
+      }
+    },
+    "loss_differences_within_combined_state_diagnostic_fraction": 1.0,
+    "comparison_is_certificate": false,
+    "note": "Combined state diagnostics are not rigorous bounds. Compare observed outcome differences and independent solver audits before claiming numerical parity.",
+    "observed_end_to_end_throughput_ratio_cupy_over_numpy": 8.02467334312201,
+    "ratio_is_repeated_benchmark_or_speedup_claim": false
+  },
+  "notes": [
+    "No CPU fallback; unavailable requested backends fail explicitly.",
+    "Complete spectral teacher and independent dense audit remain CPU-based even with CuPy propagation.",
+    "Backend-dependent dataset fingerprints are expected. IDs, programmed physics and executed waveforms must agree.",
+    "One fresh run per backend in declared order; device probes precede timing and can initialize the runtime. Generation-time allocation/JIT and thermal effects remain. Repeat profiles for speed claims.",
+    "Adaptive audit seeds can differ with backend fingerprints; audits have identical configured budgets, not necessarily identical coordinates."
+  ],
+  "recovery": "Artifacts remain intact after failure. Use a NEW output for a comparable complete profile; incomplete datasets can be resumed independently with matching generate configuration/source, but that recovery is not fresh-run timing."
+}

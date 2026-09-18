@@ -41,8 +41,16 @@ memory-feasible; whether they are *time*-feasible is a separate question, being
 measured rather than assumed (`configs/backend_profile_{16,18,20}q.json`, and
 the crossover driver which repeats each size and refuses a contended GPU).
 
-The GPU ratio is the thing to watch: measured 1.13× at 10 qubits and 2.83× at 12,
-so the regime where a GPU pays is exactly the one this ladder enters.
+The GPU ratio is the thing to watch, and the archive says something sharper than
+an earlier draft of this file did. At 10 qubits the GPU was **1.43× slower**
+than the CPU on the one repeat that returned; at 12 it is 2.83× faster across
+both repeats; at 14 two fresh replicates give 8.03× and 9.06×. So the regime
+where a GPU pays is exactly the one this ladder enters — but every one of those
+ratios was measured on a host at load 34–55 with 32 cores, which starves the
+NumPy arm, so each is an upper bound. See
+[the throughput report](../reports/throughput_2026-09-18/THROUGHPUT.md). The
+"1.13× at 10 qubits" this file previously claimed matched no artifact and had
+the sign backwards.
 
 ## Why the error mattered
 
