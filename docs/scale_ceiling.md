@@ -44,7 +44,7 @@ the crossover driver which repeats each size and refuses a contended GPU).
 The GPU ratio is the thing to watch, and the archive says something sharper than
 an earlier draft of this file did. At 10 qubits the GPU was **1.43× slower**
 than the CPU on the one repeat that returned; at 12 it is 2.83× faster across
-both repeats; at 14 two fresh replicates give 8.03× and 9.06×. So the regime
+both repeats; at 14 two fresh replicates give 8.03× and 9.06×; at 16 a single run gives 89.5×, which a load correction puts nearer 57×. So the regime
 where a GPU pays is exactly the one this ladder enters — but every one of those
 ratios was measured on a host at load 34–55 with 32 cores, which starves the
 NumPy arm, so each is an upper bound. See

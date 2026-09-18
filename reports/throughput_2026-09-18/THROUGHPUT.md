@@ -49,6 +49,48 @@ speed-up.** The archived artifact says the same thing in its own scope field,
 and its census records `other_cpu_percent` of 3166–3534 — thirty-one to
 thirty-five cores of competing work — at every point in the ladder.
 
+## 16 qubits: the point the old ladder never produced
+
+The 16-qubit profile completed, single-worker, both backends on the same 36
+records:
+
+| backend | wall | rate | numerical gate |
+|---|---:|---:|---|
+| numpy | 15 489 s (4.3 h) | 0.0186 labels/s | passed |
+| cupy | 173 s | 1.6647 labels/s | passed |
+
+Ratio **89.5×**, parity again 2.22e-16.
+
+The ladder, with every point read out of its artifact:
+
+| qubits | numpy | cupy | cupy/numpy |
+|---:|---:|---:|---:|
+| 10 | 14.493 | 10.102 | **0.70** (GPU slower) |
+| 12 | 2.62 | 7.41 | 2.83 |
+| 14 | 0.332 / 0.299 | 2.664 / 2.708 | 8.03 / 9.06 |
+| 16 | 0.0186 | 1.665 | **89.5** |
+
+The shape is what matters more than any single ratio. Per two qubits the CPU
+rate falls by 5.5×, 8.2×, then 17.2×; the GPU rate falls by 1.36×, 2.76×, then
+1.62×. **The GPU degrades far more gently**, which is the whole reason the ratio
+opens up.
+
+### The 16-qubit ratio is inflated, and by roughly how much
+
+`contention_16q.csv` samples the host from outside the job: over 83 samples
+covering the tail of the NumPy phase and all of the CuPy phase, load1 ran
+40.1–55.6 with a **median of 50.0 on 32 cores**. The profile used **one
+worker**, so the NumPy arm was a single-threaded process on a box
+oversubscribed by ~1.56×. A first-order correction — a runnable thread receives
+about `cores / load` of a core — puts the uncontended NumPy rate near
+0.0186 × 1.56 ≈ 0.029 labels/s and the ratio near **57×** rather than 89.5×.
+
+That arithmetic is a bound, not a measurement: load-average scaling is
+approximate, the sampler missed the first 3.7 hours of the NumPy phase, and
+this is **one replicate** at a size where the two 14-qubit replicates already
+disagreed by 13%. The defensible statement at 16 qubits is "somewhere around
+60–90×, measured once, under contention".
+
 ## The GPU computes the same science
 
 Worth stating separately, because it is the part that is clean. On the same 36
