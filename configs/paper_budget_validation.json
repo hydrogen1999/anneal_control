@@ -1,0 +1,421 @@
+{
+  "schema_version": 1,
+  "name": "adaptive_budget_diagnostic_followup",
+  "scope": "Diagnostic follow-up to completed paper_pilot_20260918 using the same checkpoints and six held-out records. Not independent confirmatory evidence. Horizon25 activates Finzgar GP-UCB after ten initial queries and generic GP-EI after linear plus sixteen design points. Requires intact sibling runs/paper_pilot_20260918. An initial horizon17 attempt was interrupted before this revised fixed configuration; its receipts remain in runs/paper_budget_validation_horizon17_interrupted_20260918.",
+  "steps": [
+    {
+      "id": "budget_control_0",
+      "kind": "budget",
+      "config": {
+        "schema_version": 1,
+        "source_data": "${RUN}/../paper_pilot_20260918/source/data",
+        "target_data": "${RUN}/../paper_pilot_20260918/source/data",
+        "checkpoint": "${RUN}/../paper_pilot_20260918/source/models/control/seed_0/best.pt",
+        "split": "test",
+        "allow_test_adaptation": true,
+        "budgets": [
+          0,
+          1,
+          5,
+          9,
+          17,
+          25
+        ],
+        "seeds": [
+          0,
+          1
+        ],
+        "strategies": [
+          "sobol_local",
+          "bayesian",
+          "finzgar_gp_ucb"
+        ],
+        "warm_modes": [
+          "bank",
+          "direct",
+          "source_global"
+        ],
+        "hint_mode": "project",
+        "family": "eight_bin",
+        "execution": {
+          "device": "cpu",
+          "backend": "numpy",
+          "threads": 1
+        },
+        "numerics": {
+          "tolerance": 0.0005,
+          "initial_steps": 32,
+          "max_steps": 4096
+        },
+        "literature": {
+          "n_initial": 10,
+          "acquisition_candidates": 128,
+          "acquisition_restarts": 1,
+          "gp_restarts": 1
+        },
+        "latency": {
+          "warmup": 1,
+          "repeats": 3
+        },
+        "bootstrap_resamples": 2000,
+        "offline_cost": {
+          "acquisition_study": "${RUN}/../paper_pilot_20260918/source",
+          "fixed_recipe": true
+        },
+        "quality_thresholds": [
+          0.4,
+          0.5,
+          0.6
+        ],
+        "max_records": 6
+      },
+      "output": "budget_control_0",
+      "depends": []
+    },
+    {
+      "id": "budget_policy_0",
+      "kind": "budget",
+      "config": {
+        "schema_version": 1,
+        "source_data": "${RUN}/../paper_pilot_20260918/source/data",
+        "target_data": "${RUN}/../paper_pilot_20260918/source/data",
+        "checkpoint": "${RUN}/../paper_pilot_20260918/source/models/policy/seed_0/best.pt",
+        "split": "test",
+        "allow_test_adaptation": true,
+        "budgets": [
+          0,
+          1,
+          5,
+          9,
+          17,
+          25
+        ],
+        "seeds": [
+          0,
+          1
+        ],
+        "strategies": [
+          "sobol_local",
+          "bayesian",
+          "finzgar_gp_ucb"
+        ],
+        "warm_modes": [
+          "bank",
+          "direct",
+          "source_global"
+        ],
+        "hint_mode": "project",
+        "family": "eight_bin",
+        "execution": {
+          "device": "cpu",
+          "backend": "numpy",
+          "threads": 1
+        },
+        "numerics": {
+          "tolerance": 0.0005,
+          "initial_steps": 32,
+          "max_steps": 4096
+        },
+        "literature": {
+          "n_initial": 10,
+          "acquisition_candidates": 128,
+          "acquisition_restarts": 1,
+          "gp_restarts": 1
+        },
+        "latency": {
+          "warmup": 1,
+          "repeats": 3
+        },
+        "bootstrap_resamples": 2000,
+        "offline_cost": {
+          "acquisition_study": "${RUN}/../paper_pilot_20260918/source",
+          "fixed_recipe": true
+        },
+        "quality_thresholds": [
+          0.4,
+          0.5,
+          0.6
+        ],
+        "max_records": 6
+      },
+      "output": "budget_policy_0",
+      "depends": []
+    },
+    {
+      "id": "budget_control_1",
+      "kind": "budget",
+      "config": {
+        "schema_version": 1,
+        "source_data": "${RUN}/../paper_pilot_20260918/source/data",
+        "target_data": "${RUN}/../paper_pilot_20260918/source/data",
+        "checkpoint": "${RUN}/../paper_pilot_20260918/source/models/control/seed_1/best.pt",
+        "split": "test",
+        "allow_test_adaptation": true,
+        "budgets": [
+          0,
+          1,
+          5,
+          9,
+          17,
+          25
+        ],
+        "seeds": [
+          0,
+          1
+        ],
+        "strategies": [
+          "sobol_local",
+          "bayesian",
+          "finzgar_gp_ucb"
+        ],
+        "warm_modes": [
+          "bank",
+          "direct",
+          "source_global"
+        ],
+        "hint_mode": "project",
+        "family": "eight_bin",
+        "execution": {
+          "device": "cpu",
+          "backend": "numpy",
+          "threads": 1
+        },
+        "numerics": {
+          "tolerance": 0.0005,
+          "initial_steps": 32,
+          "max_steps": 4096
+        },
+        "literature": {
+          "n_initial": 10,
+          "acquisition_candidates": 128,
+          "acquisition_restarts": 1,
+          "gp_restarts": 1
+        },
+        "latency": {
+          "warmup": 1,
+          "repeats": 3
+        },
+        "bootstrap_resamples": 2000,
+        "offline_cost": {
+          "acquisition_study": "${RUN}/../paper_pilot_20260918/source",
+          "fixed_recipe": true
+        },
+        "quality_thresholds": [
+          0.4,
+          0.5,
+          0.6
+        ],
+        "max_records": 6
+      },
+      "output": "budget_control_1",
+      "depends": []
+    },
+    {
+      "id": "budget_policy_1",
+      "kind": "budget",
+      "config": {
+        "schema_version": 1,
+        "source_data": "${RUN}/../paper_pilot_20260918/source/data",
+        "target_data": "${RUN}/../paper_pilot_20260918/source/data",
+        "checkpoint": "${RUN}/../paper_pilot_20260918/source/models/policy/seed_1/best.pt",
+        "split": "test",
+        "allow_test_adaptation": true,
+        "budgets": [
+          0,
+          1,
+          5,
+          9,
+          17,
+          25
+        ],
+        "seeds": [
+          0,
+          1
+        ],
+        "strategies": [
+          "sobol_local",
+          "bayesian",
+          "finzgar_gp_ucb"
+        ],
+        "warm_modes": [
+          "bank",
+          "direct",
+          "source_global"
+        ],
+        "hint_mode": "project",
+        "family": "eight_bin",
+        "execution": {
+          "device": "cpu",
+          "backend": "numpy",
+          "threads": 1
+        },
+        "numerics": {
+          "tolerance": 0.0005,
+          "initial_steps": 32,
+          "max_steps": 4096
+        },
+        "literature": {
+          "n_initial": 10,
+          "acquisition_candidates": 128,
+          "acquisition_restarts": 1,
+          "gp_restarts": 1
+        },
+        "latency": {
+          "warmup": 1,
+          "repeats": 3
+        },
+        "bootstrap_resamples": 2000,
+        "offline_cost": {
+          "acquisition_study": "${RUN}/../paper_pilot_20260918/source",
+          "fixed_recipe": true
+        },
+        "quality_thresholds": [
+          0.4,
+          0.5,
+          0.6
+        ],
+        "max_records": 6
+      },
+      "output": "budget_policy_1",
+      "depends": []
+    },
+    {
+      "id": "budget_control_2",
+      "kind": "budget",
+      "config": {
+        "schema_version": 1,
+        "source_data": "${RUN}/../paper_pilot_20260918/source/data",
+        "target_data": "${RUN}/../paper_pilot_20260918/source/data",
+        "checkpoint": "${RUN}/../paper_pilot_20260918/source/models/control/seed_2/best.pt",
+        "split": "test",
+        "allow_test_adaptation": true,
+        "budgets": [
+          0,
+          1,
+          5,
+          9,
+          17,
+          25
+        ],
+        "seeds": [
+          0,
+          1
+        ],
+        "strategies": [
+          "sobol_local",
+          "bayesian",
+          "finzgar_gp_ucb"
+        ],
+        "warm_modes": [
+          "bank",
+          "direct",
+          "source_global"
+        ],
+        "hint_mode": "project",
+        "family": "eight_bin",
+        "execution": {
+          "device": "cpu",
+          "backend": "numpy",
+          "threads": 1
+        },
+        "numerics": {
+          "tolerance": 0.0005,
+          "initial_steps": 32,
+          "max_steps": 4096
+        },
+        "literature": {
+          "n_initial": 10,
+          "acquisition_candidates": 128,
+          "acquisition_restarts": 1,
+          "gp_restarts": 1
+        },
+        "latency": {
+          "warmup": 1,
+          "repeats": 3
+        },
+        "bootstrap_resamples": 2000,
+        "offline_cost": {
+          "acquisition_study": "${RUN}/../paper_pilot_20260918/source",
+          "fixed_recipe": true
+        },
+        "quality_thresholds": [
+          0.4,
+          0.5,
+          0.6
+        ],
+        "max_records": 6
+      },
+      "output": "budget_control_2",
+      "depends": []
+    },
+    {
+      "id": "budget_policy_2",
+      "kind": "budget",
+      "config": {
+        "schema_version": 1,
+        "source_data": "${RUN}/../paper_pilot_20260918/source/data",
+        "target_data": "${RUN}/../paper_pilot_20260918/source/data",
+        "checkpoint": "${RUN}/../paper_pilot_20260918/source/models/policy/seed_2/best.pt",
+        "split": "test",
+        "allow_test_adaptation": true,
+        "budgets": [
+          0,
+          1,
+          5,
+          9,
+          17,
+          25
+        ],
+        "seeds": [
+          0,
+          1
+        ],
+        "strategies": [
+          "sobol_local",
+          "bayesian",
+          "finzgar_gp_ucb"
+        ],
+        "warm_modes": [
+          "bank",
+          "direct",
+          "source_global"
+        ],
+        "hint_mode": "project",
+        "family": "eight_bin",
+        "execution": {
+          "device": "cpu",
+          "backend": "numpy",
+          "threads": 1
+        },
+        "numerics": {
+          "tolerance": 0.0005,
+          "initial_steps": 32,
+          "max_steps": 4096
+        },
+        "literature": {
+          "n_initial": 10,
+          "acquisition_candidates": 128,
+          "acquisition_restarts": 1,
+          "gp_restarts": 1
+        },
+        "latency": {
+          "warmup": 1,
+          "repeats": 3
+        },
+        "bootstrap_resamples": 2000,
+        "offline_cost": {
+          "acquisition_study": "${RUN}/../paper_pilot_20260918/source",
+          "fixed_recipe": true
+        },
+        "quality_thresholds": [
+          0.4,
+          0.5,
+          0.6
+        ],
+        "max_records": 6
+      },
+      "output": "budget_policy_2",
+      "depends": []
+    }
+  ]
+}

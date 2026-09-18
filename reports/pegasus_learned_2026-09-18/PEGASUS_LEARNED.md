@@ -1,10 +1,15 @@
+> Numerical update: use [the regenerated analysis](../evidence_audit_2026-09-18/RESULTS.md) for current confidence intervals and corrected tests. Historical raw outcomes are unchanged.
+
 # The learned comparison on real Pegasus connectivity
 
 5 encoders × 3 seeds = 15 runs, trained and evaluated on `data_pegasus_trainable.json`:
 96 parents, 1152 records, 10–14 physical qubits on genuine Pegasus P16
 connectivity, 64-candidate bank. Splits by parent: 72 train / 12 validation /
-12 test. The dataset was certified byte-for-byte against an independent
-regeneration (`dataset_integrity_2026-09-18/`).
+12 test. A historical regeneration report claims matching scientific arrays; its original
+comparator excluded timing, provenance, and metadata and did not certify byte
+equality. The two complete datasets and a fresh machine-readable audit are not
+archived here, so the revised comparator has not independently verified that claim.
+See `dataset_integrity_2026-09-18/INTEGRITY.md`.
 
 ## What replicates
 
@@ -21,7 +26,7 @@ every interval excluding zero:
 The ordering is the same as on synthetic graphs: `summary` first, the
 embedding-blind `logical` last. Direct proposals remain far behind (0.687–0.707).
 
-## What does not replicate — and why
+## What remains unresolved
 
 **The embedding-information effect does not separate here.**
 
@@ -30,13 +35,18 @@ embedding-blind `logical` last. Direct proposals remain far behind (0.687–0.70
 | synthetic, 3–10 qubits | −0.00782 | [−0.01109, −0.00447] | 48 | **yes** |
 | **real Pegasus, 10–14 qubits** | **−0.00835** | **[−0.02019, +0.00106]** | **12** | **no** |
 
-The **point estimate replicates almost exactly** — −0.0084 against −0.0078 — but
-the interval is **3.2× wider** and crosses zero. With 12 test parents this is a
-power limit, not a contradiction: an effect of this size at this variance needs
-roughly **19 parents** to separate, and the dataset provides 12.
+The point estimates are similar, but the interval is **3.2× wider** and crosses
+zero. Twelve test parents leave substantial uncertainty. The data neither
+establish replication of the information effect nor identify insufficient power
+as the unique explanation. The former estimate of approximately 19 required
+parents was calculated from the observed test effect and is not a prospective
+power analysis or a guarantee of separation.
 
 After Holm correction over all ten pairs, no pair separates and all five encoders
-fall in one indistinguishable group. That is what 12 parents buys.
+form one maximal set of pairwise non-rejections. This does not establish
+equivalence. Fresh centered-null/Holm results are in
+`reports/evidence_audit_2026-09-18/contrasts.json`; this directory retains its
+historical contrast JSON unchanged.
 
 **The honest statement is therefore:** the effect size seen on synthetic graphs
 reappears on real connectivity at larger sizes, and this dataset cannot establish
@@ -55,9 +65,9 @@ full spectral teacher caps at 10 physical qubits, so this dataset is forced to
 `teacher.mode = none` and carries no such targets. The auxiliary term has nothing
 to act on.
 
-**The physics-auxiliary ablation cannot be run above 10 qubits**, by the same
-exponential cost that caps the privileged-oracle comparison. The arm is reported
-as degenerate rather than as a null result.
+The current full-spectrum teacher configuration caps at 10 qubits. This is an
+implementation and compute limitation, not a theorem prohibiting other spectral
+approximations. In this campaign the arm is degenerate, not a valid null ablation.
 
 ## What this does not cover
 
@@ -71,6 +81,7 @@ calibration, no noise, no QPU job.
 **No oracle, no physics ablation.** Both need a spectral teacher, capped at 10
 qubits.
 
-**The obvious fix is more parents.** 96 parents gave 12 in test; ~240 would give
-about 30, past the ~19 this effect needs. That is a generation cost, not a
-methodological problem.
+**Next evaluation.** Freeze an expanded-parent protocol using a scientifically
+meaningful effect or interval-width target before reading new test outcomes.
+More independent parents can narrow uncertainty but cannot guarantee a positive
+effect or repair an invalid ablation.

@@ -85,6 +85,8 @@ def _validate_config(cfg: dict) -> None:
     for key in ("seed", "parents", "candidates", "spectral_points", "steps", "max_steps"):
         if not isinstance(cfg[key], int) or isinstance(cfg[key], bool):
             raise ValueError(f"{key} must be an integer")
+    if "candidate_seed" in cfg and (type(cfg["candidate_seed"]) is not int or cfg["candidate_seed"] < 0):
+        raise ValueError("candidate_seed must be a nonnegative integer")
     sizes = _logical_sizes(cfg)
     if ("chain_lengths" in cfg) == ("chain_distribution" in cfg):
         raise ValueError("provide exactly one of chain_lengths or chain_distribution")
@@ -420,6 +422,7 @@ def generate_dataset(config: dict, destination: str | Path, *, resume: bool = Fa
     excluded from scientific fingerprints; timing/environment metadata may differ.
     CuPy currently requires workers=1 to avoid implicit GPU oversubscription.
     """
+    started = perf_counter()
     _validate_config(config)
     if backend not in {"numpy", "cupy"}:
         raise ValueError("backend must be numpy or cupy")
@@ -449,6 +452,8 @@ def generate_dataset(config: dict, destination: str | Path, *, resume: bool = Fa
         for parent in parents:
             parent["split"] = splits[parent["parent_id"]]
         manifest = {"schema_version": SCHEMA_VERSION, "status": "in_progress", "config": cfg,
+                    "generation_cost_complete": prior is None,
+                    "generation_cost_scope": "wall time from generator entry including planning; interrupted resumes are incomplete",
                     "config_hash": cfg_hash, "source_fingerprint": source_hash,
                     "environment": environment(), "execution": {"workers": workers, "backend": backend},
                     "splits": splits, "records": [], "scope": cfg.get("generation_route", "synthetic_lift") + "_closed_system",
@@ -462,7 +467,6 @@ def generate_dataset(config: dict, destination: str | Path, *, resume: bool = Fa
                     ["response_*", "candidate_losses", "ground_energy", "planted_spins"],
                     "budget_note": "spectral labels privileged; common bank independent of test spectrum"}
         write_json(manifest_path, manifest)
-        started = perf_counter()
         try:
             arguments = [(cfg, root, cfg_hash, source_hash, p, resume, backend) for p in parents]
             if workers == 1:
@@ -477,6 +481,7 @@ def generate_dataset(config: dict, destination: str | Path, *, resume: bool = Fa
                         write_json(manifest_path, manifest)
         except Exception as error:
             manifest["error"] = {"type": type(error).__name__, "message": str(error)}
+            manifest["generation_cost_complete"] = False
             manifest["elapsed_seconds"] = perf_counter() - started
             write_json(manifest_path, manifest)
             raise
@@ -590,7 +595,8 @@ def _generate_parent(cfg: dict, root: Path, cfg_hash: str, source_hash: str,
                     record_meta["file_sha256"] = hashlib.sha256(target.read_bytes()).hexdigest()
                     records.append(record_meta)
                     continue
-                bank = shared_candidate_bank(n=cfg["candidates"], n_segments=8, seed=cfg["seed"],
+                bank = shared_candidate_bank(n=cfg["candidates"], n_segments=8,
+                                             seed=cfg.get("candidate_seed", cfg["seed"]),
                                              runtime=runtime, max_slope=4. / runtime)
                 # Sampled waveforms are the authoritative controls for this ML benchmark.
                 # Reconstruct them before simulation, ensuring critic sees exactly the

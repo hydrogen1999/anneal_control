@@ -20,10 +20,12 @@ def one_cpu_thread():
 
 def example(parent, split="train", offset=0.0):
     tau = np.linspace(0, 1, 9)
+    # Distinct IDs alone do not make independent logical problems.
+    parent_bias = sum((i + 1) * ord(char) for i, char in enumerate(str(parent))) / 1000
     return dict(record_id=f"record-{parent}", parent_id=parent, split=split, fingerprint="dataset-v1",
                 physical_h=np.array([.1, .1, -.1]), physical_edges=np.array([[0, 1], [1, 2]]),
                 physical_J=np.array([-1., .5]), membership=np.array([0, 0, 1]),
-                logical_h=np.array([.2, -.1]), logical_edges=np.array([[0, 1]]), logical_J=np.array([.5]),
+                logical_h=np.array([.2 + parent_bias, -.1]), logical_edges=np.array([[0, 1]]), logical_J=np.array([.5]),
                 runtime=2., programmed_scale=.5, response_s=np.array([.2, .5, .8]),
                 candidate_schedules=np.stack((tau, tau**2, 1 - (1 - tau)**2)),
                 candidate_losses=np.array([.4, .2 + offset, .3]),
@@ -36,6 +38,61 @@ def config(variant="hierarchical"):
 
 def data():
     return [example("a"), example("b", offset=.04), example("c", offset=.09)], [example("v", "validation")]
+
+
+@pytest.mark.parametrize("scope", ["critic", "policy", "heads"])
+def test_mechanism_freezes_shared_modules_and_changes_only_designated_head(scope, tmp_path):
+    train, validation = data()
+    initial_path = tmp_path / "initial.pt"
+    initial = fit_records(train, validation, model_config=config("summary"), epochs=1,
+                          seed=7, checkpoint=initial_path)
+    updated_path = tmp_path / "updated.pt"
+    fitted = fit_records(train, validation, initialize_from=initial_path, trainable_scope=scope,
+                         selection_mode="fixed_epochs", epochs=3, patience=1,
+                         seed=7, checkpoint=updated_path)
+    before, after = initial.model.state_dict(), fitted.model.state_dict()
+    changed = {name for name in before if not torch.equal(before[name], after[name])}
+    enabled = {name for name, parameter in fitted.model.named_parameters() if parameter.requires_grad}
+    assert changed and changed <= enabled
+    assert not any(name.startswith(("attention.", "baseline_summary_encoder.", "response_head.")) for name in enabled)
+    assert fitted.best_epoch == fitted.last_epoch == 2
+    assert not fitted.stopped_early
+    for name in initial.normalizer.statistics:
+        for old, new in zip(initial.normalizer.statistics[name], fitted.normalizer.statistics[name]):
+            assert torch.equal(old, new)
+    graph = fitted.normalizer.transform(graph_from_record(validation[0]))
+    bank = torch.tensor(validation[0]["candidate_schedules"], dtype=torch.float32)
+    a, b = initial.model(graph, bank), fitted.model(graph, bank)
+    if scope == "critic":
+        assert torch.equal(a["proposal_schedules"], b["proposal_schedules"])
+        assert torch.equal(a["proposal_logits"], b["proposal_logits"])
+        assert not torch.equal(a["predicted_losses"], b["predicted_losses"])
+    if scope == "policy":
+        assert torch.equal(a["predicted_losses"], b["predicted_losses"])
+        assert not torch.equal(a["proposal_schedules"], b["proposal_schedules"])
+    saved = torch.load(updated_path, weights_only=True)
+    assert saved["selection_mode"] == "fixed_epochs"
+    assert set(saved["trainable_parameter_names"]) == enabled
+    assert len(saved["frozen_parameter_sha256"]) == 64
+
+
+def test_mechanism_exact_resume_and_unchanged_validation_requirement(tmp_path):
+    train, validation = data()
+    initial_path = tmp_path / "initial.pt"
+    fit_records(train, validation, model_config=config("summary"), epochs=1, checkpoint=initial_path)
+    settings = dict(initialize_from=initial_path, trainable_scope="policy", selection_mode="fixed_epochs", seed=9)
+    whole = fit_records(train, validation, epochs=3, **settings)
+    latest = tmp_path / "latest.pt"
+    fit_records(train, validation, epochs=1, latest_checkpoint=latest, **settings)
+    resumed = fit_records(train, validation, epochs=3, resume_from=latest, **settings)
+    assert whole.history == resumed.history
+    for name, value in whole.model.state_dict().items():
+        assert torch.equal(value, resumed.model.state_dict()[name])
+    changed_validation = [dict(validation[0], candidate_losses=np.array([.9, .8, .7]))]
+    with pytest.raises(ValueError, match="unchanged validation_content"):
+        fit_records(train, changed_validation, epochs=1, **settings)
+    with pytest.raises(ValueError, match="fixed_epochs"):
+        fit_records(train, validation, initialize_from=initial_path, trainable_scope="policy", epochs=1)
 
 
 @pytest.mark.parametrize("variant", ["hierarchical", "physical", "logical", "summary"])

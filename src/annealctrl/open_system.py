@@ -29,7 +29,7 @@ from .telemetry import _safe
 
 
 def open_loss(record: Mapping[str, Any], schedule, *, dephasing_rate: float = 0.0,
-              relaxation_rate: float = 0.0, max_qubits: int = 8, runtime: float | None = None,
+              relaxation_rate: float = 0.0, max_qubits: int = 6, runtime: float | None = None,
               **solver) -> float:
     """1 − logical success under local dephasing, decoded exactly as elsewhere.
 
@@ -57,13 +57,13 @@ def open_loss(record: Mapping[str, Any], schedule, *, dephasing_rate: float = 0.
         rates["dephasing_rates"] = float(dephasing_rate)
     if relaxation_rate:
         rates["relaxation_rates"] = float(relaxation_rate)
-    result = simulate_lindblad(terms, schedule, duration, path=path, **rates, **solver)
+    result = simulate_lindblad(terms, schedule, duration, path=path, max_qubits=max_qubits, **rates, **solver)
     probabilities = np.asarray(result.probabilities, dtype=float)
     return float(1.0 - probabilities @ np.asarray(observables["success"], dtype=float))
 
 
 def robustness_sweep(records: Sequence[Mapping[str, Any]], waveforms: Mapping[str, Any], *,
-                     rates: Sequence[float], max_qubits: int = 8,
+                     rates: Sequence[float], max_qubits: int = 6,
                      relaxation_rate: float = 0.0, **solver) -> dict:
     """Every waveform on every record at every rate, with the ordering checked.
 

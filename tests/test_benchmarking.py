@@ -177,8 +177,10 @@ def test_checkpoint_evaluation_selection_independent_of_test_labels(record, tmp_
     import annealctrl.pipeline as pipeline
 
     split_records = {}
-    for split in ("train", "validation", "test"):
+    for split_index, split in enumerate(("train", "validation", "test")):
         item = copy.deepcopy(record)
+        item["logical_h"] = item["logical_h"] + 0.01 * split_index
+        item["physical_h"] = item["physical_h"] + 0.01 * split_index
         item.update(record_id=np.array(f"{split}_r"), parent_id=np.array(f"{split}_p"),
                     split=np.array(split), fingerprint=np.array(f"{split}_fingerprint"))
         split_records[split] = [item]

@@ -12,8 +12,8 @@ So every row carries what it had to consume:
 ``fixed``
     One waveform for every instance. No per-instance work at all.
 ``privileged_spectrum``
-    Needs the exact instantaneous spectrum along the path. Exponential, and
-    unavailable to anything deployed. Consults no outcome.
+    Needs the exact instantaneous spectrum along the path. Expensive at scale;
+    the current implementation is capped at small systems. Consults no outcome.
 ``amortised``
     Offline training, then inference. Consults no outcome at deployment.
 ``online_adaptation``
@@ -25,6 +25,7 @@ global rank, because there is no question to which a global rank is the answer.
 """
 from __future__ import annotations
 
+from collections import Counter
 from typing import Any, Mapping, Sequence
 
 import numpy as np
@@ -33,6 +34,25 @@ from .headroom import _bootstrap, _parent_means
 from .telemetry import _safe
 
 COST_CLASSES = ("fixed", "privileged_spectrum", "amortised", "online_adaptation")
+
+
+def _validate_search_row(row: Mapping[str, Any], *, name: str) -> None:
+    if row.get("split") != "test":
+        raise ValueError(f"search {name!r} must use the test split")
+    for key in ("linear_loss", "best_found_loss"):
+        if row.get(key) is None or not np.isfinite(float(row[key])):
+            raise ValueError(f"search {name!r} {key} must be finite and non-null")
+    calls = row.get("total_objective_calls")
+    if isinstance(calls, bool) or not isinstance(calls, (int, np.integer)) or calls < 1:
+        raise ValueError(f"search {name!r} total_objective_calls must be a positive integer")
+
+
+def _audited_teacher_loss(row, teacher):
+    entry = row["teachers"].get(teacher) or {}
+    value = entry.get("loss")
+    if entry.get("status") != "sampled_point_audit_passed" or value is None:
+        return None
+    return float(value) if np.isfinite(value) else None
 
 
 def _block(rows: Sequence[Mapping[str, Any]], method: str, cost_class: str, *,
@@ -93,11 +113,39 @@ def assemble_comparison(ml_rows: Sequence[Mapping[str, Any]],
     two slightly different values for the same quantity.
     """
     ml_rows, frontier_rows = list(ml_rows), list(frontier_rows)
+    if isinstance(bootstrap_resamples, bool) or not isinstance(bootstrap_resamples, (int, np.integer)) or bootstrap_resamples < 1:
+        raise ValueError("bootstrap_resamples must be a positive integer")
+    ml_keys = [(str(row["method"]), str(row["mode"]), str(row["record_id"])) for row in ml_rows]
+    if len(set(ml_keys)) != len(ml_keys):
+        raise ValueError("duplicate learned method/mode/record_id")
+    for row in ml_rows:
+        for key in ("loss", "linear_loss", "global_loss"):
+            if row.get(key) is not None and not np.isfinite(float(row[key])):
+                raise ValueError(f"learned {key} must be finite")
+    constants_by_id = {}
+    for row in ml_rows:
+        record = str(row["record_id"])
+        if record in constants_by_id:
+            previous = constants_by_id[record]
+            for key in ("parent_id", "runtime", "family", "logical_n", "physical_n"):
+                if row.get(key) != previous.get(key):
+                    raise ValueError(f"learned {key} inconsistent across methods for {record}")
+            for key in ("linear_loss", "global_loss"):
+                a, b = row.get(key), previous.get(key)
+                if (a is None) != (b is None) or (a is not None and not np.isclose(a, b, rtol=0, atol=1e-12)):
+                    raise ValueError(f"learned {key} inconsistent across methods for {record}")
+        constants_by_id[record] = row
+    for row in frontier_rows:
+        _validate_search_row(row, name="reference")
     splits = {str(row.get("split")) for row in ml_rows}
     if splits != {"test"}:
         raise ValueError(f"comparison table is a held-out measurement; got splits {sorted(splits)}")
 
     frontier_by_id = {str(row["record_id"]): row for row in frontier_rows}
+    if len(frontier_by_id) != len(frontier_rows):
+        raise ValueError("duplicate reference record_id")
+    if any(str(row.get("split")) != "test" for row in frontier_rows):
+        raise ValueError("reference rows must use the test split")
     ml_ids = {str(row["record_id"]) for row in ml_rows}
     shared = ml_ids & set(frontier_by_id)
     if not shared:
@@ -107,6 +155,8 @@ def assemble_comparison(ml_rows: Sequence[Mapping[str, Any]],
     for row in ml_rows:
         record = str(row["record_id"])
         if record in shared:
+            if str(row["parent_id"]) != str(frontier_by_id[record]["parent_id"]):
+                raise ValueError("learned/reference parent identity mismatch")
             joined.append({**row, "_frontier": frontier_by_id[record]})
     reference = [frontier_by_id[record] for record in sorted(shared)]
     total = len(shared)
@@ -132,13 +182,49 @@ def assemble_comparison(ml_rows: Sequence[Mapping[str, Any]],
                            reference_total=total, bootstrap_resamples=bootstrap_resamples,
                            seed=seed, consults_outcomes=False))
 
+    teacher_populations, teacher_contrasts = {}, []
     for teacher in sorted({name for row in base for name in row["teachers"]}):
-        rows.append(_block(
+        eligible = {str(row["record_id"]): row for row in base
+                    if _audited_teacher_loss(row, teacher) is not None}
+        teacher_populations[teacher] = {
+            "eligible_record_ids": sorted(eligible), "n_eligible_records": len(eligible),
+            "n_excluded_records": total - len(eligible),
+            "status_counts": dict(Counter((row["teachers"].get(teacher) or {}).get("status", "missing")
+                                          for row in base)),
+            "eligibility": "sampled_point_audit_passed and finite non-null loss"}
+        block = _block(
             base, teacher, "privileged_spectrum",
-            loss_key=lambda r, t=teacher: (r["teachers"].get(t) or {}).get("loss"),
+            loss_key=lambda r, t=teacher: _audited_teacher_loss(r, t),
             reference_total=total, bootstrap_resamples=bootstrap_resamples, seed=seed,
             consults_outcomes=False,
-            note="requires the exact instantaneous spectrum; not available to a deployed method"))
+            note="conditional on this teacher's passed sampled-point audit; requires exact spectrum; audit is not a certificate")
+        if block is not None:
+            block["eligible_record_ids"] = sorted(eligible)
+            rows.append(block)
+        for method, mode in sorted({(str(row["method"]), str(row["mode"])) for row in joined}):
+            subset = [row for row in joined if str(row["method"]) == method and str(row["mode"]) == mode
+                      and str(row["record_id"]) in eligible and row.get("loss") is not None]
+            if not subset:
+                continue
+            ids = [str(row["record_id"]) for row in subset]
+            if len(set(ids)) != len(ids):
+                raise ValueError("matched teacher comparison requires one learned mean per method/mode/record")
+            pairs = [{"parent_id": row["parent_id"], "learned": float(row["loss"]),
+                      "teacher": _audited_teacher_loss(eligible[str(row["record_id"])], teacher)}
+                     for row in subset]
+            differences, parents = _parent_means(pairs, lambda row: row["learned"] - row["teacher"])
+            learned, _ = _parent_means(pairs, lambda row: row["learned"])
+            target, _ = _parent_means(pairs, lambda row: row["teacher"])
+            teacher_contrasts.append({
+                "method": f"{method}/{mode}", "teacher": teacher,
+                "method_cost_class": "amortised", "teacher_cost_class": "privileged_spectrum",
+                "n_records": len(pairs), "n_parents": len(parents), "record_ids": sorted(ids),
+                "covers_all_teacher_eligible_records": set(ids) == set(eligible),
+                "learned_mean_loss": float(learned.mean()), "teacher_mean_loss": float(target.mean()),
+                "mean_difference": float(differences.mean()),
+                "parent_bootstrap_ci": _bootstrap(differences, n_resamples=bootstrap_resamples, seed=seed),
+                "difference_definition": "learned minus teacher; negative favours learned",
+                "scope": "paired on teacher-specific audited records; parent bootstrap conditional on supplied learned seed means; unadjusted descriptive interval; different cost classes"})
 
     for method in sorted({str(row["method"]) for row in ml_rows}):
         for mode in sorted({str(row["mode"]) for row in ml_rows if str(row["method"]) == method}):
@@ -159,8 +245,32 @@ def assemble_comparison(ml_rows: Sequence[Mapping[str, Any]],
         search["objective_calls_per_instance"] = float(np.mean(calls)) if calls else None
         rows.append(search)
 
+    search_audit = {}
     for name, extra_rows in sorted((searches or {}).items()):
+        extra_rows = list(extra_rows)
+        extra_ids = [str(row["record_id"]) for row in extra_rows]
+        if len(set(extra_ids)) != len(extra_ids):
+            raise ValueError(f"search {name!r} has duplicate record_id")
+        for row in extra_rows:
+            _validate_search_row(row, name=name)
+            record = str(row["record_id"])
+            if record not in shared:
+                continue
+            reference_row = frontier_by_id[record]
+            for key in ("parent_id", "runtime", "family", "logical_n", "physical_n"):
+                if row.get(key) != reference_row.get(key):
+                    raise ValueError(f"search {name!r} {key} mismatch for {record}")
+            if row["total_objective_calls"] != reference_row["total_objective_calls"]:
+                raise ValueError(f"search {name!r} objective budget mismatch for {record}")
+            if not np.isclose(row["linear_loss"], reference_row["linear_loss"], atol=1e-12, rtol=0):
+                raise ValueError(f"search {name!r} linear reference mismatch for {record}")
         by_id = {str(row["record_id"]): row for row in extra_rows if str(row["record_id"]) in shared}
+        search_audit[name] = {"n_input_records": len(extra_rows), "n_common_records": len(by_id),
+                              "n_outside_common_population": len(set(extra_ids) - shared),
+                              "n_missing_common_records": len(shared - set(extra_ids)),
+                              "per_record_objective_budgets_match": True,
+                              "identity_fields_checked": ["parent_id", "split", "runtime", "family", "logical_n", "physical_n"],
+                              "search_seed_scope": "archive may omit search seeds; matching seeds is not inferred"}
         entries = [{"parent_id": row["parent_id"], "record_id": record,
                     "linear_loss": row.get("linear_loss"), "global_loss": None,
                     "best_found_loss": row.get("best_found_loss"),
@@ -183,21 +293,26 @@ def assemble_comparison(ml_rows: Sequence[Mapping[str, Any]],
     rows = [row for row in rows if row is not None]
     ranked = {}
     for cost_class in COST_CLASSES:
-        members = [row for row in rows if row["cost_class"] == cost_class]
+        members = [row for row in rows if row["cost_class"] == cost_class
+                   and row["measured_on_full_population"]]
         if members:
             ranked[cost_class] = [row["method"] for row in
                                   sorted(members, key=lambda row: row["mean_loss"])]
 
     return _safe({
-        "schema_version": 1,
+        "schema_version": 2,
         "n_records": total,
         "n_parents": len({str(row["parent_id"]) for row in reference}),
         "n_dropped_no_frontier_row": len(ml_ids - shared),
         "n_dropped_no_ml_row": len(set(frontier_by_id) - shared),
         "rows": rows,
+        "teacher_populations": teacher_populations,
+        "search_input_audit": search_audit,
+        "matched_teacher_contrasts": teacher_contrasts,
         "ranked_within_cost_class": ranked,
+        "ranking_scope": "full common population only; conditional rows are not ranked against another population",
         "cost_classes": list(COST_CLASSES),
-        "scope": ("every row is measured on the same held-out records; rows are ordered only "
-                  "within a cost class, because a method that consults true outcomes per "
-                  "instance and one that consults none are not competing for the same prize"),
+        "scope": ("common held-out join with explicitly conditional teacher populations; compare learned and "
+                  "teacher losses using matched_teacher_contrasts, not unpaired row means; ordering within "
+                  "a cost class includes only rows covering the full common population"),
     })

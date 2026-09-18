@@ -471,7 +471,7 @@ def test_warm_start_refuses_a_wrong_length_hint():
                                 warm_start=np.zeros(5))
 
 
-def test_warm_start_is_ignored_for_linear_which_has_no_parameters():
+def test_warm_start_is_rejected_before_query_for_linear_without_parameters():
     from annealctrl.search import optimize_control_family
 
     calls = []
@@ -480,17 +480,16 @@ def test_warm_start_is_ignored_for_linear_which_has_no_parameters():
         calls.append(1)
         return 0.5
 
-    result = optimize_control_family(loss_fn, "linear", budget=16, seed=0,
-                                     warm_start=np.zeros(3))
-    assert len(calls) == 1
-    assert len(result.records) == 1
+    with pytest.raises(ValueError, match="warm_start"):
+        optimize_control_family(loss_fn, "linear", budget=16, seed=0, warm_start=np.zeros(3))
+    assert len(calls) == 0
 
 
 def test_warm_start_is_refused_by_strategies_that_cannot_use_it():
     """Silently dropping a hint would make a warm-start experiment measure nothing."""
     from annealctrl.search import optimize_control_family
 
-    for strategy in ("bayesian", "policy_gradient", "cem"):
+    for strategy in ("policy_gradient", "cem"):
         with pytest.raises(ValueError, match="warm_start"):
             optimize_control_family(lambda s: 0.5, "one_window", budget=9, seed=0,
                                     strategy=strategy, warm_start=np.full(3, 0.5))

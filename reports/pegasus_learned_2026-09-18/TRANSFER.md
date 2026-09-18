@@ -31,9 +31,16 @@ Holm-corrected over all ten pairs:
 | `hierarchy_outcome` vs `summary` | −0.00091, holm 1.000, **not separated** | **+0.01080** [+0.00276, +0.01894], holm **0.0498**, separated |
 | `hierarchy_physics` vs `summary` | −0.00036, holm 1.000, not separated | **+0.01557** [+0.00884, +0.02313], holm **0.0010**, separated |
 | `hierarchy_physics` vs `physical` | +0.00117, holm 0.912, not separated | **+0.01227** [+0.00755, +0.01720], holm **0.0010**, separated |
-| aware vs blind | −0.00782 [−0.01109, −0.00447] | **−0.03913** [−0.07219, −0.00889] |
+| aware vs blind *(exploratory, see below)* | −0.00782 [−0.01109, −0.00447] | −0.03913 [−0.07219, −0.00889] |
 
 *(sign convention: positive means the second-named method is worse)*
+
+**The aware-vs-blind row is not in the Holm family.** `encoder_information_contrast`
+applies no multiplicity correction — it is labelled `"correction": "none"` and
+`"inference_role": "exploratory_pooled_information_effect"` in the artifact — so
+it must not be read as though it carried the same guarantee as the corrected
+pairwise rows above it. The between-method claim in this report rests on the
+pairwise contrasts, which are corrected; the pooled row is context.
 
 **In distribution, `summary` — 64K parameters, no message passing — ranks first
 and nothing separates from it. Out of distribution the sign flips and both
@@ -87,3 +94,22 @@ two are reported as one architectural family.
 **Bank selection only.** Direct generation was not evaluated under transfer.
 
 **Still no hardware.** Real connectivity, closed-system simulation.
+
+## Audit response
+
+An independent audit of the first commit of these results (`974207a`) recorded
+that it archived aggregate per-seed reports with "no raw paired rows,
+checkpoint/seed identities, logical-disjointness receipts, or global baseline"
+and that "no between-method architecture claim or pooled CI is established". That
+was correct at the time.
+
+`transfer_contrasts.json` supplies the between-method evidence that was missing:
+Holm-corrected pairwise contrasts over all ten pairs, with parent bootstrap
+intervals, from which the separations quoted above are read. The disjointness
+receipt is the basis field on every row (`fingerprint`), and the checkpoints are
+the five encoders at seeds 0–2 of `research_v1`. A global baseline for the
+Pegasus target is in `PEGASUS_LEARNED.md`, measured on the same records.
+
+What the audit says remains missing is still missing: raw paired rows per
+checkpoint are aggregated over seeds before contrast, so per-seed panels cannot
+be reconstructed from the archived artifact alone.

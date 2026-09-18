@@ -1,0 +1,1002 @@
+{
+  "schema_version": 1,
+  "name": "controlled_annealing_research",
+  "scope": "Predeclared confirmatory candidate; execution and favorable findings are not assumed. Review compute feasibility before full execution.",
+  "steps": [
+    {
+      "id": "source",
+      "kind": "acquisition",
+      "config": "paper_source_research.json",
+      "output": "source"
+    },
+    {
+      "id": "pegasus",
+      "kind": "generate",
+      "config": "paper_target_pegasus.json",
+      "output": "pegasus",
+      "depends": [
+        "source"
+      ],
+      "backend": "cupy",
+      "workers": 1
+    },
+    {
+      "id": "zephyr",
+      "kind": "generate",
+      "config": "paper_target_zephyr.json",
+      "output": "zephyr",
+      "depends": [
+        "source"
+      ],
+      "backend": "cupy",
+      "workers": 1
+    },
+    {
+      "id": "unseen_family",
+      "kind": "generate",
+      "config": "paper_target_family_research.json",
+      "output": "unseen_family",
+      "depends": [
+        "source"
+      ],
+      "backend": "cupy",
+      "workers": 1
+    },
+    {
+      "id": "unseen_runtime",
+      "kind": "generate",
+      "config": "paper_target_runtime_research.json",
+      "output": "unseen_runtime",
+      "depends": [
+        "source"
+      ],
+      "backend": "cupy",
+      "workers": 1
+    },
+    {
+      "id": "unseen_size",
+      "kind": "generate",
+      "config": "paper_target_size_research.json",
+      "output": "unseen_size",
+      "depends": [
+        "source"
+      ],
+      "backend": "cupy",
+      "workers": 1
+    },
+    {
+      "id": "transfer",
+      "kind": "transfer",
+      "config": {
+        "schema_version": 1,
+        "source_data": "${RUN}/source/data",
+        "checkpoints": [
+          {
+            "method": "control",
+            "seed": 0,
+            "path": "${RUN}/source/models/control/seed_0/best.pt"
+          },
+          {
+            "method": "control",
+            "seed": 1,
+            "path": "${RUN}/source/models/control/seed_1/best.pt"
+          },
+          {
+            "method": "control",
+            "seed": 2,
+            "path": "${RUN}/source/models/control/seed_2/best.pt"
+          },
+          {
+            "method": "control",
+            "seed": 3,
+            "path": "${RUN}/source/models/control/seed_3/best.pt"
+          },
+          {
+            "method": "control",
+            "seed": 4,
+            "path": "${RUN}/source/models/control/seed_4/best.pt"
+          },
+          {
+            "method": "policy",
+            "seed": 0,
+            "path": "${RUN}/source/models/policy/seed_0/best.pt"
+          },
+          {
+            "method": "policy",
+            "seed": 1,
+            "path": "${RUN}/source/models/policy/seed_1/best.pt"
+          },
+          {
+            "method": "policy",
+            "seed": 2,
+            "path": "${RUN}/source/models/policy/seed_2/best.pt"
+          },
+          {
+            "method": "policy",
+            "seed": 3,
+            "path": "${RUN}/source/models/policy/seed_3/best.pt"
+          },
+          {
+            "method": "policy",
+            "seed": 4,
+            "path": "${RUN}/source/models/policy/seed_4/best.pt"
+          }
+        ],
+        "targets": [
+          {
+            "name": "source_heldout",
+            "data": "${RUN}/source/data",
+            "axes": [
+              "heldout_parents"
+            ]
+          },
+          {
+            "name": "pegasus",
+            "data": "${RUN}/pegasus",
+            "axes": [
+              "topology"
+            ]
+          },
+          {
+            "name": "zephyr",
+            "data": "${RUN}/zephyr",
+            "axes": [
+              "topology"
+            ]
+          },
+          {
+            "name": "unseen_family",
+            "data": "${RUN}/unseen_family",
+            "axes": [
+              "family"
+            ]
+          },
+          {
+            "name": "unseen_runtime",
+            "data": "${RUN}/unseen_runtime",
+            "axes": [
+              "runtime"
+            ]
+          },
+          {
+            "name": "unseen_size",
+            "data": "${RUN}/unseen_size",
+            "axes": [
+              "physical_size"
+            ]
+          }
+        ],
+        "device": "cuda",
+        "threads": 1,
+        "bootstrap_resamples": 10000
+      },
+      "output": "transfer",
+      "depends": [
+        "source",
+        "pegasus",
+        "zephyr",
+        "unseen_family",
+        "unseen_runtime",
+        "unseen_size"
+      ]
+    },
+    {
+      "id": "budget_control_0",
+      "kind": "budget",
+      "config": {
+        "schema_version": 1,
+        "source_data": "${RUN}/source/data",
+        "target_data": "${RUN}/source/data",
+        "checkpoint": "${RUN}/source/models/control/seed_0/best.pt",
+        "split": "test",
+        "allow_test_adaptation": true,
+        "budgets": [
+          0,
+          2,
+          5,
+          9,
+          17,
+          33,
+          65,
+          129,
+          257
+        ],
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "strategies": [
+          "sobol_local",
+          "bayesian",
+          "finzgar_gp_ucb"
+        ],
+        "warm_modes": [
+          "bank",
+          "direct",
+          "source_global"
+        ],
+        "hint_mode": "project",
+        "family": "eight_bin",
+        "execution": {
+          "device": "cuda",
+          "backend": "cupy",
+          "threads": 1
+        },
+        "numerics": {
+          "tolerance": 0.0002,
+          "initial_steps": 64,
+          "max_steps": 16384
+        },
+        "literature": {
+          "n_initial": 10,
+          "acquisition_candidates": 1024,
+          "acquisition_restarts": 3,
+          "gp_restarts": 3
+        },
+        "latency": {
+          "warmup": 1,
+          "repeats": 3
+        },
+        "bootstrap_resamples": 2000,
+        "offline_cost": {
+          "acquisition_study": "${RUN}/source",
+          "fixed_recipe": true
+        },
+        "quality_thresholds": [
+          0.4,
+          0.5,
+          0.6
+        ]
+      },
+      "output": "budget_control_0",
+      "depends": [
+        "source"
+      ]
+    },
+    {
+      "id": "budget_policy_0",
+      "kind": "budget",
+      "config": {
+        "schema_version": 1,
+        "source_data": "${RUN}/source/data",
+        "target_data": "${RUN}/source/data",
+        "checkpoint": "${RUN}/source/models/policy/seed_0/best.pt",
+        "split": "test",
+        "allow_test_adaptation": true,
+        "budgets": [
+          0,
+          2,
+          5,
+          9,
+          17,
+          33,
+          65,
+          129,
+          257
+        ],
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "strategies": [
+          "sobol_local",
+          "bayesian",
+          "finzgar_gp_ucb"
+        ],
+        "warm_modes": [
+          "bank",
+          "direct",
+          "source_global"
+        ],
+        "hint_mode": "project",
+        "family": "eight_bin",
+        "execution": {
+          "device": "cuda",
+          "backend": "cupy",
+          "threads": 1
+        },
+        "numerics": {
+          "tolerance": 0.0002,
+          "initial_steps": 64,
+          "max_steps": 16384
+        },
+        "literature": {
+          "n_initial": 10,
+          "acquisition_candidates": 1024,
+          "acquisition_restarts": 3,
+          "gp_restarts": 3
+        },
+        "latency": {
+          "warmup": 1,
+          "repeats": 3
+        },
+        "bootstrap_resamples": 2000,
+        "offline_cost": {
+          "acquisition_study": "${RUN}/source",
+          "fixed_recipe": true
+        },
+        "quality_thresholds": [
+          0.4,
+          0.5,
+          0.6
+        ]
+      },
+      "output": "budget_policy_0",
+      "depends": [
+        "source"
+      ]
+    },
+    {
+      "id": "budget_control_1",
+      "kind": "budget",
+      "config": {
+        "schema_version": 1,
+        "source_data": "${RUN}/source/data",
+        "target_data": "${RUN}/source/data",
+        "checkpoint": "${RUN}/source/models/control/seed_1/best.pt",
+        "split": "test",
+        "allow_test_adaptation": true,
+        "budgets": [
+          0,
+          2,
+          5,
+          9,
+          17,
+          33,
+          65,
+          129,
+          257
+        ],
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "strategies": [
+          "sobol_local",
+          "bayesian",
+          "finzgar_gp_ucb"
+        ],
+        "warm_modes": [
+          "bank",
+          "direct",
+          "source_global"
+        ],
+        "hint_mode": "project",
+        "family": "eight_bin",
+        "execution": {
+          "device": "cuda",
+          "backend": "cupy",
+          "threads": 1
+        },
+        "numerics": {
+          "tolerance": 0.0002,
+          "initial_steps": 64,
+          "max_steps": 16384
+        },
+        "literature": {
+          "n_initial": 10,
+          "acquisition_candidates": 1024,
+          "acquisition_restarts": 3,
+          "gp_restarts": 3
+        },
+        "latency": {
+          "warmup": 1,
+          "repeats": 3
+        },
+        "bootstrap_resamples": 2000,
+        "offline_cost": {
+          "acquisition_study": "${RUN}/source",
+          "fixed_recipe": true
+        },
+        "quality_thresholds": [
+          0.4,
+          0.5,
+          0.6
+        ]
+      },
+      "output": "budget_control_1",
+      "depends": [
+        "source"
+      ]
+    },
+    {
+      "id": "budget_policy_1",
+      "kind": "budget",
+      "config": {
+        "schema_version": 1,
+        "source_data": "${RUN}/source/data",
+        "target_data": "${RUN}/source/data",
+        "checkpoint": "${RUN}/source/models/policy/seed_1/best.pt",
+        "split": "test",
+        "allow_test_adaptation": true,
+        "budgets": [
+          0,
+          2,
+          5,
+          9,
+          17,
+          33,
+          65,
+          129,
+          257
+        ],
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "strategies": [
+          "sobol_local",
+          "bayesian",
+          "finzgar_gp_ucb"
+        ],
+        "warm_modes": [
+          "bank",
+          "direct",
+          "source_global"
+        ],
+        "hint_mode": "project",
+        "family": "eight_bin",
+        "execution": {
+          "device": "cuda",
+          "backend": "cupy",
+          "threads": 1
+        },
+        "numerics": {
+          "tolerance": 0.0002,
+          "initial_steps": 64,
+          "max_steps": 16384
+        },
+        "literature": {
+          "n_initial": 10,
+          "acquisition_candidates": 1024,
+          "acquisition_restarts": 3,
+          "gp_restarts": 3
+        },
+        "latency": {
+          "warmup": 1,
+          "repeats": 3
+        },
+        "bootstrap_resamples": 2000,
+        "offline_cost": {
+          "acquisition_study": "${RUN}/source",
+          "fixed_recipe": true
+        },
+        "quality_thresholds": [
+          0.4,
+          0.5,
+          0.6
+        ]
+      },
+      "output": "budget_policy_1",
+      "depends": [
+        "source"
+      ]
+    },
+    {
+      "id": "budget_control_2",
+      "kind": "budget",
+      "config": {
+        "schema_version": 1,
+        "source_data": "${RUN}/source/data",
+        "target_data": "${RUN}/source/data",
+        "checkpoint": "${RUN}/source/models/control/seed_2/best.pt",
+        "split": "test",
+        "allow_test_adaptation": true,
+        "budgets": [
+          0,
+          2,
+          5,
+          9,
+          17,
+          33,
+          65,
+          129,
+          257
+        ],
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "strategies": [
+          "sobol_local",
+          "bayesian",
+          "finzgar_gp_ucb"
+        ],
+        "warm_modes": [
+          "bank",
+          "direct",
+          "source_global"
+        ],
+        "hint_mode": "project",
+        "family": "eight_bin",
+        "execution": {
+          "device": "cuda",
+          "backend": "cupy",
+          "threads": 1
+        },
+        "numerics": {
+          "tolerance": 0.0002,
+          "initial_steps": 64,
+          "max_steps": 16384
+        },
+        "literature": {
+          "n_initial": 10,
+          "acquisition_candidates": 1024,
+          "acquisition_restarts": 3,
+          "gp_restarts": 3
+        },
+        "latency": {
+          "warmup": 1,
+          "repeats": 3
+        },
+        "bootstrap_resamples": 2000,
+        "offline_cost": {
+          "acquisition_study": "${RUN}/source",
+          "fixed_recipe": true
+        },
+        "quality_thresholds": [
+          0.4,
+          0.5,
+          0.6
+        ]
+      },
+      "output": "budget_control_2",
+      "depends": [
+        "source"
+      ]
+    },
+    {
+      "id": "budget_policy_2",
+      "kind": "budget",
+      "config": {
+        "schema_version": 1,
+        "source_data": "${RUN}/source/data",
+        "target_data": "${RUN}/source/data",
+        "checkpoint": "${RUN}/source/models/policy/seed_2/best.pt",
+        "split": "test",
+        "allow_test_adaptation": true,
+        "budgets": [
+          0,
+          2,
+          5,
+          9,
+          17,
+          33,
+          65,
+          129,
+          257
+        ],
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "strategies": [
+          "sobol_local",
+          "bayesian",
+          "finzgar_gp_ucb"
+        ],
+        "warm_modes": [
+          "bank",
+          "direct",
+          "source_global"
+        ],
+        "hint_mode": "project",
+        "family": "eight_bin",
+        "execution": {
+          "device": "cuda",
+          "backend": "cupy",
+          "threads": 1
+        },
+        "numerics": {
+          "tolerance": 0.0002,
+          "initial_steps": 64,
+          "max_steps": 16384
+        },
+        "literature": {
+          "n_initial": 10,
+          "acquisition_candidates": 1024,
+          "acquisition_restarts": 3,
+          "gp_restarts": 3
+        },
+        "latency": {
+          "warmup": 1,
+          "repeats": 3
+        },
+        "bootstrap_resamples": 2000,
+        "offline_cost": {
+          "acquisition_study": "${RUN}/source",
+          "fixed_recipe": true
+        },
+        "quality_thresholds": [
+          0.4,
+          0.5,
+          0.6
+        ]
+      },
+      "output": "budget_policy_2",
+      "depends": [
+        "source"
+      ]
+    },
+    {
+      "id": "budget_control_3",
+      "kind": "budget",
+      "config": {
+        "schema_version": 1,
+        "source_data": "${RUN}/source/data",
+        "target_data": "${RUN}/source/data",
+        "checkpoint": "${RUN}/source/models/control/seed_3/best.pt",
+        "split": "test",
+        "allow_test_adaptation": true,
+        "budgets": [
+          0,
+          2,
+          5,
+          9,
+          17,
+          33,
+          65,
+          129,
+          257
+        ],
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "strategies": [
+          "sobol_local",
+          "bayesian",
+          "finzgar_gp_ucb"
+        ],
+        "warm_modes": [
+          "bank",
+          "direct",
+          "source_global"
+        ],
+        "hint_mode": "project",
+        "family": "eight_bin",
+        "execution": {
+          "device": "cuda",
+          "backend": "cupy",
+          "threads": 1
+        },
+        "numerics": {
+          "tolerance": 0.0002,
+          "initial_steps": 64,
+          "max_steps": 16384
+        },
+        "literature": {
+          "n_initial": 10,
+          "acquisition_candidates": 1024,
+          "acquisition_restarts": 3,
+          "gp_restarts": 3
+        },
+        "latency": {
+          "warmup": 1,
+          "repeats": 3
+        },
+        "bootstrap_resamples": 2000,
+        "offline_cost": {
+          "acquisition_study": "${RUN}/source",
+          "fixed_recipe": true
+        },
+        "quality_thresholds": [
+          0.4,
+          0.5,
+          0.6
+        ]
+      },
+      "output": "budget_control_3",
+      "depends": [
+        "source"
+      ]
+    },
+    {
+      "id": "budget_policy_3",
+      "kind": "budget",
+      "config": {
+        "schema_version": 1,
+        "source_data": "${RUN}/source/data",
+        "target_data": "${RUN}/source/data",
+        "checkpoint": "${RUN}/source/models/policy/seed_3/best.pt",
+        "split": "test",
+        "allow_test_adaptation": true,
+        "budgets": [
+          0,
+          2,
+          5,
+          9,
+          17,
+          33,
+          65,
+          129,
+          257
+        ],
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "strategies": [
+          "sobol_local",
+          "bayesian",
+          "finzgar_gp_ucb"
+        ],
+        "warm_modes": [
+          "bank",
+          "direct",
+          "source_global"
+        ],
+        "hint_mode": "project",
+        "family": "eight_bin",
+        "execution": {
+          "device": "cuda",
+          "backend": "cupy",
+          "threads": 1
+        },
+        "numerics": {
+          "tolerance": 0.0002,
+          "initial_steps": 64,
+          "max_steps": 16384
+        },
+        "literature": {
+          "n_initial": 10,
+          "acquisition_candidates": 1024,
+          "acquisition_restarts": 3,
+          "gp_restarts": 3
+        },
+        "latency": {
+          "warmup": 1,
+          "repeats": 3
+        },
+        "bootstrap_resamples": 2000,
+        "offline_cost": {
+          "acquisition_study": "${RUN}/source",
+          "fixed_recipe": true
+        },
+        "quality_thresholds": [
+          0.4,
+          0.5,
+          0.6
+        ]
+      },
+      "output": "budget_policy_3",
+      "depends": [
+        "source"
+      ]
+    },
+    {
+      "id": "budget_control_4",
+      "kind": "budget",
+      "config": {
+        "schema_version": 1,
+        "source_data": "${RUN}/source/data",
+        "target_data": "${RUN}/source/data",
+        "checkpoint": "${RUN}/source/models/control/seed_4/best.pt",
+        "split": "test",
+        "allow_test_adaptation": true,
+        "budgets": [
+          0,
+          2,
+          5,
+          9,
+          17,
+          33,
+          65,
+          129,
+          257
+        ],
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "strategies": [
+          "sobol_local",
+          "bayesian",
+          "finzgar_gp_ucb"
+        ],
+        "warm_modes": [
+          "bank",
+          "direct",
+          "source_global"
+        ],
+        "hint_mode": "project",
+        "family": "eight_bin",
+        "execution": {
+          "device": "cuda",
+          "backend": "cupy",
+          "threads": 1
+        },
+        "numerics": {
+          "tolerance": 0.0002,
+          "initial_steps": 64,
+          "max_steps": 16384
+        },
+        "literature": {
+          "n_initial": 10,
+          "acquisition_candidates": 1024,
+          "acquisition_restarts": 3,
+          "gp_restarts": 3
+        },
+        "latency": {
+          "warmup": 1,
+          "repeats": 3
+        },
+        "bootstrap_resamples": 2000,
+        "offline_cost": {
+          "acquisition_study": "${RUN}/source",
+          "fixed_recipe": true
+        },
+        "quality_thresholds": [
+          0.4,
+          0.5,
+          0.6
+        ]
+      },
+      "output": "budget_control_4",
+      "depends": [
+        "source"
+      ]
+    },
+    {
+      "id": "budget_policy_4",
+      "kind": "budget",
+      "config": {
+        "schema_version": 1,
+        "source_data": "${RUN}/source/data",
+        "target_data": "${RUN}/source/data",
+        "checkpoint": "${RUN}/source/models/policy/seed_4/best.pt",
+        "split": "test",
+        "allow_test_adaptation": true,
+        "budgets": [
+          0,
+          2,
+          5,
+          9,
+          17,
+          33,
+          65,
+          129,
+          257
+        ],
+        "seeds": [
+          0,
+          1,
+          2
+        ],
+        "strategies": [
+          "sobol_local",
+          "bayesian",
+          "finzgar_gp_ucb"
+        ],
+        "warm_modes": [
+          "bank",
+          "direct",
+          "source_global"
+        ],
+        "hint_mode": "project",
+        "family": "eight_bin",
+        "execution": {
+          "device": "cuda",
+          "backend": "cupy",
+          "threads": 1
+        },
+        "numerics": {
+          "tolerance": 0.0002,
+          "initial_steps": 64,
+          "max_steps": 16384
+        },
+        "literature": {
+          "n_initial": 10,
+          "acquisition_candidates": 1024,
+          "acquisition_restarts": 3,
+          "gp_restarts": 3
+        },
+        "latency": {
+          "warmup": 1,
+          "repeats": 3
+        },
+        "bootstrap_resamples": 2000,
+        "offline_cost": {
+          "acquisition_study": "${RUN}/source",
+          "fixed_recipe": true
+        },
+        "quality_thresholds": [
+          0.4,
+          0.5,
+          0.6
+        ]
+      },
+      "output": "budget_policy_4",
+      "depends": [
+        "source"
+      ]
+    },
+    {
+      "id": "literature",
+      "kind": "literature",
+      "config": {
+        "schema_version": 1,
+        "data": "${RUN}/source/data",
+        "split": "test",
+        "allow_test_adaptation": true,
+        "seeds": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "budgets": [
+          10,
+          30,
+          60
+        ],
+        "search": {
+          "n_segments": 8,
+          "parameterization": "policy_decoder",
+          "max_ds_dtau": 4.0,
+          "logit_bound": 6.0,
+          "n_initial": 10,
+          "acquisition_candidates": 1024,
+          "acquisition_restarts": 3,
+          "gp_restarts": 3,
+          "noise": 1e-06
+        },
+        "simulator": {
+          "backend": "cupy",
+          "tolerance": 0.0002,
+          "initial_steps": 64,
+          "max_steps": 16384
+        },
+        "bootstrap_resamples": 20000,
+        "_scope": "Frozen test-time task adaptation: five optimizer seeds, both GP-UCB and matched random, all selected test parents. Validate recipe before test. 1000 charged calls per record before retries."
+      },
+      "output": "literature",
+      "depends": [
+        "source"
+      ]
+    },
+    {
+      "id": "noise",
+      "kind": "noise",
+      "config": {
+        "schema_version": 1,
+        "source_data": "${RUN}/source/data",
+        "data": "${RUN}/source/data",
+        "checkpoint": "${RUN}/source/models/control/seed_0/best.pt",
+        "rates": [
+          [
+            0.0,
+            0.0
+          ],
+          [
+            0.02,
+            0.0
+          ],
+          [
+            0.0,
+            0.02
+          ]
+        ],
+        "max_qubits": 6,
+        "overflow": "exclude",
+        "device": "cpu",
+        "tolerance": 0.0001,
+        "bootstrap_resamples": 2000
+      },
+      "output": "noise",
+      "depends": [
+        "source"
+      ]
+    }
+  ]
+}

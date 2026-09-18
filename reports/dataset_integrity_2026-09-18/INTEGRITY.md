@@ -1,3 +1,5 @@
+> Audit correction (2026-09-18): this is a historical author report, not a verified byte-equality certificate. The original comparator did not fail closed on empty/missing records or nonfinite values, discarded imaginary components, and excluded all metadata. It has been replaced by a CLI that reports missing records and schema changes, validates complex/finite scientific arrays, compares scientific metadata, and emits machine JSON with a failing exit code. The two original full datasets are not archived, so the historical 1152-record claim cannot be independently rerun here. A fresh `python scripts/compare_datasets.py OLD/records NEW/records --output audit.json` on the actual copies is required. Raw historical assertions below are retained for provenance and must not be cited as current certification.
+
 # The damaged dataset's numbers were never wrong
 
 ## What happened

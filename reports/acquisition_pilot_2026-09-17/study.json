@@ -1,0 +1,954 @@
+{
+  "schema_version": 1,
+  "config": {
+    "schema_version": 1,
+    "dataset": {
+      "seed": 2026091701,
+      "parents": 60,
+      "families": [
+        "spin_glass",
+        "weighted_maxcut",
+        "planted_loops",
+        "weak_field"
+      ],
+      "logical_sizes": [
+        3,
+        4,
+        5
+      ],
+      "logical_support": {
+        "kind": "complete"
+      },
+      "chain_distribution": {
+        "distribution": "power_law",
+        "low": 1,
+        "high": 2,
+        "exponent": 2.0
+      },
+      "variants": [
+        {
+          "shape": "path",
+          "ports": 1,
+          "field_distribution": "uniform"
+        }
+      ],
+      "chain_strengths": [
+        1.5
+      ],
+      "runtimes": [
+        2.0,
+        5.0
+      ],
+      "candidates": 16,
+      "candidate_batch_size": 8,
+      "spectral_points": 3,
+      "teacher": {
+        "mode": "none"
+      },
+      "steps": 32,
+      "max_steps": 4096,
+      "label_state_tolerance": 0.0005,
+      "max_physical_qubits": 10,
+      "endpoint_memory_mb": 512,
+      "state_memory_mb": 1024
+    },
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "model": {
+      "encoder_variant": "summary",
+      "width": 32,
+      "proposals": 8
+    },
+    "training": {
+      "epochs": 75,
+      "patience": 15,
+      "learning_rate": 0.001,
+      "batch_size": 8,
+      "accumulation_steps": 1,
+      "weight_decay": 0.0001,
+      "policy_weight": 0.2,
+      "ranking_weight": 0.1,
+      "response_weight": 0.0
+    },
+    "acquisition": {
+      "n_extra": 8,
+      "random_seed": 1701,
+      "logit_std": 1.0
+    },
+    "execution": {
+      "device": "cpu",
+      "backend": "numpy",
+      "threads": 1,
+      "workers": 1
+    },
+    "evaluation": {
+      "direct": true,
+      "tolerance": 0.0005,
+      "initial_steps": 32,
+      "max_steps": 4096,
+      "n_resamples": 2000
+    },
+    "latency": {
+      "warmup": 2,
+      "repeats": 5
+    },
+    "bootstrap_resamples": 2000,
+    "_scope": "Bounded exploratory pilot:60freshlogicalparents,oneembeddingvariant,onechainstrength,tworuntimes,threeinitializationseeds. Frozen before its test outcomes. Does not replace five-seed research study, OOD tests or larger-qubit validation."
+  },
+  "config_hash": "cb2899a6fa5af27ebe6d3d5e6203ff6cacf5f7c106584702b721301001bd09e5",
+  "source_hash": "a07e7a1ff339c0428b4df7582fc36a9304cecb575b40729ae915ba206779c84d",
+  "environment": {
+    "python": "3.12.14",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+    "packages": {
+      "numpy": "2.3.5",
+      "scipy": "1.17.0",
+      "networkx": "3.6.1",
+      "torch": "2.14.0+cpu",
+      "pytest": "9.1.1"
+    }
+  },
+  "data_dir": "/workspace/scratch/a2db4882ba16/anneal_control/runs/acquisition_pilot_verified/data",
+  "status": "complete",
+  "runs": {
+    "baseline/seed_0": {
+      "folder": "models/baseline/seed_0",
+      "trained": true,
+      "checkpoint": "models/baseline/seed_0/best.pt",
+      "checkpoint_sha256": "688690560cff134cf888f4d69ee64321f42007146114314ad5141cec3f38b834",
+      "training_seconds": 16.348519818000568,
+      "training_cost_complete": true,
+      "best_epoch": 43,
+      "last_epoch": 58
+    },
+    "control/seed_0": {
+      "folder": "models/control/seed_0",
+      "trained": true,
+      "checkpoint": "models/control/seed_0/best.pt",
+      "checkpoint_sha256": "688690560cff134cf888f4d69ee64321f42007146114314ad5141cec3f38b834",
+      "training_seconds": 15.716699712998889,
+      "training_cost_complete": true,
+      "best_epoch": 43,
+      "last_epoch": 58,
+      "evaluation": "evaluations/control_seed_0.json",
+      "evaluation_sha256": "9e9c6905c72c738c239068eb1ce009d9391af68b00123ca25f26eb02b57880e5"
+    },
+    "bankext/seed_0": {
+      "folder": "models/bankext/seed_0",
+      "acquisition": "acquisitions/bankext_seed_0.json",
+      "acquisition_sha256": "5343e410c2e8be21463c8ca1c62d6a9df8bcc80949ce6ef45e84505ea88570b7",
+      "acquisition_cost": {
+        "schema_version": 2,
+        "status": "complete",
+        "arm": "bankext",
+        "round_id": "round1",
+        "acquisition_id": "3fa0f22bdf8e0bfe86af8b32ad588c0ccb5582a50b2c04a35429a51b5ad64f48",
+        "split": "train",
+        "n_records": 72,
+        "proposals_per_record": 8,
+        "settings": {
+          "backend": "numpy",
+          "tolerance": 0.0005,
+          "initial_steps": 32,
+          "max_steps": 4096,
+          "max_ds_dtau": 4.0,
+          "slope_roundoff_relative_tolerance": 1e-06,
+          "norm_tolerance": 1e-09
+        },
+        "provenance": {
+          "bank_seed": 2026091701,
+          "bank_size": 16,
+          "n_segments": 8
+        },
+        "requested_objective_calls": 576,
+        "objective_calls": 576,
+        "successful_objective_calls": 576,
+        "propagation_calls": 16208,
+        "total_integrator_steps": 164160,
+        "convergence_attempts": 1013,
+        "offline_scoring_seconds": 8.345325077003508,
+        "cost_counts_complete": true,
+        "failures": [],
+        "uncertainty_is_certificate": false,
+        "scope": "training labels only; fixed original validation and test banks",
+        "wall_seconds": 9.109311008998702,
+        "propagations": 576,
+        "propagations_alias": "successful_objective_calls",
+        "infeasible_proposals": 0,
+        "artifact_digest": "9fdc05edf4fc766a12dfe7fa2a7b9ba7c4e53f632c5c996a7413da81978377bf"
+      },
+      "trained": true,
+      "checkpoint": "models/bankext/seed_0/best.pt",
+      "checkpoint_sha256": "fd54216db47a6bff360cb00a48ccee58b9fa12e262d3ad9edd48cddddbf7bd4c",
+      "training_seconds": 10.293590975999905,
+      "training_cost_complete": true,
+      "best_epoch": 20,
+      "last_epoch": 35,
+      "evaluation": "evaluations/bankext_seed_0.json",
+      "evaluation_sha256": "1b2561bb8635f5feaf889f5c1b3c2ba79c6da83bbbfd2a7da3828338f3ac437c"
+    },
+    "decoder_random/seed_0": {
+      "folder": "models/decoder_random/seed_0",
+      "acquisition": "acquisitions/decoder_random_seed_0.json",
+      "acquisition_sha256": "7abfc602fb38c8f116d2f8abfd6ae1b3831cccc53d2d61e4d3ab7be28617c0af",
+      "acquisition_cost": {
+        "schema_version": 2,
+        "status": "complete",
+        "arm": "decoder_random",
+        "round_id": "round1",
+        "acquisition_id": "5b5514cf1a9a8fab7440ecbb2acd3c449cc537d09fa6401b7b4c75f87c1d9ff3",
+        "split": "train",
+        "n_records": 72,
+        "proposals_per_record": 8,
+        "settings": {
+          "backend": "numpy",
+          "tolerance": 0.0005,
+          "initial_steps": 32,
+          "max_steps": 4096,
+          "max_ds_dtau": 4.0,
+          "slope_roundoff_relative_tolerance": 1e-06,
+          "norm_tolerance": 1e-09
+        },
+        "provenance": {
+          "seed": 1701,
+          "n_segments": 8,
+          "logit_std": 1.0,
+          "logit_distribution": "iid_normal_zero_mean",
+          "shared_across_records": true,
+          "decoder": "models.monotone_samples",
+          "decoder_dtype": "float32",
+          "logits": [
+            [
+              0.438742071390152,
+              0.32818514108657837,
+              0.6832883954048157,
+              -0.8192825317382812,
+              0.6915644407272339,
+              -1.624532699584961,
+              1.5080630779266357,
+              -1.2244985103607178
+            ],
+            [
+              1.2269606590270996,
+              -1.0501304864883423,
+              0.6250936388969421,
+              0.09693023562431335,
+              0.6277641654014587,
+              -0.285651832818985,
+              1.4967865943908691,
+              -0.7676854133605957
+            ],
+            [
+              -0.3942866921424866,
+              -1.3569350242614746,
+              0.33524957299232483,
+              0.5744276642799377,
+              1.6201691627502441,
+              0.33395177125930786,
+              -1.0290671586990356,
+              -0.942666232585907
+            ],
+            [
+              0.383655309677124,
+              0.25423792004585266,
+              1.3610869646072388,
+              1.2547495365142822,
+              -0.056371260434389114,
+              0.4488089680671692,
+              -1.4790951013565063,
+              2.4025444984436035
+            ],
+            [
+              -0.06959271430969238,
+              -1.5275282859802246,
+              1.9363341331481934,
+              -1.280063509941101,
+              -0.7156206369400024,
+              0.724556028842926,
+              0.47362789511680603,
+              -0.3313169777393341
+            ],
+            [
+              0.2627294361591339,
+              1.750380277633667,
+              0.018342211842536926,
+              -1.4389992952346802,
+              1.3716486692428589,
+              0.6767955422401428,
+              0.5379361510276794,
+              1.533994436264038
+            ],
+            [
+              0.28214871883392334,
+              0.5631395578384399,
+              -0.3779394030570984,
+              -1.1583225727081299,
+              0.965941846370697,
+              -0.3561195731163025,
+              -1.2853686809539795,
+              0.19742657244205475
+            ],
+            [
+              0.4168262183666229,
+              -0.9538636207580566,
+              0.7583044171333313,
+              -2.0859687328338623,
+              -1.1620347499847412,
+              0.3423268496990204,
+              -1.1188819408416748,
+              -1.1359599828720093
+            ]
+          ]
+        },
+        "requested_objective_calls": 576,
+        "objective_calls": 576,
+        "successful_objective_calls": 576,
+        "propagation_calls": 16016,
+        "total_integrator_steps": 161472,
+        "convergence_attempts": 1001,
+        "offline_scoring_seconds": 7.633219176972489,
+        "cost_counts_complete": true,
+        "failures": [],
+        "uncertainty_is_certificate": false,
+        "scope": "training labels only; fixed original validation and test banks",
+        "wall_seconds": 8.155379346999325,
+        "propagations": 576,
+        "propagations_alias": "successful_objective_calls",
+        "infeasible_proposals": 0,
+        "artifact_digest": "a13aaf4d2aadc62adaa24897c99021bff00bff823be769b97cfbb2082e9deb14"
+      },
+      "trained": true,
+      "checkpoint": "models/decoder_random/seed_0/best.pt",
+      "checkpoint_sha256": "20ac380120b73daacd60afa461d9b065710a822be1797fdc63350dc6c06ce31f",
+      "training_seconds": 15.916226101000575,
+      "training_cost_complete": true,
+      "best_epoch": 44,
+      "last_epoch": 59,
+      "evaluation": "evaluations/decoder_random_seed_0.json",
+      "evaluation_sha256": "037668594b02432d8c7db8d6dfe6219f9c0687ae5a6421ef60c8fccd4856f38a"
+    },
+    "policy/seed_0": {
+      "folder": "models/policy/seed_0",
+      "acquisition": "acquisitions/policy_seed_0.json",
+      "acquisition_sha256": "d102ed7dfd041fa1f1f17c3e4695e7a9e90351875c0699e6a1c9a4e8421534b8",
+      "acquisition_cost": {
+        "schema_version": 2,
+        "status": "complete",
+        "arm": "policy",
+        "round_id": "round1",
+        "acquisition_id": "058c29b417ab1604f47942c96510d67f68105f1a4730a4792ba5f2b4008070b3",
+        "split": "train",
+        "n_records": 72,
+        "proposals_per_record": 8,
+        "settings": {
+          "backend": "numpy",
+          "tolerance": 0.0005,
+          "initial_steps": 32,
+          "max_steps": 4096,
+          "max_ds_dtau": 4.0,
+          "slope_roundoff_relative_tolerance": 1e-06,
+          "norm_tolerance": 1e-09
+        },
+        "provenance": {
+          "checkpoint_sha256": "688690560cff134cf888f4d69ee64321f42007146114314ad5141cec3f38b834",
+          "checkpoint": "/workspace/scratch/a2db4882ba16/anneal_control/runs/acquisition_pilot_verified/models/baseline/seed_0/best.pt",
+          "device": "cpu"
+        },
+        "requested_objective_calls": 576,
+        "objective_calls": 576,
+        "successful_objective_calls": 576,
+        "propagation_calls": 17408,
+        "total_integrator_steps": 181824,
+        "convergence_attempts": 1088,
+        "offline_scoring_seconds": 8.818669620975925,
+        "cost_counts_complete": true,
+        "failures": [],
+        "uncertainty_is_certificate": false,
+        "scope": "training labels only; fixed original validation and test banks",
+        "wall_seconds": 9.523350020999715,
+        "propagations": 576,
+        "propagations_alias": "successful_objective_calls",
+        "infeasible_proposals": 0,
+        "artifact_digest": "c1b3299a0ae4a4deaedd82441f6305724d826f3b73987bed509856c09fa87dc5"
+      },
+      "trained": true,
+      "checkpoint": "models/policy/seed_0/best.pt",
+      "checkpoint_sha256": "a117814013fc6f76f237011ae32a277fd6e46be9b15d15828d569f669375bff8",
+      "training_seconds": 5.191583144998731,
+      "training_cost_complete": true,
+      "best_epoch": 3,
+      "last_epoch": 18,
+      "evaluation": "evaluations/policy_seed_0.json",
+      "evaluation_sha256": "ed77a7786693443689450cb3cd8baa3ee0cc22e15585e38804e097b3dac52049"
+    },
+    "baseline/seed_1": {
+      "folder": "models/baseline/seed_1",
+      "trained": true,
+      "checkpoint": "models/baseline/seed_1/best.pt",
+      "checkpoint_sha256": "359eba25ba5078fec9b22ae3886cd20e4668c263ab5176cad172bdd771dd59e9",
+      "training_seconds": 10.022313114999633,
+      "training_cost_complete": true,
+      "best_epoch": 20,
+      "last_epoch": 35
+    },
+    "control/seed_1": {
+      "folder": "models/control/seed_1",
+      "trained": true,
+      "checkpoint": "models/control/seed_1/best.pt",
+      "checkpoint_sha256": "359eba25ba5078fec9b22ae3886cd20e4668c263ab5176cad172bdd771dd59e9",
+      "training_seconds": 9.097840768999959,
+      "training_cost_complete": true,
+      "best_epoch": 20,
+      "last_epoch": 35,
+      "evaluation": "evaluations/control_seed_1.json",
+      "evaluation_sha256": "c724e8df8a33ab5c6ce9b5534aa99f7d96b82511247c6bc71edace9544a225ab"
+    },
+    "bankext/seed_1": {
+      "folder": "models/bankext/seed_1",
+      "acquisition": "acquisitions/bankext_seed_1.json",
+      "acquisition_sha256": "93ae08e3ea2b3da129f5f85b3ed344b3369bfa00cf5f3c7fb75c13bd313b3866",
+      "acquisition_cost": {
+        "schema_version": 2,
+        "status": "complete",
+        "arm": "bankext",
+        "round_id": "round1",
+        "acquisition_id": "3fa0f22bdf8e0bfe86af8b32ad588c0ccb5582a50b2c04a35429a51b5ad64f48",
+        "split": "train",
+        "n_records": 72,
+        "proposals_per_record": 8,
+        "settings": {
+          "backend": "numpy",
+          "tolerance": 0.0005,
+          "initial_steps": 32,
+          "max_steps": 4096,
+          "max_ds_dtau": 4.0,
+          "slope_roundoff_relative_tolerance": 1e-06,
+          "norm_tolerance": 1e-09
+        },
+        "provenance": {
+          "bank_seed": 2026091701,
+          "bank_size": 16,
+          "n_segments": 8
+        },
+        "requested_objective_calls": 576,
+        "objective_calls": 576,
+        "successful_objective_calls": 576,
+        "propagation_calls": 16208,
+        "total_integrator_steps": 164160,
+        "convergence_attempts": 1013,
+        "offline_scoring_seconds": 7.802757544988708,
+        "cost_counts_complete": true,
+        "failures": [],
+        "uncertainty_is_certificate": false,
+        "scope": "training labels only; fixed original validation and test banks",
+        "wall_seconds": 8.559010539000155,
+        "propagations": 576,
+        "propagations_alias": "successful_objective_calls",
+        "infeasible_proposals": 0,
+        "artifact_digest": "554938cab8bfd6e6b86c4b448056021cdc9ea29ee7fb9ba4705174d37e8db7b7"
+      },
+      "trained": true,
+      "checkpoint": "models/bankext/seed_1/best.pt",
+      "checkpoint_sha256": "1a5edeb99d3bc9ef1230b35c242fc4e14f09f285d8a77d4369d2e8c958e5588e",
+      "training_seconds": 19.99618812600056,
+      "training_cost_complete": true,
+      "best_epoch": 67,
+      "last_epoch": 74,
+      "evaluation": "evaluations/bankext_seed_1.json",
+      "evaluation_sha256": "472bb58c82464098e3d2ea62b3359f5c0d6328bd8761d47f3911b8c57066b81d"
+    },
+    "decoder_random/seed_1": {
+      "folder": "models/decoder_random/seed_1",
+      "acquisition": "acquisitions/decoder_random_seed_1.json",
+      "acquisition_sha256": "cfb5c76cc21f6fbd0e54f5b9d4e0a9173870defc6fdd1f7576eb5508507bd12d",
+      "acquisition_cost": {
+        "schema_version": 2,
+        "status": "complete",
+        "arm": "decoder_random",
+        "round_id": "round1",
+        "acquisition_id": "5b5514cf1a9a8fab7440ecbb2acd3c449cc537d09fa6401b7b4c75f87c1d9ff3",
+        "split": "train",
+        "n_records": 72,
+        "proposals_per_record": 8,
+        "settings": {
+          "backend": "numpy",
+          "tolerance": 0.0005,
+          "initial_steps": 32,
+          "max_steps": 4096,
+          "max_ds_dtau": 4.0,
+          "slope_roundoff_relative_tolerance": 1e-06,
+          "norm_tolerance": 1e-09
+        },
+        "provenance": {
+          "seed": 1701,
+          "n_segments": 8,
+          "logit_std": 1.0,
+          "logit_distribution": "iid_normal_zero_mean",
+          "shared_across_records": true,
+          "decoder": "models.monotone_samples",
+          "decoder_dtype": "float32",
+          "logits": [
+            [
+              0.438742071390152,
+              0.32818514108657837,
+              0.6832883954048157,
+              -0.8192825317382812,
+              0.6915644407272339,
+              -1.624532699584961,
+              1.5080630779266357,
+              -1.2244985103607178
+            ],
+            [
+              1.2269606590270996,
+              -1.0501304864883423,
+              0.6250936388969421,
+              0.09693023562431335,
+              0.6277641654014587,
+              -0.285651832818985,
+              1.4967865943908691,
+              -0.7676854133605957
+            ],
+            [
+              -0.3942866921424866,
+              -1.3569350242614746,
+              0.33524957299232483,
+              0.5744276642799377,
+              1.6201691627502441,
+              0.33395177125930786,
+              -1.0290671586990356,
+              -0.942666232585907
+            ],
+            [
+              0.383655309677124,
+              0.25423792004585266,
+              1.3610869646072388,
+              1.2547495365142822,
+              -0.056371260434389114,
+              0.4488089680671692,
+              -1.4790951013565063,
+              2.4025444984436035
+            ],
+            [
+              -0.06959271430969238,
+              -1.5275282859802246,
+              1.9363341331481934,
+              -1.280063509941101,
+              -0.7156206369400024,
+              0.724556028842926,
+              0.47362789511680603,
+              -0.3313169777393341
+            ],
+            [
+              0.2627294361591339,
+              1.750380277633667,
+              0.018342211842536926,
+              -1.4389992952346802,
+              1.3716486692428589,
+              0.6767955422401428,
+              0.5379361510276794,
+              1.533994436264038
+            ],
+            [
+              0.28214871883392334,
+              0.5631395578384399,
+              -0.3779394030570984,
+              -1.1583225727081299,
+              0.965941846370697,
+              -0.3561195731163025,
+              -1.2853686809539795,
+              0.19742657244205475
+            ],
+            [
+              0.4168262183666229,
+              -0.9538636207580566,
+              0.7583044171333313,
+              -2.0859687328338623,
+              -1.1620347499847412,
+              0.3423268496990204,
+              -1.1188819408416748,
+              -1.1359599828720093
+            ]
+          ]
+        },
+        "requested_objective_calls": 576,
+        "objective_calls": 576,
+        "successful_objective_calls": 576,
+        "propagation_calls": 16016,
+        "total_integrator_steps": 161472,
+        "convergence_attempts": 1001,
+        "offline_scoring_seconds": 7.372386642007768,
+        "cost_counts_complete": true,
+        "failures": [],
+        "uncertainty_is_certificate": false,
+        "scope": "training labels only; fixed original validation and test banks",
+        "wall_seconds": 7.877255338000396,
+        "propagations": 576,
+        "propagations_alias": "successful_objective_calls",
+        "infeasible_proposals": 0,
+        "artifact_digest": "565f010ed93519c371239f98f01accad8a4a58415ed26fde7f7218048a6a5ac9"
+      },
+      "trained": true,
+      "checkpoint": "models/decoder_random/seed_1/best.pt",
+      "checkpoint_sha256": "22367b5feb5494d4f4c718a7989e2630bbd8b03ef335e56700d48b70e8831d7b",
+      "training_seconds": 17.487560134000887,
+      "training_cost_complete": true,
+      "best_epoch": 49,
+      "last_epoch": 64,
+      "evaluation": "evaluations/decoder_random_seed_1.json",
+      "evaluation_sha256": "2d3f4de5d6094ba0d5df6fb8c367cea0329c6af2b6fbd5ec4e0263db5a04fd31"
+    },
+    "policy/seed_1": {
+      "folder": "models/policy/seed_1",
+      "acquisition": "acquisitions/policy_seed_1.json",
+      "acquisition_sha256": "1e47e4efff3b90b3d3e20d0f89ca1387e1a0cfdb9d8af56f79d7ca45166cefb3",
+      "acquisition_cost": {
+        "schema_version": 2,
+        "status": "complete",
+        "arm": "policy",
+        "round_id": "round1",
+        "acquisition_id": "fb91637188738954a42320d09903561f49eb8debe9efef9fddc5c06fdf22127a",
+        "split": "train",
+        "n_records": 72,
+        "proposals_per_record": 8,
+        "settings": {
+          "backend": "numpy",
+          "tolerance": 0.0005,
+          "initial_steps": 32,
+          "max_steps": 4096,
+          "max_ds_dtau": 4.0,
+          "slope_roundoff_relative_tolerance": 1e-06,
+          "norm_tolerance": 1e-09
+        },
+        "provenance": {
+          "checkpoint_sha256": "359eba25ba5078fec9b22ae3886cd20e4668c263ab5176cad172bdd771dd59e9",
+          "checkpoint": "/workspace/scratch/a2db4882ba16/anneal_control/runs/acquisition_pilot_verified/models/baseline/seed_1/best.pt",
+          "device": "cpu"
+        },
+        "requested_objective_calls": 576,
+        "objective_calls": 576,
+        "successful_objective_calls": 576,
+        "propagation_calls": 17504,
+        "total_integrator_steps": 186624,
+        "convergence_attempts": 1094,
+        "offline_scoring_seconds": 8.237655150995124,
+        "cost_counts_complete": true,
+        "failures": [],
+        "uncertainty_is_certificate": false,
+        "scope": "training labels only; fixed original validation and test banks",
+        "wall_seconds": 8.842916621999393,
+        "propagations": 576,
+        "propagations_alias": "successful_objective_calls",
+        "infeasible_proposals": 0,
+        "artifact_digest": "c1bd0c5cd03db3a0f5331b0612365a5ca05f8be9986680d2ec7350254a257988"
+      },
+      "trained": true,
+      "checkpoint": "models/policy/seed_1/best.pt",
+      "checkpoint_sha256": "87b1cded20475231529378a056ac5cbbda64dc5a9659135ea09fc805428bd491",
+      "training_seconds": 4.4532090880002215,
+      "training_cost_complete": true,
+      "best_epoch": 2,
+      "last_epoch": 17,
+      "evaluation": "evaluations/policy_seed_1.json",
+      "evaluation_sha256": "8737a48873bb621f02fcf193d27c3815392646729e1cd47cd9b117fc9ddf5161"
+    },
+    "baseline/seed_2": {
+      "folder": "models/baseline/seed_2",
+      "trained": true,
+      "checkpoint": "models/baseline/seed_2/best.pt",
+      "checkpoint_sha256": "d1d77f35f5b56110bc4cefca08669620f18decf657453627ef5f5927bd15880e",
+      "training_seconds": 9.842802500999824,
+      "training_cost_complete": true,
+      "best_epoch": 20,
+      "last_epoch": 35
+    },
+    "control/seed_2": {
+      "folder": "models/control/seed_2",
+      "trained": true,
+      "checkpoint": "models/control/seed_2/best.pt",
+      "checkpoint_sha256": "d1d77f35f5b56110bc4cefca08669620f18decf657453627ef5f5927bd15880e",
+      "training_seconds": 9.747370429999137,
+      "training_cost_complete": true,
+      "best_epoch": 20,
+      "last_epoch": 35,
+      "evaluation": "evaluations/control_seed_2.json",
+      "evaluation_sha256": "270b06d99ccdaa3bd8729123aa97115a2251c1a85433701ace60dc16253b1fd3"
+    },
+    "bankext/seed_2": {
+      "folder": "models/bankext/seed_2",
+      "acquisition": "acquisitions/bankext_seed_2.json",
+      "acquisition_sha256": "52ec08310cadf85bddeae3c294aa950de609484546714926fa9643c127ae388b",
+      "acquisition_cost": {
+        "schema_version": 2,
+        "status": "complete",
+        "arm": "bankext",
+        "round_id": "round1",
+        "acquisition_id": "3fa0f22bdf8e0bfe86af8b32ad588c0ccb5582a50b2c04a35429a51b5ad64f48",
+        "split": "train",
+        "n_records": 72,
+        "proposals_per_record": 8,
+        "settings": {
+          "backend": "numpy",
+          "tolerance": 0.0005,
+          "initial_steps": 32,
+          "max_steps": 4096,
+          "max_ds_dtau": 4.0,
+          "slope_roundoff_relative_tolerance": 1e-06,
+          "norm_tolerance": 1e-09
+        },
+        "provenance": {
+          "bank_seed": 2026091701,
+          "bank_size": 16,
+          "n_segments": 8
+        },
+        "requested_objective_calls": 576,
+        "objective_calls": 576,
+        "successful_objective_calls": 576,
+        "propagation_calls": 16208,
+        "total_integrator_steps": 164160,
+        "convergence_attempts": 1013,
+        "offline_scoring_seconds": 7.798904768011198,
+        "cost_counts_complete": true,
+        "failures": [],
+        "uncertainty_is_certificate": false,
+        "scope": "training labels only; fixed original validation and test banks",
+        "wall_seconds": 8.607583953998983,
+        "propagations": 576,
+        "propagations_alias": "successful_objective_calls",
+        "infeasible_proposals": 0,
+        "artifact_digest": "ff54ea3b405634319d0c2b105990a81b35b9d15b624ab47805d1b5f27cd9be31"
+      },
+      "trained": true,
+      "checkpoint": "models/bankext/seed_2/best.pt",
+      "checkpoint_sha256": "6c01692ba4bb388265d92b379adf86aa4b3c968d29ca1b543d914c91f568420c",
+      "training_seconds": 20.000119009000628,
+      "training_cost_complete": true,
+      "best_epoch": 71,
+      "last_epoch": 74,
+      "evaluation": "evaluations/bankext_seed_2.json",
+      "evaluation_sha256": "de06bb40baeca905589e52eaadc2c6160f6f88a1e0d6f05e5d790f89301f23c9"
+    },
+    "decoder_random/seed_2": {
+      "folder": "models/decoder_random/seed_2",
+      "acquisition": "acquisitions/decoder_random_seed_2.json",
+      "acquisition_sha256": "28e577fd5c75eed62845e1a2abb23dedc04f00b60408956c6eed29cb9764a14c",
+      "acquisition_cost": {
+        "schema_version": 2,
+        "status": "complete",
+        "arm": "decoder_random",
+        "round_id": "round1",
+        "acquisition_id": "5b5514cf1a9a8fab7440ecbb2acd3c449cc537d09fa6401b7b4c75f87c1d9ff3",
+        "split": "train",
+        "n_records": 72,
+        "proposals_per_record": 8,
+        "settings": {
+          "backend": "numpy",
+          "tolerance": 0.0005,
+          "initial_steps": 32,
+          "max_steps": 4096,
+          "max_ds_dtau": 4.0,
+          "slope_roundoff_relative_tolerance": 1e-06,
+          "norm_tolerance": 1e-09
+        },
+        "provenance": {
+          "seed": 1701,
+          "n_segments": 8,
+          "logit_std": 1.0,
+          "logit_distribution": "iid_normal_zero_mean",
+          "shared_across_records": true,
+          "decoder": "models.monotone_samples",
+          "decoder_dtype": "float32",
+          "logits": [
+            [
+              0.438742071390152,
+              0.32818514108657837,
+              0.6832883954048157,
+              -0.8192825317382812,
+              0.6915644407272339,
+              -1.624532699584961,
+              1.5080630779266357,
+              -1.2244985103607178
+            ],
+            [
+              1.2269606590270996,
+              -1.0501304864883423,
+              0.6250936388969421,
+              0.09693023562431335,
+              0.6277641654014587,
+              -0.285651832818985,
+              1.4967865943908691,
+              -0.7676854133605957
+            ],
+            [
+              -0.3942866921424866,
+              -1.3569350242614746,
+              0.33524957299232483,
+              0.5744276642799377,
+              1.6201691627502441,
+              0.33395177125930786,
+              -1.0290671586990356,
+              -0.942666232585907
+            ],
+            [
+              0.383655309677124,
+              0.25423792004585266,
+              1.3610869646072388,
+              1.2547495365142822,
+              -0.056371260434389114,
+              0.4488089680671692,
+              -1.4790951013565063,
+              2.4025444984436035
+            ],
+            [
+              -0.06959271430969238,
+              -1.5275282859802246,
+              1.9363341331481934,
+              -1.280063509941101,
+              -0.7156206369400024,
+              0.724556028842926,
+              0.47362789511680603,
+              -0.3313169777393341
+            ],
+            [
+              0.2627294361591339,
+              1.750380277633667,
+              0.018342211842536926,
+              -1.4389992952346802,
+              1.3716486692428589,
+              0.6767955422401428,
+              0.5379361510276794,
+              1.533994436264038
+            ],
+            [
+              0.28214871883392334,
+              0.5631395578384399,
+              -0.3779394030570984,
+              -1.1583225727081299,
+              0.965941846370697,
+              -0.3561195731163025,
+              -1.2853686809539795,
+              0.19742657244205475
+            ],
+            [
+              0.4168262183666229,
+              -0.9538636207580566,
+              0.7583044171333313,
+              -2.0859687328338623,
+              -1.1620347499847412,
+              0.3423268496990204,
+              -1.1188819408416748,
+              -1.1359599828720093
+            ]
+          ]
+        },
+        "requested_objective_calls": 576,
+        "objective_calls": 576,
+        "successful_objective_calls": 576,
+        "propagation_calls": 16016,
+        "total_integrator_steps": 161472,
+        "convergence_attempts": 1001,
+        "offline_scoring_seconds": 7.670053649024339,
+        "cost_counts_complete": true,
+        "failures": [],
+        "uncertainty_is_certificate": false,
+        "scope": "training labels only; fixed original validation and test banks",
+        "wall_seconds": 8.186426464999386,
+        "propagations": 576,
+        "propagations_alias": "successful_objective_calls",
+        "infeasible_proposals": 0,
+        "artifact_digest": "3a5cb72c9769a3fbc9651bc06e78906ee024662f553156293638d1fb7931df9c"
+      },
+      "trained": true,
+      "checkpoint": "models/decoder_random/seed_2/best.pt",
+      "checkpoint_sha256": "2ccee9fd1c08ad4628a5547bfc60435b24deaf6e0275fec0a110ef8677caddf9",
+      "training_seconds": 6.7952350189989374,
+      "training_cost_complete": true,
+      "best_epoch": 9,
+      "last_epoch": 24,
+      "evaluation": "evaluations/decoder_random_seed_2.json",
+      "evaluation_sha256": "7bfb1e11f08f7af5121fd4e491df4c73d8593dd7e7f79fbdf0dfc52f86542aa1"
+    },
+    "policy/seed_2": {
+      "folder": "models/policy/seed_2",
+      "acquisition": "acquisitions/policy_seed_2.json",
+      "acquisition_sha256": "577e1b83e180fff67a7bcfda09086b93c7761d9faf4ed1b098989078924ab0b4",
+      "acquisition_cost": {
+        "schema_version": 2,
+        "status": "complete",
+        "arm": "policy",
+        "round_id": "round1",
+        "acquisition_id": "b35e2ac42ff97ac82788419ac4471ab2cbae1eb4d425b866c40e6de41862616b",
+        "split": "train",
+        "n_records": 72,
+        "proposals_per_record": 8,
+        "settings": {
+          "backend": "numpy",
+          "tolerance": 0.0005,
+          "initial_steps": 32,
+          "max_steps": 4096,
+          "max_ds_dtau": 4.0,
+          "slope_roundoff_relative_tolerance": 1e-06,
+          "norm_tolerance": 1e-09
+        },
+        "provenance": {
+          "checkpoint_sha256": "d1d77f35f5b56110bc4cefca08669620f18decf657453627ef5f5927bd15880e",
+          "checkpoint": "/workspace/scratch/a2db4882ba16/anneal_control/runs/acquisition_pilot_verified/models/baseline/seed_2/best.pt",
+          "device": "cpu"
+        },
+        "requested_objective_calls": 576,
+        "objective_calls": 576,
+        "successful_objective_calls": 576,
+        "propagation_calls": 17568,
+        "total_integrator_steps": 186432,
+        "convergence_attempts": 1098,
+        "offline_scoring_seconds": 8.659069108007316,
+        "cost_counts_complete": true,
+        "failures": [],
+        "uncertainty_is_certificate": false,
+        "scope": "training labels only; fixed original validation and test banks",
+        "wall_seconds": 9.27731198499896,
+        "propagations": 576,
+        "propagations_alias": "successful_objective_calls",
+        "infeasible_proposals": 0,
+        "artifact_digest": "21539fc6ee0f25924a12386a83fc4bb8787c9bf63f654acb141600abb2fa2174"
+      },
+      "trained": true,
+      "checkpoint": "models/policy/seed_2/best.pt",
+      "checkpoint_sha256": "f65e90657310ae37d5b2cd8e6b67cec90407702bc21e8d777387fcdd0d156444",
+      "training_seconds": 4.707296488000793,
+      "training_cost_complete": true,
+      "best_epoch": 2,
+      "last_epoch": 17,
+      "evaluation": "evaluations/policy_seed_2.json",
+      "evaluation_sha256": "4cb9525aca5829b6aa2290e7ac5b6faa177bc034cb1025f679b47c2b36f359a5"
+    }
+  },
+  "plan": {
+    "arms": [
+      "control",
+      "bankext",
+      "decoder_random",
+      "policy"
+    ],
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "training_runs": 15,
+    "added_labels_per_training_record_per_acquisition_arm": 8,
+    "retraining": "from scratch, identical initialization seed and recipe for all arms",
+    "selection": "original validation bank regret",
+    "primary_contrasts": [
+      "policy minus bankext",
+      "policy minus decoder_random"
+    ],
+    "scope": "one matched round; plan is not experimental evidence"
+  },
+  "data_manifest_sha256": "cffddcc6734329338517655d83fe6d3884c67fe7ad6d587730dec3508468a9ec",
+  "training_digest": "85056db306f5e2b0fee4139445e0f30ef9cd4efdd972ce8699dee7424a87432e",
+  "validation_digest": "90a4e76c9d393702cc7b56713b673fa8a62194a047b96c3e5738d82a377f6e09",
+  "training_complete": true
+}

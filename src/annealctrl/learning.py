@@ -265,6 +265,28 @@ def _data_provenance(train_records: Sequence[Mapping[str, Any]], validation_reco
             if len(set(ids)) != len(ids):
                 raise ValueError(f"Duplicate {name} record IDs")
             result[f"{name}_record_ids"] = sorted(ids)
+    # Logical identity excludes runtime, embedding, generator metadata and source revision.
+    # Legacy/minimal synthetic fixtures without coefficients remain trainable, but
+    # cannot make a transfer claim until independently verified source migration.
+    coefficient_keys = {"logical_h", "logical_edges", "logical_J"}
+    if all(coefficient_keys <= r.keys() for r in (*train_records, *validation_records)):
+        from .transfer import record_logical_fingerprint
+        logical_parts = {}
+        for name, records in (("train", train_records), ("validation", validation_records)):
+            mapping = {}
+            for record in records:
+                parent, fingerprint = _identity(record, "parent_id"), record_logical_fingerprint(record)
+                if parent in mapping and mapping[parent] != fingerprint:
+                    raise ValueError("one parent ID carries different logical coefficients")
+                mapping[parent] = fingerprint
+            values = sorted(set(mapping.values()))
+            result[f"{name}_logical_fingerprints"] = values
+            result[f"{name}_logical_parent_count"] = len(values)
+            result[f"{name}_parent_logical_fingerprints"] = mapping
+            logical_parts[name] = set(values)
+        if logical_parts["train"] & logical_parts["validation"]:
+            raise ValueError("Logical coefficient leakage between train and validation")
+        result["logical_provenance_version"] = 1
     result["data_fingerprints"] = sorted({str(r["fingerprint"]) for r in (*train_records, *validation_records)
                                            if "fingerprint" in r})
     return result
@@ -317,6 +339,27 @@ def _restore_rng(state: Mapping[str, Any], order_rng: random.Random) -> None:
         torch.cuda.set_rng_state_all([s.cpu() for s in state["torch_cuda"]])
 
 
+def configure_trainable_scope(model: AnnealController, scope: str) -> list[str]:
+    """Select disjoint control heads while keeping every shared module fixed.
+
+    Attention is shared by policy and critic and must therefore stay frozen in
+    all head-only comparisons. The schedule encoder belongs only to the critic;
+    the learned policy query belongs only to proposal generation.
+    """
+    if scope not in {"all", "critic", "policy", "heads"}:
+        raise ValueError("trainable_scope must be all, critic, policy, or heads")
+    names = []
+    for name, parameter in model.named_parameters():
+        critic = name.startswith(("schedule_encoder.", "critic_head."))
+        policy = name == "policy_query" or name.startswith("policy_head.")
+        enabled = (scope == "all" or (scope in {"critic", "heads"} and critic)
+                   or (scope in {"policy", "heads"} and policy))
+        parameter.requires_grad_(enabled)
+        if enabled:
+            names.append(name)
+    return names
+
+
 def fit_records(train_records: Sequence[Mapping[str, Any]],
                 validation_records: Sequence[Mapping[str, Any]], *, model: AnnealController | None = None,
                 epochs: int = 50, learning_rate: float = 1e-3, patience: int = 10,
@@ -327,7 +370,9 @@ def fit_records(train_records: Sequence[Mapping[str, Any]],
                 resume_from: str | Path | None = None, latest_checkpoint: str | Path | None = None,
                 batch_size: int = 1, accumulation_steps: int = 1, weight_decay: float = 1e-4,
                 max_grad_norm: float = 1.0, deterministic: bool = True, bandwidth: float = 0.1,
-                ranking_tolerance: float = 1e-5, dataset_fingerprint: str | None = None) -> FitResult:
+                ranking_tolerance: float = 1e-5, dataset_fingerprint: str | None = None,
+                initialize_from: str | Path | None = None, trainable_scope: str = "all",
+                selection_mode: str = "finite_bank_critic") -> FitResult:
     """AdamW with exact epoch-boundary resume and validation-only selection.
 
     ``epochs`` is the total target, not additional epochs. Every optimizer update
@@ -341,6 +386,12 @@ def fit_records(train_records: Sequence[Mapping[str, Any]],
     ``checkpoint`` exposes the best validation model for inference, whereas
     ``latest_checkpoint`` exposes the current epoch model. Legacy checkpoints
     remain loadable for inference but are not silently treated as resumable.
+
+    ``initialize_from`` starts a fresh optimizer from a checkpoint and preserves
+    its normalizer. Head-only mechanism fits require the same training parents
+    and exactly the same validation records. ``fixed_epochs`` selects the final
+    predeclared epoch and disables early stopping: a frozen critic would make
+    bank-regret selection insensitive to all policy updates.
     """
     validate_splits(train_records, validation_records)
     if any(not isinstance(v, int) or isinstance(v, bool) or v < 1 for v in (epochs, patience, batch_size, accumulation_steps)):
@@ -351,6 +402,14 @@ def fit_records(train_records: Sequence[Mapping[str, Any]],
         raise ValueError("Weights and ranking tolerance must be finite and nonnegative")
     if model is not None and model_config is not None:
         raise ValueError("Provide model or model_config, not both")
+    if initialize_from is not None and model is not None:
+        raise ValueError("Provide initialize_from or model, not both")
+    if selection_mode not in {"finite_bank_critic", "fixed_epochs"}:
+        raise ValueError("Unknown checkpoint selection_mode")
+    if trainable_scope != "all" and initialize_from is None and resume_from is None:
+        raise ValueError("Head-only training requires a frozen initialization checkpoint")
+    if trainable_scope == "policy" and (selection_mode != "fixed_epochs" or policy_weight <= 0):
+        raise ValueError("Policy-only training requires fixed_epochs and positive policy_weight")
     if checkpoint is not None and latest_checkpoint is not None and Path(checkpoint).resolve() == Path(latest_checkpoint).resolve():
         raise ValueError("Best and latest checkpoints must have distinct paths")
     seed_everything(seed, deterministic=deterministic)
@@ -359,22 +418,43 @@ def fit_records(train_records: Sequence[Mapping[str, Any]],
     if target_device.type == "cuda" and not torch.cuda.is_available():
         raise RuntimeError("CUDA training was requested but CUDA is unavailable; choose device='cpu' explicitly")
     payload = torch.load(resume_from, map_location="cpu", weights_only=True) if resume_from is not None else None
+    initial = torch.load(initialize_from, map_location="cpu", weights_only=True) if initialize_from is not None else None
+    initialization_sha = (hashlib.sha256(Path(initialize_from).read_bytes()).hexdigest()
+                          if initialize_from is not None else
+                          (payload.get("training_config", {}).get("initialization_sha256") if payload else None))
     if payload is not None and (payload.get("checkpoint_version", 0) < 2 or "resume_state" not in payload):
         raise ValueError("Legacy checkpoint lacks exact resume state; use load_checkpoint for explicit fine-tuning")
     if model is None:
-        config = dict(model_config) if model_config is not None else (payload["model_config"] if payload is not None else {})
+        config = (dict(model_config) if model_config is not None else
+                  ((payload or initial)["model_config"] if (payload or initial) is not None else {}))
         model = AnnealController(**config)
+    if initial is not None:
+        # Constructor fills defaults; compare the complete architecture.
+        if model.config != initial["model_config"]:
+            raise ValueError("Initialization model configuration mismatch")
+        model.load_state_dict(initial["model_state"])
     model = model.to(target_device)
+    trainable_names = configure_trainable_scope(model, trainable_scope)
     training_config = {"epochs": epochs, "patience": patience, "learning_rate": learning_rate,
                        "weight_decay": weight_decay, "label_temperature": label_temperature,
                        "policy_weight": policy_weight, "ranking_weight": ranking_weight,
                        "response_weight": response_weight, "batch_size": batch_size,
                        "accumulation_steps": accumulation_steps, "max_grad_norm": max_grad_norm,
                        "deterministic": deterministic, "bandwidth": bandwidth,
-                       "ranking_tolerance": ranking_tolerance, "seed": seed}
+                       "ranking_tolerance": ranking_tolerance, "seed": seed,
+                       "initialization_sha256": initialization_sha, "trainable_scope": trainable_scope,
+                       "selection_mode": selection_mode}
     provenance = _data_provenance(train_records, validation_records, dataset_fingerprint)
+    if initial is not None and trainable_scope != "all":
+        initial_provenance = initial.get("data_provenance", {})
+        for key in ("train_parent_ids", "validation_content_sha256"):
+            if initial_provenance.get(key) != provenance[key]:
+                raise ValueError(f"Mechanism initialization requires unchanged {key}")
     if payload is not None:
         old_config = {k: v for k, v in payload["training_config"].items() if k != "epochs"}
+        for key, default in (("initialization_sha256", None), ("trainable_scope", "all"),
+                             ("selection_mode", "finite_bank_critic")):
+            old_config.setdefault(key, default)
         if old_config != {k: v for k, v in training_config.items() if k != "epochs"}:
             raise ValueError("Resume training configuration mismatch; begin a new fine-tuning run instead")
         if epochs < payload["training_config"]["epochs"]:
@@ -385,7 +465,8 @@ def fit_records(train_records: Sequence[Mapping[str, Any]],
             raise ValueError("Resume dataset provenance/content mismatch")
     # Memory grows with the source records, not accelerator dataset residency.
     graphs = [graph_from_record(r) for r in train_records]
-    normalizer = FeatureNormalizer(payload["normalizer"]) if payload is not None else FeatureNormalizer.fit(graphs)
+    origin = payload or initial
+    normalizer = FeatureNormalizer(origin["normalizer"]) if origin is not None else FeatureNormalizer.fit(graphs)
     graphs = [normalizer.transform(g) for g in graphs]
     for record in (*train_records, *validation_records):
         schedules = np.asarray(record["candidate_schedules"])
@@ -396,7 +477,8 @@ def fit_records(train_records: Sequence[Mapping[str, Any]],
             raise ValueError("A finite nonempty candidate bank with matching losses is required")
         if not np.isfinite(schedules).all():
             raise ValueError("Candidate schedule values must be finite")
-    optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
+    optimizer = torch.optim.AdamW((p for p in model.parameters() if p.requires_grad),
+                                 lr=learning_rate, weight_decay=weight_decay)
     history, best_epoch, stale = [], -1, 0
     best_regret = float("inf")
     best_state, best_optimizer = None, None
@@ -413,6 +495,9 @@ def fit_records(train_records: Sequence[Mapping[str, Any]],
         stopped_early = bool(state["stopped_early"])
         _restore_rng(state["rng_state"], rng)
     resume_state = payload["resume_state"] if payload is not None else None
+    frozen_names = sorted(set(model.state_dict()) - set(trainable_names))
+    frozen_digest = (records_content_digest([{name: model.state_dict()[name] for name in frozen_names}])
+                     if trainable_scope != "all" else None)
     effective_batch = batch_size * accumulation_steps
     for epoch in range(start_epoch, epochs) if not stopped_early else ():
         model.train()
@@ -442,6 +527,16 @@ def fit_records(train_records: Sequence[Mapping[str, Any]],
                                                  response_weight=response_weight, response_labels=labels, response_mask=mask,
                                                  loss_uncertainty=uncertainty, bandwidth=bandwidth,
                                                  ranking_tolerance=ranking_tolerance)
+                # These objectives depend only on the designated head(s).
+                # Label targets are the fixed, simulator-evaluated bank losses;
+                # no updated critic supplies pseudo-labels to the policy.
+                if trainable_scope == "critic":
+                    losses_by_task["total"] = losses_by_task["outcome"] + ranking_weight * losses_by_task["ranking"]
+                elif trainable_scope == "policy":
+                    losses_by_task["total"] = policy_weight * losses_by_task["policy"]
+                elif trainable_scope == "heads":
+                    losses_by_task["total"] = (losses_by_task["outcome"] + ranking_weight * losses_by_task["ranking"]
+                                                + policy_weight * losses_by_task["policy"])
                 if not torch.isfinite(losses_by_task["total"]):
                     raise FloatingPointError(f"Nonfinite training loss at epoch {epoch}, graph {index}")
                 (losses_by_task["total"] / len(group)).backward()
@@ -451,6 +546,10 @@ def fit_records(train_records: Sequence[Mapping[str, Any]],
             optimizer.step()
             updates += 1
         validation = evaluate_records(model, validation_records, normalizer)
+        if frozen_digest is not None:
+            current_digest = records_content_digest([{name: model.state_dict()[name] for name in frozen_names}])
+            if current_digest != frozen_digest:
+                raise RuntimeError("Frozen mechanism parameters changed during training")
         regret = validation["mean_bank_regret"]
         if not math.isfinite(regret):
             raise FloatingPointError("Nonfinite validation bank regret")
@@ -458,20 +557,22 @@ def fit_records(train_records: Sequence[Mapping[str, Any]],
                         **{f"train_{k}_loss": v / len(train_records) for k, v in epoch_parts.items() if k != "total"},
                         "validation_bank_regret": regret, "validation_mean_loss": validation["mean_loss"],
                         "optimizer_updates": updates})
-        if regret < best_regret:
+        if selection_mode == "fixed_epochs" or regret < best_regret:
             best_regret, best_epoch, stale = regret, epoch, 0
             best_state = _cpu_copy(model.state_dict())
             best_optimizer = _cpu_copy(optimizer.state_dict())
         else:
             stale += 1
-        last_epoch, stopped_early = epoch, stale >= patience
+        last_epoch, stopped_early = epoch, selection_mode != "fixed_epochs" and stale >= patience
         resume_state = {"epoch": epoch, "model_state": _cpu_copy(model.state_dict()),
                         "optimizer_state": _cpu_copy(optimizer.state_dict()),
                         "stale": stale, "stopped_early": stopped_early, "rng_state": _rng_state(rng)}
         saved = {"checkpoint_version": 2, "model_config": model.config,
                  "normalizer": _cpu_copy(normalizer.statistics), "best_epoch": best_epoch,
                  "best_regret": best_regret, "history": history, "seed": seed,
-                 "selection_mode": "finite_bank_critic", "training_config": training_config,
+                 "selection_mode": selection_mode, "training_config": training_config,
+                 "trainable_parameter_names": trainable_names,
+                 "frozen_parameter_sha256": frozen_digest,
                  "training_device": str(target_device), "data_provenance": provenance,
                  "parameter_count": sum(p.numel() for p in model.parameters()),
                  "software_versions": {"torch": str(torch.__version__), "numpy": str(np.__version__)},
