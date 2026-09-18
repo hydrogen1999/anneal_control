@@ -241,7 +241,7 @@ def optimize_control_family(
     loss_fn: Callable[[Schedule], float], family: str, *, budget: int = 32,
     runtime: float = 1.0, max_slope: float = 4.0, seed: int = 0,
     split: str = "train", allow_test_adaptation: bool = False,
-    strategy: str = "sobol_local",
+    strategy: str = "sobol_local", warm_start=None,
 ) -> SearchResult:
     """Exact-waveform Sobol exploration plus incumbent-centered random search.
 
@@ -260,6 +260,10 @@ def optimize_control_family(
         raise ValueError(f"unknown control family {family!r}")
     if strategy not in STRATEGIES:
         raise ValueError(f"unknown search strategy {strategy!r}; available: {list(STRATEGIES)}")
+    if warm_start is not None and strategy != "sobol_local":
+        raise ValueError(f"warm_start is only implemented for sobol_local, not {strategy!r}; "
+                         "dropping the hint silently would make a warm-start experiment "
+                         "measure nothing")
     if isinstance(budget, bool) or not isinstance(budget, int) or budget < 1:
         raise ValueError("budget must be a positive integer")
     decode_durations([0.0], runtime=runtime, max_slope=max_slope)
@@ -273,6 +277,20 @@ def optimize_control_family(
         int(np.ceil(np.log2(budget - 1))))[:budget - 1]
     best_parameters, best_loss = None, first.loss
     records = [first]
+
+    # A warm start is a hint at where to begin refining, not a replacement for the
+    # linear reference: trial 0 stays linear because every headroom number in this
+    # project is defined against it. The shape is checked here; the hint is
+    # evaluated below, once `decode` exists.
+    warm_offset = 0
+    hint = None
+    if warm_start is not None:
+        hint = np.asarray(warm_start, dtype=float)
+        if hint.shape != (dimension,):
+            raise ValueError(f"warm_start must have {dimension} parameters for family "
+                             f"{family!r}, got shape {hint.shape}")
+        hint = np.clip(hint, 1e-6, 1 - 1e-6)
+        warm_offset = 1
 
     def decode(parameters):
         p = np.clip(parameters, 1e-6, 1 - 1e-6)
@@ -316,6 +334,17 @@ def optimize_control_family(
         design_marker = [min(max(4, 2 * dimension), budget - 1)]
         minimise(objective, dimension=dimension, budget=budget - 1, seed=seed)
         return SearchResult(tuple(records), split, split == "test")
+
+    if hint is not None:
+        # Charged like any other call, and it becomes the incumbent that the
+        # local moves refine from.
+        schedule = decode(hint)
+        schedule.validate_slope(runtime=runtime, max_slope=max_slope)
+        record = _evaluate(loss_fn, Candidate(f"{family}_0001", family, schedule,
+                                              {"unit_parameters": hint.tolist(),
+                                               "proposal": "warm_start"}), 1)
+        records.append(record)
+        best_parameters, best_loss = hint.copy(), record.loss
 
     if strategy == "policy_gradient":
         # REINFORCE on a diagonal Gaussian over the unconstrained parameter
@@ -403,12 +432,12 @@ def optimize_control_family(
                 sigma = np.maximum(elite.std(axis=0), 0.05)
         return SearchResult(tuple(records), split, split == "test")
 
-    for index in range(1, budget):
+    for index in range(1 + warm_offset, budget):
         # The linear closure incumbent has no interior parameter vector for
         # window/pause families. Explore until a genuine parameter incumbent
         # exists, instead of pretending arbitrary 0.5 coordinates encode it.
         exploratory = index % 2 == 1 or best_parameters is None
-        parameters = points[index - 1] if exploratory else np.clip(
+        parameters = points[index - 1 - warm_offset] if exploratory else np.clip(
             best_parameters + rng.normal(0., 0.15, dimension), 1e-6, 1 - 1e-6)
         schedule = decode(parameters)
         schedule.validate_slope(runtime=runtime, max_slope=max_slope)
