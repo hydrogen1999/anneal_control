@@ -135,7 +135,13 @@ def main(argv=None) -> int:
             row.update({"record_id": rid, "split": split,
                         "parent_id": str(np.asarray(record["parent_id"]).item()),
                         "n_candidates": int(len(true)),
-                        "families": sorted({e["family"] for e in entries})})
+                        "families": sorted({e["family"] for e in entries}),
+                        # Persisted so the headline can be re-analysed without
+                        # re-simulating: a summary nobody can audit is a claim,
+                        # not evidence.
+                        "predicted_losses": [float(x) for x in predicted],
+                        "true_losses": [float(x) for x in true],
+                        "candidate_families": [e["family"] for e in entries]})
             rows.append(row)
         results[split] = aggregate_filter(rows, keep_fractions=KEEP)
         all_rows.extend(rows)
