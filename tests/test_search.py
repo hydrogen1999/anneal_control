@@ -217,3 +217,99 @@ def test_random_policy_family_candidates_do_not_close_the_manifold_gap():
         f"be unnecessary: {with_family:.4f} vs {without:.4f}")
 
 
+
+
+# --- the policy-gradient strategy --------------------------------------------
+
+def test_policy_gradient_is_a_registered_strategy():
+    from annealctrl.search import STRATEGIES
+
+    assert "policy_gradient" in STRATEGIES
+
+
+def test_policy_gradient_spends_exactly_the_budget():
+    """Equal budget is the whole point of comparing search strategies."""
+    from annealctrl.search import optimize_control_family
+
+    calls = []
+
+    def loss_fn(schedule):
+        calls.append(1)
+        return float(np.abs(schedule(np.linspace(0, 1, 9)) - 0.5).sum())
+
+    for family, budget in (("one_window", 17), ("two_window", 33), ("eight_bin", 25)):
+        calls.clear()
+        result = optimize_control_family(loss_fn, family, budget=budget, seed=0,
+                                         strategy="policy_gradient")
+        assert len(calls) == budget, (family, len(calls), budget)
+        assert len(result.records) == budget
+
+
+def test_policy_gradient_is_deterministic_given_a_seed():
+    from annealctrl.search import optimize_control_family
+
+    def loss_fn(schedule):
+        return float(np.abs(schedule(np.linspace(0, 1, 9)) - 0.3).sum())
+
+    a = optimize_control_family(loss_fn, "one_window", budget=17, seed=3,
+                                strategy="policy_gradient")
+    b = optimize_control_family(loss_fn, "one_window", budget=17, seed=3,
+                                strategy="policy_gradient")
+    assert [r.loss for r in a.records] == [r.loss for r in b.records]
+
+
+def test_policy_gradient_improves_on_its_own_first_trial():
+    """A learner that never beats its initial incumbent is not learning."""
+    from annealctrl.search import optimize_control_family
+
+    def loss_fn(schedule):
+        tau = np.linspace(0, 1, 33)
+        return float(np.abs(schedule(tau) - np.sqrt(tau)).mean())
+
+    result = optimize_control_family(loss_fn, "eight_bin", budget=65, seed=0,
+                                     strategy="policy_gradient")
+    losses = [r.loss for r in result.records]
+    assert min(losses) < losses[0]
+
+
+def test_policy_gradient_labels_its_proposals():
+    from annealctrl.search import optimize_control_family
+
+    def loss_fn(schedule):
+        return float(schedule(np.linspace(0, 1, 9)).sum())
+
+    result = optimize_control_family(loss_fn, "one_window", budget=17, seed=0,
+                                     strategy="policy_gradient")
+    tags = {r.candidate.parameters.get("proposal") for r in result.records[1:]}
+    assert tags == {"policy_gradient"}
+    assert result.records[0].candidate.parameters.get("initial_incumbent") == "linear"
+
+
+def test_policy_gradient_records_its_own_hyperparameters():
+    """A baseline whose settings are not recorded cannot be reproduced or attacked."""
+    from annealctrl.search import optimize_control_family
+
+    def loss_fn(schedule):
+        return float(schedule(np.linspace(0, 1, 9)).sum())
+
+    result = optimize_control_family(loss_fn, "two_window", budget=33, seed=0,
+                                     strategy="policy_gradient")
+    meta = result.records[1].candidate.parameters
+    for key in ("batch_size", "learning_rate", "sigma"):
+        assert key in meta, key
+
+
+def test_linear_family_ignores_the_strategy():
+    """Linear has no free parameters; no strategy may pad it with fake calls."""
+    from annealctrl.search import optimize_control_family
+
+    calls = []
+
+    def loss_fn(schedule):
+        calls.append(1)
+        return 0.5
+
+    result = optimize_control_family(loss_fn, "linear", budget=32, seed=0,
+                                     strategy="policy_gradient")
+    assert len(calls) == 1
+    assert len(result.records) == 1

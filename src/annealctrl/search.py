@@ -234,7 +234,7 @@ def equal_budget_refinement(
 CONTROL_FAMILIES = ("linear", "one_window", "two_window", "eight_bin", "pause")
 
 
-STRATEGIES = ("sobol_local", "bayesian")
+STRATEGIES = ("sobol_local", "bayesian", "policy_gradient")
 
 
 def optimize_control_family(
@@ -315,6 +315,50 @@ def optimize_control_family(
 
         design_marker = [min(max(4, 2 * dimension), budget - 1)]
         minimise(objective, dimension=dimension, budget=budget - 1, seed=seed)
+        return SearchResult(tuple(records), split, split == "test")
+
+    if strategy == "policy_gradient":
+        # REINFORCE on a diagonal Gaussian over the unconstrained parameter
+        # vector, squashed to the unit cube. This is the learned counterpart of
+        # the other two strategies and exists so the comparison contains a
+        # method that *learns* rather than only searches: a reviewer asking
+        # "against which learned baseline?" has an answer at equal budget.
+        #
+        # Batch size grows with dimension because a policy gradient estimated
+        # from fewer samples than parameters is mostly noise, and sigma decays
+        # so late trials exploit what early ones found. The linear incumbent is
+        # already charged as trial 0 and the policy never sees a loss before it
+        # proposes.
+        batch = int(max(4, min(dimension + 2, budget - 1)))
+        learning_rate, sigma, decay = 0.4, 1.0, 0.92
+        mean = np.zeros(dimension)
+        index = 1
+        while index < budget:
+            size = min(batch, budget - index)
+            draws = mean + sigma * rng.normal(size=(size, dimension))
+            losses = np.empty(size)
+            for offset in range(size):
+                parameters = 1.0 / (1.0 + np.exp(-draws[offset]))
+                schedule = decode(parameters)
+                schedule.validate_slope(runtime=runtime, max_slope=max_slope)
+                candidate = Candidate(f"{family}_{index + offset:04d}", family, schedule,
+                                      {"unit_parameters": parameters.tolist(),
+                                       "proposal": "policy_gradient",
+                                       "batch_size": batch,
+                                       "learning_rate": learning_rate,
+                                       "sigma": float(sigma)})
+                record = _evaluate(loss_fn, candidate, index + offset)
+                records.append(record)
+                losses[offset] = record.loss
+            index += size
+            # Standardised advantage: lower loss is better, so the sign is
+            # flipped. A degenerate batch carries no gradient and is skipped
+            # rather than dividing by a vanishing standard deviation.
+            spread = float(losses.std())
+            if size > 1 and spread > 1e-12:
+                advantage = -(losses - losses.mean()) / spread
+                mean = mean + learning_rate * (advantage[:, None] * (draws - mean)).mean(axis=0) / sigma
+            sigma *= decay
         return SearchResult(tuple(records), split, split == "test")
 
     for index in range(1, budget):
