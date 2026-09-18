@@ -1,0 +1,127 @@
+{
+ "schema_version": 1,
+ "n_records": 10,
+ "rows": [
+  {
+   "record_id": "parent_0013_e0_k0_t0",
+   "parent_id": "parent_0013",
+   "physical_n": 4,
+   "runtime": 1.0,
+   "spearman": 0.22046703296703296,
+   "exact_best_index": 11,
+   "surrogate_best_index": 9,
+   "exact_loss_of_surrogate_pick": 0.7076429413161477,
+   "exact_best_loss": 0.7031323539848097,
+   "exact_linear_loss": 0.7196896346614075
+  },
+  {
+   "record_id": "parent_0013_e0_k1_t1",
+   "parent_id": "parent_0013",
+   "physical_n": 4,
+   "runtime": 4.0,
+   "spearman": -0.5221153846153846,
+   "exact_best_index": 51,
+   "surrogate_best_index": 1,
+   "exact_loss_of_surrogate_pick": 0.6984662642170285,
+   "exact_best_loss": 0.6402220159369884,
+   "exact_linear_loss": 0.6695024111812401
+  },
+  {
+   "record_id": "parent_0013_e0_k2_t2",
+   "parent_id": "parent_0013",
+   "physical_n": 4,
+   "runtime": 12.0,
+   "spearman": -0.5879578754578755,
+   "exact_best_index": 18,
+   "surrogate_best_index": 20,
+   "exact_loss_of_surrogate_pick": 0.7001147296263079,
+   "exact_best_loss": 0.6501352781344323,
+   "exact_linear_loss": 0.6740156826294872
+  },
+  {
+   "record_id": "parent_0013_e1_k1_t0",
+   "parent_id": "parent_0013",
+   "physical_n": 4,
+   "runtime": 1.0,
+   "spearman": 0.21121794871794872,
+   "exact_best_index": 11,
+   "surrogate_best_index": 46,
+   "exact_loss_of_surrogate_pick": 0.7268753836084803,
+   "exact_best_loss": 0.7192033283051373,
+   "exact_linear_loss": 0.7299150161934194
+  },
+  {
+   "record_id": "parent_0013_e1_k2_t1",
+   "parent_id": "parent_0013",
+   "physical_n": 4,
+   "runtime": 4.0,
+   "spearman": -0.4457875457875458,
+   "exact_best_index": 18,
+   "surrogate_best_index": 20,
+   "exact_loss_of_surrogate_pick": 0.7281321157546349,
+   "exact_best_loss": 0.6734264282067118,
+   "exact_linear_loss": 0.7066780234332444
+  },
+  {
+   "record_id": "parent_0014_e0_k0_t2",
+   "parent_id": "parent_0014",
+   "physical_n": 4,
+   "runtime": 12.0,
+   "spearman": -0.0614010989010989,
+   "exact_best_index": 61,
+   "surrogate_best_index": 31,
+   "exact_loss_of_surrogate_pick": 0.038089092372946665,
+   "exact_best_loss": 0.0028980649449457108,
+   "exact_linear_loss": 0.019758647902112236
+  },
+  {
+   "record_id": "parent_0014_e0_k2_t0",
+   "parent_id": "parent_0014",
+   "physical_n": 4,
+   "runtime": 1.0,
+   "spearman": 0.24345238095238095,
+   "exact_best_index": 11,
+   "surrogate_best_index": 26,
+   "exact_loss_of_surrogate_pick": 0.7215394676766423,
+   "exact_best_loss": 0.6869661069066962,
+   "exact_linear_loss": 0.7111084945122244
+  },
+  {
+   "record_id": "parent_0014_e1_k0_t1",
+   "parent_id": "parent_0014",
+   "physical_n": 4,
+   "runtime": 4.0,
+   "spearman": null,
+   "exact_best_index": 39,
+   "surrogate_best_index": 0,
+   "exact_loss_of_surrogate_pick": 0.11091284256002054,
+   "exact_best_loss": 0.016425751750923645,
+   "exact_linear_loss": 0.11091284256002054
+  },
+  {
+   "record_id": "parent_0014_e1_k1_t2",
+   "parent_id": "parent_0014",
+   "physical_n": 4,
+   "runtime": 12.0,
+   "spearman": -0.024816849816849815,
+   "exact_best_index": 0,
+   "surrogate_best_index": 31,
+   "exact_loss_of_surrogate_pick": 0.027721732832954205,
+   "exact_best_loss": 0.0031069304913020623,
+   "exact_linear_loss": 0.0031069304913020623
+  },
+  {
+   "record_id": "parent_0016_e0_k0_t0",
+   "parent_id": "parent_0016",
+   "physical_n": 6,
+   "runtime": 1.0,
+   "spearman": 0.47197802197802197,
+   "exact_best_index": 11,
+   "surrogate_best_index": 46,
+   "exact_loss_of_surrogate_pick": 0.9251188798219259,
+   "exact_best_loss": 0.9177339793797064,
+   "exact_linear_loss": 0.9302250914605575
+  }
+ ],
+ "wall_seconds": 20.183202266693115
+}
