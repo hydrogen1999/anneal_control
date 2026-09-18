@@ -58,6 +58,54 @@ measurement, not a second measurement**, and it is not claimed as established.
 Testing it would need an arm that freezes the policy head and aggregates for the
 critic alone.
 
+## An independent pilot does not reproduce this, and the two are compatible
+
+A separate controlled-acquisition pilot (`acquisition_pilot_2026-09-17/`) ran the
+same idea on 60 fresh parents with three matched controls and settings frozen
+before the test outcomes. Its headline is negative.
+
+| contrast | pilot | this study |
+|---|---|---|
+| **matched** (POLICY − BANKEXT) | +0.004107, CI [−0.0500, +0.0517] | **−0.022555** |
+| unmatched (POLICY − CONTROL) | +0.027589, CI [+0.0039, +0.0487] | −0.028752 |
+
+**On the matched contrast the two studies agree, because the pilot cannot tell
+them apart.** Its interval is 0.102 wide over 12 held-out parents and three
+seeds, and −0.0226 sits inside it. The pilot does not refute this result; it
+lacks the power to confirm or deny it.
+
+On the **unmatched** contrast the signs are opposite, and that is the part worth
+taking seriously rather than explaining away.
+
+## The confound both studies share
+
+The pilot names it: its POLICY checkpoints were selected at epochs **3, 2, 2**
+against CONTROL's 43, 20, 20 — effectively untrained. Early stopping uses
+validation bank regret, and both studies augment the **validation** bank as well
+as the training bank. Regret measured against a bank the policy's own proposals
+were just added to is easier to reduce, so patience can fire before the model is
+trained.
+
+This study's epochs do not show that pattern as severely:
+
+| seed | CONTROL | BANKEXT | DAGGER |
+|---:|---:|---:|---:|
+| 0 | 55 | 20 | 20 |
+| 1 | 33 | 63 | 55 |
+| 2 | 52 | 29 | 26 |
+
+Two seeds stop earlier than control, one stops later. That is not the pilot's
+collapse to epoch 2, and the matched DAGGER−BANKEXT comparison holds both
+augmented arms to the same selection rule. But "less severe" is not "absent",
+and no study here has run the ablation the pilot asks for.
+
+**It is running now.** Every arm early-stops on the **un-augmented** validation
+records, so the selection criterion is one object across arms while the training
+banks still differ. If −0.0226 survives, selection was not driving it. If it
+disappears, the number was selection rather than aggregation and is withdrawn.
+Until that lands, this section is the correct reading of the result, not the
+headline above it.
+
 ## Cost, and what this is not
 
 Each aggregation arm spends **10,368 objective evaluations** labelling proposals on
