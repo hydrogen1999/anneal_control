@@ -29,7 +29,7 @@ annealctrl comparison-table \
 | amortised | best direct proposal | 0.5898–0.5978 | — | −0.0111…−0.0032 | 864 |
 | online adaptation | search, **Bayesian** | 0.5055 | [0.4374, 0.5709] | −0.0955 | 864 |
 | online adaptation | search, quasi-random (`sobol_local`) | 0.5074 | [0.4391, 0.5728] | −0.0936 | 864 |
-| online adaptation | search, **policy gradient** (learned) | *withdrawn, re-running* | — | — | — |
+| online adaptation | search, **policy gradient** (learned) | 0.5114 | [0.4429, 0.5770] | −0.0895 | 864 |
 
 There is deliberately **no global rank**. A linear ramp, an oracle whose
 construction is exponential in the number of qubits, a network that consults no
@@ -72,16 +72,36 @@ venue asks for.
 Bayesian optimisation wins over `sobol_local`, consistently and by a small
 margin.
 
-**The policy-gradient row is withdrawn.** It was measured with a wrong gradient:
-the score of a Gaussian policy is (z − μ)/σ², and the implementation divided by
-σ once. Every step therefore shrank as σ decayed and the policy barely moved. The
-arm lost on 0 of 48 parents, and that number measured the bug, not the method.
+**The policy-gradient row was withdrawn and re-measured.** The first run used a
+wrong gradient — the score of a Gaussian policy is (z − μ)/σ² and the
+implementation divided by σ once, so every step shrank as σ decayed and the
+policy barely moved. That run reported 0.5130.
 
-With the score corrected, on the same synthetic objective the policy gradient
-**wins** the eight-dimensional family at campaign budget (0.02431 against
-Bayesian's 0.02816) and wins 4 of 8 family/budget cells. The real test split is
-being re-run; the old rows are kept on disk under a directory named for the
-defect rather than deleted.
+Corrected, it reports **0.5114**: better, and still last.
+
+| strategy | loss | vs `sobol_local` | parents favouring it | best control found |
+|---|---:|---:|---:|---:|
+| Bayesian | **0.5055** | −0.00189 | 47/48 | 450 |
+| `sobol_local` | 0.5074 | — | — | 336 |
+| policy gradient | 0.5114 | +0.00404 | 1/48 | 78 |
+
+**The synthetic benchmark did not predict this.** With the corrected score, on a
+smooth unimodal target (`|s(τ) − √τ|`), the policy gradient *wins* the
+eight-dimensional family at campaign budget and 4 of 8 family/budget cells. On
+real instances it loses on **every** family:
+
+| family | `sobol_local` | Bayesian | policy gradient |
+|---|---:|---:|---:|
+| `eight_bin` | 0.5178 | **0.5133** | 0.5226 |
+| `one_window` | 0.5157 | **0.5083** | 0.5213 |
+| `two_window` | 0.5111 | **0.5090** | 0.5200 |
+| `pause` | 0.5239 | **0.5210** | 0.5278 |
+
+That gap between the synthetic and the real landscape is worth more than the
+ranking itself: a derivative-free method tuned and validated on a smooth
+surrogate transferred *in the wrong direction* here. The original conclusion —
+the learned search loses — survives correction, but it was first published from a
+buggy measurement and the retraction stands in the record.
 
 The amortised methods should be read against the **best** of the three, which is
 Bayesian at 0.5055, making their gap 0.039 rather than 0.037.

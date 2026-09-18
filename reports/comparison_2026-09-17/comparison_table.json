@@ -700,11 +700,11 @@
    "n_records": 864,
    "n_parents": 48,
    "measured_on_full_population": true,
-   "mean_loss": 0.5129900930268186,
-   "std_parent_loss": 0.2393230607379389,
+   "mean_loss": 0.5113923506893613,
+   "std_parent_loss": 0.2396328560796892,
    "parent_bootstrap_ci": {
-    "low": 0.4446609073177913,
-    "high": 0.578459841483892,
+    "low": 0.4428903394370463,
+    "high": 0.5769574442046462,
     "confidence": 0.95,
     "resamples": 20000,
     "unit_of_independence": "logical_parent",
@@ -712,10 +712,10 @@
     "includes_training_seed_uncertainty": false
    },
    "vs_linear": {
-    "mean_difference": -0.0879393982313762,
+    "mean_difference": -0.08953714056883351,
     "parent_bootstrap_ci": {
-     "low": -0.09865083064542664,
-     "high": -0.0784597102842326,
+     "low": -0.10044277046551406,
+     "high": -0.07982586842164215,
      "confidence": 0.95,
      "resamples": 20000,
      "unit_of_independence": "logical_parent",

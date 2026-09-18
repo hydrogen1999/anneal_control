@@ -80,7 +80,7 @@ directory; every caveat is load-bearing, not decoration.
 | **Claim** | Bayesian optimisation at the same 257-call budget beats the quasi-random search by only 0.0019. |
 | **Evidence** | 864 records; BO favoured on 47 of 48 parents. Consistent direction, small size. |
 | **Artifact** | `comparison_2026-09-17/bayes_rows.json` |
-| **Retracted, re-running** | A third strategy, a **policy gradient**, was run and reported as losing on 0/48 parents. That measurement used a wrong Gaussian score — (z−μ)/σ implemented instead of (z−μ)/σ² — so every step shrank as σ decayed and the policy barely moved. With the score corrected it wins the eight-dimensional family at campaign budget on a synthetic objective. The real-split arm is being re-run and no number from it is quoted until it lands. |
+| **Extended, after a retraction** | A third strategy, a **policy gradient**, reaches **0.5114** and is last of the three (1/48 parents over `sobol_local`, 0/48 over Bayesian, best control on 78 of 864 records). It loses on *every* control family. The first measurement of this arm used a wrong Gaussian score — (z−μ)/σ instead of (z−μ)/σ² — reported 0.5130, and was retracted; the corrected run confirms the direction. Note that on a smooth synthetic target the corrected method *wins* the eight-dimensional family, so the surrogate predicted the opposite of what real instances show. |
 | **Does not cover** | Three strategies at one budget on one distribution. No comparison against a published embedding-aware control method, and the policy gradient is a standard REINFORCE rather than a reproduction of a specific paper's method. |
 
 ## 9. GPU throughput crosses over at 12 qubits
