@@ -29,6 +29,7 @@ annealctrl comparison-table \
 | amortised | best direct proposal | 0.5898–0.5978 | — | −0.0111…−0.0032 | 864 |
 | online adaptation | search, **Bayesian** | 0.5055 | [0.4374, 0.5709] | −0.0955 | 864 |
 | online adaptation | search, quasi-random (`sobol_local`) | 0.5074 | [0.4391, 0.5728] | −0.0936 | 864 |
+| online adaptation | search, **policy gradient** (learned) | 0.5130 | [0.4447, 0.5785] | −0.0880 | 864 |
 
 There is deliberately **no global rank**. A linear ramp, an oracle whose
 construction is exponential in the number of qubits, a network that consults no
@@ -54,14 +55,28 @@ amortised method. That gap is the honest price of not consulting outcomes at
 deployment. It is not hidden, and no amortised row is described as matching
 search.
 
-**The search baseline is not a straw man.** `sobol_local` is a quasi-random local
-search written for this project, so it was checked against Bayesian optimisation
-— a Gaussian process with a Matérn 5/2 kernel and expected improvement — run at
-the *same* 257-call budget on the same records. BO wins by **0.0019**, on 47 of
-48 parents. The direction is consistent and the size is small: a standard
-derivative-free optimiser, given the same budget, finds essentially what the
-quasi-random search finds. Both rows are reported; the Bayesian one is the
-stronger baseline and is the one the amortised methods should be read against.
+**The search baseline is not a straw man — three strategies were run at the same
+budget.** `sobol_local` is a quasi-random local search written for this project,
+so it was checked against two alternatives on the same 864 records at the same
+257 objective calls: Bayesian optimisation (Gaussian process, Matérn 5/2,
+expected improvement) and a **policy gradient** (REINFORCE on a diagonal Gaussian
+over the schedule parameters), the latter being the *learned* baseline an ML
+venue asks for.
+
+| strategy | loss | vs `sobol_local` | parents favouring it | records where it found the best |
+|---|---:|---:|---:|---:|
+| Bayesian | **0.5055** | −0.00189 | 47/48 | 452 |
+| `sobol_local` | 0.5074 | — | — | 332 |
+| policy gradient | 0.5130 | +0.00564 | 0/48 | 80 |
+
+Bayesian optimisation wins, consistently and by a small margin. **The policy
+gradient loses to both**, on every parent — a negative result for the learned
+search, reported as measured. On a synthetic objective it had won the
+eight-dimensional family at small budgets; at budget 64 per family on real
+instances it does not, and the synthetic result did not survive contact.
+
+The amortised methods should be read against the **best** of the three, which is
+Bayesian at 0.5055, making their gap 0.039 rather than 0.037.
 
 **Which encoder does not matter; seeing the embedding does.** The four
 embedding-aware encoders land within 0.0015 of each other — inside their own

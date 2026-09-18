@@ -692,6 +692,41 @@
    },
    "note": "online adaptation, bayesian strategy at the same budget",
    "objective_calls_per_instance": 257.0
+  },
+  {
+   "method": "search_policy_gradient",
+   "cost_class": "online_adaptation",
+   "consults_true_outcomes": true,
+   "n_records": 864,
+   "n_parents": 48,
+   "measured_on_full_population": true,
+   "mean_loss": 0.5129900930268186,
+   "std_parent_loss": 0.2393230607379389,
+   "parent_bootstrap_ci": {
+    "low": 0.4446609073177913,
+    "high": 0.578459841483892,
+    "confidence": 0.95,
+    "resamples": 20000,
+    "unit_of_independence": "logical_parent",
+    "status": "ok",
+    "includes_training_seed_uncertainty": false
+   },
+   "vs_linear": {
+    "mean_difference": -0.0879393982313762,
+    "parent_bootstrap_ci": {
+     "low": -0.09865083064542664,
+     "high": -0.0784597102842326,
+     "confidence": 0.95,
+     "resamples": 20000,
+     "unit_of_independence": "logical_parent",
+     "status": "ok",
+     "includes_training_seed_uncertainty": false
+    },
+    "reference": "linear_loss",
+    "sign_convention": "negative means this method is better"
+   },
+   "note": "online adaptation, policy_gradient strategy at the same budget",
+   "objective_calls_per_instance": 257.0
   }
  ],
  "ranked_within_cost_class": {
@@ -717,7 +752,8 @@
   ],
   "online_adaptation": [
    "search_bayesian",
-   "search_best_found"
+   "search_best_found",
+   "search_policy_gradient"
   ]
  },
  "cost_classes": [
