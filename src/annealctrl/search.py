@@ -284,6 +284,65 @@ def eight_bin_hint(schedule: Schedule, *, runtime=1., max_slope=4.,
             "mode": mode, "evaluation_required": True}
 
 
+def bank_candidate_to_unit_parameters(candidate, *, runtime: float = 1.0,
+                                      max_slope: float = 4.0) -> tuple[str, np.ndarray] | None:
+    """Invert a bank candidate into the search's unit-cube parameters.
+
+    Warm-starting a search from a learned selection needs this to be *exact*.
+    The bank stores construction parameters -- window edges, pause fractions,
+    duration logits -- while ``optimize_control_family`` works in a unit cube and
+    decodes. If the inverse were approximate the experiment would be measuring
+    the conversion error rather than the hint, so every family here round-trips
+    to the same waveform and an unrecognised family is refused rather than
+    guessed at.
+
+    ``runtime`` and ``max_slope`` are required because one inverse genuinely
+    depends on them: the search encodes a pause as a fraction of the spare time
+    ``1 - 1/(runtime * max_slope)``, while the bank stores the fraction itself.
+    Ignoring that produced a waveform 0.032 away from the candidate it claimed to
+    reproduce.
+
+    Returns ``None`` for ``linear``, which has no free parameters, and the search
+    evaluates it as trial 0 regardless.
+    """
+    family, parameters = candidate.family, dict(candidate.parameters or {})
+    if family == "linear":
+        return None
+    if family == "duration_logits":
+        # decode() for eight_bin applies 2 * ndtri(p), so p = ndtr(logits / 2)
+        # reproduces the stored logits exactly.
+        logits = np.asarray(parameters["logits"], dtype=float)
+        return "eight_bin", ndtr(logits / 2.0)
+    if family == "one_window":
+        a, b, q = (float(parameters[k]) for k in ("a", "b", "q"))
+        p0 = a / 0.98
+        p1 = (((b - a) / (1.0 - a)) - 0.01) / 0.99
+        return "one_window", np.clip(np.array([p0, p1, q]), 1e-6, 1 - 1e-6)
+    if family == "two_window":
+        windows = parameters["windows"]
+        weights = list(parameters["weights"])
+        values = []
+        for a, b in windows:
+            a, b = float(a), float(b)
+            values.append(a / 0.98)
+            values.append((((b - a) / (1.0 - a)) - 0.01) / 0.99)
+        # decode() reads weights as [p4, (1 - p4) * p5].
+        w0, w1 = float(weights[0]), float(weights[1])
+        values.append(w0)
+        values.append(w1 / (1.0 - w0) if w0 < 1.0 else 0.0)
+        return "two_window", np.clip(np.array(values), 1e-6, 1 - 1e-6)
+    if family == "pause":
+        location = float(parameters["location"])
+        fraction = float(parameters["pause_fraction"])
+        spare = max(0.0, 1.0 - 1.0 / (runtime * max_slope))
+        if spare <= 0:
+            raise ValueError("no spare time at this runtime and slope cap; a pause candidate "
+                             "cannot be expressed in the search's parameterisation")
+        return "pause", np.clip(np.array([location, fraction / spare]), 1e-6, 1 - 1e-6)
+    raise ValueError(f"cannot map candidate family {family!r} to search parameters; "
+                     "add an explicit inverse rather than approximating one")
+
+
 def optimize_control_family(
     loss_fn: Callable[[Schedule], float], family: str, *, budget: int = 32,
     runtime: float = 1.0, max_slope: float = 4.0, seed: int = 0,

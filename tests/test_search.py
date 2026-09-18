@@ -493,3 +493,55 @@ def test_warm_start_is_refused_by_strategies_that_cannot_use_it():
         with pytest.raises(ValueError, match="warm_start"):
             optimize_control_family(lambda s: 0.5, "one_window", budget=9, seed=0,
                                     strategy=strategy, warm_start=np.full(3, 0.5))
+
+
+# --- mapping a bank candidate back to search parameters ----------------------
+
+def test_bank_candidate_round_trips_to_search_parameters():
+    """Warm-starting a search from a learned selection needs the inverse map.
+
+    The bank stores each candidate's construction parameters; the search works in
+    a unit cube. Without an exact inverse a "warm start from the model's choice"
+    would start somewhere else, and the experiment would measure the conversion
+    error rather than the hint.
+    """
+    from annealctrl.search import (bank_candidate_to_unit_parameters, shared_candidate_bank,
+                                   optimize_control_family)
+
+    runtime, max_slope = 4.0, 1.0
+    tau = np.linspace(0.0, 1.0, 129)
+    bank = shared_candidate_bank(n=64, n_segments=8, seed=20260916,
+                                 runtime=runtime, max_slope=max_slope)
+    checked = 0
+    for candidate in bank:
+        recovered = bank_candidate_to_unit_parameters(
+            candidate, runtime=runtime, max_slope=max_slope)
+        if recovered is None:                      # linear has no free parameters
+            assert candidate.family == "linear"
+            continue
+        family, parameters = recovered
+        captured = {}
+
+        def loss_fn(schedule, captured=captured):
+            captured.setdefault("first", schedule)
+            return 0.0
+
+        optimize_control_family(loss_fn, family, budget=2, seed=0, runtime=runtime,
+                                max_slope=max_slope, warm_start=parameters)
+        # budget 2 = linear then the hint; re-run to grab the hint's waveform.
+        result = optimize_control_family(lambda s: float(np.abs(s(tau)).sum()), family,
+                                         budget=2, seed=0, runtime=runtime,
+                                         max_slope=max_slope, warm_start=parameters)
+        hint = result.records[1].candidate.schedule
+        assert np.abs(hint(tau) - candidate.schedule(tau)).max() < 1e-9, candidate.candidate_id
+        checked += 1
+    assert checked >= 50, f"only {checked} candidates exercised"
+
+
+def test_unknown_candidate_family_is_refused_not_guessed():
+    from annealctrl.search import Candidate, bank_candidate_to_unit_parameters
+    from annealctrl.schedules import Schedule
+
+    with pytest.raises(ValueError, match="cannot map"):
+        bank_candidate_to_unit_parameters(
+            Candidate("x", "mystery", Schedule.linear(), {"whatever": 1.0}))
