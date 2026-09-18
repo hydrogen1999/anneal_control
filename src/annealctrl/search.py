@@ -348,6 +348,8 @@ def optimize_control_family(
     runtime: float = 1.0, max_slope: float = 4.0, seed: int = 0,
     split: str = "train", allow_test_adaptation: bool = False,
     strategy: str = "sobol_local", warm_start=None,
+    surrogate: Callable[[Sequence[Schedule]], np.ndarray] | None = None,
+    oversample: int = 1,
 ) -> SearchResult:
     """Exact-waveform Sobol exploration plus incumbent-centered random search.
 
@@ -358,6 +360,16 @@ def optimize_control_family(
     Linear has no free parameters and is evaluated ONCE (never padded with fake
     optimization calls). Returned controls retain their actual switching knots;
     they are NOT resampled onto the learned policy's nine-point representation.
+
+    A ``surrogate`` turns each simulator call into a choice. Instead of
+    simulating the next proposal, ``oversample`` proposals are drawn, scored by
+    the surrogate for free, and only the best is simulated. **The budget is
+    simulator calls and does not move**: at ``oversample=8`` a budget of 32 is
+    still 32 true evaluations, chosen from 256 proposals. That is the whole
+    claim, so a test asserts the call count is exactly ``budget`` at every
+    oversample, and another asserts ``oversample=1`` reproduces the unfiltered
+    search record for record -- a filter that quietly shifts the baseline would
+    make any improvement unreadable.
     """
     _check_split(split)
     if split == "test" and not allow_test_adaptation:
@@ -366,6 +378,15 @@ def optimize_control_family(
         raise ValueError(f"unknown control family {family!r}")
     if strategy not in STRATEGIES:
         raise ValueError(f"unknown search strategy {strategy!r}; available: {list(STRATEGIES)}")
+    if isinstance(oversample, bool) or not isinstance(oversample, int) or oversample < 1:
+        raise ValueError("oversample must be a positive integer")
+    if oversample > 1 and surrogate is None:
+        raise ValueError("oversample above one needs a surrogate to choose with; without "
+                         "one the extra proposals would be discarded at random")
+    if surrogate is not None and strategy != "sobol_local":
+        raise ValueError(f"surrogate filtering is implemented for sobol_local, not {strategy!r}; "
+                         "accepting it silently would report a filtered budget that never "
+                         "filtered anything")
     if warm_start is not None and strategy not in {"sobol_local", "bayesian"}:
         raise ValueError(f"warm_start is only implemented for sobol_local and bayesian, not {strategy!r}; "
                          "dropping the hint silently would make a warm-start experiment "
@@ -386,8 +407,9 @@ def optimize_control_family(
     if family == "linear" or budget == 1:
         return SearchResult((first,), split, split == "test")
     rng = np.random.default_rng(seed)
+    n_points = max(1, (budget - 1) * oversample)
     points = qmc.Sobol(dimension, scramble=True, seed=seed).random_base2(
-        int(np.ceil(np.log2(budget - 1))))[:budget - 1]
+        int(np.ceil(np.log2(n_points))))[:n_points]
     best_parameters, best_loss = None, first.loss
     records = [first]
 
@@ -541,17 +563,50 @@ def optimize_control_family(
         # window/pause families. Explore until a genuine parameter incumbent
         # exists, instead of pretending arbitrary 0.5 coordinates encode it.
         exploratory = index % 2 == 1 or best_parameters is None
-        parameters = points[index - 1 - warm_offset] if exploratory else np.clip(
-            best_parameters + rng.normal(0., 0.15, dimension), 1e-6, 1 - 1e-6)
-        schedule = decode(parameters)
-        schedule.validate_slope(runtime=runtime, max_slope=max_slope)
+        # One proposal at oversample 1, so the unfiltered path is untouched.
+        # The Sobol slice is keyed to the loop index, not to a running cursor, so
+        # at oversample 1 the consumed point is exactly points[index-1-warm_offset]
+        # -- the unfiltered stream, unchanged. A cursor that only advanced on
+        # exploratory steps silently moved the baseline, and the existing
+        # warm-start test caught it.
+        base = (index - 1 - warm_offset) * oversample
+        proposals = []
+        for offset in range(oversample):
+            if exploratory:
+                proposals.append(points[min(base + offset, len(points) - 1)])
+            else:
+                proposals.append(np.clip(best_parameters + rng.normal(0., 0.15, dimension),
+                                         1e-6, 1 - 1e-6))
+        decoded = []
+        for parameters in proposals:
+            schedule = decode(parameters)
+            schedule.validate_slope(runtime=runtime, max_slope=max_slope)
+            decoded.append((parameters, schedule))
+        if surrogate is None or len(decoded) == 1:
+            parameters, schedule = decoded[0]
+            extra = {}
+        else:
+            # Scored before any true loss is seen: the surrogate is the only
+            # thing that chooses, and the discarded proposals cost nothing.
+            scores = np.asarray(surrogate([d[1] for d in decoded]), dtype=float)
+            if scores.shape != (len(decoded),):
+                raise ValueError(f"surrogate must return one score per proposal, got "
+                                 f"{scores.shape} for {len(decoded)} proposals")
+            if not np.isfinite(scores).all():
+                raise ValueError("surrogate returned a nonfinite score")
+            pick = int(scores.argmin())
+            parameters, schedule = decoded[pick]
+            extra = {"surrogate_considered": len(decoded),
+                     "surrogate_pick": pick,
+                     "surrogate_scores": [float(x) for x in scores]}
         candidate = Candidate(f"{family}_{index:04d}", family, schedule,
-                              {"unit_parameters": parameters.tolist(),
-                               "proposal": "sobol" if exploratory else "incumbent_local"})
+                              {"unit_parameters": np.asarray(parameters).tolist(),
+                               "proposal": "sobol" if exploratory else "incumbent_local",
+                               **extra})
         record = _evaluate(loss_fn, candidate, index)
         records.append(record)
         if record.loss < best_loss:
-            best_parameters, best_loss = parameters.copy(), record.loss
+            best_parameters, best_loss = np.asarray(parameters).copy(), record.loss
     return SearchResult(tuple(records), split, split == "test")
 
 
