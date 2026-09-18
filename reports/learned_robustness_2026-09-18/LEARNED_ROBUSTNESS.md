@@ -104,28 +104,64 @@ So roughly a fifth of the achievable advantage at rate 0.1 is lost purely by
 being unable to see the environment — and the learned critic recovers part of
 that gap without being shown it.
 
-## The mechanism was tested and is NOT established
+## The mechanism: noiseless optimisation is what the environment punishes
 
-The natural story is the one in `open_system.py`'s docstring: a control that
-lingers buys adiabaticity in a closed system and buys the bath more time in an
-open one, so the exact noiseless argmax over-commits to lingering and a smoothed
-critic does not. That is a plausible story and **the measurement does not
-support it.**
+A first attempt at this failed, and the failure is informative rather than
+discardable. The story in `open_system.py`'s docstring is that a control which
+*lingers* buys adiabaticity in a closed system and buys the bath more time in
+an open one. Tested as written — rank correlation between a candidate's dwell
+time (1 ÷ minimum local slope) and its degradation, over 120 records × 8
+candidates — it finds nothing:
 
-Rank correlation between a candidate's dwell time (1 ÷ minimum local slope) and
-its degradation loss(0.1) − loss(0), over 120 records × 8 candidates:
-
-    per-record mean   +0.0655
-    per-record median +0.0737
-    positive in       72/120 records = 60.0%
+    per-record mean   +0.0655        positive in 72/120 = 60.0%
     pooled            +0.0097
 
-That is no relationship worth the name. Either the mechanism is wrong, or dwell
-measured *anywhere* is the wrong proxy for lingering *near the gap* — this test
-cannot distinguish them. **The effect in Results 1–3 is measured; its
-explanation is not.** It is written here rather than omitted because a
-plausible mechanism that fails its own test is exactly the thing a paper should
-not quietly drop.
+So lingering *anywhere* is not the mechanism.
+
+Asking the question without a proxy does work. If the exact noiseless argmax
+over-commits to something the environment punishes, then within a record a
+candidate's closed-system quality should predict its degradation. Over 200
+records × 8 candidates:
+
+| statistic | value | sign holds in |
+|---|---|---|
+| ρ(noiseless loss, degradation) | **−0.9081** | 200/200 records |
+| ρ(noiseless loss, degradation ÷ headroom) | **−0.7925** | 198/200 records |
+| degradation rank of the noiseless-best, headroom-normalised | **7.12** of 8 (chance 4.5) | — |
+
+**The better a control is without noise, the more it loses with noise.**
+
+### The obvious artefact was checked and is not the explanation
+
+A loss lives in [0, 1], so a candidate with a low noiseless loss has more room
+to rise and a negative level–change correlation can appear with no mechanism at
+all. Dividing the degradation by the available headroom (1 − loss) removes
+exactly that. The correlation moves from −0.9081 to **−0.7925** and stays
+negative in 198 of 200 records. The ceiling accounts for a small part of the
+effect and not for the effect.
+
+### This is erosion, not inversion
+
+Two numbers keep the claim the right size:
+
+    ρ(loss at rate 0, loss at rate 0.1)      +0.8340
+    noiseless-best still best at rate 0.1    157/200 = 78.5%
+
+The ordering largely survives and the noiseless favourite usually remains the
+favourite. It is simply, and systematically, the candidate that gives up the
+most. That is precisely the shape needed to explain Results 1–3: the advantage
+survives because the ordering holds, it decays because the winner degrades
+most, and a smoothed critic that does not chase the extreme optimum keeps more
+of what it had.
+
+### What it means beyond this table
+
+The practical reading is unwelcome and worth stating plainly: **on a noisy
+device, optimising harder against a noiseless simulator is self-defeating past
+some point.** The controls a closed-system search rewards are the ones an
+environment erodes fastest. That is an argument for learning a smoothed
+preference rather than for running a longer noiseless search, and it is
+measured here rather than argued.
 
 ## Limits
 
