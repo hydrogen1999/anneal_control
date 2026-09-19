@@ -52,6 +52,27 @@ failing to separate four encoders at 48 parents does not make them equal.
 The pooled aware-minus-blind figure of −0.00782 [−0.01109, −0.00447] remains
 exploratory and unadjusted, and is not the basis of the claim above.
 
+## A second factorial cell falls out of the same matrix
+
+`hierarchy_physics` and `hierarchy_outcome` have **identical model blocks** and
+differ in exactly one training key — `response_weight`, 0.05 against 0.0. So
+their row above is not merely an architecture comparison; it **is** the design
+document's factor-5 arm, "with/without auxiliary physics":
+
+    hierarchy_physics - hierarchy_outcome = -0.00055 [-0.00166, +0.00050]
+                                            Holm p = 1.0000
+
+This is a **tight** null rather than an absence of evidence: the interval
+bounds any effect of the auxiliary spectral-response loss below ±0.0017 in
+either direction, against learned-versus-linear effects of 0.056 and
+learned-versus-teacher effects of 0.050. The auxiliary physics loss buys
+nothing measurable here — and, answering the other half of what the document
+asks of this arm, costs nothing either: there is no measurable negative
+transfer.
+
+One weight value, not a sweep; a different `response_weight` could behave
+differently.
+
 ## Limits
 
 - One dataset, bank-selection mode, 48 held-out parents, intervals conditional
