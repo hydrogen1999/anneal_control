@@ -87,28 +87,40 @@ here — have not been examined at all.
 
 ## Consequence 2: it explains why the spectral teachers look useless
 
-Half of these instances have a *monotone* gap. A time density derived from D₂
-has nothing to localise on a monotone gap, so the construction reduces to
-something close to linear there. Splitting the `d2` teacher on that mechanism:
+Half of these instances have a *monotone* gap, and a time density derived from
+D₂ has nothing to localise there. That motivated splitting the `d2` teacher on
+the mechanism — and the split behaves very differently at different runtimes,
+which an earlier version of this report did not check.
 
-| subgroup | n | teacher − linear | beats linear |
-|---|---:|---|---:|
-| 0 interior minima | 23 | **+0.01065** [−0.00093, +0.02183] | 6/23 |
-| ≥1 interior minimum | 24 | **−0.01291** [−0.01815, −0.00768] | **21/24** |
+**Teacher − linear, by subgroup and runtime:**
 
-The teacher is not useless. It works where it has a bottleneck to work with and
-does nothing where it does not, and rank correlation between the minimum gap
-and its advantage over linear is **−0.399** — smaller gap, larger benefit,
-which is what adiabatic theory predicts.
+| runtime | 0 interior minima | ≥1 interior minimum |
+|---:|---|---|
+| 1 | +0.01065 [−0.00093, +0.02183], 6/23 | **−0.01291** [−0.01815, −0.00768], 21/24 |
+| 4 | −0.03788 [−0.08203, +0.00375], 12/23 | **+0.05777** [+0.01517, +0.10218], 7/24 |
+| 12 | **−0.04834** [−0.08882, −0.01220], 15/23 | +0.02544 [−0.02310, +0.07425], 9/24 |
 
-The pooled "spectral teachers barely beat linear" figure on this population was
-a **mixture of two opposite subgroups**, in the same way that a claimed 2.6×
-scale-arm effect was a mixture of factor populations and a +0.00729 filtering
-gain was 39 % proposal-stream coverage.
+**The stratification reverses.** At runtime 1 the teacher helps the
+interior-minimum group; at runtime 4 it *hurts* that same group, with the
+interval clearing zero in the opposite direction. Pooled correctly — averaging
+within parent across all three runtimes, then resampling parents — it helps the
+**monotone** group (−0.02519 [−0.04990, −0.00060], 23 parents) and not the
+other (+0.02343 [−0.00587, +0.05259]).
 
-It also sharpens the related-work comparison: on the working half, the physical
-embedded spectrum beats the logical one by +0.00871 [+0.00450, +0.01304], 19/24
-parents. See
+So the earlier claim here, that the teacher "works where it has a bottleneck to
+work with", was a **runtime-1 result reported as a general one, and is
+withdrawn**. What is true is narrower and less tidy: the teacher's value
+depends on runtime at least as strongly as on gap structure, and the two
+interact with opposite signs.
+
+The rank correlation of −0.399 between minimum gap and teacher advantage was
+also computed at runtime 1 only and inherits the same limitation.
+
+What does survive the pooling is the related-work contrast: on the
+interior-minimum subgroup the physical embedded spectrum beats the logical one
+by **+0.01137 [+0.00320, +0.01975]** over 24 parents, pooled across all three
+runtimes, with the same sign at each of them individually (+0.0087, +0.0135,
++0.0120). See
 [the logical-spectrum report](../logical_spectrum_2026-09-19/LOGICAL_SPECTRUM.md).
 
 ## Limits
