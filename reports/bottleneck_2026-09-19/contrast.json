@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "source": "/home/nguyencongt/runs/bottleneck_run/paper/results.json",
+  "modes": {
+    "bank": {
+      "contrast_matrix": {
+        "schema_version": 2,
+        "mode": "bank",
+        "key": "loss",
+        "methods": [
+          "bottleneck_1",
+          "bottleneck_8",
+          "unconstrained"
+        ],
+        "n_comparisons": 3,
+        "alpha": 0.05,
+        "correction": "holm",
+        "pairs": [
+          {
+            "schema_version": 2,
+            "method_a": "bottleneck_1",
+            "method_b": "bottleneck_8",
+            "mode": "bank",
+            "key": "loss",
+            "n_parents": 48,
+            "mean_a": 0.5510032039679938,
+            "mean_b": 0.544449051049071,
+            "mean_difference": -0.006554152918922702,
+            "std_difference": 0.011799687626372441,
+            "parents_favouring_b": 40,
+            "ci_low": -0.0098134027787588,
+            "ci_high": -0.0032433022109780345,
+            "p_value": 9.99950002499875e-05,
+            "p_value_method": "centered_null_bootstrap_absolute_mean",
+            "p_value_scope": "approximate; conditional on observed training seeds",
+            "status": "ok",
+            "confidence": 0.95,
+            "resamples": 20000,
+            "separated": true,
+            "better": "bottleneck_8",
+            "unit_of_independence": "logical_parent",
+            "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+            "correction": "none",
+            "scope": "paired on the parent, conditional on observed training seeds; CI is pointwise and uncorrected for multiplicity; see contrast_matrix for the family-corrected decision; failure to separate is not equivalence",
+            "p_value_holm": 0.0002999850007499625,
+            "separated_after_correction": true
+          },
+          {
+            "schema_version": 2,
+            "method_a": "bottleneck_1",
+            "method_b": "unconstrained",
+            "mode": "bank",
+            "key": "loss",
+            "n_parents": 48,
+            "mean_a": 0.5510032039679938,
+            "mean_b": 0.5453468962533674,
+            "mean_difference": -0.005656307714626443,
+            "std_difference": 0.012040753233206395,
+            "parents_favouring_b": 38,
+            "ci_low": -0.009074996446313887,
+            "ci_high": -0.0023014492139251256,
+            "p_value": 0.0014499275036248187,
+            "p_value_method": "centered_null_bootstrap_absolute_mean",
+            "p_value_scope": "approximate; conditional on observed training seeds",
+            "status": "ok",
+            "confidence": 0.95,
+            "resamples": 20000,
+            "separated": true,
+            "better": "unconstrained",
+            "unit_of_independence": "logical_parent",
+            "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+            "correction": "none",
+            "scope": "paired on the parent, conditional on observed training seeds; CI is pointwise and uncorrected for multiplicity; see contrast_matrix for the family-corrected decision; failure to separate is not equivalence",
+            "p_value_holm": 0.0028998550072496373,
+            "separated_after_correction": true
+          },
+          {
+            "schema_version": 2,
+            "method_a": "bottleneck_8",
+            "method_b": "unconstrained",
+            "mode": "bank",
+            "key": "loss",
+            "n_parents": 48,
+            "mean_a": 0.544449051049071,
+            "mean_b": 0.5453468962533674,
+            "mean_difference": 0.0008978452042962583,
+            "std_difference": 0.008367653557966835,
+            "parents_favouring_b": 22,
+            "ci_low": -0.0014542485330571193,
+            "ci_high": 0.0032201721139644523,
+            "p_value": 0.44612769361531923,
+            "p_value_method": "centered_null_bootstrap_absolute_mean",
+            "p_value_scope": "approximate; conditional on observed training seeds",
+            "status": "ok",
+            "confidence": 0.95,
+            "resamples": 20000,
+            "separated": false,
+            "better": null,
+            "unit_of_independence": "logical_parent",
+            "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+            "correction": "none",
+            "scope": "paired on the parent, conditional on observed training seeds; CI is pointwise and uncorrected for multiplicity; see contrast_matrix for the family-corrected decision; failure to separate is not equivalence",
+            "p_value_holm": 0.44612769361531923,
+            "separated_after_correction": false
+          }
+        ],
+        "ranked_by_mean": [
+          "bottleneck_8",
+          "unconstrained",
+          "bottleneck_1"
+        ],
+        "nonseparated_maximal_sets": [
+          [
+            "bottleneck_1"
+          ],
+          [
+            "bottleneck_8",
+            "unconstrained"
+          ]
+        ],
+        "indistinguishable_groups": [
+          [
+            "bottleneck_1"
+          ],
+          [
+            "bottleneck_8",
+            "unconstrained"
+          ]
+        ],
+        "deprecated_fields": {
+          "indistinguishable_groups": "use nonseparated_maximal_sets; not equivalence"
+        },
+        "n_separated_after_correction": 2,
+        "scope": "a pair is called separated only after Holm correction of approximate centered-null bootstrap p-values over these 3 comparisons and a pointwise CI excluding zero; CIs are not simultaneous; conditional on observed training seeds; failing to separate is not evidence of equality; the pooled embedding-information contrast is outside this correction family"
+      },
+      "embedding_information": {
+        "status": "unavailable",
+        "reason": "none of the blind encoders ('logical',) appear in mode 'bank'"
+      }
+    }
+  }
+}

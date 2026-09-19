@@ -1,0 +1,275 @@
+{
+  "schema_version": 1,
+  "status": "complete",
+  "config": {
+    "schema_version": 1,
+    "dataset": {
+      "seed": 20260916,
+      "parents": 240,
+      "families": [
+        "spin_glass",
+        "weighted_maxcut",
+        "planted_loops",
+        "weak_field"
+      ],
+      "logical_sizes": [
+        3,
+        4,
+        5
+      ],
+      "logical_support": {
+        "kind": "complete"
+      },
+      "chain_distribution": {
+        "distribution": "power_law",
+        "low": 1,
+        "high": 3,
+        "exponent": 2.0
+      },
+      "variants": [
+        {
+          "shape": "path",
+          "ports": 1,
+          "field_distribution": "uniform"
+        },
+        {
+          "shape": "random_tree",
+          "ports": 2,
+          "field_distribution": "concentrated",
+          "coupling_distribution": "random"
+        }
+      ],
+      "chain_strengths": [
+        0.75,
+        1.5,
+        3.0
+      ],
+      "runtimes": [
+        1.0,
+        4.0,
+        12.0
+      ],
+      "candidates": 64,
+      "candidate_batch_size": 8,
+      "spectral_points": 9,
+      "teacher": {
+        "mode": "adaptive",
+        "max_queries": 65,
+        "audit_points": 8,
+        "relative_tolerance": 0.05
+      },
+      "steps": 64,
+      "max_steps": 16384,
+      "label_state_tolerance": 0.0002,
+      "max_physical_qubits": 10,
+      "endpoint_memory_mb": 1024,
+      "state_memory_mb": 2048
+    },
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "methods": [
+      {
+        "name": "unconstrained",
+        "model": {
+          "encoder_variant": "hierarchical",
+          "width": 64
+        },
+        "training": {
+          "response_weight": 0.0
+        }
+      },
+      {
+        "name": "bottleneck_1",
+        "model": {
+          "encoder_variant": "hierarchical",
+          "width": 64,
+          "bottleneck_dim": 1
+        },
+        "training": {
+          "response_weight": 0.0
+        }
+      },
+      {
+        "name": "bottleneck_8",
+        "model": {
+          "encoder_variant": "hierarchical",
+          "width": 64,
+          "bottleneck_dim": 8
+        },
+        "training": {
+          "response_weight": 0.0
+        }
+      }
+    ],
+    "training": {
+      "epochs": 200,
+      "patience": 25,
+      "learning_rate": 0.001,
+      "batch_size": 8,
+      "accumulation_steps": 2,
+      "weight_decay": 0.0001,
+      "policy_weight": 0.2,
+      "ranking_weight": 0.1
+    },
+    "execution": {
+      "device": "cpu",
+      "backend": "numpy",
+      "threads": 1,
+      "workers": 12
+    },
+    "evaluation": {
+      "direct": true,
+      "tolerance": 0.0002,
+      "initial_steps": 128,
+      "max_steps": 16384,
+      "n_resamples": 10000
+    },
+    "report": {
+      "plots": true,
+      "bootstrap_resamples": 10000
+    },
+    "_execution_note": "Mandatory-bottleneck ablation from the design document's factorial table: 'Force G->D2->rho versus direct residual branch with identical encoder ... Loss caused by scalar compression, not merely model size.' All three methods share the hierarchical encoder, width 64 and response_weight 0.0, so the only difference is the constriction. bottleneck_1 is the literal scalar chain; bottleneck_8 is a coarse profile. Both ADD parameters (230176 and 231079 against 225823), so a loss cannot be attributed to a smaller model. The unconstrained arm is re-trained inside this experiment rather than borrowed from research_v1, so the comparison shares data, splits and seeds."
+  },
+  "config_hash": "3fe7bfb3a82f103b892a050a160fa2e62f3a95f963c792cb0c49fd2875b43cc0",
+  "source_hash": "1d9a3bcd6a915e23a59f831a57a98ccaebad83302c8876f03e857d70589434c9",
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-6.8.0-90-generic-x86_64-with-glibc2.39",
+    "packages": {
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "networkx": "3.6.1",
+      "torch": "2.14.0+cpu",
+      "pytest": "9.1.1"
+    }
+  },
+  "stages": {
+    "generate": {
+      "seconds": 4185.762929132674,
+      "record_count": 4320
+    },
+    "report": true
+  },
+  "runs": {
+    "unconstrained/seed_0": {
+      "method": "unconstrained",
+      "seed": 0,
+      "training_cost_complete": true,
+      "observed_training_seconds": 3557.2167708342895,
+      "trained": true,
+      "best_epoch": 29,
+      "training_seconds": 3557.2167708342895,
+      "checkpoint": "models/unconstrained/seed_0/best.pt",
+      "evaluated": true,
+      "evaluation_seconds": 84.72153154108673,
+      "evaluation": "evaluations/unconstrained__seed_0.json"
+    },
+    "unconstrained/seed_1": {
+      "method": "unconstrained",
+      "seed": 1,
+      "training_cost_complete": true,
+      "observed_training_seconds": 3456.554762683809,
+      "trained": true,
+      "best_epoch": 34,
+      "training_seconds": 3456.554762683809,
+      "checkpoint": "models/unconstrained/seed_1/best.pt",
+      "evaluated": true,
+      "evaluation_seconds": 83.0917344246991,
+      "evaluation": "evaluations/unconstrained__seed_1.json"
+    },
+    "unconstrained/seed_2": {
+      "method": "unconstrained",
+      "seed": 2,
+      "training_cost_complete": true,
+      "observed_training_seconds": 4692.757930787746,
+      "trained": true,
+      "best_epoch": 56,
+      "training_seconds": 4692.757930787746,
+      "checkpoint": "models/unconstrained/seed_2/best.pt",
+      "evaluated": true,
+      "evaluation_seconds": 101.47875482961535,
+      "evaluation": "evaluations/unconstrained__seed_2.json"
+    },
+    "bottleneck_1/seed_0": {
+      "method": "bottleneck_1",
+      "seed": 0,
+      "training_cost_complete": true,
+      "observed_training_seconds": 2350.0653405119665,
+      "trained": true,
+      "best_epoch": 20,
+      "training_seconds": 2350.0653405119665,
+      "checkpoint": "models/bottleneck_1/seed_0/best.pt",
+      "evaluated": true,
+      "evaluation_seconds": 97.65013975510374,
+      "evaluation": "evaluations/bottleneck_1__seed_0.json"
+    },
+    "bottleneck_1/seed_1": {
+      "method": "bottleneck_1",
+      "seed": 1,
+      "training_cost_complete": true,
+      "observed_training_seconds": 1900.9853903460316,
+      "trained": true,
+      "best_epoch": 11,
+      "training_seconds": 1900.9853903460316,
+      "checkpoint": "models/bottleneck_1/seed_1/best.pt",
+      "evaluated": true,
+      "evaluation_seconds": 93.5141015346162,
+      "evaluation": "evaluations/bottleneck_1__seed_1.json"
+    },
+    "bottleneck_1/seed_2": {
+      "method": "bottleneck_1",
+      "seed": 2,
+      "training_cost_complete": true,
+      "observed_training_seconds": 6964.5584733211435,
+      "trained": true,
+      "best_epoch": 102,
+      "training_seconds": 6964.5584733211435,
+      "checkpoint": "models/bottleneck_1/seed_2/best.pt",
+      "evaluated": true,
+      "evaluation_seconds": 119.49961871979758,
+      "evaluation": "evaluations/bottleneck_1__seed_2.json"
+    },
+    "bottleneck_8/seed_0": {
+      "method": "bottleneck_8",
+      "seed": 0,
+      "training_cost_complete": true,
+      "observed_training_seconds": 3304.1857962762006,
+      "trained": true,
+      "best_epoch": 35,
+      "training_seconds": 3304.1857962762006,
+      "checkpoint": "models/bottleneck_8/seed_0/best.pt",
+      "evaluated": true,
+      "evaluation_seconds": 275.6289821160026,
+      "evaluation": "evaluations/bottleneck_8__seed_0.json"
+    },
+    "bottleneck_8/seed_1": {
+      "method": "bottleneck_8",
+      "seed": 1,
+      "training_cost_complete": true,
+      "observed_training_seconds": 4594.992007479072,
+      "trained": true,
+      "best_epoch": 58,
+      "training_seconds": 4594.992007479072,
+      "checkpoint": "models/bottleneck_8/seed_1/best.pt",
+      "evaluated": true,
+      "evaluation_seconds": 62.98340460192412,
+      "evaluation": "evaluations/bottleneck_8__seed_1.json"
+    },
+    "bottleneck_8/seed_2": {
+      "method": "bottleneck_8",
+      "seed": 2,
+      "training_cost_complete": true,
+      "observed_training_seconds": 1747.0756749399006,
+      "trained": true,
+      "best_epoch": 23,
+      "training_seconds": 1747.0756749399006,
+      "checkpoint": "models/bottleneck_8/seed_2/best.pt",
+      "evaluated": true,
+      "evaluation_seconds": 49.59015035908669,
+      "evaluation": "evaluations/bottleneck_8__seed_2.json"
+    }
+  }
+}

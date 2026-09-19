@@ -62,7 +62,7 @@ extensions beyond this completed baseline workflow".
 |---|---|---|
 | 1 | Physical input (logical / physical / hierarchy) | **Partial.** Aware − blind = −0.007817 [−0.011093, −0.004471] over 48 parents, but the ledger labels it *exploratory, not Holm-adjusted*, and the Pegasus interval [−0.020195, +0.001062] includes zero. The document's headline factor is not confirmatory. |
 | 2 | Spectral target (first gap → all gaps → response bins → response + intervention) | **Missing as a ladder.** `gap_inverse_square` and `d2` exist as *teachers*; response bins exist as *features*. The four-rung comparison that isolates "whether couplings, frequency resolution, or finite-time response add decision value" was never run. |
-| 3 | **Mandatory bottleneck** G→D₂→ϱ versus direct residual branch, identical encoder | **Largely answered, by an oracle upper bound — see §2a.** Not by the learned variant the table literally asks for. |
+| 3 | **Mandatory bottleneck** G→D₂→ϱ versus direct residual branch, identical encoder | **DONE** (2026-09-19). A learned scalar chain costs +0.00566 [+0.00230, +0.00907], Holm p = 0.0029, with *more* parameters than the unconstrained model. An eight-number profile is not separated (Holm p = 0.45). Compression is not the problem; scalar compression is. [Report](../reports/bottleneck_2026-09-19/BOTTLENECK.md) |
 | 4 | Control family | **Done** — all four families searched, and see §1. |
 | 5 | Learning objective (imitation vs outcome, ± auxiliary physics) | **Partial.** `hierarchy_physics` and `hierarchy_outcome` are both trained and both appear in the comparison table, but no *paired contrast between them* is archived; the ledger explicitly says "no between-method architecture claim is established". |
 | 6 | Symmetry (signed baseline / gauge augmentation / covariant model) | **Missing as evidence.** An `invariant-gauge` variant exists in the model contract and gauge code exists in five modules; no archived ablation result. |
@@ -217,9 +217,11 @@ rather than left as orphans:
 
 1. **Re-run Stage A's gate as a predeclared decision and act on it** (§1). It is
    free — the data exists — and it questions the model's output family.
-2. **The learned bottleneck variant** (§2a). The oracle upper bound already
-   loses by 0.050, so this converts a strong argument into the measured
-   ablation rather than deciding the question.
+2. ~~**The learned bottleneck variant**~~ **Done** (§2a). The scalar chain is
+   separated from both the unconstrained model and an eight-number profile
+   after Holm correction; the profile is not separated from unconstrained. The
+   document's resolution is refined, not just confirmed: do not compress to a
+   *scalar*.
 3. **Tx-NQDT** (§3). The competitor a reviewer names first.
 4. Multi-crossing runtime scan (§4) and the gauge ablation (§2, factor 6).
 5. Report time-to-solution from existing data (§5) — also free.
