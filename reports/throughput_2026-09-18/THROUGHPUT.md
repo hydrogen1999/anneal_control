@@ -91,6 +91,45 @@ this is **one replicate** at a size where the two 14-qubit replicates already
 disagreed by 13%. The defensible statement at 16 qubits is "somewhere around
 60–90×, measured once, under contention".
 
+## How far the GPU actually reaches: 18 and 20 qubits, measured
+
+The NumPy arm at 18 qubits would take roughly 74 hours by extrapolation from the
+measured per-two-qubit CPU slowdown, which answers nothing worth 74 hours. So
+these two points are **GPU-only** — no parity check is possible without the CPU
+arm, and parity was already verified at 10, 12, 14 and 16 qubits at 2.22e-16.
+
+| physical qubits | labels | wall | labels/s | numerical gate | max norm error |
+|---:|---:|---:|---:|---|---:|
+| 14 | 576 | 216 s | 2.6641 | passed | 8.8e-14 |
+| 16 | 288 | 173 s | 1.6647 | passed | 1.0e-13 |
+| 18 | 144 | 118 s | 1.2250 | passed | 3.8e-14 |
+| 20 | 72 | 220 s | **0.3277** | passed | 2.9e-14 |
+
+*(Label counts halve because each config labels fewer candidates per record —
+8 at 16 qubits, 4 at 18. Rate per label is the comparable quantity and is what
+is tabulated.)*
+
+Slowdown per two qubits on the GPU: 1.60×, 1.36×, then 3.74×. **20 physical
+qubits generates, and it generates in under four minutes for 72 labels.**
+
+### What that means for scale
+
+The configs record the reason this ladder exists: at 18 qubits a full
+eigendecomposition needs **1.1 × 10³ GB** while the state vector needs
+**0.004 GB**. Only the spectral teacher is exponentially capped — the
+propagation path that every non-oracle claim in this project uses is not.
+
+Extrapolating the measured GPU rate, a 2880-record dataset at 20 qubits is
+roughly 39 GPU-hours: large but ordinary. Memory is nowhere near binding — a
+20-qubit state vector is 16 MB against 97 GB of device memory, and 30 qubits
+would still fit at 16 GB. Time binds first: at 3.74× per two qubits, 24 qubits
+is ~0.023 labels/s and 26 is ~0.006, where a single label takes minutes.
+
+So the honest scale statement for exact simulation on this hardware is
+**dataset generation to about 20 physical qubits, individual evaluations to
+about 24–26**, with the spectral oracle stuck near 16 for a completely
+different reason.
+
 ## The GPU computes the same science
 
 Worth stating separately, because it is the part that is clean. On the same 36

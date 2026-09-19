@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "status": "complete",
+  "config": {
+    "seed": 20260916,
+    "parents": 6,
+    "families": [
+      "spin_glass",
+      "weighted_maxcut"
+    ],
+    "logical_qubits": 9,
+    "chain_lengths": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2
+    ],
+    "variants": [
+      {
+        "shape": "path",
+        "ports": 1,
+        "field_distribution": "uniform"
+      },
+      {
+        "shape": "random_tree",
+        "ports": 2,
+        "field_distribution": "concentrated",
+        "coupling_distribution": "random"
+      }
+    ],
+    "chain_strengths": [
+      0.75,
+      1.5,
+      3.0
+    ],
+    "runtimes": [
+      4.0
+    ],
+    "candidates": 4,
+    "candidate_batch_size": 4,
+    "spectral_points": 3,
+    "teacher": {
+      "mode": "none"
+    },
+    "steps": 64,
+    "max_steps": 16384,
+    "label_state_tolerance": 0.0002,
+    "max_physical_qubits": 18,
+    "endpoint_memory_mb": 2058,
+    "state_memory_mb": 4129,
+    "endpoint_max_qubits": 18,
+    "_note": "Backend throughput at 18 physical qubits. The point of this ladder is that only the spectral teacher is exponentially capped: a full eigendecomposition needs 1.1e+03 GB at this size, while the state vector needs 0.004 GB and the basis observables 0.010 GB. teacher.mode=none, so this measures the propagation path that every non-oracle claim in the project actually uses."
+  },
+  "config_hash": "2c9bdb61f7a500fc4dbb59bd93cea0013173bee60a7296ba187681b53cad3ce3",
+  "source_fingerprint": "80a858a7b77851e7b0a5b3280383d7bb6c6857b2566b662c3353ff410e12c6fa",
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-6.8.0-90-generic-x86_64-with-glibc2.39",
+    "packages": {
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "networkx": "3.6.1",
+      "torch": "2.14.0+cpu",
+      "pytest": "9.1.1"
+    }
+  },
+  "requested_backends": [
+    "cupy"
+  ],
+  "workers": 1,
+  "backends": {
+    "cupy": {
+      "status": "complete",
+      "dataset": "/home/nguyencongt/runs/crossover_large/profile_18q_gpu/cupy",
+      "device_before": {
+        "backend": "cupy",
+        "device": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
+        "device_id": 0,
+        "free_device_bytes": 101352996864,
+        "total_device_bytes": 101938757632,
+        "cupy_version": "14.2.0"
+      },
+      "records": 36,
+      "physical_paths": 36,
+      "accepted_candidate_labels": 144,
+      "generation_wall_seconds": 117.54872218845412,
+      "accepted_labels_per_second": 1.2250239502317957,
+      "timing_scope": "entire generate_dataset call: initialization, assembly, endpoint labels, spectral teacher/audit, convergence retries, independent dense dynamics audit and disk writes",
+      "cost_components": {
+        "spectral_including_random_audit_worker_seconds": 0.0005122642032802105,
+        "propagation_shared_cost_worker_seconds": 63.87645985232666,
+        "independent_dynamics_audit_worker_seconds": 0.0,
+        "worker_seconds_not_additive_wall_time": false,
+        "component_note": "Observed logged components; may exclude overhead. Runtime-shared teacher costs counted once per physical path."
+      },
+      "max_state_error_diagnostic": 0.00013485984899117836,
+      "max_norm_error": 3.8413716652030416e-14,
+      "max_independent_dense_state_error": null,
+      "max_accepted_integration_steps": 512,
+      "all_candidate_labels_pass_numerical_gate": true,
+      "state_error_is_certificate": false,
+      "adaptive_paths_with_failed_sampled_checks": 0,
+      "memory": {
+        "estimated_numeric_work_peak_per_worker_bytes": 388890624,
+        "estimated_numeric_work_all_workers_bytes": 388890624,
+        "max_endpoint_workspace_bytes": 53346304,
+        "max_state_workspace_bytes": 335544320,
+        "max_dense_teacher_workspace_bytes": 0,
+        "active_worker_upper_bound": 1,
+        "measured_peak_memory": false,
+        "scope": "Analytical numeric-array estimate; excludes Python/process overhead, coordinator dataset residency and allocator pools. Dense teacher estimate uses 128*(2**N)**2 bytes and remains CPU-only."
+      },
+      "config_hash": "903bdbafc076661fce76bfa43b6aed716c2eb31dafcaf54b362c568b214536e9",
+      "dataset_fingerprint": "578f887bd0ebe97552a56ef01f84738563842531d22d6271b5b3465e11b635f5",
+      "device_after": {
+        "backend": "cupy",
+        "device": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
+        "device_id": 0,
+        "free_device_bytes": 100177215488,
+        "total_device_bytes": 101938757632,
+        "cupy_version": "14.2.0"
+      }
+    }
+  },
+  "cpu_gpu_comparison": null,
+  "notes": [
+    "No CPU fallback; unavailable requested backends fail explicitly.",
+    "Complete spectral teacher and independent dense audit remain CPU-based even with CuPy propagation.",
+    "Backend-dependent dataset fingerprints are expected. IDs, programmed physics and executed waveforms must agree.",
+    "One fresh run per backend in declared order; device probes precede timing and can initialize the runtime. Generation-time allocation/JIT and thermal effects remain. Repeat profiles for speed claims.",
+    "Adaptive audit seeds can differ with backend fingerprints; audits have identical configured budgets, not necessarily identical coordinates."
+  ],
+  "recovery": "Artifacts remain intact after failure. Use a NEW output for a comparable complete profile; incomplete datasets can be resumed independently with matching generate configuration/source, but that recovery is not fresh-run timing."
+}
