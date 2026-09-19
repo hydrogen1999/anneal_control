@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "data": "/home/nguyencongt/runs/g2_data",
+  "split": "test",
+  "rate": 0.1,
+  "n_records": 40,
+  "qubit_range": [
+    7,
+    7
+  ],
+  "n_candidates": 8,
+  "n_distinct_banks_in_pool": 1,
+  "correlations": {
+    "raw": {
+      "mean": -0.9166666666666667,
+      "median": -0.9523809523809523,
+      "negative": 40,
+      "n": 40
+    },
+    "headroom_normalised": {
+      "mean": -0.8214285714285714,
+      "median": -0.9047619047619048,
+      "negative": 40,
+      "n": 40
+    },
+    "candidate_demeaned": {
+      "mean": -0.8369047619047618,
+      "median": -0.8809523809523809,
+      "negative": 40,
+      "n": 40
+    },
+    "candidate_demeaned_headroom": {
+      "mean": -0.5952380952380952,
+      "median": -0.6428571428571429,
+      "negative": 38,
+      "n": 40
+    }
+  },
+  "per_candidate": {
+    "0": {
+      "mean_noiseless_loss": 0.5916504901248416,
+      "mean_degradation": 0.12382437298342899,
+      "won_noiseless": 2
+    },
+    "1": {
+      "mean_noiseless_loss": 0.6515035693973725,
+      "mean_degradation": 0.08388720129716686,
+      "won_noiseless": 0
+    },
+    "2": {
+      "mean_noiseless_loss": 0.5859425729135985,
+      "mean_degradation": 0.12064386211022997,
+      "won_noiseless": 17
+    },
+    "3": {
+      "mean_noiseless_loss": 0.5724429489759306,
+      "mean_degradation": 0.11698550608165599,
+      "won_noiseless": 15
+    },
+    "4": {
+      "mean_noiseless_loss": 0.5924968020640436,
+      "mean_degradation": 0.12253313950407677,
+      "won_noiseless": 1
+    },
+    "5": {
+      "mean_noiseless_loss": 0.6100166117530966,
+      "mean_degradation": 0.09773880059210573,
+      "won_noiseless": 0
+    },
+    "6": {
+      "mean_noiseless_loss": 0.5991286035640748,
+      "mean_degradation": 0.11667651699263337,
+      "won_noiseless": 0
+    },
+    "7": {
+      "mean_noiseless_loss": 0.5765037823388203,
+      "mean_degradation": 0.12694548840991443,
+      "won_noiseless": 5
+    }
+  },
+  "scope": "candidate_demeaned removes each waveform's own mean across records, leaving only instance-specific variation; the shared bank makes that control necessary rather than optional"
+}

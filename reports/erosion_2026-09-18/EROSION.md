@@ -126,6 +126,26 @@ cap is a cost limit rather than a regime boundary.
 Reproduce with `scripts/critic_ranking_diagnostics.py`; artifact in
 `reports/diagnostics_2026-09-18/ranking.json`.
 
+## Is it a small-system artefact? Not at the sizes reachable
+
+The main measurement caps at 6 physical qubits because of the solver, not
+because of the physics, so the effect was re-measured at the next size the
+solver allows.
+
+| pool | records | raw | ÷ headroom | candidate-demeaned ÷ headroom | negative in |
+|---|---:|---:|---:|---:|---:|
+| ≤ 6 qubits | 200 | −0.9081 | −0.7925 | **−0.6312** | 192/200 |
+| 7 qubits | 40 | −0.9167 | −0.8214 | **−0.5952** | 38/40 |
+
+The doubly-controlled figure is the same to within the noise of 40 records. The
+per-candidate pattern repeats too: at 7 qubits candidate 1 is again the worst
+noiseless control (0.6515), degrades least (0.0839) and never wins — the same
+shape as at ≤ 6 qubits.
+
+An 8-qubit pool is the last size the density solver accepts and costs 30.4 s
+per solve; that run is smaller still (12 records) and is reported when it
+lands rather than promised here.
+
 ## Erosion, not inversion
 
 Two numbers keep the claim the right size:

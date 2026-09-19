@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "data": "/home/nguyencongt/runs/g2_data",
+  "split": "test",
+  "n_records": 100,
+  "rows": [
+    {
+      "channel": "dephasing",
+      "rate": 0.02,
+      "rho_raw": -0.8023809523809524,
+      "rho_headroom_normalised": -0.6823809523809523,
+      "negative": 96,
+      "n": 100,
+      "noiseless_best_degradation_rank": 6.83,
+      "chance_rank": 4.5
+    },
+    {
+      "channel": "dephasing",
+      "rate": 0.05,
+      "rho_raw": -0.8452380952380952,
+      "rho_headroom_normalised": -0.7247619047619048,
+      "negative": 99,
+      "n": 100,
+      "noiseless_best_degradation_rank": 7.01,
+      "chance_rank": 4.5
+    },
+    {
+      "channel": "dephasing",
+      "rate": 0.1,
+      "rho_raw": -0.9000000000000001,
+      "rho_headroom_normalised": -0.7826190476190475,
+      "negative": 99,
+      "n": 100,
+      "noiseless_best_degradation_rank": 7.27,
+      "chance_rank": 4.5
+    },
+    {
+      "channel": "relaxation",
+      "rate": 0.02,
+      "rho_raw": -0.5423809523809523,
+      "rho_headroom_normalised": -0.4064285714285715,
+      "negative": 76,
+      "n": 100,
+      "noiseless_best_degradation_rank": 6.37,
+      "chance_rank": 4.5
+    },
+    {
+      "channel": "relaxation",
+      "rate": 0.05,
+      "rho_raw": -0.5254761904761903,
+      "rho_headroom_normalised": -0.3897619047619047,
+      "negative": 75,
+      "n": 100,
+      "noiseless_best_degradation_rank": 6.37,
+      "chance_rank": 4.5
+    },
+    {
+      "channel": "relaxation",
+      "rate": 0.1,
+      "rho_raw": -0.5135714285714286,
+      "rho_headroom_normalised": -0.37809523809523804,
+      "negative": 78,
+      "n": 100,
+      "noiseless_best_degradation_rank": 6.4,
+      "chance_rank": 4.5
+    }
+  ],
+  "scope": "uniform single-qubit channels at a declared rate, not a calibrated device model; the noiseless table is shared across channels so the comparison isolates the channel rather than the solver"
+}
