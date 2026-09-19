@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "data": "/home/nguyencongt/runs/g2_data",
+  "split": "test",
+  "rate": 0.1,
+  "n_records": 12,
+  "qubit_range": [
+    8,
+    8
+  ],
+  "n_candidates": 8,
+  "n_distinct_banks_in_pool": 1,
+  "correlations": {
+    "raw": {
+      "mean": -0.9623015873015873,
+      "median": -0.9761904761904762,
+      "negative": 12,
+      "n": 12
+    },
+    "headroom_normalised": {
+      "mean": -0.7043650793650794,
+      "median": -0.6547619047619048,
+      "negative": 12,
+      "n": 12
+    },
+    "candidate_demeaned": {
+      "mean": -0.9861111111111112,
+      "median": -0.9761904761904762,
+      "negative": 12,
+      "n": 12
+    },
+    "candidate_demeaned_headroom": {
+      "mean": -0.5813492063492064,
+      "median": -0.5833333333333334,
+      "negative": 11,
+      "n": 12
+    }
+  },
+  "per_candidate": {
+    "0": {
+      "mean_noiseless_loss": 0.7770203090364202,
+      "mean_degradation": 0.1849145597917273,
+      "won_noiseless": 0
+    },
+    "1": {
+      "mean_noiseless_loss": 0.819388797247322,
+      "mean_degradation": 0.15380222227798804,
+      "won_noiseless": 0
+    },
+    "2": {
+      "mean_noiseless_loss": 0.7258311862934727,
+      "mean_degradation": 0.22233775188871185,
+      "won_noiseless": 9
+    },
+    "3": {
+      "mean_noiseless_loss": 0.840960358424673,
+      "mean_degradation": 0.11294453444570218,
+      "won_noiseless": 0
+    },
+    "4": {
+      "mean_noiseless_loss": 0.798899576795375,
+      "mean_degradation": 0.16348547621168943,
+      "won_noiseless": 0
+    },
+    "5": {
+      "mean_noiseless_loss": 0.8116719964014955,
+      "mean_degradation": 0.14161095491435874,
+      "won_noiseless": 0
+    },
+    "6": {
+      "mean_noiseless_loss": 0.7633306789062207,
+      "mean_degradation": 0.19342729609123496,
+      "won_noiseless": 1
+    },
+    "7": {
+      "mean_noiseless_loss": 0.783670691570321,
+      "mean_degradation": 0.1734369067021669,
+      "won_noiseless": 2
+    }
+  },
+  "scope": "candidate_demeaned removes each waveform's own mean across records, leaving only instance-specific variation; the shared bank makes that control necessary rather than optional"
+}

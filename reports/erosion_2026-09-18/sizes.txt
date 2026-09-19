@@ -1,0 +1,39 @@
+40 records, 1 distinct bank(s) in the pool
+
+analysis                           mean rho    median   negative
+raw                                 -0.9167   -0.9524     40/40
+headroom_normalised                 -0.8214   -0.9048     40/40
+candidate_demeaned                  -0.8369   -0.8810     40/40
+candidate_demeaned_headroom         -0.5952   -0.6429     38/40
+
+cand  mean noiseless   mean degradation    won
+   0         0.59165            0.12382      2
+   1         0.65150            0.08389      0
+   2         0.58594            0.12064     17
+   3         0.57244            0.11699     15
+   4         0.59250            0.12253      1
+   5         0.61002            0.09774      0
+   6         0.59913            0.11668      0
+   7         0.57650            0.12695      5
+
+wrote /home/nguyencongt/runs/erosion/control_7to7.json
+12 records, 1 distinct bank(s) in the pool
+
+analysis                           mean rho    median   negative
+raw                                 -0.9623   -0.9762     12/12
+headroom_normalised                 -0.7044   -0.6548     12/12
+candidate_demeaned                  -0.9861   -0.9762     12/12
+candidate_demeaned_headroom         -0.5813   -0.5833     11/12
+
+cand  mean noiseless   mean degradation    won
+   0         0.77702            0.18491      0
+   1         0.81939            0.15380      0
+   2         0.72583            0.22234      9
+   3         0.84096            0.11294      0
+   4         0.79890            0.16349      0
+   5         0.81167            0.14161      0
+   6         0.76333            0.19343      1
+   7         0.78367            0.17344      2
+
+wrote /home/nguyencongt/runs/erosion/control_8to8.json
+EROSION_SIZES_DONE

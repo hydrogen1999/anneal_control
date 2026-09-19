@@ -20,9 +20,11 @@ fragile waveforms could have carried the whole correlation. Removing each
 candidate's own mean strengthens the effect instead of dissolving it. The
 reports now quote −0.63 and not the flattering −0.91.
 
-Not dephasing-specific: under amplitude relaxation ρ ≈ −0.39 in 78/100 records.
-But half as strong, and unlike dephasing it does not grow with rate.
-`reports/erosion_2026-09-18/`.
+Not dephasing-specific: under amplitude relaxation ρ ≈ −0.39 in 78/100 records,
+though half as strong and, unlike dephasing, not growing with rate. Not a
+small-system artefact either: the doubly-controlled figure is **−0.63, −0.60,
+−0.58** at 6, 7 and 8 physical qubits, and 8 is the last size the density
+solver accepts. `reports/erosion_2026-09-18/`.
 
 This is erosion, not inversion — ρ(loss at 0, loss at 0.1) = +0.83 and the
 noiseless favourite still wins 78.5% of the time. It simply gives up the most.

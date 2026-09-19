@@ -118,15 +118,24 @@ solver allows.
 |---|---:|---:|---:|---:|---:|
 | ≤ 6 qubits | 200 | −0.9081 | −0.7925 | **−0.6312** | 192/200 |
 | 7 qubits | 40 | −0.9167 | −0.8214 | **−0.5952** | 38/40 |
+| 8 qubits | 12 | −0.9623 | −0.7044 | **−0.5813** | 11/12 |
 
-The doubly-controlled figure is the same to within the noise of 40 records. The
-per-candidate pattern repeats too: at 7 qubits candidate 1 is again the worst
-noiseless control (0.6515), degrades least (0.0839) and never wins — the same
-shape as at ≤ 6 qubits.
+**−0.63, −0.60, −0.58 across 6, 7 and 8 physical qubits.** Eight is the last
+size the density solver accepts. The doubly-controlled figure drifts by less
+than the sampling noise of 12 records, so whatever this effect is, it is not an
+artefact of very small systems.
 
-An 8-qubit pool is the last size the density solver accepts and costs 30.4 s
-per solve; that run is smaller still (12 records) and is reported when it
-lands rather than promised here.
+The per-candidate pattern repeats at every size, and at 8 qubits it is at its
+clearest:
+
+| candidate | mean noiseless loss | mean degradation | times it won |
+|---:|---:|---:|---:|
+| 2 | **0.72583** (best) | **0.22234** (worst) | 9 |
+| 3 | **0.84096** (worst) | **0.11294** (best) | 0 |
+
+The waveform that wins most often is the one the environment punishes hardest,
+and the waveform that never wins is the one it barely touches. That is the
+whole claim, visible in two rows.
 
 ## Erosion, not inversion
 
