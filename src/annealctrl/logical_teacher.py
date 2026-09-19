@@ -29,17 +29,35 @@ from typing import Any, Mapping
 import numpy as np
 
 
-def logical_terms(record: Mapping[str, Any]):
+def logical_terms(record: Mapping[str, Any], *, scale: str = "programmed"):
     """The logical Ising problem as a Hamiltonian, with no chains and no embedding.
 
-    Uses the logical coefficients as specified, not the programmed physical
-    ones: an approximate solver of the logical problem would see these.
+    ``scale`` decides which of two different questions this asks, and the
+    default is not the obvious one. The raw logical coefficients differ from
+    the physical ones by **both** the embedding and a common rescaling by
+    ``programmed_scale``, and the document lists re-embedding and common
+    rescaling as *separate* falsification axes. Feeding raw coefficients
+    therefore confounds them: on this dataset every one-to-one record with
+    ``programmed_scale == 1`` reproduces the physical schedule exactly, and
+    every one with a smaller scale does not, by up to 0.034 in loss.
+
+    ``"programmed"`` applies ``programmed_scale`` so that a one-to-one
+    embedding yields the identical Hamiltonian and isolates the embedding.
+    ``"raw"`` keeps the unscaled problem, which is closer to what a solver of
+    the stated logical problem would see, and is reported separately.
     """
     from .physics import HamiltonianTerms
 
-    h = np.asarray(record["logical_h"], dtype=float)
+    if scale not in {"programmed", "raw"}:
+        raise ValueError("scale must be 'programmed' or 'raw'")
+    factor = 1.0
+    if scale == "programmed":
+        factor = float(np.asarray(record["programmed_scale"]).item())
+        if not np.isfinite(factor) or factor <= 0:
+            raise ValueError("programmed_scale must be finite and positive")
+    h = np.asarray(record["logical_h"], dtype=float) * factor
     edges = np.asarray(record["logical_edges"], dtype=int).reshape(-1, 2)
-    weights = np.asarray(record["logical_J"], dtype=float)
+    weights = np.asarray(record["logical_J"], dtype=float) * factor
     if edges.shape[0] != weights.shape[0]:
         raise ValueError("logical_edges and logical_J must agree in length")
     return HamiltonianTerms(int(h.size), h, edges, weights)
@@ -47,7 +65,7 @@ def logical_terms(record: Mapping[str, Any]):
 
 def logical_spectrum_schedule(record: Mapping[str, Any], *, method: str = "d2",
                               runtime: float | None = None, max_slope: float = 4.0,
-                              max_qubits: int = 10, **kwargs):
+                              max_qubits: int = 10, scale: str = "programmed", **kwargs):
     """Build the teacher schedule from the logical spectrum alone.
 
     The anneal path keeps the record's own catalyst and energy scale: changing
@@ -61,14 +79,14 @@ def logical_spectrum_schedule(record: Mapping[str, Any], *, method: str = "d2",
     duration = float(_scalar(record, "runtime")) if runtime is None else float(runtime)
     path = AnnealPath(catalyst_strength=float(_scalar(record, "catalyst_strength", 0.0)),
                       energy_scale=float(_scalar(record, "energy_scale", 1.0)))
-    return exact_teacher_baseline(logical_terms(record), method, runtime=duration,
+    return exact_teacher_baseline(logical_terms(record, scale=scale), method, runtime=duration,
                                   max_slope=max_slope, path=path, max_qubits=max_qubits,
                                   **kwargs)
 
 
 def compare_spectra(record: Mapping[str, Any], *, method: str = "d2", max_slope: float = 4.0,
                     max_qubits: int = 10, tolerance: float = 5e-4, max_steps: int = 8192,
-                    **kwargs) -> dict:
+                    scale: str = "programmed", **kwargs) -> dict:
     """Score logical- and physical-spectrum teachers on the same embedded task.
 
     Both schedules are evaluated by the same simulator on the same physical
@@ -86,7 +104,8 @@ def compare_spectra(record: Mapping[str, Any], *, method: str = "d2", max_slope:
     physical = exact_teacher_baseline(terms, method, runtime=duration, max_slope=max_slope,
                                       path=path, max_qubits=max_qubits, **kwargs)
     logical = logical_spectrum_schedule(record, method=method, runtime=duration,
-                                        max_slope=max_slope, max_qubits=max_qubits, **kwargs)
+                                        max_slope=max_slope, max_qubits=max_qubits,
+                                        scale=scale, **kwargs)
 
     def score(result):
         if result.schedule is None:
@@ -103,7 +122,9 @@ def compare_spectra(record: Mapping[str, Any], *, method: str = "d2", max_slope:
         "parent_id": str(np.asarray(record["parent_id"]).item()),
         "n_logical": int(np.asarray(record["logical_h"]).size),
         "n_physical": int(np.asarray(record["physical_h"]).size),
-        "method": method,
+        "method": method, "logical_scale": scale,
+        "one_to_one_embedding": int(np.asarray(record["logical_h"]).size)
+                                == int(np.asarray(record["physical_h"]).size),
         "physical_spectrum_loss": physical_loss,
         "logical_spectrum_loss": logical_loss,
         "linear_loss": linear,

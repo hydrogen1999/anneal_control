@@ -20,7 +20,8 @@ import numpy as np
 
 
 def _one(args):
-    data_dir, split, record_id, method, max_slope, max_qubits, tolerance, max_steps = args
+    (data_dir, split, record_id, method, max_slope, max_qubits, tolerance,
+     max_steps, scale) = args
     import numpy as np
 
     from annealctrl.logical_teacher import compare_spectra
@@ -30,7 +31,8 @@ def _one(args):
                   if str(np.asarray(r["record_id"]).item()) == record_id)
     try:
         return compare_spectra(record, method=method, max_slope=max_slope,
-                               max_qubits=max_qubits, tolerance=tolerance, max_steps=max_steps)
+                               max_qubits=max_qubits, tolerance=tolerance,
+                               max_steps=max_steps, scale=scale)
     except Exception as exc:                       # a refusal is data, not a crash
         return {"record_id": record_id,
                 "parent_id": str(np.asarray(record["parent_id"]).item()),
@@ -49,6 +51,9 @@ def main(argv=None) -> int:
     parser.add_argument("--workers", type=int, default=4)
     parser.add_argument("--tolerance", type=float, default=5e-4)
     parser.add_argument("--max-steps", type=int, default=8192)
+    parser.add_argument("--scale", choices=("programmed", "raw"), default="programmed",
+                        help="'programmed' isolates the embedding; 'raw' also carries "
+                             "the common rescaling and is a different question")
     args = parser.parse_args(argv)
 
     from annealctrl.headroom import _bootstrap, _describe, _parent_means
@@ -69,7 +74,7 @@ def main(argv=None) -> int:
           f"method {args.method}", flush=True)
 
     jobs = [(args.data, args.split, rid, args.method, args.max_slope, args.max_qubits,
-             args.tolerance, args.max_steps) for rid in chosen]
+             args.tolerance, args.max_steps, args.scale) for rid in chosen]
     rows, failed = [], []
     with ProcessPoolExecutor(max_workers=min(args.workers, len(jobs))) as pool:
         for row in pool.map(_one, jobs):
@@ -96,7 +101,8 @@ def main(argv=None) -> int:
         blocks[name] = block
 
     payload = {"schema_version": 1, "data": args.data, "split": args.split,
-               "method": args.method, "n_requested": len(chosen),
+               "method": args.method, "logical_scale": args.scale,
+               "n_requested": len(chosen),
                "n_usable": len(usable), "n_unresolved": len(rows) - len(usable),
                "n_failed": len(failed), "failures": failed,
                "summary": blocks, "rows": rows,
@@ -104,6 +110,15 @@ def main(argv=None) -> int:
                          "in which spectrum built them; inspired by the logical-spectrum "
                          "information path of Tx-NQDT, not a reimplementation")}
     Path(args.output).parent.mkdir(parents=True, exist_ok=True)
+    Path(args.output).write_text(json.dumps(payload, indent=2, default=float))
+
+    identity = [r for r in usable if r.get("one_to_one_embedding")]
+    violations = [r for r in identity if abs(r["logical_minus_physical"]) > 1e-9]
+    payload["one_to_one_records"] = len(identity)
+    payload["one_to_one_violations"] = len(violations)
+    if args.scale == "programmed" and violations:
+        print(f"WARNING: {len(violations)}/{len(identity)} one-to-one records differ; "
+              "the two Hamiltonians should coincide exactly", flush=True)
     Path(args.output).write_text(json.dumps(payload, indent=2, default=float))
 
     d = blocks["logical_minus_physical"]

@@ -114,3 +114,54 @@ def test_an_unresolved_teacher_is_reported_not_replaced():
     if result["logical_spectrum_loss"] is None:
         assert result["logical_minus_physical"] is None
         assert result["logical_status"] != "sampled_point_audit_passed"
+
+
+def scaled_identity_record(scale=0.35):
+    """A one-to-one embedding whose physical coefficients carry a programmed scale.
+
+    This is what the real dataset looks like, and the earlier synthetic
+    identity_record (scale 1.0) could not have caught the confound.
+    """
+    record = identity_record()
+    record["physical_h"] = np.asarray(record["logical_h"], dtype=float) * scale
+    record["physical_J"] = np.asarray(record["logical_J"], dtype=float) * scale
+    record["problem_J"] = np.asarray(record["logical_J"], dtype=float) * scale
+    record["programmed_scale"] = scale
+    return record
+
+
+def test_the_programmed_scale_is_applied_so_a_one_to_one_embedding_still_matches():
+    """Without this the comparison confounds re-embedding with common rescaling.
+
+    On the real dataset every one-to-one record with programmed_scale == 1
+    reproduced the physical schedule exactly and every one with a smaller scale
+    did not, by up to 0.034 in loss. The scale, not the embedding, was moving.
+    """
+    from annealctrl.benchmarking import record_physics
+    from annealctrl.physics_baselines import exact_teacher_baseline
+
+    record = scaled_identity_record()
+    terms, path, _ = record_physics(record)
+    physical = exact_teacher_baseline(terms, "d2", runtime=1.0, max_slope=4.0, path=path)
+    logical = logical_spectrum_schedule(record, method="d2", max_slope=4.0)
+    assert physical.schedule is not None and logical.schedule is not None
+    assert logical.schedule.s_knots == pytest.approx(physical.schedule.s_knots, abs=1e-9)
+    assert logical.schedule.tau_knots == pytest.approx(physical.schedule.tau_knots, abs=1e-9)
+
+
+def test_the_raw_scale_option_reproduces_the_confound_it_is_named_for():
+    """'raw' is kept because it answers a different question; it must differ."""
+    from annealctrl.benchmarking import record_physics
+    from annealctrl.physics_baselines import exact_teacher_baseline
+
+    record = scaled_identity_record()
+    terms, path, _ = record_physics(record)
+    physical = exact_teacher_baseline(terms, "d2", runtime=1.0, max_slope=4.0, path=path)
+    raw = logical_spectrum_schedule(record, method="d2", max_slope=4.0, scale="raw")
+    grid = np.linspace(0.0, 1.0, 65)
+    assert np.abs(raw.schedule(grid) - physical.schedule(grid)).max() > 1e-6
+
+
+def test_an_unknown_scale_is_refused():
+    with pytest.raises(ValueError, match="programmed.*raw"):
+        logical_terms(chain_record(), scale="physical")
