@@ -64,13 +64,21 @@ def logical_terms(record: Mapping[str, Any], *, scale: str = "programmed"):
 
 
 def logical_spectrum_schedule(record: Mapping[str, Any], *, method: str = "d2",
-                              runtime: float | None = None, max_slope: float = 4.0,
+                              runtime: float | None = None, max_ds_dtau: float = 4.0,
                               max_qubits: int = 10, scale: str = "programmed", **kwargs):
     """Build the teacher schedule from the logical spectrum alone.
 
     The anneal path keeps the record's own catalyst and energy scale: changing
     them as well would confound the spectrum's provenance with a different
     physical path.
+
+    ``max_ds_dtau`` is the scorer's convention -- a bound on ds/dtau, which does
+    not depend on runtime. ``exact_teacher_baseline`` instead takes a bound on
+    ds/dt, so it must be handed ``max_ds_dtau / runtime``; this is what
+    ``benchmarking.py`` does when it builds the same teacher. Passing the
+    scorer's number straight through gives the teacher a runtime-times-larger
+    slope budget: at runtime 4 a d2 teacher then reaches ds/dtau = 15.0 against
+    a cap of 4.0, and the scorer rejects it.
     """
     from .benchmarking import _scalar
     from .physics import AnnealPath
@@ -80,11 +88,11 @@ def logical_spectrum_schedule(record: Mapping[str, Any], *, method: str = "d2",
     path = AnnealPath(catalyst_strength=float(_scalar(record, "catalyst_strength", 0.0)),
                       energy_scale=float(_scalar(record, "energy_scale", 1.0)))
     return exact_teacher_baseline(logical_terms(record, scale=scale), method, runtime=duration,
-                                  max_slope=max_slope, path=path, max_qubits=max_qubits,
-                                  **kwargs)
+                                  max_slope=max_ds_dtau / duration, path=path,
+                                  max_qubits=max_qubits, **kwargs)
 
 
-def compare_spectra(record: Mapping[str, Any], *, method: str = "d2", max_slope: float = 4.0,
+def compare_spectra(record: Mapping[str, Any], *, method: str = "d2", max_ds_dtau: float = 4.0,
                     max_qubits: int = 10, tolerance: float = 5e-4, max_steps: int = 8192,
                     scale: str = "programmed", **kwargs) -> dict:
     """Score logical- and physical-spectrum teachers on the same embedded task.
@@ -101,28 +109,30 @@ def compare_spectra(record: Mapping[str, Any], *, method: str = "d2", max_slope:
 
     terms, path, _ = record_physics(record)
     duration = float(np.asarray(record["runtime"]).item())
-    physical = exact_teacher_baseline(terms, method, runtime=duration, max_slope=max_slope,
-                                      path=path, max_qubits=max_qubits, **kwargs)
+    physical = exact_teacher_baseline(terms, method, runtime=duration,
+                                      max_slope=max_ds_dtau / duration, path=path,
+                                      max_qubits=max_qubits, **kwargs)
     logical = logical_spectrum_schedule(record, method=method, runtime=duration,
-                                        max_slope=max_slope, max_qubits=max_qubits,
+                                        max_ds_dtau=max_ds_dtau, max_qubits=max_qubits,
                                         scale=scale, **kwargs)
 
     def score(result):
         if result.schedule is None:
             return None
         return float(score_schedule(record, result.schedule, tolerance=tolerance,
-                                    max_steps=max_steps, max_ds_dtau=max_slope * (1 + 1e-6)
+                                    max_steps=max_steps, max_ds_dtau=max_ds_dtau * (1 + 1e-6)
                                     )["loss"])
 
     linear = float(score_schedule(record, Schedule.linear(), tolerance=tolerance,
-                                  max_steps=max_steps, max_ds_dtau=max_slope * (1 + 1e-6))["loss"])
+                                  max_steps=max_steps, max_ds_dtau=max_ds_dtau * (1 + 1e-6))["loss"])
     physical_loss, logical_loss = score(physical), score(logical)
     return _safe({
         "record_id": str(np.asarray(record["record_id"]).item()),
         "parent_id": str(np.asarray(record["parent_id"]).item()),
         "n_logical": int(np.asarray(record["logical_h"]).size),
         "n_physical": int(np.asarray(record["physical_h"]).size),
-        "method": method, "logical_scale": scale,
+        "method": method, "logical_scale": scale, "max_ds_dtau": max_ds_dtau,
+        "runtime": duration,
         "one_to_one_embedding": int(np.asarray(record["logical_h"]).size)
                                 == int(np.asarray(record["physical_h"]).size),
         "physical_spectrum_loss": physical_loss,

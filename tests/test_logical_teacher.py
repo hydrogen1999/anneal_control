@@ -76,8 +76,8 @@ def test_a_one_to_one_embedding_makes_both_spectra_give_the_same_schedule():
 
     record = identity_record()
     terms, path, _ = record_physics(record)
-    physical = exact_teacher_baseline(terms, "d2", runtime=1.0, max_slope=4.0, path=path)
-    logical = logical_spectrum_schedule(record, method="d2", max_slope=4.0)
+    physical = exact_teacher_baseline(terms, "d2", runtime=1.0, max_slope=4.0 / 1.0, path=path)
+    logical = logical_spectrum_schedule(record, method="d2", max_ds_dtau=4.0)
     assert physical.schedule is not None and logical.schedule is not None
     assert logical.schedule.s_knots == pytest.approx(physical.schedule.s_knots, abs=1e-9)
     assert logical.schedule.tau_knots == pytest.approx(physical.schedule.tau_knots, abs=1e-9)
@@ -90,8 +90,8 @@ def test_chains_make_the_two_spectra_disagree():
 
     record = chain_record()
     terms, path, _ = record_physics(record)
-    physical = exact_teacher_baseline(terms, "d2", runtime=1.0, max_slope=4.0, path=path)
-    logical = logical_spectrum_schedule(record, method="d2", max_slope=4.0)
+    physical = exact_teacher_baseline(terms, "d2", runtime=1.0, max_slope=4.0 / 1.0, path=path)
+    logical = logical_spectrum_schedule(record, method="d2", max_ds_dtau=4.0)
     assert physical.schedule is not None and logical.schedule is not None
     grid = np.linspace(0.0, 1.0, 65)
     assert np.abs(logical.schedule(grid) - physical.schedule(grid)).max() > 1e-6
@@ -142,8 +142,8 @@ def test_the_programmed_scale_is_applied_so_a_one_to_one_embedding_still_matches
 
     record = scaled_identity_record()
     terms, path, _ = record_physics(record)
-    physical = exact_teacher_baseline(terms, "d2", runtime=1.0, max_slope=4.0, path=path)
-    logical = logical_spectrum_schedule(record, method="d2", max_slope=4.0)
+    physical = exact_teacher_baseline(terms, "d2", runtime=1.0, max_slope=4.0 / 1.0, path=path)
+    logical = logical_spectrum_schedule(record, method="d2", max_ds_dtau=4.0)
     assert physical.schedule is not None and logical.schedule is not None
     assert logical.schedule.s_knots == pytest.approx(physical.schedule.s_knots, abs=1e-9)
     assert logical.schedule.tau_knots == pytest.approx(physical.schedule.tau_knots, abs=1e-9)
@@ -156,8 +156,8 @@ def test_the_raw_scale_option_reproduces_the_confound_it_is_named_for():
 
     record = scaled_identity_record()
     terms, path, _ = record_physics(record)
-    physical = exact_teacher_baseline(terms, "d2", runtime=1.0, max_slope=4.0, path=path)
-    raw = logical_spectrum_schedule(record, method="d2", max_slope=4.0, scale="raw")
+    physical = exact_teacher_baseline(terms, "d2", runtime=1.0, max_slope=4.0 / 1.0, path=path)
+    raw = logical_spectrum_schedule(record, method="d2", max_ds_dtau=4.0, scale="raw")
     grid = np.linspace(0.0, 1.0, 65)
     assert np.abs(raw.schedule(grid) - physical.schedule(grid)).max() > 1e-6
 
@@ -165,3 +165,38 @@ def test_the_raw_scale_option_reproduces_the_confound_it_is_named_for():
 def test_an_unknown_scale_is_refused():
     with pytest.raises(ValueError, match="programmed.*raw"):
         logical_terms(chain_record(), scale="physical")
+
+
+def test_the_teacher_is_built_with_the_scorer_s_slope_convention():
+    """exact_teacher_baseline bounds ds/dt; the scorer bounds ds/dtau.
+
+    Handing the scorer's number straight to the builder gives the teacher a
+    runtime-times-larger budget. At runtime 4 that produced a d2 teacher with
+    ds/dtau = 15.0 against a cap of 4.0, which score_schedule rejects outright.
+    This pins the conversion so the two cannot drift apart again.
+    """
+    from annealctrl.benchmarking import score_schedule
+
+    record = chain_record()
+    for runtime in (1.0, 4.0, 12.0):
+        record["runtime"] = runtime
+        result = logical_spectrum_schedule(record, method="d2", max_ds_dtau=4.0)
+        if result.schedule is None:
+            continue
+        slope = np.abs(np.diff(result.schedule.s_knots)
+                       / np.diff(result.schedule.tau_knots)).max()
+        assert slope <= 4.0 * (1 + 1e-6), f"runtime {runtime}: ds/dtau {slope}"
+        # And the scorer must actually accept it, which is the point.
+        score_schedule(record, result.schedule, tolerance=5e-4, max_steps=8192,
+                       max_ds_dtau=4.0 * (1 + 1e-6))
+
+
+def test_compare_spectra_works_at_every_runtime_in_the_dataset():
+    """The first study silently covered only runtime 1, where the two slope
+    conventions coincide. This checks the other two do not raise."""
+    record = chain_record()
+    for runtime in (1.0, 4.0, 12.0):
+        record["runtime"] = runtime
+        out = compare_spectra(record, method="d2", max_ds_dtau=4.0)
+        assert out["runtime"] == pytest.approx(runtime)
+        assert out["physical_spectrum_loss"] is not None

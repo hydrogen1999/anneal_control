@@ -20,7 +20,7 @@ import numpy as np
 
 
 def _one(args):
-    (data_dir, split, record_id, method, max_slope, max_qubits, tolerance,
+    (data_dir, split, record_id, method, max_ds_dtau, max_qubits, tolerance,
      max_steps, scale) = args
     import numpy as np
 
@@ -30,7 +30,7 @@ def _one(args):
     record = next(r for r in load_records(data_dir, split)
                   if str(np.asarray(r["record_id"]).item()) == record_id)
     try:
-        return compare_spectra(record, method=method, max_slope=max_slope,
+        return compare_spectra(record, method=method, max_ds_dtau=max_ds_dtau,
                                max_qubits=max_qubits, tolerance=tolerance,
                                max_steps=max_steps, scale=scale)
     except Exception as exc:                       # a refusal is data, not a crash
@@ -47,7 +47,11 @@ def main(argv=None) -> int:
     parser.add_argument("--method", default="d2", choices=("d2", "gap_inverse_square"))
     parser.add_argument("--records", type=int, default=48)
     parser.add_argument("--max-qubits", type=int, default=10)
-    parser.add_argument("--max-slope", type=float, default=4.0)
+    parser.add_argument("--max-ds-dtau", type=float, default=4.0)
+    parser.add_argument("--runtime", type=float, default=None,
+                        help="restrict to one runtime; without it the "
+                             "one-record-per-parent rule silently picks the "
+                             "shortest, which is what the first study did")
     parser.add_argument("--workers", type=int, default=4)
     parser.add_argument("--tolerance", type=float, default=5e-4)
     parser.add_argument("--max-steps", type=int, default=8192)
@@ -61,6 +65,13 @@ def main(argv=None) -> int:
 
     records = [r for r in load_records(args.data, args.split)
                if len(np.asarray(r["physical_h"])) <= args.max_qubits]
+    if args.runtime is not None:
+        records = [r for r in records
+                   if abs(float(np.asarray(r["runtime"]).item()) - args.runtime) < 1e-9]
+        if not records:
+            raise SystemExit(f"no record at runtime {args.runtime}")
+    runtimes = sorted({float(np.asarray(r["runtime"]).item()) for r in records})
+    print(f"runtimes present: {runtimes}", flush=True)
     seen, chosen = set(), []
     for r in sorted(records, key=lambda r: str(np.asarray(r["record_id"]).item())):
         pid = str(np.asarray(r["parent_id"]).item())
@@ -73,7 +84,7 @@ def main(argv=None) -> int:
     print(f"{len(chosen)} records, one per parent, <= {args.max_qubits} physical qubits, "
           f"method {args.method}", flush=True)
 
-    jobs = [(args.data, args.split, rid, args.method, args.max_slope, args.max_qubits,
+    jobs = [(args.data, args.split, rid, args.method, args.max_ds_dtau, args.max_qubits,
              args.tolerance, args.max_steps, args.scale) for rid in chosen]
     rows, failed = [], []
     with ProcessPoolExecutor(max_workers=min(args.workers, len(jobs))) as pool:
@@ -102,6 +113,8 @@ def main(argv=None) -> int:
 
     payload = {"schema_version": 1, "data": args.data, "split": args.split,
                "method": args.method, "logical_scale": args.scale,
+               "max_ds_dtau": args.max_ds_dtau, "runtime_filter": args.runtime,
+               "runtimes_covered": runtimes,
                "n_requested": len(chosen),
                "n_usable": len(usable), "n_unresolved": len(rows) - len(usable),
                "n_failed": len(failed), "failures": failed,
