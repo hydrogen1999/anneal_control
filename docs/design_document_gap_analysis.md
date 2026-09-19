@@ -81,6 +81,8 @@ and the answer contradicts a choice already baked into the model.
 `docs/paper_protocol.md:157` already concedes three of these as "optional
 extensions beyond this completed baseline workflow".
 
+**Status after 2026-09-19:** 1 confirmatory · 2 half (two rungs of four) · 3 done · 4 done · 5 auxiliary-physics arm done · 6 running · 7 done except the device adapter, which needs a QPU · 8 not started.
+
 | # | Factor | Status |
 |---|---|---|
 | 1 | Physical input (logical / physical / hierarchy) | **DONE** (2026-09-19). The Holm-corrected pairwise matrix separates `logical` from all four embedding-aware encoders (holm 0.0005–0.0049, differences 0.0070–0.0085); it existed all along and had not been reported. The "exploratory" label belonged to the *pooled* statistic only. No two aware encoders separate from each other, so information helps and architecture does not. Synthetic only — the Pegasus pooled interval still includes zero. [Report](../reports/encoder_contrast_2026-09-19/ENCODER_CONTRAST.md) |

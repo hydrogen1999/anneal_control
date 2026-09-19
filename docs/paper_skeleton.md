@@ -61,6 +61,8 @@ the same instrument applied to different selectors.
 
 **0 CRITICAL, 2 MAJOR, 3 MINOR** (a third major was resolved by measurement; the row is kept struck through rather than deleted).
 
+The two remaining majors are **small effect sizes** and **no QPU**. Everything else on the 2026-09-19 list is closed: the factorial table stands at 1 confirmatory, 2 half, 3 done, 4 done, 5 auxiliary arm done, 6 running, 7 done bar the device adapter, 8 not started. See [the gap analysis](design_document_gap_analysis.md).
+
 | | Issue | Why it matters |
 |---|---|---|
 | MAJOR | **Effect sizes are small.** +0.00485 on a loss near 0.70 is 0.7%, and the erosion finding's most quotable consequence — "optimise less" — was tested and is false. What remains is a discount factor and a robustness ordering, both real and both modest. | This is the main obstacle to an oral, not to acceptance. |
