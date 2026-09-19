@@ -167,9 +167,12 @@ smoothed learned preference keeps more of its advantage than an exact noiseless
 argmax does** (69.5–74.5% retained against 61.5%). Both of those are measured.
 "Optimise less" is not.
 
-Tested at one rate (0.1) over budgets 1–64 on one family. A stronger channel or
-a longer ladder could still turn the curve up; nothing here rules that out, and
-nothing here supports it.
+Tested at **four** rates. The curve is monotone at 0.1, 0.2, 0.3 and 0.5, with
+the largest budget best and costing zero in 0/32 parents every time. What does
+move is the discount, and it moves as the mechanism predicts: the retained
+fraction of the noiseless gain falls **86.5% → 75.1% → 65.5% → 50.4%** as the
+rate rises. At rate 0.5 half of what the search buys is erased — and the other
+half is still a gain. [Full table](../overoptimisation_2026-09-18/OVEROPTIMISATION.md).
 
 ## Limits
 

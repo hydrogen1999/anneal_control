@@ -31,8 +31,13 @@ noiseless favourite still wins 78.5% of the time. It simply gives up the most.
 harder against a noiseless simulator is self-defeating" was tested directly:
 searching to budget 64 and re-evaluating every budget's incumbent under
 dephasing 0.1, the noisy curve is **monotone**, the best budget is the largest
-one tested, and spending it costs 0.00000 in 0 of 32 parents. Erosion buys a
-**discount, not a reversal** — 86.5% of the noiseless gain survives.
+one tested, and spending it costs 0.00000 in 0 of 32 parents. Repeated at rates
+0.2, 0.3 and 0.5: monotone every time.
+
+Erosion buys a **discount, not a reversal**, and the discount is a
+dose–response curve. The retained fraction of the noiseless gain falls
+**86.5% → 75.1% → 65.5% → 50.4%** across those four rates — at 0.5 half of
+what the search buys is erased, and the other half is still a gain.
 `reports/overoptimisation_2026-09-18/`.
 
 ### The learned selector is more robust than exact noiseless optimisation

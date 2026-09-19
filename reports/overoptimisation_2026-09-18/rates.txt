@@ -1,0 +1,43 @@
+=== rate 0.2
+ budget     closed       open
+      1    0.74020    0.75504
+      2    0.74020    0.75504
+      4    0.71473    0.73463
+      8    0.70661    0.73027
+     16    0.68082    0.71039
+     32    0.67879    0.70894
+     64    0.67876    0.70891
+
+best budget under noise: 64 of 64
+cost of spending the largest budget instead: +0.00000 [+0.00000,+0.00000], worse in 0/32 parents
+open loss monotone in budget: True
+wrote /home/nguyencongt/runs/overopt/eight_bin_r0.2.json
+=== rate 0.3
+ budget     closed       open
+      1    0.74020    0.76103
+      2    0.74020    0.76103
+      4    0.71473    0.74265
+      8    0.70661    0.73964
+     16    0.68082    0.72207
+     32    0.67879    0.72084
+     64    0.67876    0.72081
+
+best budget under noise: 64 of 64
+cost of spending the largest budget instead: +0.00000 [+0.00000,+0.00000], worse in 0/32 parents
+open loss monotone in budget: True
+wrote /home/nguyencongt/runs/overopt/eight_bin_r0.3.json
+=== rate 0.5
+ budget     closed       open
+      1    0.74020    0.77083
+      2    0.74020    0.77083
+      4    0.71473    0.75577
+      8    0.70661    0.75471
+     16    0.68082    0.74081
+     32    0.67879    0.73991
+     64    0.67876    0.73989
+
+best budget under noise: 64 of 64
+cost of spending the largest budget instead: +0.00000 [+0.00000,+0.00000], worse in 0/32 parents
+open loss monotone in budget: True
+wrote /home/nguyencongt/runs/overopt/eight_bin_r0.5.json
+OVEROPT_RATES_DONE
