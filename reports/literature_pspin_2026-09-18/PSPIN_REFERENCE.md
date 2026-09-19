@@ -32,6 +32,14 @@ The interval excludes zero by a wide margin and the median fidelity is close to
 double. **The three-seed 1-of-3 result was sample noise**, and the smoke
 report's refusal to read anything into it was the right call.
 
+## The artifact
+
+`reference_80.json.gz` — all 80 seeds, both methods, every query with its
+parameters, fidelity and solver diagnostics, plus the paired summary. Gzipped
+to follow this repository's convention for large artifacts; it was first
+committed uncompressed by mistake, and because this repository is shared with
+another agent no history was rewritten to remove that blob.
+
 ## What this does and does not establish
 
 **Does:** the baseline our method is compared against reproduces the prior
