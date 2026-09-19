@@ -90,6 +90,24 @@ Two things to say honestly:
   couples more tightly to phase noise than to amplitude damping, and this
   measurement does not say why.
 
+## Ranking quality does not fall with system size
+
+A separate diagnostic on the **full** 864-record test split, all eight
+candidates, `summary/seed_0`:
+
+| physical qubits | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| ρ | +0.83 | +0.81 | +0.86 | +0.86 | +0.88 | +0.76 | +0.72 | +0.83 |
+| n | 54 | 162 | 198 | 144 | 144 | 90 | 54 | 18 |
+
+No trend, a mild dip at 8–9. `hierarchy_physics/seed_0` gives the same picture
+(+0.78 to +0.88). This matters twice: it is why the Pegasus ranking drop is not
+attributed to larger records, and it is why the erosion measurement's ≤ 6 qubit
+cap is a cost limit rather than a regime boundary.
+
+Reproduce with `scripts/critic_ranking_diagnostics.py`; artifact in
+`reports/diagnostics_2026-09-18/ranking.json`.
+
 ## Erosion, not inversion
 
 Two numbers keep the claim the right size:

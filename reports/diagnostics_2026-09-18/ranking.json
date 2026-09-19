@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "data": "/home/nguyencongt/runs/g2_data",
+  "split": "test",
+  "n_records": 864,
+  "n_candidates": 8,
+  "n_distinct_banks": 1,
+  "noiseless_winner_counts": {
+    "2": 455,
+    "3": 248,
+    "5": 22,
+    "4": 8,
+    "0": 45,
+    "7": 68,
+    "6": 10,
+    "1": 8
+  },
+  "checkpoints": {
+    "summary/seed_0": {
+      "mean_rank_correlation": 0.834104938271605,
+      "n_records": 864,
+      "picks_true_best": 0.7800925925925926,
+      "true_best_in_top_half": 0.9548611111111112,
+      "by_physical_qubits": {
+        "3": {
+          "mean_rho": 0.8253968253968254,
+          "n": 54
+        },
+        "4": {
+          "mean_rho": 0.8145208700764257,
+          "n": 162
+        },
+        "5": {
+          "mean_rho": 0.8621933621933623,
+          "n": 198
+        },
+        "6": {
+          "mean_rho": 0.864914021164021,
+          "n": 144
+        },
+        "7": {
+          "mean_rho": 0.8779761904761905,
+          "n": 144
+        },
+        "8": {
+          "mean_rho": 0.7600529100529101,
+          "n": 90
+        },
+        "9": {
+          "mean_rho": 0.7226631393298061,
+          "n": 54
+        },
+        "10": {
+          "mean_rho": 0.8346560846560847,
+          "n": 18
+        }
+      }
+    },
+    "hierarchy_physics/seed_0": {
+      "mean_rank_correlation": 0.8388172398589065,
+      "n_records": 864,
+      "picks_true_best": 0.7557870370370371,
+      "true_best_in_top_half": 0.9513888888888888,
+      "by_physical_qubits": {
+        "3": {
+          "mean_rho": 0.8783068783068783,
+          "n": 54
+        },
+        "4": {
+          "mean_rho": 0.7780717225161671,
+          "n": 162
+        },
+        "5": {
+          "mean_rho": 0.8751803751803753,
+          "n": 198
+        },
+        "6": {
+          "mean_rho": 0.8533399470899471,
+          "n": 144
+        },
+        "7": {
+          "mean_rho": 0.8847552910052909,
+          "n": 144
+        },
+        "8": {
+          "mean_rho": 0.7793650793650794,
+          "n": 90
+        },
+        "9": {
+          "mean_rho": 0.7879188712522046,
+          "n": 54
+        },
+        "10": {
+          "mean_rho": 0.8333333333333334,
+          "n": 18
+        }
+      }
+    }
+  },
+  "scope": "in-distribution ranking on the bank the critic was trained against; the shared-bank count is reported because a shared bank makes a candidate fixed effect necessary before any within-record claim"
+}
