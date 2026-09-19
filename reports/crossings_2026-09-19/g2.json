@@ -1,0 +1,758 @@
+{
+  "schema_version": 1,
+  "data": "/home/nguyencongt/runs/g2_data",
+  "split": "test",
+  "s_grid_points": 129,
+  "n_records": 48,
+  "minima_histogram": {
+    "0": 24,
+    "1": 20,
+    "2": 4
+  },
+  "n_multi_crossing": 4,
+  "multi_crossing_records": [
+    {
+      "record_id": "parent_0016_e0_k0_t0",
+      "parent_id": "parent_0016",
+      "n_physical": 6,
+      "interior_minima": 2,
+      "minima_locations": [
+        0.625,
+        0.765625
+      ],
+      "min_gap": 0.32516945411579945,
+      "argmin_s": 0.765625,
+      "gap_at_endpoints": [
+        1.999999999999992,
+        0.5187125015747949
+      ]
+    },
+    {
+      "record_id": "parent_0048_e0_k0_t0",
+      "parent_id": "parent_0048",
+      "n_physical": 5,
+      "interior_minima": 2,
+      "minima_locations": [
+        0.6015625,
+        0.9921875
+      ],
+      "min_gap": 0.13124108202616203,
+      "argmin_s": 0.9921875,
+      "gap_at_endpoints": [
+        1.9999999999999991,
+        0.13133066568380025
+      ]
+    },
+    {
+      "record_id": "parent_0104_e0_k0_t0",
+      "parent_id": "parent_0104",
+      "n_physical": 9,
+      "interior_minima": 2,
+      "minima_locations": [
+        0.6875,
+        0.8671875
+      ],
+      "min_gap": 0.09818932790328194,
+      "argmin_s": 0.8671875,
+      "gap_at_endpoints": [
+        1.9999999999999964,
+        0.1543980666106215
+      ]
+    },
+    {
+      "record_id": "parent_0124_e0_k0_t0",
+      "parent_id": "parent_0124",
+      "n_physical": 9,
+      "interior_minima": 2,
+      "minima_locations": [
+        0.5703125,
+        0.96875
+      ],
+      "min_gap": 0.07887526478561391,
+      "argmin_s": 0.96875,
+      "gap_at_endpoints": [
+        1.9999999999999964,
+        0.08702330450692397
+      ]
+    }
+  ],
+  "rows": [
+    {
+      "record_id": "parent_0013_e0_k0_t0",
+      "parent_id": "parent_0013",
+      "n_physical": 4,
+      "interior_minima": 0,
+      "minima_locations": [],
+      "min_gap": 0.0,
+      "argmin_s": 1.0,
+      "gap_at_endpoints": [
+        1.9999999999999982,
+        0.0
+      ]
+    },
+    {
+      "record_id": "parent_0014_e0_k0_t0",
+      "parent_id": "parent_0014",
+      "n_physical": 4,
+      "interior_minima": 0,
+      "minima_locations": [],
+      "min_gap": 0.0,
+      "argmin_s": 1.0,
+      "gap_at_endpoints": [
+        1.9999999999999996,
+        0.0
+      ]
+    },
+    {
+      "record_id": "parent_0016_e0_k0_t0",
+      "parent_id": "parent_0016",
+      "n_physical": 6,
+      "interior_minima": 2,
+      "minima_locations": [
+        0.625,
+        0.765625
+      ],
+      "min_gap": 0.32516945411579945,
+      "argmin_s": 0.765625,
+      "gap_at_endpoints": [
+        1.999999999999992,
+        0.5187125015747949
+      ]
+    },
+    {
+      "record_id": "parent_0042_e0_k0_t0",
+      "parent_id": "parent_0042",
+      "n_physical": 7,
+      "interior_minima": 0,
+      "minima_locations": [],
+      "min_gap": 0.0,
+      "argmin_s": 1.0,
+      "gap_at_endpoints": [
+        1.9999999999999734,
+        0.0
+      ]
+    },
+    {
+      "record_id": "parent_0047_e0_k0_t0",
+      "parent_id": "parent_0047",
+      "n_physical": 8,
+      "interior_minima": 1,
+      "minima_locations": [
+        0.6484375
+      ],
+      "min_gap": 0.0038546212454901863,
+      "argmin_s": 0.6484375,
+      "gap_at_endpoints": [
+        1.9999999999999858,
+        0.006000000000000227
+      ]
+    },
+    {
+      "record_id": "parent_0048_e0_k0_t0",
+      "parent_id": "parent_0048",
+      "n_physical": 5,
+      "interior_minima": 2,
+      "minima_locations": [
+        0.6015625,
+        0.9921875
+      ],
+      "min_gap": 0.13124108202616203,
+      "argmin_s": 0.9921875,
+      "gap_at_endpoints": [
+        1.9999999999999991,
+        0.13133066568380025
+      ]
+    },
+    {
+      "record_id": "parent_0063_e0_k0_t0",
+      "parent_id": "parent_0063",
+      "n_physical": 4,
+      "interior_minima": 1,
+      "minima_locations": [
+        0.890625
+      ],
+      "min_gap": 0.0018033841936642148,
+      "argmin_s": 0.890625,
+      "gap_at_endpoints": [
+        1.9999999999999982,
+        0.0019999999999997797
+      ]
+    },
+    {
+      "record_id": "parent_0077_e0_k0_t0",
+      "parent_id": "parent_0077",
+      "n_physical": 4,
+      "interior_minima": 0,
+      "minima_locations": [],
+      "min_gap": 0.0,
+      "argmin_s": 1.0,
+      "gap_at_endpoints": [
+        1.9999999999999996,
+        0.0
+      ]
+    },
+    {
+      "record_id": "parent_0079_e0_k0_t0",
+      "parent_id": "parent_0079",
+      "n_physical": 5,
+      "interior_minima": 1,
+      "minima_locations": [
+        0.7890625
+      ],
+      "min_gap": 0.006353899347134373,
+      "argmin_s": 0.7890625,
+      "gap_at_endpoints": [
+        1.9999999999999991,
+        0.008000000000000895
+      ]
+    },
+    {
+      "record_id": "parent_0081_e0_k0_t0",
+      "parent_id": "parent_0081",
+      "n_physical": 7,
+      "interior_minima": 0,
+      "minima_locations": [],
+      "min_gap": 0.0,
+      "argmin_s": 1.0,
+      "gap_at_endpoints": [
+        1.9999999999999734,
+        0.0
+      ]
+    },
+    {
+      "record_id": "parent_0088_e0_k0_t0",
+      "parent_id": "parent_0088",
+      "n_physical": 5,
+      "interior_minima": 1,
+      "minima_locations": [
+        0.46875
+      ],
+      "min_gap": 0.6392345441870808,
+      "argmin_s": 0.46875,
+      "gap_at_endpoints": [
+        1.9999999999999991,
+        1.7901885231067811
+      ]
+    },
+    {
+      "record_id": "parent_0089_e0_k0_t0",
+      "parent_id": "parent_0089",
+      "n_physical": 4,
+      "interior_minima": 0,
+      "minima_locations": [],
+      "min_gap": 0.0,
+      "argmin_s": 1.0,
+      "gap_at_endpoints": [
+        1.9999999999999996,
+        0.0
+      ]
+    },
+    {
+      "record_id": "parent_0096_e0_k0_t0",
+      "parent_id": "parent_0096",
+      "n_physical": 4,
+      "interior_minima": 1,
+      "minima_locations": [
+        0.859375
+      ],
+      "min_gap": 0.22714703864404195,
+      "argmin_s": 0.859375,
+      "gap_at_endpoints": [
+        1.9999999999999982,
+        0.28392358114963434
+      ]
+    },
+    {
+      "record_id": "parent_0097_e0_k0_t0",
+      "parent_id": "parent_0097",
+      "n_physical": 5,
+      "interior_minima": 0,
+      "minima_locations": [],
+      "min_gap": 0.0,
+      "argmin_s": 1.0,
+      "gap_at_endpoints": [
+        1.9999999999999991,
+        0.0
+      ]
+    },
+    {
+      "record_id": "parent_0104_e0_k0_t0",
+      "parent_id": "parent_0104",
+      "n_physical": 9,
+      "interior_minima": 2,
+      "minima_locations": [
+        0.6875,
+        0.8671875
+      ],
+      "min_gap": 0.09818932790328194,
+      "argmin_s": 0.8671875,
+      "gap_at_endpoints": [
+        1.9999999999999964,
+        0.1543980666106215
+      ]
+    },
+    {
+      "record_id": "parent_0108_e0_k0_t0",
+      "parent_id": "parent_0108",
+      "n_physical": 5,
+      "interior_minima": 1,
+      "minima_locations": [
+        0.7421875
+      ],
+      "min_gap": 0.06461159767818803,
+      "argmin_s": 0.7421875,
+      "gap_at_endpoints": [
+        1.9999999999999987,
+        0.10565632125431179
+      ]
+    },
+    {
+      "record_id": "parent_0111_e0_k0_t0",
+      "parent_id": "parent_0111",
+      "n_physical": 7,
+      "interior_minima": 1,
+      "minima_locations": [
+        0.7578125
+      ],
+      "min_gap": 0.004464617133743243,
+      "argmin_s": 0.7578125,
+      "gap_at_endpoints": [
+        1.9999999999999734,
+        0.006000000000000227
+      ]
+    },
+    {
+      "record_id": "parent_0114_e0_k0_t0",
+      "parent_id": "parent_0114",
+      "n_physical": 6,
+      "interior_minima": 0,
+      "minima_locations": [],
+      "min_gap": 0.0,
+      "argmin_s": 1.0,
+      "gap_at_endpoints": [
+        1.999999999999992,
+        0.0
+      ]
+    },
+    {
+      "record_id": "parent_0115_e0_k0_t0",
+      "parent_id": "parent_0115",
+      "n_physical": 8,
+      "interior_minima": 1,
+      "minima_locations": [
+        0.671875
+      ],
+      "min_gap": 0.005244421950366451,
+      "argmin_s": 0.671875,
+      "gap_at_endpoints": [
+        1.9999999999999858,
+        0.008000000000000895
+      ]
+    },
+    {
+      "record_id": "parent_0117_e0_k0_t0",
+      "parent_id": "parent_0117",
+      "n_physical": 7,
+      "interior_minima": 0,
+      "minima_locations": [],
+      "min_gap": 0.0,
+      "argmin_s": 1.0,
+      "gap_at_endpoints": [
+        1.9999999999999734,
+        0.0
+      ]
+    },
+    {
+      "record_id": "parent_0118_e0_k0_t0",
+      "parent_id": "parent_0118",
+      "n_physical": 5,
+      "interior_minima": 0,
+      "minima_locations": [],
+      "min_gap": 0.0,
+      "argmin_s": 1.0,
+      "gap_at_endpoints": [
+        1.9999999999999991,
+        0.0
+      ]
+    },
+    {
+      "record_id": "parent_0119_e0_k0_t0",
+      "parent_id": "parent_0119",
+      "n_physical": 7,
+      "interior_minima": 1,
+      "minima_locations": [
+        0.6875
+      ],
+      "min_gap": 0.0013723182857035,
+      "argmin_s": 0.6875,
+      "gap_at_endpoints": [
+        1.9999999999999734,
+        0.002000000000000668
+      ]
+    },
+    {
+      "record_id": "parent_0121_e0_k0_t0",
+      "parent_id": "parent_0121",
+      "n_physical": 3,
+      "interior_minima": 0,
+      "minima_locations": [],
+      "min_gap": 0.0,
+      "argmin_s": 1.0,
+      "gap_at_endpoints": [
+        1.999999999999999,
+        0.0
+      ]
+    },
+    {
+      "record_id": "parent_0124_e0_k0_t0",
+      "parent_id": "parent_0124",
+      "n_physical": 9,
+      "interior_minima": 2,
+      "minima_locations": [
+        0.5703125,
+        0.96875
+      ],
+      "min_gap": 0.07887526478561391,
+      "argmin_s": 0.96875,
+      "gap_at_endpoints": [
+        1.9999999999999964,
+        0.08702330450692397
+      ]
+    },
+    {
+      "record_id": "parent_0134_e0_k0_t0",
+      "parent_id": "parent_0134",
+      "n_physical": 4,
+      "interior_minima": 0,
+      "minima_locations": [],
+      "min_gap": 0.0,
+      "argmin_s": 1.0,
+      "gap_at_endpoints": [
+        1.9999999999999982,
+        0.0
+      ]
+    },
+    {
+      "record_id": "parent_0141_e0_k0_t0",
+      "parent_id": "parent_0141",
+      "n_physical": 8,
+      "interior_minima": 0,
+      "minima_locations": [],
+      "min_gap": 0.0,
+      "argmin_s": 1.0,
+      "gap_at_endpoints": [
+        1.9999999999999858,
+        0.0
+      ]
+    },
+    {
+      "record_id": "parent_0146_e0_k0_t0",
+      "parent_id": "parent_0146",
+      "n_physical": 3,
+      "interior_minima": 0,
+      "minima_locations": [],
+      "min_gap": 0.0,
+      "argmin_s": 1.0,
+      "gap_at_endpoints": [
+        1.9999999999999991,
+        0.0
+      ]
+    },
+    {
+      "record_id": "parent_0148_e0_k0_t0",
+      "parent_id": "parent_0148",
+      "n_physical": 8,
+      "interior_minima": 1,
+      "minima_locations": [
+        0.6796875
+      ],
+      "min_gap": 0.12365307360080813,
+      "argmin_s": 0.6796875,
+      "gap_at_endpoints": [
+        1.9999999999999858,
+        0.25461364653105445
+      ]
+    },
+    {
+      "record_id": "parent_0149_e0_k0_t0",
+      "parent_id": "parent_0149",
+      "n_physical": 4,
+      "interior_minima": 0,
+      "minima_locations": [],
+      "min_gap": 0.0,
+      "argmin_s": 1.0,
+      "gap_at_endpoints": [
+        1.9999999999999982,
+        0.0
+      ]
+    },
+    {
+      "record_id": "parent_0151_e0_k0_t0",
+      "parent_id": "parent_0151",
+      "n_physical": 8,
+      "interior_minima": 1,
+      "minima_locations": [
+        0.703125
+      ],
+      "min_gap": 0.002792258133727188,
+      "argmin_s": 0.703125,
+      "gap_at_endpoints": [
+        1.9999999999999858,
+        0.0039999999999995595
+      ]
+    },
+    {
+      "record_id": "parent_0159_e0_k0_t0",
+      "parent_id": "parent_0159",
+      "n_physical": 5,
+      "interior_minima": 1,
+      "minima_locations": [
+        0.828125
+      ],
+      "min_gap": 0.0016802817567067585,
+      "argmin_s": 0.828125,
+      "gap_at_endpoints": [
+        1.9999999999999991,
+        0.0019999999999997797
+      ]
+    },
+    {
+      "record_id": "parent_0161_e0_k0_t0",
+      "parent_id": "parent_0161",
+      "n_physical": 7,
+      "interior_minima": 0,
+      "minima_locations": [],
+      "min_gap": 0.0,
+      "argmin_s": 1.0,
+      "gap_at_endpoints": [
+        1.9999999999999734,
+        0.0
+      ]
+    },
+    {
+      "record_id": "parent_0162_e0_k0_t0",
+      "parent_id": "parent_0162",
+      "n_physical": 5,
+      "interior_minima": 0,
+      "minima_locations": [],
+      "min_gap": 0.0,
+      "argmin_s": 1.0,
+      "gap_at_endpoints": [
+        1.9999999999999987,
+        0.0
+      ]
+    },
+    {
+      "record_id": "parent_0164_e0_k0_t0",
+      "parent_id": "parent_0164",
+      "n_physical": 5,
+      "interior_minima": 1,
+      "minima_locations": [
+        0.6796875
+      ],
+      "min_gap": 0.19854194924947288,
+      "argmin_s": 0.6796875,
+      "gap_at_endpoints": [
+        1.9999999999999991,
+        0.4541448831646804
+      ]
+    },
+    {
+      "record_id": "parent_0170_e0_k0_t0",
+      "parent_id": "parent_0170",
+      "n_physical": 4,
+      "interior_minima": 0,
+      "minima_locations": [],
+      "min_gap": 0.0,
+      "argmin_s": 1.0,
+      "gap_at_endpoints": [
+        1.9999999999999982,
+        0.0
+      ]
+    },
+    {
+      "record_id": "parent_0171_e0_k0_t0",
+      "parent_id": "parent_0171",
+      "n_physical": 5,
+      "interior_minima": 1,
+      "minima_locations": [
+        0.8125
+      ],
+      "min_gap": 0.004932844893374977,
+      "argmin_s": 0.8125,
+      "gap_at_endpoints": [
+        1.9999999999999991,
+        0.006000000000000227
+      ]
+    },
+    {
+      "record_id": "parent_0177_e0_k0_t0",
+      "parent_id": "parent_0177",
+      "n_physical": 10,
+      "interior_minima": 0,
+      "minima_locations": [],
+      "min_gap": 0.0,
+      "argmin_s": 1.0,
+      "gap_at_endpoints": [
+        2.0,
+        0.0
+      ]
+    },
+    {
+      "record_id": "parent_0178_e0_k0_t0",
+      "parent_id": "parent_0178",
+      "n_physical": 6,
+      "interior_minima": 0,
+      "minima_locations": [],
+      "min_gap": 0.0,
+      "argmin_s": 1.0,
+      "gap_at_endpoints": [
+        1.999999999999992,
+        0.0
+      ]
+    },
+    {
+      "record_id": "parent_0180_e0_k0_t0",
+      "parent_id": "parent_0180",
+      "n_physical": 6,
+      "interior_minima": 1,
+      "minima_locations": [
+        0.5859375
+      ],
+      "min_gap": 0.25748566461480493,
+      "argmin_s": 0.5859375,
+      "gap_at_endpoints": [
+        1.999999999999992,
+        0.46129532139498863
+      ]
+    },
+    {
+      "record_id": "parent_0198_e0_k0_t0",
+      "parent_id": "parent_0198",
+      "n_physical": 6,
+      "interior_minima": 0,
+      "minima_locations": [],
+      "min_gap": 0.0,
+      "argmin_s": 1.0,
+      "gap_at_endpoints": [
+        1.999999999999992,
+        0.0
+      ]
+    },
+    {
+      "record_id": "parent_0200_e0_k0_t0",
+      "parent_id": "parent_0200",
+      "n_physical": 9,
+      "interior_minima": 1,
+      "minima_locations": [
+        0.84375
+      ],
+      "min_gap": 0.00152124073259019,
+      "argmin_s": 0.84375,
+      "gap_at_endpoints": [
+        1.9999999999999964,
+        0.04566948012438665
+      ]
+    },
+    {
+      "record_id": "parent_0214_e0_k0_t0",
+      "parent_id": "parent_0214",
+      "n_physical": 6,
+      "interior_minima": 0,
+      "minima_locations": [],
+      "min_gap": 0.0,
+      "argmin_s": 1.0,
+      "gap_at_endpoints": [
+        1.999999999999992,
+        0.0
+      ]
+    },
+    {
+      "record_id": "parent_0226_e0_k0_t0",
+      "parent_id": "parent_0226",
+      "n_physical": 5,
+      "interior_minima": 0,
+      "minima_locations": [],
+      "min_gap": 0.0,
+      "argmin_s": 1.0,
+      "gap_at_endpoints": [
+        1.9999999999999991,
+        0.0
+      ]
+    },
+    {
+      "record_id": "parent_0227_e0_k0_t0",
+      "parent_id": "parent_0227",
+      "n_physical": 7,
+      "interior_minima": 1,
+      "minima_locations": [
+        0.6484375
+      ],
+      "min_gap": 0.003976757499248862,
+      "argmin_s": 0.6484375,
+      "gap_at_endpoints": [
+        1.9999999999999734,
+        0.006000000000000227
+      ]
+    },
+    {
+      "record_id": "parent_0229_e0_k0_t0",
+      "parent_id": "parent_0229",
+      "n_physical": 3,
+      "interior_minima": 0,
+      "minima_locations": [],
+      "min_gap": 0.0,
+      "argmin_s": 1.0,
+      "gap_at_endpoints": [
+        1.999999999999999,
+        0.0
+      ]
+    },
+    {
+      "record_id": "parent_0235_e0_k0_t0",
+      "parent_id": "parent_0235",
+      "n_physical": 6,
+      "interior_minima": 1,
+      "minima_locations": [
+        0.7578125
+      ],
+      "min_gap": 0.003047027253564316,
+      "argmin_s": 0.7578125,
+      "gap_at_endpoints": [
+        1.999999999999992,
+        0.0039999999999995595
+      ]
+    },
+    {
+      "record_id": "parent_0236_e0_k0_t0",
+      "parent_id": "parent_0236",
+      "n_physical": 6,
+      "interior_minima": 1,
+      "minima_locations": [
+        0.59375
+      ],
+      "min_gap": 0.31295560398265776,
+      "argmin_s": 0.59375,
+      "gap_at_endpoints": [
+        1.999999999999992,
+        0.46344270954411204
+      ]
+    },
+    {
+      "record_id": "parent_0239_e0_k0_t0",
+      "parent_id": "parent_0239",
+      "n_physical": 7,
+      "interior_minima": 1,
+      "minima_locations": [
+        0.671875
+      ],
+      "min_gap": 0.0012789527820293856,
+      "argmin_s": 0.671875,
+      "gap_at_endpoints": [
+        1.9999999999999734,
+        0.002000000000000668
+      ]
+    }
+  ],
+  "scope": "interior local minima of the first gap on a finite s grid; a coarser grid hides minima and a degenerate or unresolved gap is not filtered here, so this bounds rather than certifies the count of transition regions"
+}

@@ -16,60 +16,76 @@ the same machinery fed the **logical** Hamiltonian and asked to control the
 **physical embedded** one. That doubles as the sharpest available test of this
 project's central thesis.
 
-## Result: a clean null, on both scale conventions
+## Result: a pooled null that is a mixture of two opposite populations
 
-48 held-out parents, one record each, ≤10 physical qubits, `d2` teacher,
-both schedules scored by the same simulator on the same embedded record.
-47 usable, 1 unresolved teacher, 0 failures.
+48 held-out parents, one record each, ≤10 physical qubits, `d2` teacher, both
+schedules scored by the same simulator on the same embedded record. 47 usable,
+1 unresolved teacher, 0 failures, 0 one-to-one violations.
+
+Pooled, it is a null on both scale conventions:
 
 | logical coefficients | logical − physical | logical worse in |
 |---|---|---:|
-| at the programmed scale (isolates the embedding) | **+0.00268** [−0.00148, +0.00668] | 25/47 |
-| raw (also carries the common rescaling) | **−0.00115** [−0.00616, +0.00376] | 24/47 |
+| at the programmed scale | +0.00268 [−0.00148, +0.00668] | 25/47 |
+| raw | −0.00115 [−0.00616, +0.00376] | 24/47 |
 
-Both intervals straddle zero and both win-rates are coin flips.
+**That pooled number is a composition artefact.** Half of these instances have
+a *monotone* gap — [the crossing census](../crossings_2026-09-19/CROSSINGS.md)
+finds no interior gap minimum in 24 of 48 parents — and a time density derived
+from D₂ has nothing to localise there. The construction does nothing on that
+half, so its input cannot matter on that half either.
 
-## The context that decides how to read it
+Splitting on that mechanism, which is a property of the instance and not of the
+outcome:
 
-| | mean loss |
-|---|---:|
-| physical-spectrum teacher | 0.77298 |
-| **linear at matched duration** | **0.77436** |
-| logical-spectrum teacher (programmed) | 0.77566 |
+| subgroup | n | teacher − linear | beats linear |
+|---|---:|---|---:|
+| 0 interior gap minima | 23 | **+0.01065** [−0.00093, +0.02183] | 6/23 |
+| ≥1 interior gap minimum | 24 | **−0.01291** [−0.01815, −0.00768] | **21/24** |
 
-**Neither teacher meaningfully beats linear on this population** — the
-physical-spectrum one by 0.00138, the logical-spectrum one not at all. Asking
-which spectrum feeds the construction better is asking which fuel a stalled
-engine prefers.
+The spectral teacher works, clearly, exactly where it has a bottleneck to work
+with, and not otherwise. Rank correlation between the minimum gap and the
+teacher's advantage over linear is **−0.399**: the smaller the gap, the more it
+helps, which is what adiabatic theory predicts.
 
-So this is **not** evidence against the embedding thesis. It is evidence that
-the `d2` construction is too weak a probe to test it. The direct evidence for
-the thesis is elsewhere and is not weak: re-embedding the same logical
-objective produces a decisive reversal of the preferred control in **53.9 %** of
-pairs at 14 qubits, measured on best-found controls rather than through a
-teacher.
+### Where it works, the physical spectrum beats the logical one
 
-It is consistent with the rest of the ledger, which already records that
-spectral oracles lose to equal-budget search by +0.110.
+| logical coefficients | subgroup | logical − physical | logical worse in |
+|---|---|---|---:|
+| programmed | ≥1 minimum (n=24) | **+0.00871** [+0.00450, +0.01304] | **19/24** |
+| programmed | 0 minima (n=23) | −0.00360 [−0.00966, +0.00241] | 6/23 |
+| raw | ≥1 minimum (n=24) | **+0.00771** [+0.00309, +0.01238] | **18/24** |
+| raw | 0 minima (n=23) | −0.01040 [−0.01754, −0.00344] | 6/23 |
 
-*Population note:* the ledger's `summary/bank − d2 = −0.050399` uses the audited
-711-record population; this run is 47 records at ≤10 physical qubits, one per
-parent. The teacher is not equally weak everywhere, and these are not the same
-population.
+**On the half where spectrum-guided scheduling does anything at all, the
+physical embedded spectrum beats the logical one, with the interval clearing
+zero under both scale conventions.** That is direct evidence for this project's
+central thesis, obtained through the comparison the design document asked for.
+
+Two honest qualifications. This is a **subgroup analysis on 24 parents**: one
+stratification, chosen from a stated mechanism before the split was examined,
+using a variable that is a property of the instance rather than of the outcome
+— but it needs replication, not treatment as a confirmatory result. And the
+sign on the monotone-gap half is *negative* under both conventions, which
+should not be read as "the logical spectrum is better there": it is the sign of
+a difference between two constructions that both do nothing.
 
 ## What it settles about the related work
 
-Usefully, and in our favour — though not the way the document anticipated. The
-document frames Tx-NQDT's logical spectrum as its limitation. The measurement
-says the spectrum choice is **not** what separates methods here: the whole
-spectrum-guided construction sits at linear on this task, from either spectrum.
+The document frames Tx-NQDT's logical spectrum as its limitation, and on the
+instances where the method it belongs to actually functions, **that framing is
+correct and now measured**: +0.00871 [+0.00450, +0.01304], logical worse in
+19 of 24 parents.
 
-The honest related-work position is therefore stronger than arguing about whose
-spectrum is better: *spectrum-guided schedule construction, given an exact
-spectrum of either the logical or the physical system, does not beat a linear
-ramp on this population, while equal-budget search beats it by 0.110 and
-learned selection beats the physical-spectrum teacher by 0.050 on its audited
-population.*
+The complete statement needs both halves, because the pooled figure is a null
+and a reader who sees only the subgroup would be misled:
+
+*Spectrum-guided schedule construction beats a linear ramp by 0.013 on the half
+of instances whose gap has an interior minimum and not at all on the monotone
+half, so pooled it sits at linear. On the half where it works, the physical
+embedded spectrum beats the logical one by 0.009. Equal-budget search beats the
+construction by 0.110 regardless, and learned selection beats the
+physical-spectrum teacher by 0.050 on its audited population.*
 
 ## A confound that was found and removed
 
