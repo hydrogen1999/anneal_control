@@ -112,8 +112,16 @@ closed-system simulator — not only to this one.
 
 ## Limits
 
-- One bank of eight waveforms, one dataset, ≤ 6 physical qubits (a density
-  matrix costs O(4^N)). Not replicated on Pegasus.
+- One bank of eight waveforms, one dataset, ≤ 6 physical qubits for the main
+  measurement. The wall is measured, not guessed: one Lindblad solve costs
+  **1.16 s at 6 qubits, 5.12 s at 7, 30.4 s at 8**, and the density solver
+  refuses 9 outright (`adapters.simulate_lindblad`, O(4^N) memory). A full
+  200-record study is therefore 1 hour at 6 qubits, 4.5 at 7 and 27 at 8.
+- **Not replicated on Pegasus, and it cannot be.** The smallest Pegasus records
+  here are 10 physical qubits, past the solver's hard cap. That is a genuine
+  gap, not an omission: the Pegasus bank is different (64 candidates, two
+  distinct banks rather than one) and would have been a much stronger
+  independent check than anything available at ≤ 8 qubits.
 - Two channels, both uniform across qubits at a declared rate. No thermal bath,
   no measured T1/T2, no per-qubit calibration, no working-graph exclusions.
   **This is not a calibrated device model.**

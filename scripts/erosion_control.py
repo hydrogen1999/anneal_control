@@ -35,7 +35,10 @@ def _shard(args):
     wanted = set(record_ids)
     records = [r for r in load_records(data_dir, split)
                if str(np.asarray(r["record_id"]).item()) in wanted]
-    return bank_loss_table(records, rates=[0.0, rate], max_qubits=max_qubits)["losses"]
+    # The density solver's own cap is 8; pass the pool's actual size so a study
+    # at 7-8 qubits is not silently refused by a default meant for 6.
+    return bank_loss_table(records, rates=[0.0, rate],
+                           max_qubits=max(max_qubits, 8))["losses"]
 
 
 def _rho(a, b):
@@ -57,13 +60,18 @@ def main(argv=None) -> int:
     parser.add_argument("--rate", type=float, default=0.1)
     parser.add_argument("--records", type=int, default=200)
     parser.add_argument("--max-qubits", type=int, default=6)
+    parser.add_argument("--min-qubits", type=int, default=0,
+                        help="lower bound too, so the effect can be checked at a "
+                             "size range rather than only up to a cap")
     parser.add_argument("--workers", type=int, default=4)
     args = parser.parse_args(argv)
 
     from annealctrl.pipeline import load_records
 
     records = [r for r in load_records(args.data, args.split)
-               if len(np.asarray(r["physical_h"])) <= args.max_qubits]
+               if args.min_qubits <= len(np.asarray(r["physical_h"])) <= args.max_qubits]
+    if not records:
+        raise SystemExit(f"no record in {args.min_qubits}..{args.max_qubits} qubits")
     ids = sorted(str(np.asarray(r["record_id"]).item()) for r in records)[:args.records]
     banks = {np.asarray(r["candidate_schedules"], float).tobytes() for r in records}
     print(f"{len(ids)} records, {len(banks)} distinct bank(s) in the pool", flush=True)
@@ -103,7 +111,8 @@ def main(argv=None) -> int:
                      for j in range(L0.shape[1])}
 
     payload = {"schema_version": 1, "data": args.data, "split": args.split,
-               "rate": args.rate, "n_records": len(ids), "n_candidates": int(L0.shape[1]),
+               "rate": args.rate, "n_records": len(ids),
+               "qubit_range": [args.min_qubits, args.max_qubits], "n_candidates": int(L0.shape[1]),
                "n_distinct_banks_in_pool": len(banks),
                "correlations": out, "per_candidate": per_candidate,
                "scope": ("candidate_demeaned removes each waveform's own mean across records, "
