@@ -1,4 +1,6 @@
 """Spin-reversal gauge: exact, label-preserving, and frustration-preserving."""
+import pathlib
+
 import numpy as np
 import pytest
 
@@ -161,3 +163,54 @@ def test_gauging_a_record_does_not_mutate_the_original():
     before = record["physical_J"].copy()
     gauge_record(record, np.array([-1.0, 1.0, -1.0]))
     assert record["physical_J"] == pytest.approx(before)
+
+
+# --- the augmentation as training actually uses it ---------------------------
+
+def test_gauge_augmentation_trains_and_is_recorded_in_the_config(tmp_path):
+    """The flag must reach training_config, or a checkpoint cannot say which
+    arm produced it."""
+    import torch
+
+    from annealctrl.learning import fit_records
+    from tests.test_training_ready import data
+
+    train, validation = data()
+    fit_records(train, validation, epochs=1, seed=0, checkpoint=tmp_path / "plain.pt")
+    fit_records(train, validation, epochs=1, seed=0, gauge_augment=True,
+                checkpoint=tmp_path / "gauged.pt")
+    assert torch.load(tmp_path / "plain.pt", weights_only=True
+                      )["training_config"]["gauge_augment"] is False
+    assert torch.load(tmp_path / "gauged.pt", weights_only=True
+                      )["training_config"]["gauge_augment"] is True
+
+
+def test_augmentation_never_touches_the_labels(tmp_path):
+    """Different gauges reach the encoder; the candidate losses never move."""
+    from annealctrl.learning import fit_records
+    from tests.test_training_ready import data
+
+    train, validation = data()
+    before = [np.asarray(r["candidate_losses"]).copy() for r in train]
+    fit_records(train, validation, epochs=2, seed=0, gauge_augment=True,
+                checkpoint=tmp_path / "g.pt")
+    for record, original in zip(train, before):
+        assert np.asarray(record["candidate_losses"]) == pytest.approx(original)
+
+
+def test_the_experiment_validator_accepts_the_flag_and_still_rejects_typos():
+    """The allowlist exists so a misspelt option cannot become a silent no-op."""
+    import copy
+    import json
+
+    from annealctrl.experiments import validate_experiment
+
+    config = json.loads(pathlib.Path("configs/experiment_gauge.json").read_text())
+    config["dataset"] = json.loads(
+        pathlib.Path("configs/data_research.json").read_text())
+    validate_experiment(copy.deepcopy(config))       # gauge_augment is present and accepted
+
+    typo = copy.deepcopy(config)
+    typo["methods"][1]["training"] = {"response_weight": 0.0, "guage_augment": True}
+    with pytest.raises(ValueError, match="Unknown training keys"):
+        validate_experiment(typo)

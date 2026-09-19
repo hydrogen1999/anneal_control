@@ -372,7 +372,8 @@ def fit_records(train_records: Sequence[Mapping[str, Any]],
                 max_grad_norm: float = 1.0, deterministic: bool = True, bandwidth: float = 0.1,
                 ranking_tolerance: float = 1e-5, dataset_fingerprint: str | None = None,
                 initialize_from: str | Path | None = None, trainable_scope: str = "all",
-                selection_mode: str = "finite_bank_critic") -> FitResult:
+                selection_mode: str = "finite_bank_critic",
+                gauge_augment: bool = False) -> FitResult:
     """AdamW with exact epoch-boundary resume and validation-only selection.
 
     ``epochs`` is the total target, not additional epochs. Every optimizer update
@@ -442,6 +443,7 @@ def fit_records(train_records: Sequence[Mapping[str, Any]],
                        "accumulation_steps": accumulation_steps, "max_grad_norm": max_grad_norm,
                        "deterministic": deterministic, "bandwidth": bandwidth,
                        "ranking_tolerance": ranking_tolerance, "seed": seed,
+                       "gauge_augment": bool(gauge_augment),
                        "initialization_sha256": initialization_sha, "trainable_scope": trainable_scope,
                        "selection_mode": selection_mode}
     provenance = _data_provenance(train_records, validation_records, dataset_fingerprint)
@@ -464,6 +466,14 @@ def fit_records(train_records: Sequence[Mapping[str, Any]],
         if provenance != payload["data_provenance"]:
             raise ValueError("Resume dataset provenance/content mismatch")
     # Memory grows with the source records, not accelerator dataset residency.
+    # Gauge augmentation, when requested, re-draws a spin reversal for every
+    # training record at every epoch. The transformation is exact -- the
+    # spectrum is unchanged, so every stored candidate loss stays correct --
+    # and it preserves frustration, which is the condition the design document
+    # attaches to this arm. Validation is never augmented: the model is scored
+    # on the gauge the dataset actually stores.
+    gauge_augment = bool(training_config["gauge_augment"])
+    gauge_rng = np.random.default_rng(seed + 917) if gauge_augment else None
     graphs = [graph_from_record(r) for r in train_records]
     origin = payload or initial
     normalizer = FeatureNormalizer(origin["normalizer"]) if origin is not None else FeatureNormalizer.fit(graphs)
@@ -509,7 +519,18 @@ def fit_records(train_records: Sequence[Mapping[str, Any]],
             group = order[start:start + effective_batch]
             optimizer.zero_grad(set_to_none=True)
             for index in group:
-                record, graph = train_records[index], graphs[index].to(target_device)
+                record = train_records[index]
+                if gauge_augment:
+                    # A fresh spin reversal every epoch. Exact, so the stored
+                    # candidate losses below remain the correct labels, and
+                    # frustration-preserving, so this is not the sign-deleting
+                    # invariance the design document refuses.
+                    from .gauge import gauge_record, gauge_signs
+                    signs = gauge_signs(int(np.asarray(record["logical_h"]).size), gauge_rng)
+                    graph = normalizer.transform(
+                        graph_from_record(gauge_record(record, signs))).to(target_device)
+                else:
+                    graph = graphs[index].to(target_device)
                 schedules, losses = _tensor(record, "candidate_schedules", target_device), _tensor(record, "candidate_losses", target_device)
                 output = model(graph, schedules)
                 labels = _tensor(record, "response_moments", target_device) if "response_moments" in record else None

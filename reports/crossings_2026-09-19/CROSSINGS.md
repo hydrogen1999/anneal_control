@@ -100,6 +100,8 @@ which an earlier version of this report did not check.
 | 4 | −0.03788 [−0.08203, +0.00375], 12/23 | **+0.05777** [+0.01517, +0.10218], 7/24 |
 | 12 | **−0.04834** [−0.08882, −0.01220], 15/23 | +0.02544 [−0.02310, +0.07425], 9/24 |
 
+**The stratification reverses**, and a third analysis ([the coherent scan](../coherent_2026-09-19/COHERENT_SCAN.md)) gives a third answer again. All subgroup claims about the teacher's own advantage are withdrawn; see that report. What follows is kept as the record of what was measured.
+
 **The stratification reverses.** At runtime 1 the teacher helps the
 interior-minimum group; at runtime 4 it *hurts* that same group, with the
 interval clearing zero in the opposite direction. Pooled correctly — averaging

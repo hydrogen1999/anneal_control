@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "dataset": "data_research.json",
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "methods": [
+    {
+      "name": "signed_baseline",
+      "model": {
+        "encoder_variant": "hierarchical",
+        "width": 64
+      },
+      "training": {
+        "response_weight": 0.0
+      }
+    },
+    {
+      "name": "gauge_augmented",
+      "model": {
+        "encoder_variant": "hierarchical",
+        "width": 64
+      },
+      "training": {
+        "response_weight": 0.0,
+        "gauge_augment": true
+      }
+    }
+  ],
+  "training": {
+    "epochs": 200,
+    "patience": 25,
+    "learning_rate": 0.001,
+    "batch_size": 8,
+    "accumulation_steps": 2,
+    "weight_decay": 0.0001,
+    "policy_weight": 0.2,
+    "ranking_weight": 0.1
+  },
+  "execution": {
+    "device": "cpu",
+    "backend": "numpy",
+    "threads": 1,
+    "workers": 12
+  },
+  "evaluation": {
+    "direct": true,
+    "tolerance": 0.0002,
+    "initial_steps": 128,
+    "max_steps": 16384,
+    "n_resamples": 10000
+  },
+  "report": {
+    "plots": true,
+    "bootstrap_resamples": 10000
+  },
+  "_execution_note": "Symmetry arm of the design document's factorial table: 'Signed baseline; gauge augmentation; specialized covariant model | Whether stronger inductive bias improves robustness without deleting frustration.' The two arms differ only in gauge_augment. A spin reversal is exact -- the spectrum is unchanged, so every stored candidate loss stays the correct label -- and it preserves the loop product, so frustration is not deleted, which is the condition the document attaches to this arm. Validation is never augmented and the normalizer is fitted on unaugmented graphs, so both arms are scored on the gauge the dataset stores, through identical normalisation. The covariant-model arm is NOT implemented and remains open."
+}
