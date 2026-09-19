@@ -86,6 +86,60 @@ waveforms.
 
 The skill is real and it is not confined to separating good from obviously bad.
 
+## On a real device topology the ranking survives, and weakens sharply
+
+The same study on **Pegasus** — `pegasus_trainable_v2`, the `pegasus_exp`
+summary checkpoint, 44 held-out records across 22 parents, 4268 candidates
+re-scored:
+
+| restricted to | Pegasus | synthetic | positive in (Pegasus) |
+|---|---:|---:|---:|
+| all 97 | **+0.8163** | +0.9269 | 44/44 |
+| best 50% | +0.6343 | +0.8212 | 41/42 |
+| best 25% | +0.4496 | +0.7287 | 40/42 |
+| best 10% | **+0.1613** | +0.6272 | **28/42** |
+
+Budget curve on Pegasus:
+
+| simulate | shortfall | finds the true best |
+|---|---|---:|
+| top 12.5% | +0.00634 [+0.00225, +0.01141] | 65.9% |
+| top 25% | +0.00385 [+0.00059, +0.00779] | 81.8% |
+| top 50% | +0.00102 [+0.00000, +0.00305] | 95.5% |
+
+At the same keep-fraction the shortfall is **17× larger** than on the synthetic
+set (+0.00385 against +0.00022) and the exact best is found 81.8% of the time
+rather than 96.0%. The coarse ranking transfers; the fine ranking largely does
+not. Among the best 10% of candidates, where a budget filter has to do its real
+work, ρ falls to +0.16 and is positive in only two records out of three.
+
+### It is not a size effect
+
+Pegasus records here are 10–14 physical qubits and the synthetic ones 3–9, so
+the comparison confounds topology with size. Within each dataset the size
+varies, which measures the size effect directly:
+
+| synthetic | ρ all | | Pegasus | ρ all |
+|---:|---:|---|---:|---:|
+| 3 q | +0.9406 | | 10 q | +0.7465 |
+| 4 q | +0.9542 | | 11 q | +0.2965 |
+| 5 q | +0.9018 | | 12 q | +0.8867 |
+| 6 q | +0.8545 | | 13 q | +0.9721 |
+| 7 q | +0.9685 | | 14 q | +0.8777 |
+| 8 q | +0.9441 | | | |
+| 9 q | +0.9561 | | | |
+
+**Neither dataset shows ρ declining with qubit count.** Synthetic 8–9 qubit
+records still score 0.94–0.96; Pegasus 10-qubit records already score 0.75. The
+drop is a property of the Pegasus setting, not of larger systems.
+
+What it is *not* is isolated to topology. "Pegasus" here bundles the
+connectivity with a different instance family, different chain structure, and a
+checkpoint trained separately on different data. This measurement says the drop
+is real and is not size; it does not attribute it to connectivity alone. The
+per-size cells hold 2–14 records each, so the absence of a trend is a weak
+statement rather than an established flat line.
+
 ## The limitation that matters
 
 **This is an offline re-ranking of a completed search trace, not a closed-loop
