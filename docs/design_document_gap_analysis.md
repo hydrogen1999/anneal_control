@@ -40,11 +40,25 @@ three to five times better than eight-bin on every sweep. Eight-bin is the
 parameters, because a higher-dimensional family is harder to search at 32
 calls.
 
-**This matters for the model, not just for the search.** `models.monotone_samples`
-decodes the policy head to eight equal-time increments through a capped-simplex
-water-filling — that is the `eight_bin` family. **The learned policy's output
-family is the one Stage A would have rejected.** Nothing in the archive tests a
-two-window output head.
+**It bears on the direct policy head, and not on the bank path — which is worth
+separating carefully, because the bank path carries the paper's main claim.**
+
+`models.monotone_samples` decodes the policy head to eight equal-time
+increments through a capped-simplex water-filling: that is the `eight_bin`
+family, the one Stage A would have rejected. But the bank the critic selects
+from is family-diverse and contains **no** eight-bin candidate at all —
+`candidate_ids` are `linear`, `one_window_{0,1,2}`, `two_window_{0,1}`,
+`pause_{0,1}`.
+
+So the bank path was already doing what Stage A recommends, by construction:
+it offers the two families that clear the tolerance most often (two_window at
+5.6–20.8 % exceedance, one_window at 16.7–41.7 %) and excludes the one that
+clears it least (eight_bin at 34.7–58.3 %). The direct head does the opposite.
+
+That is a design-level explanation for the gap this project has reported all
+along between direct generation (0.590) and bank selection (0.545), and it is a
+hypothesis rather than a measurement: nothing in the archive tests a two-window
+output head.
 
 This is the single most actionable gap: it is a check the document asked to be
 run *before* architecture work, the data to run it has existed for three days,
