@@ -77,6 +77,33 @@ Per family at checkpoint seed_0 / search seed 0, critic filter against baseline:
 
 Mean best-found loss over the 44 parents: **0.71113 → 0.70384**.
 
+## On real Pegasus connectivity the in-loop gain does not shrink
+
+The offline study on Pegasus is markedly weaker: ρ falls from +0.9269 to
++0.8163 overall, and from +0.6272 to **+0.1613** among the best 10% of
+candidates. That predicts a smaller in-loop gain. It is not what happens.
+
+`pegasus_trainable_v2`, the `pegasus_exp` summary checkpoint, validation split,
+12 parents at ≤ 14 physical qubits, same protocol:
+
+| | Pegasus | synthetic (5 configurations) |
+|---|---|---|
+| filtering total | +0.01335 [+0.00686, +0.02080] 11/12 | +0.00622 (spread 9.5×) |
+| random control | +0.00805 [+0.00234, +0.01456] 8/12 | +0.00137 (changes sign) |
+| **the critic alone** | **+0.00530** [+0.00195, +0.00870] 10/12 | **+0.00485** (+0.00360 … +0.00615) |
+
+The Pegasus point estimate lands inside the synthetic spread and its interval
+excludes zero. **With 12 parents that interval is wide and this does not
+establish equality** — it establishes that the in-loop benefit survives on real
+device connectivity, not that it is the same size.
+
+The apparent tension with the offline numbers has a plain reading. Inside the
+loop the critic does not need to resolve the best 10% of candidates; it needs
+to avoid the bad ones, and the coarse ranking that does transfer (ρ = +0.82
+overall, positive in 44/44 records) is sufficient for that. The offline
+top-10% collapse would bite a method that used the critic to *replace* the
+simulator. This one uses it to *order* proposals the simulator still checks.
+
 ## What it costs
 
 Measured, not asserted:

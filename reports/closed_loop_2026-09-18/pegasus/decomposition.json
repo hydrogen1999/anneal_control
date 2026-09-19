@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "configurations": [
+    {
+      "checkpoint": "seed_0",
+      "search_seed": 0,
+      "n_parents": 12,
+      "baseline_drift": 0.0,
+      "critic": {
+        "mean": 0.013354272636500186,
+        "low": 0.006859534106451994,
+        "high": 0.020804725970954147,
+        "positive_parents": 11,
+        "n_parents": 12
+      },
+      "random": {
+        "mean": 0.00805102827036159,
+        "low": 0.002341791816390196,
+        "high": 0.01455541819941999,
+        "positive_parents": 8,
+        "n_parents": 12
+      },
+      "delta": {
+        "mean": 0.005303244366138595,
+        "low": 0.0019535233667580657,
+        "high": 0.008696664169798213,
+        "positive_parents": 10,
+        "n_parents": 12
+      }
+    }
+  ],
+  "problems": [],
+  "scope": "critic-alone is the paired difference between the critic arm and a random chooser on the identical oversampled proposal stream, against a baseline verified identical in both files"
+}
