@@ -1,0 +1,310 @@
+{
+  "schema_version": 1,
+  "data": "/home/nguyencongt/runs/pegasus_trainable240",
+  "split": "test",
+  "s_grid_points": 129,
+  "n_records": 16,
+  "minima_histogram": {
+    "0": 8,
+    "1": 4,
+    "2": 4
+  },
+  "n_multi_crossing": 4,
+  "multi_crossing_records": [
+    {
+      "record_id": "parent_0000_e0_k0_t0",
+      "parent_id": "parent_0000",
+      "n_physical": 10,
+      "interior_minima": 2,
+      "minima_locations": [
+        0.53125,
+        0.859375
+      ],
+      "min_gap": 0.09203368724853966,
+      "argmin_s": 0.859375,
+      "gap_at_endpoints": [
+        2.0,
+        0.11415186932437571
+      ]
+    },
+    {
+      "record_id": "parent_0012_e0_k0_t0",
+      "parent_id": "parent_0012",
+      "n_physical": 10,
+      "interior_minima": 2,
+      "minima_locations": [
+        0.6640625,
+        0.921875
+      ],
+      "min_gap": 0.12094446306117135,
+      "argmin_s": 0.921875,
+      "gap_at_endpoints": [
+        2.0,
+        0.12972218854944995
+      ]
+    },
+    {
+      "record_id": "parent_0096_e0_k0_t0",
+      "parent_id": "parent_0096",
+      "n_physical": 10,
+      "interior_minima": 2,
+      "minima_locations": [
+        0.71875,
+        0.875
+      ],
+      "min_gap": 0.17182778328091697,
+      "argmin_s": 0.71875,
+      "gap_at_endpoints": [
+        2.0,
+        0.21975198384304928
+      ]
+    },
+    {
+      "record_id": "parent_0219_e0_k0_t0",
+      "parent_id": "parent_0219",
+      "n_physical": 10,
+      "interior_minima": 2,
+      "minima_locations": [
+        0.7734375,
+        0.9921875
+      ],
+      "min_gap": 0.001991033419542987,
+      "argmin_s": 0.9921875,
+      "gap_at_endpoints": [
+        2.0,
+        0.0019999999999997797
+      ]
+    }
+  ],
+  "rows": [
+    {
+      "record_id": "parent_0000_e0_k0_t0",
+      "parent_id": "parent_0000",
+      "n_physical": 10,
+      "interior_minima": 2,
+      "minima_locations": [
+        0.53125,
+        0.859375
+      ],
+      "min_gap": 0.09203368724853966,
+      "argmin_s": 0.859375,
+      "gap_at_endpoints": [
+        2.0,
+        0.11415186932437571
+      ]
+    },
+    {
+      "record_id": "parent_0012_e0_k0_t0",
+      "parent_id": "parent_0012",
+      "n_physical": 10,
+      "interior_minima": 2,
+      "minima_locations": [
+        0.6640625,
+        0.921875
+      ],
+      "min_gap": 0.12094446306117135,
+      "argmin_s": 0.921875,
+      "gap_at_endpoints": [
+        2.0,
+        0.12972218854944995
+      ]
+    },
+    {
+      "record_id": "parent_0039_e0_k0_t0",
+      "parent_id": "parent_0039",
+      "n_physical": 10,
+      "interior_minima": 1,
+      "minima_locations": [
+        0.8203125
+      ],
+      "min_gap": 0.0016601890892156135,
+      "argmin_s": 0.8203125,
+      "gap_at_endpoints": [
+        2.0,
+        0.002000000000000668
+      ]
+    },
+    {
+      "record_id": "parent_0051_e0_k0_t0",
+      "parent_id": "parent_0051",
+      "n_physical": 10,
+      "interior_minima": 0,
+      "minima_locations": [],
+      "min_gap": 0.0,
+      "argmin_s": 1.0,
+      "gap_at_endpoints": [
+        2.0,
+        0.0
+      ]
+    },
+    {
+      "record_id": "parent_0062_e0_k0_t0",
+      "parent_id": "parent_0062",
+      "n_physical": 10,
+      "interior_minima": 0,
+      "minima_locations": [],
+      "min_gap": 0.0,
+      "argmin_s": 1.0,
+      "gap_at_endpoints": [
+        2.0,
+        0.0
+      ]
+    },
+    {
+      "record_id": "parent_0096_e0_k0_t0",
+      "parent_id": "parent_0096",
+      "n_physical": 10,
+      "interior_minima": 2,
+      "minima_locations": [
+        0.71875,
+        0.875
+      ],
+      "min_gap": 0.17182778328091697,
+      "argmin_s": 0.71875,
+      "gap_at_endpoints": [
+        2.0,
+        0.21975198384304928
+      ]
+    },
+    {
+      "record_id": "parent_0120_e0_k0_t0",
+      "parent_id": "parent_0120",
+      "n_physical": 10,
+      "interior_minima": 1,
+      "minima_locations": [
+        0.9375
+      ],
+      "min_gap": 0.042767458628934385,
+      "argmin_s": 0.9375,
+      "gap_at_endpoints": [
+        2.0,
+        0.04537897301269744
+      ]
+    },
+    {
+      "record_id": "parent_0121_e0_k0_t0",
+      "parent_id": "parent_0121",
+      "n_physical": 10,
+      "interior_minima": 0,
+      "minima_locations": [],
+      "min_gap": 0.0,
+      "argmin_s": 1.0,
+      "gap_at_endpoints": [
+        2.0,
+        0.0
+      ]
+    },
+    {
+      "record_id": "parent_0135_e0_k0_t0",
+      "parent_id": "parent_0135",
+      "n_physical": 10,
+      "interior_minima": 1,
+      "minima_locations": [
+        0.8046875
+      ],
+      "min_gap": 0.001614114088559937,
+      "argmin_s": 0.8046875,
+      "gap_at_endpoints": [
+        2.0,
+        0.002000000000000668
+      ]
+    },
+    {
+      "record_id": "parent_0146_e0_k0_t0",
+      "parent_id": "parent_0146",
+      "n_physical": 10,
+      "interior_minima": 0,
+      "minima_locations": [],
+      "min_gap": 0.0,
+      "argmin_s": 1.0,
+      "gap_at_endpoints": [
+        2.0,
+        0.0
+      ]
+    },
+    {
+      "record_id": "parent_0169_e0_k0_t0",
+      "parent_id": "parent_0169",
+      "n_physical": 10,
+      "interior_minima": 0,
+      "minima_locations": [],
+      "min_gap": 0.0,
+      "argmin_s": 1.0,
+      "gap_at_endpoints": [
+        2.0,
+        0.0
+      ]
+    },
+    {
+      "record_id": "parent_0170_e0_k0_t0",
+      "parent_id": "parent_0170",
+      "n_physical": 10,
+      "interior_minima": 0,
+      "minima_locations": [],
+      "min_gap": 0.0,
+      "argmin_s": 1.0,
+      "gap_at_endpoints": [
+        2.0,
+        0.0
+      ]
+    },
+    {
+      "record_id": "parent_0182_e0_k0_t0",
+      "parent_id": "parent_0182",
+      "n_physical": 10,
+      "interior_minima": 0,
+      "minima_locations": [],
+      "min_gap": 0.0,
+      "argmin_s": 1.0,
+      "gap_at_endpoints": [
+        2.0,
+        0.0
+      ]
+    },
+    {
+      "record_id": "parent_0205_e0_k0_t0",
+      "parent_id": "parent_0205",
+      "n_physical": 10,
+      "interior_minima": 1,
+      "minima_locations": [
+        0.9765625
+      ],
+      "min_gap": 0.0,
+      "argmin_s": 0.9921875,
+      "gap_at_endpoints": [
+        2.0,
+        0.0
+      ]
+    },
+    {
+      "record_id": "parent_0219_e0_k0_t0",
+      "parent_id": "parent_0219",
+      "n_physical": 10,
+      "interior_minima": 2,
+      "minima_locations": [
+        0.7734375,
+        0.9921875
+      ],
+      "min_gap": 0.001991033419542987,
+      "argmin_s": 0.9921875,
+      "gap_at_endpoints": [
+        2.0,
+        0.0019999999999997797
+      ]
+    },
+    {
+      "record_id": "parent_0229_e0_k0_t0",
+      "parent_id": "parent_0229",
+      "n_physical": 10,
+      "interior_minima": 0,
+      "minima_locations": [],
+      "min_gap": 0.0,
+      "argmin_s": 1.0,
+      "gap_at_endpoints": [
+        2.0,
+        0.0
+      ]
+    }
+  ],
+  "scope": "interior local minima of the first gap on a finite s grid; a coarser grid hides minima and a degenerate or unresolved gap is not filtered here, so this bounds rather than certifies the count of transition regions"
+}

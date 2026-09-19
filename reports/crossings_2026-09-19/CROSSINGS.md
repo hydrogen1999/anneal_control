@@ -35,14 +35,55 @@ finite grid cannot distinguish a genuine avoided crossing from boundary
 behaviour. The defensible count of interior multi-crossing instances is
 therefore **2 to 4 of 48**.
 
+## Replication on real Pegasus connectivity
+
+The same census on the new 240-parent Pegasus dataset, test split. Only **16 of
+48 parents** have a record at ≤10 physical qubits, which is where the exact
+spectral profile is capped, so this is a **size-selected subsample** — the 16
+parents with the most compact embeddings.
+
+| interior gap minima | synthetic (n=48) | Pegasus (n=16) |
+|---:|---:|---:|
+| 0 | 50.0 % | **50.0 %** |
+| 1 | 41.7 % | 25.0 % |
+| ≥2 | 8.3 % | **25.0 %** |
+
+**The monotone-gap half replicates exactly** — 50.0 % on both topologies. That
+is the fraction that drives the teacher stratification below, and it is not an
+artefact of the synthetic generator.
+
+The multi-crossing fraction is three times higher on Pegasus, and the instances
+are harder:
+
+| record | minima | min gap | locations |
+|---|---:|---:|---|
+| parent_0000_e0_k0_t0 | 2 | 0.0920 | s = 0.531, 0.859 |
+| parent_0012_e0_k0_t0 | 2 | 0.1209 | s = 0.664, 0.922 |
+| parent_0096_e0_k0_t0 | 2 | 0.1718 | s = 0.719, 0.875 |
+| parent_0219_e0_k0_t0 | 2 | **0.0020** | s = 0.773, **0.992** |
+
+Three of the four have both minima clearly interior, against two of four on the
+synthetic set, and one reaches a minimum gap of 0.0020 — two orders of
+magnitude smaller than anything in the synthetic multi-crossing group, whose
+smallest was 0.0789.
+
+Read this as a direction, not a rate: **4 of 16 is a wide interval**, and the
+subsample is selected by embedding compactness. What it does establish is that
+chains on real device connectivity do produce genuinely multi-crossing,
+small-gap instances, which the synthetic generator largely does not.
+
 ## Consequence 1: the coherent-failure test cannot be run here
 
-At most four usable instances, and the data generator does not produce
-multi-crossing paths by design. The document's interference scan needs a
-purpose-built family, which does not exist. Until it does, **every
-representation claim in this project rests on instances with at most one
-transition region in 92 % of cases** — a scope statement the paper needs and
-did not have.
+At most four usable instances on the synthetic set, and the generator does not
+produce multi-crossing paths by design. **Every synthetic representation claim
+in this project therefore rests on instances with at most one transition region
+in 92 % of cases** — a scope statement the paper needs and did not have.
+
+Pegasus is more promising: four usable instances in a 16-parent subsample, one
+of them with a minimum gap of 0.0020. A purpose-built family is still the right
+answer, but real device connectivity may supply enough instances without one,
+and the 12–14-qubit Pegasus records — which the 10-qubit spectral cap excludes
+here — have not been examined at all.
 
 ## Consequence 2: it explains why the spectral teachers look useless
 
