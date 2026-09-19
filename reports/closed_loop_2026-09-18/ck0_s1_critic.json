@@ -1,0 +1,1608 @@
+{
+  "schema_version": 1,
+  "data": "/home/nguyencongt/runs/g2_data",
+  "split": "validation",
+  "checkpoint": "/home/nguyencongt/runs/research_v1/models/summary/seed_0/best.pt",
+  "budget": 32,
+  "oversample": 8,
+  "seed": 1,
+  "chooser": "critic",
+  "n_records": 44,
+  "n_parents": 44,
+  "budget_mismatches": 0,
+  "improvement_best_over_families": {
+    "n_parents": 44,
+    "mean": 0.008290159582128776,
+    "std": 0.005524234353750797,
+    "min": 0.002161329311571536,
+    "max": 0.023334362913315365,
+    "quantiles": {
+      "p10": 0.002602109120140228,
+      "p25": 0.004139599219092155,
+      "p50": 0.006808706944300691,
+      "p75": 0.011529576392503738,
+      "p90": 0.01669962966996502
+    },
+    "parent_bootstrap_ci": {
+      "low": 0.006733546697491238,
+      "high": 0.009969925523553238,
+      "confidence": 0.95,
+      "resamples": 4000,
+      "unit_of_independence": "logical_parent",
+      "status": "ok",
+      "includes_training_seed_uncertainty": false
+    }
+  },
+  "improvement_per_family": {
+    "one_window": {
+      "n_parents": 44,
+      "mean": 0.037059897081665474,
+      "std": 0.020871031478113197,
+      "min": 0.011240964702845413,
+      "max": 0.09476049903434935,
+      "quantiles": {
+        "p10": 0.015316236127885541,
+        "p25": 0.018932092480372614,
+        "p50": 0.03519412441644898,
+        "p75": 0.04733359845298413,
+        "p90": 0.06832888332913649
+      },
+      "parent_bootstrap_ci": {
+        "low": 0.03096690151470943,
+        "high": 0.04339833058397864,
+        "confidence": 0.95,
+        "resamples": 4000,
+        "unit_of_independence": "logical_parent",
+        "status": "ok",
+        "includes_training_seed_uncertainty": false
+      }
+    },
+    "two_window": {
+      "n_parents": 44,
+      "mean": 0.01565616351544433,
+      "std": 0.010112987934604009,
+      "min": 0.002843064739379342,
+      "max": 0.035030095966835706,
+      "quantiles": {
+        "p10": 0.004851437221805554,
+        "p25": 0.007918223944792468,
+        "p50": 0.012649512297048693,
+        "p75": 0.02590904171352071,
+        "p90": 0.030633630267034164
+      },
+      "parent_bootstrap_ci": {
+        "low": 0.012667975162156283,
+        "high": 0.018701514588236618,
+        "confidence": 0.95,
+        "resamples": 4000,
+        "unit_of_independence": "logical_parent",
+        "status": "ok",
+        "includes_training_seed_uncertainty": false
+      }
+    },
+    "eight_bin": {
+      "n_parents": 44,
+      "mean": 0.0008099930763036011,
+      "std": 0.0032664769474590404,
+      "min": -0.0023256898313328556,
+      "max": 0.014600047343082956,
+      "quantiles": {
+        "p10": 1.0206783768151873e-05,
+        "p25": 1.3690089718493281e-05,
+        "p50": 2.305073954544934e-05,
+        "p75": 3.268795313432493e-05,
+        "p90": 5.0766393376078254e-05
+      },
+      "parent_bootstrap_ci": {
+        "low": -2.9255508782878695e-05,
+        "high": 0.0018559005190707824,
+        "confidence": 0.95,
+        "resamples": 4000,
+        "unit_of_independence": "logical_parent",
+        "status": "ok",
+        "includes_training_seed_uncertainty": false
+      }
+    }
+  },
+  "filtered_wins": 44,
+  "ties": 0,
+  "rows": [
+    {
+      "record_id": "parent_0004_e0_k0_t0",
+      "parent_id": "parent_0004",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.875253669911698,
+          "filtered_best": 0.8179841953750809,
+          "improvement": 0.057269474536617015,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.8365455863932697,
+          "filtered_best": 0.8179628843521384,
+          "improvement": 0.018582702041131327,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.8347706513007278,
+          "filtered_best": 0.8347379671536244,
+          "improvement": 3.268414710344558e-05,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.8347706513007278,
+      "filtered_best": 0.8179628843521384,
+      "improvement": 0.01680776694858943
+    },
+    {
+      "record_id": "parent_0007_e0_k0_t0",
+      "parent_id": "parent_0007",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.7606141043724406,
+          "filtered_best": 0.7210152577788513,
+          "improvement": 0.039598846593589254,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.7472041602260864,
+          "filtered_best": 0.7205796745140808,
+          "improvement": 0.026624485712005597,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.7340828654482467,
+          "filtered_best": 0.7340604726132738,
+          "improvement": 2.239283497296185e-05,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.7340828654482467,
+      "filtered_best": 0.7205796745140808,
+      "improvement": 0.013503190934165965
+    },
+    {
+      "record_id": "parent_0009_e0_k0_t0",
+      "parent_id": "parent_0009",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.8996033924625582,
+          "filtered_best": 0.8877396675192977,
+          "improvement": 0.01186372494326049,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.8918529957089872,
+          "filtered_best": 0.8872279441030295,
+          "improvement": 0.00462505160595772,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.8894528413209912,
+          "filtered_best": 0.8894442032940086,
+          "improvement": 8.638026982588087e-06,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.8894528413209912,
+      "filtered_best": 0.8872279441030295,
+      "improvement": 0.0022248972179617077
+    },
+    {
+      "record_id": "parent_0018_e0_k0_t0",
+      "parent_id": "parent_0018",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.5072052723695308,
+          "filtered_best": 0.4674994048236406,
+          "improvement": 0.03970586754589023,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.4821369447066145,
+          "filtered_best": 0.46749985946236217,
+          "improvement": 0.014637085244252335,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.47486554046232554,
+          "filtered_best": 0.4748388698365732,
+          "improvement": 2.6670625752345245e-05,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.47486554046232554,
+      "filtered_best": 0.4674994048236406,
+      "improvement": 0.007366135638684934
+    },
+    {
+      "record_id": "parent_0019_e0_k0_t0",
+      "parent_id": "parent_0019",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.7111984223432356,
+          "filtered_best": 0.6436119365251464,
+          "improvement": 0.06758648581808924,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.6725227146941279,
+          "filtered_best": 0.642867445735386,
+          "improvement": 0.02965526895874193,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.6582860762414102,
+          "filtered_best": 0.6582373254484293,
+          "improvement": 4.875079298094498e-05,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.6582860762414102,
+      "filtered_best": 0.642867445735386,
+      "improvement": 0.015418630506024211
+    },
+    {
+      "record_id": "parent_0025_e0_k0_t0",
+      "parent_id": "parent_0025",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.6436116896991884,
+          "filtered_best": 0.6099099992093121,
+          "improvement": 0.03370169048987626,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.6223204711420973,
+          "filtered_best": 0.6099069658982441,
+          "improvement": 0.012413505243853207,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.6160690941944154,
+          "filtered_best": 0.6160468684556435,
+          "improvement": 2.2225738771863845e-05,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.6160690941944154,
+      "filtered_best": 0.6099069658982441,
+      "improvement": 0.006162128296171243
+    },
+    {
+      "record_id": "parent_0032_e0_k0_t0",
+      "parent_id": "parent_0032",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.9099914545627321,
+          "filtered_best": 0.8920105420511949,
+          "improvement": 0.017980912511537217,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.8999338366404944,
+          "filtered_best": 0.8920040299690475,
+          "improvement": 0.007929806671446937,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.8960506205013967,
+          "filtered_best": 0.8960372956878293,
+          "improvement": 1.3324813567416882e-05,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.8960506205013967,
+      "filtered_best": 0.8920040299690475,
+      "improvement": 0.004046590532349237
+    },
+    {
+      "record_id": "parent_0036_e0_k0_t0",
+      "parent_id": "parent_0036",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.9212760869323803,
+          "filtered_best": 0.897642072192756,
+          "improvement": 0.02363401473962423,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.9066273428741638,
+          "filtered_best": 0.8978764348906964,
+          "improvement": 0.008750907983467449,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.9022580406892401,
+          "filtered_best": 0.9022412993408482,
+          "improvement": 1.6741348391913213e-05,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.9022580406892401,
+      "filtered_best": 0.897642072192756,
+      "improvement": 0.004615968496484046
+    },
+    {
+      "record_id": "parent_0072_e0_k0_t0",
+      "parent_id": "parent_0072",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.8469365784064259,
+          "filtered_best": 0.8339364853624911,
+          "improvement": 0.01300009304393479,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.8383386306470411,
+          "filtered_best": 0.8339387665169553,
+          "improvement": 0.004399864130085751,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.8362353076379364,
+          "filtered_best": 0.8362258649579737,
+          "improvement": 9.44267996272341e-06,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.8362353076379364,
+      "filtered_best": 0.8339364853624911,
+      "improvement": 0.0022988222754453114
+    },
+    {
+      "record_id": "parent_0074_e0_k0_t0",
+      "parent_id": "parent_0074",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.3038157424486596,
+          "filtered_best": 0.23359475325397105,
+          "improvement": 0.07022098919468855,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.26812256028877335,
+          "filtered_best": 0.23355034562014665,
+          "improvement": 0.0345722146686267,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.24557765636741524,
+          "filtered_best": 0.24553265356085607,
+          "improvement": 4.5002806559168995e-05,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.24557765636741524,
+      "filtered_best": 0.23355034562014665,
+      "improvement": 0.012027310747268594
+    },
+    {
+      "record_id": "parent_0076_e0_k0_t0",
+      "parent_id": "parent_0076",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.8584077923910249,
+          "filtered_best": 0.8221026017623647,
+          "improvement": 0.03630519062866022,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.8362694827598859,
+          "filtered_best": 0.8225856088327502,
+          "improvement": 0.013683873927135659,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.8293677722642668,
+          "filtered_best": 0.8293418917555588,
+          "improvement": 2.5880508707998295e-05,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.8293677722642668,
+      "filtered_best": 0.8221026017623647,
+      "improvement": 0.0072651705019021184
+    },
+    {
+      "record_id": "parent_0085_e0_k0_t0",
+      "parent_id": "parent_0085",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.6879571200865356,
+          "filtered_best": 0.6687446036606692,
+          "improvement": 0.01921251642586641,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.6762048332294097,
+          "filtered_best": 0.6687150688006451,
+          "improvement": 0.007489764428764589,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.6724397839612076,
+          "filtered_best": 0.672426841964296,
+          "improvement": 1.2941996911597364e-05,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.6724397839612076,
+      "filtered_best": 0.6687150688006451,
+      "improvement": 0.0037247151605624973
+    },
+    {
+      "record_id": "parent_0091_e0_k0_t0",
+      "parent_id": "parent_0091",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.7771104945352552,
+          "filtered_best": 0.7398391874606793,
+          "improvement": 0.03727130707457582,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.7501175233490558,
+          "filtered_best": 0.7398533071220258,
+          "improvement": 0.010264216227029999,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.7486665496260174,
+          "filtered_best": 0.7486428409818995,
+          "improvement": 2.3708644117936828e-05,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.7486665496260174,
+      "filtered_best": 0.7398391874606793,
+      "improvement": 0.008827362165338082
+    },
+    {
+      "record_id": "parent_0093_e0_k0_t0",
+      "parent_id": "parent_0093",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.8809385738684196,
+          "filtered_best": 0.8597464685055412,
+          "improvement": 0.02119210536287841,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.8675909215240813,
+          "filtered_best": 0.8597074457592523,
+          "improvement": 0.007883475764829062,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.8635136004229245,
+          "filtered_best": 0.863499788574489,
+          "improvement": 1.3811848435518748e-05,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.8635136004229245,
+      "filtered_best": 0.8597074457592523,
+      "improvement": 0.003806154663672179
+    },
+    {
+      "record_id": "parent_0101_e0_k0_t0",
+      "parent_id": "parent_0101",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.8205906255437372,
+          "filtered_best": 0.8051851768246974,
+          "improvement": 0.015405448719039816,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.8129799894743351,
+          "filtered_best": 0.805298564040554,
+          "improvement": 0.007681425433781142,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.8076346065559493,
+          "filtered_best": 0.8076242196802292,
+          "improvement": 1.0386875720080901e-05,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.8076346065559493,
+      "filtered_best": 0.8051851768246974,
+      "improvement": 0.002449429731251951
+    },
+    {
+      "record_id": "parent_0102_e0_k0_t0",
+      "parent_id": "parent_0102",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.36494516811560906,
+          "filtered_best": 0.2836012122495919,
+          "improvement": 0.08134395586601717,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.3143454624102153,
+          "filtered_best": 0.28360928345692227,
+          "improvement": 0.03073617895329306,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.2988584970989978,
+          "filtered_best": 0.29880686687688096,
+          "improvement": 5.1630222116849644e-05,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.2988584970989978,
+      "filtered_best": 0.2836012122495919,
+      "improvement": 0.015257284849405917
+    },
+    {
+      "record_id": "parent_0107_e0_k0_t0",
+      "parent_id": "parent_0107",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.8845012356061246,
+          "filtered_best": 0.8353122592031973,
+          "improvement": 0.0491889764029273,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.8648505559932886,
+          "filtered_best": 0.8344562059941919,
+          "improvement": 0.030394349999096737,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.8519520348857875,
+          "filtered_best": 0.8519242547122297,
+          "improvement": 2.778017355786755e-05,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.8519520348857875,
+      "filtered_best": 0.8344562059941919,
+      "improvement": 0.01749582889159562
+    },
+    {
+      "record_id": "parent_0110_e0_k0_t0",
+      "parent_id": "parent_0110",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.39793930106870834,
+          "filtered_best": 0.35882983700206716,
+          "improvement": 0.039109464066641175,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.3784465337044435,
+          "filtered_best": 0.3588203194036923,
+          "improvement": 0.019626214300751177,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.36567515651698557,
+          "filtered_best": 0.3656493998530195,
+          "improvement": 2.575666396609222e-05,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.36567515651698557,
+      "filtered_best": 0.3588203194036923,
+      "improvement": 0.006854837113293266
+    },
+    {
+      "record_id": "parent_0123_e0_k0_t0",
+      "parent_id": "parent_0123",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.7691303630301675,
+          "filtered_best": 0.7249076904453566,
+          "improvement": 0.04422267258481083,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.7408470508656326,
+          "filtered_best": 0.7252560835166026,
+          "improvement": 0.015590967349029983,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.7331032470178557,
+          "filtered_best": 0.733072401667554,
+          "improvement": 3.084535030162261e-05,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.7331032470178557,
+      "filtered_best": 0.7249076904453566,
+      "improvement": 0.008195556572499041
+    },
+    {
+      "record_id": "parent_0130_e0_k0_t0",
+      "parent_id": "parent_0130",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.33467926034193085,
+          "filtered_best": 0.2603783544283431,
+          "improvement": 0.07430090591358773,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.28816771415598674,
+          "filtered_best": 0.2595127744397151,
+          "improvement": 0.028654939716271643,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.2717969025743634,
+          "filtered_best": 0.27174955860981376,
+          "improvement": 4.734396454963985e-05,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.2717969025743634,
+      "filtered_best": 0.2595127744397151,
+      "improvement": 0.012284128134648298
+    },
+    {
+      "record_id": "parent_0137_e0_k0_t0",
+      "parent_id": "parent_0137",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.8222531092315696,
+          "filtered_best": 0.8069751070713216,
+          "improvement": 0.015278002160247994,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.8154047073870114,
+          "filtered_best": 0.8069760245736575,
+          "improvement": 0.00842868281335396,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.8099712553509987,
+          "filtered_best": 0.8099597481112482,
+          "improvement": 1.1507239750518927e-05,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.8099712553509987,
+      "filtered_best": 0.8069751070713216,
+      "improvement": 0.002996148279677091
+    },
+    {
+      "record_id": "parent_0139_e0_k0_t0",
+      "parent_id": "parent_0139",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.8361458291423001,
+          "filtered_best": 0.8087160991985309,
+          "improvement": 0.027429729943769132,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.8166568738346841,
+          "filtered_best": 0.807534909337228,
+          "improvement": 0.009121964497456059,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.8160047828475742,
+          "filtered_best": 0.8159893984852231,
+          "improvement": 1.5384362351045233e-05,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.8160047828475742,
+      "filtered_best": 0.807534909337228,
+      "improvement": 0.008469873510346115
+    },
+    {
+      "record_id": "parent_0140_e0_k0_t0",
+      "parent_id": "parent_0140",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.9226770825946636,
+          "filtered_best": 0.9012081558905428,
+          "improvement": 0.021468926704120816,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.9100364670062349,
+          "filtered_best": 0.901407350895423,
+          "improvement": 0.008629116110811852,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.9056859977984083,
+          "filtered_best": 0.9056717728579045,
+          "improvement": 1.4224940503848593e-05,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.9056859977984083,
+      "filtered_best": 0.9012081558905428,
+      "improvement": 0.004477841907865487
+    },
+    {
+      "record_id": "parent_0147_e0_k0_t0",
+      "parent_id": "parent_0147",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.902660983678756,
+          "filtered_best": 0.8914200189759106,
+          "improvement": 0.011240964702845413,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.8956766493019428,
+          "filtered_best": 0.8914050502904786,
+          "improvement": 0.004271599011464233,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.8935663796020501,
+          "filtered_best": 0.893558802028346,
+          "improvement": 7.577573704065088e-06,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.8935663796020501,
+      "filtered_best": 0.8914050502904786,
+      "improvement": 0.002161329311571536
+    },
+    {
+      "record_id": "parent_0150_e0_k0_t0",
+      "parent_id": "parent_0150",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.5796412721886645,
+          "filtered_best": 0.5109942184976506,
+          "improvement": 0.06864705369101387,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.5464484464184606,
+          "filtered_best": 0.5115136871100248,
+          "improvement": 0.034934759308435814,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.522357883438566,
+          "filtered_best": 0.5223100679526501,
+          "improvement": 4.7815485915925215e-05,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.522357883438566,
+      "filtered_best": 0.5109942184976506,
+      "improvement": 0.011363664940915452
+    },
+    {
+      "record_id": "parent_0153_e0_k0_t0",
+      "parent_id": "parent_0153",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.899033200663786,
+          "filtered_best": 0.8822895849034853,
+          "improvement": 0.0167436157603007,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.8868824934936227,
+          "filtered_best": 0.8840394287542434,
+          "improvement": 0.002843064739379342,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.8864601870181584,
+          "filtered_best": 0.8864500574166554,
+          "improvement": 1.0129601503039432e-05,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.8864601870181584,
+      "filtered_best": 0.8822895849034853,
+      "improvement": 0.004170602114673128
+    },
+    {
+      "record_id": "parent_0157_e0_k0_t0",
+      "parent_id": "parent_0157",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.6988824282215476,
+          "filtered_best": 0.6807916075776563,
+          "improvement": 0.018090820643891226,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.6898212166123437,
+          "filtered_best": 0.6808416021019436,
+          "improvement": 0.008979614510400191,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.6857867115779586,
+          "filtered_best": 0.6857722333615575,
+          "improvement": 1.4478216401103694e-05,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.6857867115779586,
+      "filtered_best": 0.6807916075776563,
+      "improvement": 0.004995104000302231
+    },
+    {
+      "record_id": "parent_0158_e0_k0_t0",
+      "parent_id": "parent_0158",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.12861097670231736,
+          "filtered_best": 0.08752153048999867,
+          "improvement": 0.04108944621231869,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.10252906482541346,
+          "filtered_best": 0.08790935942878175,
+          "improvement": 0.01461970539663171,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.09510719047516147,
+          "filtered_best": 0.09508101712754546,
+          "improvement": 2.6173347616009757e-05,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.09510719047516147,
+      "filtered_best": 0.08752153048999867,
+      "improvement": 0.007585659985162807
+    },
+    {
+      "record_id": "parent_0167_e0_k0_t0",
+      "parent_id": "parent_0167",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.8570731836432046,
+          "filtered_best": 0.7919591256341607,
+          "improvement": 0.06511405800904391,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.8327636506711422,
+          "filtered_best": 0.7977335547043065,
+          "improvement": 0.035030095966835706,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.8152934885474761,
+          "filtered_best": 0.8010824502669519,
+          "improvement": 0.014211038280524169,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.8152934885474761,
+      "filtered_best": 0.7919591256341607,
+      "improvement": 0.023334362913315365
+    },
+    {
+      "record_id": "parent_0168_e0_k0_t0",
+      "parent_id": "parent_0168",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.8692077508604774,
+          "filtered_best": 0.8351246926562397,
+          "improvement": 0.03408305820423774,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.8481870324283061,
+          "filtered_best": 0.8353015130780619,
+          "improvement": 0.012885519350244179,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.8418628203131786,
+          "filtered_best": 0.8418377350165493,
+          "improvement": 2.508529662925696e-05,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.8418628203131786,
+      "filtered_best": 0.8351246926562397,
+      "improvement": 0.00673812765693893
+    },
+    {
+      "record_id": "parent_0169_e0_k0_t0",
+      "parent_id": "parent_0169",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.7452983799306931,
+          "filtered_best": 0.7216222069496704,
+          "improvement": 0.02367617298102276,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.7312752111320455,
+          "filtered_best": 0.7215820965949182,
+          "improvement": 0.00969311453712729,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.726446106904677,
+          "filtered_best": 0.7264293191934121,
+          "improvement": 1.678771126489842e-05,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.726446106904677,
+      "filtered_best": 0.7215820965949182,
+      "improvement": 0.004864010309758804
+    },
+    {
+      "record_id": "parent_0176_e0_k0_t0",
+      "parent_id": "parent_0176",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.9004534644824995,
+          "filtered_best": 0.875563971407789,
+          "improvement": 0.024889493074710556,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.8817860079545257,
+          "filtered_best": 0.8756529287040474,
+          "improvement": 0.006133079250478235,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.8807372975972517,
+          "filtered_best": 0.8807218440646553,
+          "improvement": 1.5453532596465536e-05,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.8807372975972517,
+      "filtered_best": 0.875563971407789,
+      "improvement": 0.005173326189462757
+    },
+    {
+      "record_id": "parent_0183_e0_k0_t0",
+      "parent_id": "parent_0183",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.7648251859439638,
+          "filtered_best": 0.7181100468076274,
+          "improvement": 0.0467151391363364,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.7350137803791932,
+          "filtered_best": 0.7192514057982504,
+          "improvement": 0.015762374580942762,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.726813346219843,
+          "filtered_best": 0.726780646848616,
+          "improvement": 3.269937122696298e-05,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.726813346219843,
+      "filtered_best": 0.7181100468076274,
+      "improvement": 0.008703299412215593
+    },
+    {
+      "record_id": "parent_0185_e0_k0_t0",
+      "parent_id": "parent_0185",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.7871752761110361,
+          "filtered_best": 0.7542439071501884,
+          "improvement": 0.032931368960847696,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.7669967021623787,
+          "filtered_best": 0.7537235028254634,
+          "improvement": 0.013273199336915287,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.7594216379087109,
+          "filtered_best": 0.759399854547931,
+          "improvement": 2.1783360779847882e-05,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.7594216379087109,
+      "filtered_best": 0.7537235028254634,
+      "improvement": 0.0056981350832474575
+    },
+    {
+      "record_id": "parent_0189_e0_k0_t0",
+      "parent_id": "parent_0189",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.8766449947527934,
+          "filtered_best": 0.860083573020693,
+          "improvement": 0.0165614217321004,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.8665173772542734,
+          "filtered_best": 0.8600662130013998,
+          "improvement": 0.006451164252873509,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.8631905954800518,
+          "filtered_best": 0.8631799818457888,
+          "improvement": 1.0613634263023641e-05,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.8631905954800518,
+      "filtered_best": 0.8600662130013998,
+      "improvement": 0.003124382478651988
+    },
+    {
+      "record_id": "parent_0197_e0_k0_t0",
+      "parent_id": "parent_0197",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.7461825029238133,
+          "filtered_best": 0.6925673466580232,
+          "improvement": 0.053615156265790054,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.719120519316209,
+          "filtered_best": 0.6929862109304306,
+          "improvement": 0.02613430838577846,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.7012031018602304,
+          "filtered_best": 0.7011674972441636,
+          "improvement": 3.560461606677556e-05,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.7012031018602304,
+      "filtered_best": 0.6925673466580232,
+      "improvement": 0.008635755202207163
+    },
+    {
+      "record_id": "parent_0203_e0_k0_t0",
+      "parent_id": "parent_0203",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.8587897033966095,
+          "filtered_best": 0.809314100511366,
+          "improvement": 0.04947560288524355,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.8427344387494883,
+          "filtered_best": 0.8147321366444505,
+          "improvement": 0.028002302105037735,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.8257614098645407,
+          "filtered_best": 0.8175688323265775,
+          "improvement": 0.008192577537963208,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.8257614098645407,
+      "filtered_best": 0.809314100511366,
+      "improvement": 0.016447309353174733
+    },
+    {
+      "record_id": "parent_0207_e0_k0_t0",
+      "parent_id": "parent_0207",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.7893049825871061,
+          "filtered_best": 0.7517994716444572,
+          "improvement": 0.03750551094264898,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.7708060435193296,
+          "filtered_best": 0.7517954482401699,
+          "improvement": 0.019010595279159714,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.758558025015478,
+          "filtered_best": 0.758532229267468,
+          "improvement": 2.579574800998241e-05,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.758558025015478,
+      "filtered_best": 0.7517954482401699,
+      "improvement": 0.006762576775308116
+    },
+    {
+      "record_id": "parent_0208_e0_k0_t0",
+      "parent_id": "parent_0208",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.8662785549623643,
+          "filtered_best": 0.8532721993469163,
+          "improvement": 0.01300635561544794,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.8578066279719868,
+          "filtered_best": 0.8533142172311756,
+          "improvement": 0.004492410740811192,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.8555559821628644,
+          "filtered_best": 0.8578816719941973,
+          "improvement": -0.0023256898313328556,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.8555559821628644,
+      "filtered_best": 0.8532721993469163,
+      "improvement": 0.002283782815948099
+    },
+    {
+      "record_id": "parent_0215_e0_k0_t0",
+      "parent_id": "parent_0215",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.8804366593918527,
+          "filtered_best": 0.8363952015320777,
+          "improvement": 0.04404145785977498,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.8659540013706427,
+          "filtered_best": 0.8401200485478746,
+          "improvement": 0.025833952822768125,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.8579958222227679,
+          "filtered_best": 0.843395774879685,
+          "improvement": 0.014600047343082956,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.8579958222227679,
+      "filtered_best": 0.8363952015320777,
+      "improvement": 0.021600620690690242
+    },
+    {
+      "record_id": "parent_0220_e0_k0_t0",
+      "parent_id": "parent_0220",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.8768075686007698,
+          "filtered_best": 0.8522352470470692,
+          "improvement": 0.024572321553700593,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.8615359251743169,
+          "filtered_best": 0.8525525267902668,
+          "improvement": 0.008983398384050045,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.8569298328063117,
+          "filtered_best": 0.8569128609192949,
+          "improvement": 1.6971887016881126e-05,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.8569298328063117,
+      "filtered_best": 0.8522352470470692,
+      "improvement": 0.004694585759242531
+    },
+    {
+      "record_id": "parent_0222_e0_k0_t0",
+      "parent_id": "parent_0222",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.35193708745675023,
+          "filtered_best": 0.2571765884224009,
+          "improvement": 0.09476049903434935,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.2921104412833251,
+          "filtered_best": 0.25732198378895776,
+          "improvement": 0.03478845749436732,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.2746219593042316,
+          "filtered_best": 0.27456073563045114,
+          "improvement": 6.1223673780475e-05,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.2746219593042316,
+      "filtered_best": 0.2571765884224009,
+      "improvement": 0.017445370881830735
+    },
+    {
+      "record_id": "parent_0228_e0_k0_t0",
+      "parent_id": "parent_0228",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.8315261126178312,
+          "filtered_best": 0.8154401913322377,
+          "improvement": 0.016085921285593496,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.8209665355728287,
+          "filtered_best": 0.8155868652473782,
+          "improvement": 0.005379670325450503,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.8183985523597839,
+          "filtered_best": 0.8183871491188925,
+          "improvement": 1.1403240891327826e-05,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.8183985523597839,
+      "filtered_best": 0.8154401913322377,
+      "improvement": 0.002958361027546208
+    },
+    {
+      "record_id": "parent_0230_e0_k0_t0",
+      "parent_id": "parent_0230",
+      "split": "validation",
+      "families": {
+        "one_window": {
+          "baseline_best": 0.6566969368801185,
+          "filtered_best": 0.615198205108306,
+          "improvement": 0.041498731771812514,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "two_window": {
+          "baseline_best": 0.6262101998580992,
+          "filtered_best": 0.6152174527388738,
+          "improvement": 0.010992747119225377,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        },
+        "eight_bin": {
+          "baseline_best": 0.624649086744606,
+          "filtered_best": 0.624624037621187,
+          "improvement": 2.5049123418940944e-05,
+          "baseline_calls": 32,
+          "filtered_calls": 32,
+          "proposals_considered": 249
+        }
+      },
+      "baseline_best": 0.624649086744606,
+      "filtered_best": 0.615198205108306,
+      "improvement": 0.009450881636299924
+    }
+  ],
+  "scope": "both arms spend exactly `budget` true simulator calls per family and share a seed; the surrogate scores a nine-point regridding of each proposal while the label is always the simulator on the real waveform"
+}

@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "configurations": [
+    {
+      "checkpoint": "seed_0",
+      "search_seed": 0,
+      "n_parents": 44,
+      "baseline_drift": 0.0,
+      "critic": {
+        "mean": 0.007288828927804764,
+        "low": 0.0060100616300829005,
+        "high": 0.008724171569279175,
+        "positive_parents": 44,
+        "n_parents": 44
+      },
+      "random": {
+        "mean": 0.0028377980577642074,
+        "low": 0.0016867636077479045,
+        "high": 0.00399834853245732,
+        "positive_parents": 37,
+        "n_parents": 44
+      },
+      "delta": {
+        "mean": 0.004451030870040557,
+        "low": 0.003271179995293105,
+        "high": 0.005653468997957197,
+        "positive_parents": 42,
+        "n_parents": 44
+      }
+    },
+    {
+      "checkpoint": "seed_0",
+      "search_seed": 1,
+      "n_parents": 44,
+      "baseline_drift": 0.0,
+      "critic": {
+        "mean": 0.008290159582128776,
+        "low": 0.006733612949051817,
+        "high": 0.00997071877309386,
+        "positive_parents": 44,
+        "n_parents": 44
+      },
+      "random": {
+        "mean": 0.0021446167399902997,
+        "low": 0.00011541805163797738,
+        "high": 0.0041096353328278126,
+        "positive_parents": 30,
+        "n_parents": 44
+      },
+      "delta": {
+        "mean": 0.0061455428421384765,
+        "low": 0.004408382443446587,
+        "high": 0.008215921341409567,
+        "positive_parents": 43,
+        "n_parents": 44
+      }
+    },
+    {
+      "checkpoint": "seed_0",
+      "search_seed": 2,
+      "n_parents": 44,
+      "baseline_drift": 0.0,
+      "critic": {
+        "mean": 0.000871799454364772,
+        "low": 0.000515488074472122,
+        "high": 0.001277749104851013,
+        "positive_parents": 33,
+        "n_parents": 44
+      },
+      "random": {
+        "mean": -0.003966858100524096,
+        "low": -0.005631616858353351,
+        "high": -0.0024462592037397773,
+        "positive_parents": 8,
+        "n_parents": 44
+      },
+      "delta": {
+        "mean": 0.004838657554888868,
+        "low": 0.0032645212794234924,
+        "high": 0.006604441382712016,
+        "positive_parents": 40,
+        "n_parents": 44
+      }
+    },
+    {
+      "checkpoint": "seed_1",
+      "search_seed": 0,
+      "n_parents": 44,
+      "baseline_drift": 0.0,
+      "critic": {
+        "mean": 0.007082203906974477,
+        "low": 0.005905696354222747,
+        "high": 0.008376834229088045,
+        "positive_parents": 44,
+        "n_parents": 44
+      },
+      "random": {
+        "mean": 0.0034780707491858446,
+        "low": 0.0021132156821040957,
+        "high": 0.004860548703644081,
+        "positive_parents": 36,
+        "n_parents": 44
+      },
+      "delta": {
+        "mean": 0.0036041331577886322,
+        "low": 0.002421200450203493,
+        "high": 0.004951689955252031,
+        "positive_parents": 36,
+        "n_parents": 44
+      }
+    },
+    {
+      "checkpoint": "seed_2",
+      "search_seed": 0,
+      "n_parents": 44,
+      "baseline_drift": 0.0,
+      "critic": {
+        "mean": 0.007565316179586337,
+        "low": 0.006275210783474399,
+        "high": 0.009027300628434235,
+        "positive_parents": 44,
+        "n_parents": 44
+      },
+      "random": {
+        "mean": 0.0023497185499253936,
+        "low": 0.0008862117653653568,
+        "high": 0.0037567922721575974,
+        "positive_parents": 33,
+        "n_parents": 44
+      },
+      "delta": {
+        "mean": 0.005215597629660943,
+        "low": 0.0037427069507955948,
+        "high": 0.006846410270054063,
+        "positive_parents": 44,
+        "n_parents": 44
+      }
+    }
+  ],
+  "problems": [],
+  "scope": "critic-alone is the paired difference between the critic arm and a random chooser on the identical oversampled proposal stream, against a baseline verified identical in both files"
+}

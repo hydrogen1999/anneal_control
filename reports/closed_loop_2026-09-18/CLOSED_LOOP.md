@@ -23,26 +23,53 @@ budget 32 true calls per family, oversample 8, families `one_window`,
 `two_window`, `eight_bin`. 249 proposals considered per family for 32 true
 calls.
 
-## Headline, and the control that halves it
+## Headline: the control is where the story is
 
-| | effect | positive in |
-|---|---|---:|
-| total gain from filtering | **+0.00729** [+0.00601, +0.00872] | 44/44 parents |
-| the wider proposal stream alone (random pick of 8) | +0.00284 [+0.00169, +0.00400] | 37/44 parents |
-| **the critic's own choice** | **+0.00445** [+0.00327, +0.00565] | **42/44 parents** |
+Every configuration was run twice — once with the critic choosing, once with a
+seeded random chooser on the **identical** oversampled proposal stream. That
+control is not decoration. At oversample 8 the filtered arm walks eight times
+as much of the Sobol sequence as the baseline, so part of any gain is wider
+coverage rather than the model.
 
-**The control was necessary and it changed the answer.** At oversample 8 the
-filtered arm walks eight times as much of the Sobol sequence as the baseline
-does, so part of any gain is wider coverage rather than the model. Replacing
-the critic with a seeded random chooser on the identical proposal stream still
-beats the baseline by +0.00284. Reporting +0.00729 as the model's contribution
-would have over-credited it by 39%.
+| checkpoint | search seed | filtering total | random control | **the critic alone** |
+|---|---:|---|---|---|
+| seed_0 | 0 | +0.00729 [+0.00601, +0.00872] 44/44 | +0.00284 [+0.00169, +0.00400] 37/44 | **+0.00445** [+0.00327, +0.00565] 42/44 |
+| seed_0 | 1 | +0.00829 [+0.00673, +0.00997] 44/44 | +0.00214 [+0.00012, +0.00411] 30/44 | **+0.00615** [+0.00441, +0.00822] 43/44 |
+| seed_0 | 2 | +0.00087 [+0.00052, +0.00128] 33/44 | **−0.00397** [−0.00563, −0.00245] 8/44 | **+0.00484** [+0.00326, +0.00660] 40/44 |
+| seed_1 | 0 | +0.00708 [+0.00591, +0.00838] 44/44 | +0.00348 [+0.00211, +0.00486] 36/44 | **+0.00360** [+0.00242, +0.00495] 36/44 |
+| seed_2 | 0 | +0.00757 [+0.00628, +0.00903] 44/44 | +0.00235 [+0.00089, +0.00376] 33/44 | **+0.00522** [+0.00374, +0.00685] 44/44 |
 
-The paired contrast is exact, not merely matched: the baseline arm is re-run in
-both files and verified identical to 1e-12 on every record, so critic and
-random are differenced parent by parent against the same reference.
+| across 5 configurations | mean | spread |
+|---|---:|---|
+| filtering total | +0.00622 | +0.00087 … +0.00829 — **9.5×** |
+| random control | +0.00137 | **−0.00397 … +0.00348 — changes sign** |
+| **the critic alone** | **+0.00485** | +0.00360 … +0.00615 — 1.7× |
 
-Per family, critic filter against baseline:
+**Every configuration's critic-alone interval excludes zero.**
+
+Read the rows, not the first one. Had this been reported from search seed 0
+alone it would have claimed +0.00729 for the model — 50% too much. Had it been
+reported from search seed 2 alone it would have claimed +0.00087 and looked
+like a failure. The raw "filtering helps" number swings by a factor of 9.5 and
+is not a property of the method; it is a property of which slice of the Sobol
+sequence the wider stream happened to land in, and at seed 2 that slice is
+actively **worse** than the baseline's. The critic's own contribution, measured
+against that same stream, sits at +0.005 and barely moves.
+
+This is the same composition error that turned a claimed 2.6× scale-arm effect
+into a matched 1.52×: an effect measured without holding the confound fixed
+reports the confound.
+
+The pairing is exact rather than matched. The baseline arm is re-run inside both
+files of every pair, and `closed_loop_summary.py` **verifies** the two baselines
+agree to 1e-12 on every record before differencing — if they did not, the
+decomposition would be meaningless and the script says so instead of printing a
+number. It also refused the first critic run outright, because that run predates
+the `--chooser` flag and so does not record which chooser it used; rather than
+patch a field into an archived artifact, the configuration was simply re-run,
+and it reproduced +0.00729 [+0.00599, +0.00874] 44/44 exactly.
+
+Per family at checkpoint seed_0 / search seed 0, critic filter against baseline:
 
     one_window   +0.01285 [+0.01055, +0.01521]
     two_window   +0.01385 [+0.01010, +0.01787]
@@ -85,8 +112,10 @@ still wins.
 
 ## Limits
 
-- **One search seed** (0) and **one checkpoint** (summary/seed_0). The offline
-  study covers six checkpoints; this closed-loop run does not.
+- Three search seeds and three checkpoints, but not crossed: seeds 1 and 2 were
+  run only at checkpoint seed_0, and checkpoints seed_1/seed_2 only at search
+  seed 0. A full 3x3 grid would separate the two sources of variation cleanly;
+  this does not.
 - Validation split, ≤ 8 physical qubits, 44 parents, one dataset, one
   connectivity, closed-system losses.
 - `sobol_local` only. Filtering is refused for the other strategies rather than
