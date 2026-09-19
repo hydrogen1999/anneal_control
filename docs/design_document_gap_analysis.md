@@ -156,10 +156,12 @@ is the one that would distinguish "a scalar profile works after averaging" from
 
 ## 5. Evaluation machinery that exists but is never reported
 
-- **Time-to-solution.** `evaluation.time_to_solution` and the `n_q` formula are
-  implemented (`evaluation.py:110`, `benchmarking.py:158`) exactly as
-  §Amortization specifies, including the censoring rule. **No archived artifact
-  reports it.**
+- ~~**Time-to-solution.**~~ **Done** (2026-09-19). Reads for 99 % confidence over
+  864 held-out records: learned bank 16.9, tuned global 19.2, linear 22.3 at
+  parent mean. Paired ratios `linear/learned = 1.361x [1.319, 1.408]` and
+  `global/learned = 1.206x [1.164, 1.253]`, learned needing fewer in 48/48
+  parents against both, nothing censored. A 0.069 loss difference is a **36 %
+  read reduction**. [Report](../reports/time_to_solution_2026-09-19/TIME_TO_SOLUTION.md).
 - **Failure tails.** §Primary outcome asks for "distributions and failure tails,
   not only average improvements". Quantiles are reported in some artifacts and
   not others; there is no systematic tail reporting.
