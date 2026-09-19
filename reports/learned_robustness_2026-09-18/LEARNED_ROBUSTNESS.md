@@ -131,14 +131,23 @@ records × 8 candidates:
 
 **The better a control is without noise, the more it loses with noise.**
 
-### The obvious artefact was checked and is not the explanation
+### Two artefacts were checked; neither is the explanation
 
 A loss lives in [0, 1], so a candidate with a low noiseless loss has more room
-to rise and a negative level–change correlation can appear with no mechanism at
-all. Dividing the degradation by the available headroom (1 − loss) removes
-exactly that. The correlation moves from −0.9081 to **−0.7925** and stays
-negative in 198 of 200 records. The ceiling accounts for a small part of the
-effect and not for the effect.
+to rise and a negative level–change correlation can appear with no mechanism.
+Dividing by the available headroom removes that: −0.9081 → **−0.7925**,
+negative in 198/200.
+
+The second artefact is worse and was found by inspection rather than
+anticipated. **The bank is shared** — all 558 records draw from one set of
+eight waveforms, and candidates 2 and 3 win 80% of records between them, so two
+fragile waveforms could have produced the whole correlation. Removing each
+candidate's own mean across records leaves only instance-specific variation,
+and the effect *strengthens*: −0.9320, negative in 200/200. With both controls
+applied it is **−0.6312**, negative in 192/200 — and that is the number to
+quote. Full treatment in [the erosion report](../erosion_2026-09-18/EROSION.md),
+which also shows the effect surviving under amplitude relaxation at about half
+the strength.
 
 ### This is erosion, not inversion
 
