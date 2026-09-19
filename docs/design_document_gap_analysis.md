@@ -55,10 +55,19 @@ it offers the two families that clear the tolerance most often (two_window at
 5.6–20.8 % exceedance, one_window at 16.7–41.7 %) and excludes the one that
 clears it least (eight_bin at 34.7–58.3 %). The direct head does the opposite.
 
-That is a design-level explanation for the gap this project has reported all
-along between direct generation (0.590) and bank selection (0.545), and it is a
-hypothesis rather than a measurement: nothing in the archive tests a two-window
-output head.
+I proposed that as a design-level explanation for the gap this project reports
+between direct generation (0.590) and bank selection (0.545), labelled a
+hypothesis. **It has since been measured and is false.** The trained policy's
+proposals are two-window controls to within a sup norm of **0.0022**, against a
+bank-candidate spacing of 0.3956 — it does not use its extra bins — and
+projecting them exactly onto the family costs 0.0002. The head's effective
+family is already the one Stage A favours, so the family cannot explain the
+gap, and a restricted two-window head is not worth building.
+[Report](../reports/policy_shape_2026-09-19/POLICY_SHAPE.md).
+
+The hole in the reasoning is worth naming: Stage A's family-restriction loss
+measures how hard a family is to *search* at 32 calls, and a trained network
+predicts rather than searches.
 
 This is the single most actionable gap: it is a check the document asked to be
 run *before* architecture work, the data to run it has existed for three days,

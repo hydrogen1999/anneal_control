@@ -1,0 +1,5 @@
+20 records
+two-window fit residual (sup norm): mean 0.0022 median 0.0021 max 0.0058
+  for scale, widest gap between bank candidates: 0.3956
+loss of the two-window approximation minus the policy's own proposal:
+  mean +0.00020  median +0.00014  worse in 20/20
