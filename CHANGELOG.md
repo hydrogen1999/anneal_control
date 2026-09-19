@@ -1,3 +1,100 @@
+## 2026-09-18 — What noise does to optimisation, and a filter that survives it
+
+### The result the controls did not kill
+
+**The control that is best in a noiseless simulator is systematically the one an
+environment erodes most.** Within a record, closed-system quality predicts
+degradation at ρ = −0.9081 raw. Two artefacts could have manufactured that and
+both were removed:
+
+| | ρ | negative in |
+|---|---:|---:|
+| raw | −0.9081 | 200/200 |
+| ÷ headroom — removes the [0,1] ceiling | −0.7925 | 198/200 |
+| candidate-demeaned — removes the shared bank's waveform identity | −0.9320 | 200/200 |
+| **both** | **−0.6312** | **192/200** |
+
+The second control matters more than it sounds. All 558 test records at ≤6
+qubits draw from **one** bank, and two candidates win 80% of them, so two
+fragile waveforms could have carried the whole correlation. Removing each
+candidate's own mean strengthens the effect instead of dissolving it. The
+reports now quote −0.63 and not the flattering −0.91.
+
+Not dephasing-specific: under amplitude relaxation ρ ≈ −0.39 in 78/100 records.
+But half as strong, and unlike dephasing it does not grow with rate.
+`reports/erosion_2026-09-18/`.
+
+This is erosion, not inversion — ρ(loss at 0, loss at 0.1) = +0.83 and the
+noiseless favourite still wins 78.5% of the time. It simply gives up the most.
+
+### The learned selector is more robust than exact noiseless optimisation
+
+Retention of the noiseless advantage at dephasing 0.1: noise-aware oracle
+82.5%, learned 69.5–74.5%, **exact noiseless argmax 61.5%**. The learned rule
+sits between them having never seen noise. Paired retention contrast excludes
+zero for all three seeds (+8.1% to +13.6%). Every advantage-vs-linear interval
+excludes zero at every rate. `reports/learned_robustness_2026-09-18/`.
+
+### Model + search, closed loop — and the control that halves the credit
+
+A critic inside the search loop, budget measured in simulator calls and
+verified unchanged (`budget_mismatches: 0`):
+
+| across 5 configurations | mean | spread |
+|---|---:|---|
+| filtering total | +0.00622 | +0.00087 … +0.00829 — **9.5×** |
+| random chooser on the identical stream | +0.00137 | **−0.00397 … +0.00348 — changes sign** |
+| **the critic alone** | **+0.00485** | +0.00360 … +0.00615, every interval excludes zero |
+
+Reporting search seed 0 alone would have over-credited the model by 50%;
+seed 2 alone would have looked like failure. A third arm splits what the critic
+buys: **tail-avoidance 75%** (+0.00334), **fine ranking 25%** (+0.00111), both
+excluding zero. Replicated on real Pegasus connectivity (+0.00530, 10/12
+parents). Online overhead 0.91% — one simulator call buys 742 surrogate scores.
+`reports/closed_loop_2026-09-18/`, `reports/surrogate_filter_2026-09-18/`.
+
+The prerequisite behind it: the critic ranks **search-generated** waveforms at
+ρ = +0.9269, better than the +0.834 it manages on its own bank. On Pegasus the
+coarse ranking transfers (+0.8163, 44/44 records) while the fine ranking does
+not (+0.1613 among the best 10%) — which is exactly why 75/25 matters.
+
+### Scale, measured rather than argued
+
+- **GPU generation reaches 20 physical qubits**: 0.3277 labels/s, numerical
+  gate passed, norm error 2.9e-14. Per-two-qubit slowdown 1.60×, 1.36×, 3.74×.
+  Memory is not the limit (16 MB against 97 GB); time is, near 24–26 qubits.
+- **Entanglement**: peak S grows at 0.073 nats/qubit, 21% of the volume-law
+  rate but not an area law, so χ ≈ 52 at 50 qubits and ≈2×10³ at 100. **MPS
+  plausibly reaches 50–100 qubits, not device scale** — and six points over
+  5–10 qubits is a weak basis for that extrapolation, which the report says.
+- **The Lindblad wall is 8 qubits**, timed: 1.16 s/solve at 6, 5.12 at 7, 30.4
+  at 8, refused at 9. The erosion result therefore **cannot** be replicated on
+  Pegasus, whose smallest records are 10 qubits. Stated as a gap.
+
+### Corrections
+
+- `docs/scale_ceiling.md` claimed "1.13× at 10 qubits". No artifact produces
+  1.13 and the sign was backwards: the archived 10-qubit run has the **GPU
+  1.43× slower**. Corrected.
+- Every GPU ratio in the ladder is an **upper bound**. Two 14-qubit replicates
+  disagree by 13%, and the variance is entirely CPU-side (numpy walls differ
+  11%, cupy walls 1.4%) on a host at load 34–55 with 32 cores. A load
+  correction puts the 16-qubit 89.5× nearer 57×.
+- The first robustness report said the mechanism was **not** established, on
+  the strength of one proxy (dwell time, pooled ρ = +0.0097). The direct test
+  establishes it. Corrected in a separate commit.
+- Analyses that produced published numbers have moved out of `/tmp` into
+  `scripts/erosion_channels.py` and `scripts/critic_ranking_diagnostics.py`,
+  and were re-run from the committed code to confirm they reproduce.
+
+### Also
+
+`docs/paper_skeleton.md` — the logic chain, every cell naming its artifact,
+four consistency checks passing, and a severity list that currently reads
+0 critical / 2 major / 3 minor.
+
+1007 tests passing.
+
 ## 2026-09-17 — Baselines, corrections, and one held-out table
 
 ### The comparison table
