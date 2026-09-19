@@ -138,15 +138,38 @@ Two numbers keep the claim the right size:
 The ranking largely survives. The noiseless favourite usually wins anyway — it
 simply gives up more of its margin than anything else does.
 
-## What it means for practice
+## What it means for practice — and the stronger claim that is FALSE
 
-**Past some point, optimising harder against a noiseless simulator is
-self-defeating.** The controls a closed-system search rewards are the ones an
-environment erodes fastest, so the marginal return on a longer noiseless search
-is worse than its closed-system curve suggests. That is an argument for
-learning a smoothed preference rather than for buying more noiseless
-optimisation, and it applies to any pipeline that fits quantum control in a
-closed-system simulator — not only to this one.
+The tempting reading is that past some point, optimising harder against a
+noiseless simulator is self-defeating. **That was tested and it is wrong in
+this regime.** A search run to budget 64 on 32 held-out parents, with each
+budget's incumbent re-evaluated under dephasing 0.1:
+
+| budget | 1 | 2 | 4 | 8 | 16 | 32 | 64 |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| noiseless | 0.74020 | 0.74020 | 0.71473 | 0.70661 | 0.68082 | 0.67879 | 0.67876 |
+| under noise | 0.74815 | 0.74815 | 0.72539 | 0.71936 | 0.69677 | 0.69506 | **0.69503** |
+
+The noisy curve is **monotone**: the best budget under noise is the largest one
+tested, and spending it instead of any smaller budget costs **exactly 0.00000
+in 0 of 32 parents**. More noiseless search never hurt.
+[Report](../overoptimisation_2026-09-18/).
+
+What erosion actually buys is a **discount, not a reversal**. Over the same
+ladder the noiseless loss improves by 0.06144 and the noisy loss by 0.05312 —
+**86.5%** of the promised gain survives. The controls a closed-system search
+rewards are the ones the environment erodes fastest, so the returns to search
+are smaller than its own curve advertises; they do not become negative.
+
+The defensible practical statement is therefore narrower than the slogan:
+**a closed-system search curve overstates what it is buying you, and a
+smoothed learned preference keeps more of its advantage than an exact noiseless
+argmax does** (69.5–74.5% retained against 61.5%). Both of those are measured.
+"Optimise less" is not.
+
+Tested at one rate (0.1) over budgets 1–64 on one family. A stronger channel or
+a longer ladder could still turn the curve up; nothing here rules that out, and
+nothing here supports it.
 
 ## Limits
 
