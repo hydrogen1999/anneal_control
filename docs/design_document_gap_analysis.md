@@ -62,12 +62,55 @@ extensions beyond this completed baseline workflow".
 |---|---|---|
 | 1 | Physical input (logical / physical / hierarchy) | **Partial.** Aware − blind = −0.007817 [−0.011093, −0.004471] over 48 parents, but the ledger labels it *exploratory, not Holm-adjusted*, and the Pegasus interval [−0.020195, +0.001062] includes zero. The document's headline factor is not confirmatory. |
 | 2 | Spectral target (first gap → all gaps → response bins → response + intervention) | **Missing as a ladder.** `gap_inverse_square` and `d2` exist as *teachers*; response bins exist as *features*. The four-rung comparison that isolates "whether couplings, frequency resolution, or finite-time response add decision value" was never run. |
-| 3 | **Mandatory bottleneck** G→D₂→ϱ versus direct residual branch, identical encoder | **Missing.** This is the document's Round-1 central resolution — "replace the mandatory G→D→ρ chain by operator-resolved auxiliaries plus a direct policy". Our model simply *has no bottleneck*, so the claim that the bottleneck destroys information is **assumed, not measured**. The falsifying test the document names for its own core design decision has not been run. |
+| 3 | **Mandatory bottleneck** G→D₂→ϱ versus direct residual branch, identical encoder | **Largely answered, by an oracle upper bound — see §2a.** Not by the learned variant the table literally asks for. |
 | 4 | Control family | **Done** — all four families searched, and see §1. |
 | 5 | Learning objective (imitation vs outcome, ± auxiliary physics) | **Partial.** `hierarchy_physics` and `hierarchy_outcome` are both trained and both appear in the comparison table, but no *paired contrast between them* is archived; the ledger explicitly says "no between-method architecture claim is established". |
 | 6 | Symmetry (signed baseline / gauge augmentation / covariant model) | **Missing as evidence.** An `invariant-gauge` variant exists in the model contract and gauge code exists in five modules; no archived ablation result. |
 | 7 | Transfer (zero-shot / equal-budget refinement / device adapter) | **Mostly done.** Zero-shot transfer archived; equal-budget refinement is the closed-loop filter (+0.00485). Device adapter needs a QPU. |
 | 8 | Classical assistance (no-sampling / sample-assisted / sampler alone) | **Missing.** SVMC was tested as a *ranker* and ruled out (ρ ≈ −0.09). "Sampler alone" is therefore covered; **"sample-assisted model" was never built or tested.** |
+
+---
+
+## 2a. The bottleneck ablation is closer to answered than it looked
+
+The document's Round-1 central resolution is to *reject* the mandatory
+G→D₂→ϱ chain, and its factorial table asks for the ablation that justifies
+that rejection. An earlier draft of this analysis said the rejection was
+"assumed, not measured". That was too pessimistic, and the correction matters
+because this is the paper's own core design decision.
+
+`physics_baselines.exact_teacher_baseline(method="d2")` **is** the bottleneck
+path, executed end to end:
+
+1. exact spectral profile at 33 grid points → D₂ — this is **G → D₂**, with the
+   bottleneck quantity supplied by an *oracle* rather than a learned predictor;
+2. `bounded_density_schedule` → `decode_durations(log masses)` — this is
+   **D₂ → ϱ → schedule**.
+
+Measured against the learned selector on its own audited population:
+
+    summary/bank − d2 = −0.050399  [−0.069051, −0.032866]   711 records / 45 parents
+
+**The bottleneck path loses by 0.050 while being handed a perfect value of the
+very quantity it would otherwise have to predict.** A learned D₂ predicts that
+same target with error, so the oracle is a strong upper bound on what the
+learned bottleneck could achieve.
+
+Two honest qualifications, neither of which is small:
+
+- **It is an upper bound by argument, not by construction.** A *biased* D₂
+  predictor could in principle compensate for a suboptimal D₂→ϱ map and beat
+  the oracle. Unlikely, but the document asked for the learned variant and this
+  is not it.
+- **Different cost class.** `d2` is `privileged_spectrum` and the learned
+  selector is `amortised`; the contrast is informative about the *information
+  path*, which is what factor 3 asks, and is not a deployment ranking.
+
+What remains genuinely missing for factor 3 is narrow: a variant with the same
+encoder whose control information is *forced* through a learned low-dimensional
+profile, trained and evaluated alongside the unconstrained model. At ~8 minutes
+per seed that is affordable; it would convert a strong argument into the
+measured ablation.
 
 ---
 
@@ -158,8 +201,9 @@ rather than left as orphans:
 
 1. **Re-run Stage A's gate as a predeclared decision and act on it** (§1). It is
    free — the data exists — and it questions the model's output family.
-2. **The bottleneck ablation** (§2, factor 3). It is the document's own central
-   design claim and is currently assumed.
+2. **The learned bottleneck variant** (§2a). The oracle upper bound already
+   loses by 0.050, so this converts a strong argument into the measured
+   ablation rather than deciding the question.
 3. **Tx-NQDT** (§3). The competitor a reviewer names first.
 4. Multi-crossing runtime scan (§4) and the gauge ablation (§2, factor 6).
 5. Report time-to-solution from existing data (§5) — also free.
