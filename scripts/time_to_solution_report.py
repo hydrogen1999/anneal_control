@@ -32,8 +32,14 @@ from pathlib import Path
 
 import numpy as np
 
-METHOD_KEYS = {"learned_bank": "bank_best_loss", "linear": "linear_loss",
-               "global": "global_loss"}
+# `bank_best_loss` and `best_bank_loss` are the same number -- the ORACLE best
+# over the bank, a property of the record, not of the method. The method's own
+# selection is recovered as bank_best_loss + bank_regret, and only that is a
+# method loss. An earlier version of this script used bank_best_loss directly
+# and therefore reported the oracle as if it were the learned selector.
+METHOD_KEYS = {"linear": "linear_loss", "global": "global_loss"}
+ORACLE_KEY = "bank_best_loss"
+REGRET_KEY = "bank_regret"
 
 
 def reads_to_confidence(loss: float, target: float) -> float:
@@ -67,27 +73,46 @@ def main(argv=None) -> int:
         for row in json.loads(Path(path).read_text())["records"]:
             entry = by_record.setdefault(str(row["record_id"]), {
                 "parent_id": str(row["parent_id"]), "n": 0,
+                "learned_bank": 0.0, "bank_oracle": 0.0,
                 **{k: 0.0 for k in METHOD_KEYS}})
             entry["n"] += 1
             for name, key in METHOD_KEYS.items():
                 entry[name] += float(row[key])
+            entry["bank_oracle"] += float(row[ORACLE_KEY])
+            entry["learned_bank"] += float(row[ORACLE_KEY]) + float(row[REGRET_KEY])
+    names = list(METHOD_KEYS) + ["learned_bank", "bank_oracle"]
     for entry in by_record.values():
-        for name in METHOD_KEYS:
+        for name in names:
             entry[name] /= entry["n"]
-    print(f"{len(by_record)} records over {len(files)} seeds, method {args.method}", flush=True)
+    # The guard that would have caught the original error. Each evaluation
+    # states its own mean_loss; if the reconstruction does not reproduce it,
+    # the wrong field is being read and every number below would be wrong.
+    stated, rebuilt = [], []
+    for path in files:
+        payload = json.loads(Path(path).read_text())
+        stated.append(float(payload["mean_loss"]))
+        rebuilt.append(float(np.mean([float(r[ORACLE_KEY]) + float(r[REGRET_KEY])
+                                      for r in payload["records"]])))
+    drift = float(np.max(np.abs(np.asarray(stated) - np.asarray(rebuilt))))
+    if drift > 1e-9:
+        raise SystemExit(
+            f"reconstructed method loss disagrees with the evaluation's own mean_loss "
+            f"by {drift:.3e}; the wrong field is being read")
+    print(f"{len(by_record)} records over {len(files)} seeds, method {args.method}; "
+          f"reconstruction matches each evaluation's mean_loss to {drift:.1e}", flush=True)
 
     rows = []
     for rid, entry in by_record.items():
         row = {"record_id": rid, "parent_id": entry["parent_id"]}
-        for name in METHOD_KEYS:
+        for name in names:
             row[f"{name}_loss"] = entry[name]
             row[f"{name}_reads"] = reads_to_confidence(entry[name], args.target)
         rows.append(row)
 
     censored = {name: sum(1 for r in rows if not math.isfinite(r[f"{name}_reads"]))
-                for name in METHOD_KEYS}
+                for name in names}
     summary = {}
-    for name in METHOD_KEYS:
+    for name in names:
         finite = [r for r in rows if math.isfinite(r[f"{name}_reads"])]
         values, parents = _parent_means(finite, lambda r, n=name: r[f"{n}_reads"])
         arr = np.array([r[f"{name}_reads"] for r in finite], dtype=float)
@@ -104,7 +129,7 @@ def main(argv=None) -> int:
 
     # The operational headline: paired per-record ratio, not a ratio of means.
     ratios = {}
-    for name in ("linear", "global"):
+    for name in ("linear", "global", "bank_oracle"):
         paired = [{"parent_id": r["parent_id"],
                    "v": r[f"{name}_reads"] / r["learned_bank_reads"]}
                   for r in rows
@@ -123,6 +148,11 @@ def main(argv=None) -> int:
         "schema_version": 1, "evaluations": args.evaluations, "method": args.method,
         "target_confidence": args.target, "n_records": len(rows), "n_seeds": len(files),
         "summary": summary, "read_ratios": ratios, "rows": rows,
+        "field_semantics": ("`bank_best_loss` in the evaluation records is the ORACLE "
+                            "best over the bank; the learned selection is recovered as "
+                            "bank_best_loss + bank_regret and is reported as learned_bank. "
+                            "bank_oracle is reported too, as the ceiling the selector "
+                            "aims at, never as the method."),
         "scope": ("p is a simulated success probability from exact propagation, not a "
                   "fraction of observed reads, so the binomial Clopper-Pearson interval "
                   "for hardware counts does not apply and is not used; uncertainty is "

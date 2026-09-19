@@ -166,12 +166,16 @@ is the one that would distinguish "a scalar profile works after averaging" from
 
 ## 5. Evaluation machinery that exists but is never reported
 
-- ~~**Time-to-solution.**~~ **Done** (2026-09-19). Reads for 99 % confidence over
-  864 held-out records: learned bank 16.9, tuned global 19.2, linear 22.3 at
-  parent mean. Paired ratios `linear/learned = 1.361x [1.319, 1.408]` and
-  `global/learned = 1.206x [1.164, 1.253]`, learned needing fewer in 48/48
-  parents against both, nothing censored. A 0.069 loss difference is a **36 %
-  read reduction**. [Report](../reports/time_to_solution_2026-09-19/TIME_TO_SOLUTION.md).
+- ~~**Time-to-solution.**~~ **Done** (2026-09-19, corrected the same day). Reads
+  for 99 % confidence over 864 held-out records: learned bank 17.5, tuned
+  global 19.2, linear 22.3 at parent mean, with the bank oracle at 16.9 as a
+  ceiling. Paired ratios `linear/learned = 1.279x [1.243, 1.319]` (47/48
+  parents) and `global/learned = 1.128x [1.092, 1.167]` (44/48), nothing
+  censored. A 0.056 loss difference is a **22 % read reduction**. The first
+  version read `bank_best_loss` as the method's loss when it is the bank
+  oracle, and overstated this as 36 %; the script now verifies its
+  reconstruction against each evaluation's own `mean_loss`.
+  [Report](../reports/time_to_solution_2026-09-19/TIME_TO_SOLUTION.md).
 - **Failure tails.** §Primary outcome asks for "distributions and failure tails,
   not only average improvements". Quantiles are reported in some artifacts and
   not others; there is no systematic tail reporting.
