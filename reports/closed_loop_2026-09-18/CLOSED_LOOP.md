@@ -104,6 +104,42 @@ overall, positive in 44/44 records) is sufficient for that. The offline
 top-10% collapse would bite a method that used the critic to *replace* the
 simulator. This one uses it to *order* proposals the simulator still checks.
 
+## What the critic is actually doing: three quarters of it is avoiding the bad tail
+
+The Pegasus section above offers an explanation — inside the loop the critic
+does not need to resolve the best 10%, only to avoid the worst — and an
+explanation that is merely plausible is worth little. A third arm tests it.
+
+`reject_worst` scores every proposal with the critic, keeps the better half,
+then picks **at random** among the survivors. It therefore has the critic's
+coarse judgement and none of its fine ranking. Same records, same seed, same
+budget, and the baseline is verified identical across all three arms to
+**exactly 0.0**.
+
+| arm or contrast | effect | positive in |
+|---|---|---:|
+| critic vs baseline | +0.00729 [+0.00601, +0.00872] | 44/44 |
+| reject-worst vs baseline | +0.00618 [+0.00506, +0.00745] | 44/44 |
+| random vs baseline | +0.00284 [+0.00169, +0.00400] | 37/44 |
+| **critic − random** — all the model buys | **+0.00445** [+0.00327, +0.00565] | 42/44 |
+| **reject-worst − random** — tail-avoidance alone | **+0.00334** [+0.00219, +0.00459] | 35/44 |
+| **critic − reject-worst** — fine ranking alone | **+0.00111** [+0.00050, +0.00182] | 30/44 |
+
+**Tail-avoidance is 75% of what the model buys; fine ranking among the
+survivors is 25%.** Both intervals exclude zero, so both components are real
+and neither is the whole story.
+
+This closes the Pegasus question by measurement rather than by argument. The
+ranking that transfers to Pegasus is exactly the coarse one — ρ = +0.8163,
+positive in 44/44 records — and that is the component carrying three quarters
+of the benefit. The top-10% collapse to ρ = +0.1613 costs the other quarter,
+which is why the in-loop gain there (+0.00530) is close to the synthetic one
+(+0.00485) despite the offline numbers looking much worse.
+
+It also says something a practitioner can use: a critic does not have to be a
+good regressor to be a useful filter. It has to be right about which proposals
+are bad.
+
 ## What it costs
 
 Measured, not asserted:

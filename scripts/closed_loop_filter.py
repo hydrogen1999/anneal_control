@@ -78,7 +78,23 @@ def _run_record(args):
     def random_chooser(schedules):
         return control_rng.random(len(schedules))
 
-    surrogate = critic if chooser == "critic" else random_chooser
+    # The third arm separates two explanations of why filtering helps. If the
+    # critic only has to avoid the bad tail, rejecting the worst half and then
+    # choosing at random should recover most of the gain. If fine ranking among
+    # the survivors is what matters, it should not. This is the discriminating
+    # experiment for the Pegasus result, where the coarse ranking transfers
+    # (rho +0.82) but the top-10% ranking collapses (rho +0.16) and the in-loop
+    # gain survives anyway.
+    def reject_worst(schedules):
+        scores = np.asarray(critic(schedules), dtype=float)
+        keep = max(1, len(scores) // 2)
+        survivors = np.argsort(scores, kind="stable")[:keep]
+        out = np.full(len(scores), np.inf)
+        out[survivors] = control_rng.random(keep)
+        return out
+
+    surrogate = {"critic": critic, "random": random_chooser,
+                 "reject_worst": reject_worst}[chooser]
 
     out = {"record_id": record_id,
            "parent_id": str(np.asarray(record["parent_id"]).item()), "split": split,
@@ -117,9 +133,12 @@ def main(argv=None) -> int:
     parser.add_argument("--workers", type=int, default=6)
     parser.add_argument("--tolerance", type=float, default=5e-4)
     parser.add_argument("--max-steps", type=int, default=8192)
-    parser.add_argument("--chooser", choices=("critic", "random"), default="critic",
+    parser.add_argument("--chooser", choices=("critic", "random", "reject_worst"),
+                        default="critic",
                         help="'random' is the control: same oversampled proposal stream, "
-                             "chosen without the model")
+                             "chosen without the model. 'reject_worst' keeps the critic's "
+                             "better half and then chooses at random among it, which "
+                             "separates tail-avoidance from fine ranking.")
     args = parser.parse_args(argv)
 
     from annealctrl.headroom import _bootstrap, _describe, _parent_means

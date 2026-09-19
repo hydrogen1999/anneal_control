@@ -124,3 +124,39 @@ def test_at_oversample_one_the_sobol_stream_is_the_original_one():
         index = int(record.candidate.candidate_id.rsplit("_", 1)[1])
         assert record.candidate.parameters["unit_parameters"] == \
             pytest.approx(expected[index - 1].tolist())
+
+
+def test_a_surrogate_may_rank_by_any_rule_including_rejecting_a_subset():
+    """The reject-worst arm returns inf for rejected proposals; that must work.
+
+    It is how the study separates 'the critic avoids the bad tail' from 'the
+    critic ranks finely', so a surrogate that scores some proposals as
+    unacceptable has to be a legal surrogate rather than a special case.
+    """
+    def reject_all_but_last(schedules):
+        scores = np.full(len(schedules), np.inf)
+        scores[-1] = 0.0
+        return scores
+
+    loss = counting(sup_from_sqrt)
+    result = optimize_control_family(loss, "one_window", budget=10, seed=0,
+                                     surrogate=reject_all_but_last, oversample=4)
+    assert len(loss.calls) == 10
+    assert all(r.candidate.parameters.get("surrogate_pick") == 3
+               for r in result.records[1:])
+
+
+def test_a_surrogate_scoring_everything_unacceptable_is_refused():
+    """All-inf is not a choice, and silently taking argmin of it would hide that."""
+    with pytest.raises(ValueError, match="rejected every proposal"):
+        optimize_control_family(sup_from_sqrt, "one_window", budget=8, seed=0,
+                                surrogate=lambda s: np.full(len(s), np.inf), oversample=4)
+
+
+def test_nan_and_negative_infinity_are_still_refused():
+    """A rejection is +inf. NaN is undefined and -inf wins without ranking."""
+    for bad in (np.nan, -np.inf):
+        with pytest.raises(ValueError, match="not rankings"):
+            optimize_control_family(sup_from_sqrt, "one_window", budget=8, seed=0,
+                                    surrogate=lambda s, b=bad: np.array(
+                                        [b] + [1.0] * (len(s) - 1)), oversample=4)

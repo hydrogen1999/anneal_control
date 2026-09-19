@@ -592,8 +592,16 @@ def optimize_control_family(
             if scores.shape != (len(decoded),):
                 raise ValueError(f"surrogate must return one score per proposal, got "
                                  f"{scores.shape} for {len(decoded)} proposals")
-            if not np.isfinite(scores).all():
-                raise ValueError("surrogate returned a nonfinite score")
+            # +inf is a legal score meaning "do not simulate this one", which is
+            # how a reject-then-choose rule expresses itself. NaN is undefined
+            # and -inf beats everything without saying anything, so both are
+            # refused; so is an all-+inf vector, which is not a choice at all.
+            if np.isnan(scores).any() or np.isneginf(scores).any():
+                raise ValueError("surrogate returned a nonfinite score that is not "
+                                 "a rejection: NaN and -inf are not rankings")
+            if not np.isfinite(scores).any():
+                raise ValueError("surrogate rejected every proposal; there is nothing "
+                                 "to simulate and silently taking the first would hide it")
             pick = int(scores.argmin())
             parameters, schedule = decoded[pick]
             extra = {"surrogate_considered": len(decoded),
