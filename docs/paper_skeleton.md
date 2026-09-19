@@ -24,14 +24,14 @@ observation about the world, not an artifact we built.
 | **Limitation 2** | Learned control policies are fit and evaluated in noiseless simulation; robustness is asserted, not measured. Prior open-system checks here covered a *fixed searched* control, never the learned rule. | `open_system_2026-09-17/` |
 | **Limitation 3** | Comparisons routinely mix cost classes — a spectral oracle, an online search, and an amortised learned model — in one ranking column. | `paper_table.py`, `COST_CLASSES` |
 | **Key Idea** | **The control that is optimal in a noiseless simulator is systematically the one an environment erodes most** — so a smoothed, learned preference is more robust than exact noiseless optimisation, and its right use is to *order* a search's proposals rather than to replace the search. | `learned_robustness_2026-09-18/`, `closed_loop_2026-09-18/` |
-| **Challenge 1** | A loss in [0,1] makes level and change negatively correlated for free. Showing erosion means removing the ceiling, not asserting it is small. | ρ −0.9081 → **−0.7925** after dividing by headroom, negative in 198/200 |
+| **Challenge 1** | Two artefacts can manufacture the erosion result. A loss in [0,1] makes level and change negatively correlated for free; and the bank is **shared**, with two waveforms winning 80% of records, so two fragile waveforms could carry the whole correlation. | Both removed: ρ −0.9081 raw → −0.7925 (ceiling) → −0.9320 (candidate fixed effect) → **−0.6312 with both**, negative in 192/200 |
 | **Challenge 2** | Any filter that scores many proposals also *sees* more proposals. A gain could be the wider stream rather than the model. | Random chooser on the identical stream: +0.00137, **changes sign** |
 | **Challenge 3** | Claims need a scale at which exact simulation is possible, and an honest statement of where that stops. | GPU ladder to 20 q; entanglement → MPS 50–100 q; SVMC ruled out at ρ ≈ 0 |
 | **Methodology topic sentence** | Three instruments, each built so that the confound it addresses is measured rather than argued. | — |
-| **Module A** (Challenge 1) | One shared Lindblad loss table across all selectors, headroom-normalised correlation, and a second noise channel. Sharing the table makes selector comparisons exact; a test pins the shared path against the direct path at rel=0, abs=0. | `open_system.bank_loss_table` |
+| **Module A** (Challenge 1) | One shared Lindblad loss table across all selectors; headroom normalisation; a candidate fixed effect; a second noise channel. Sharing the table makes selector comparisons exact, and a test pins the shared path against the direct path at rel=0, abs=0. | `open_system.bank_loss_table`, `scripts/erosion_control.py` |
 | **Module B** (Challenge 2) | An in-loop surrogate filter whose budget is simulator calls, with a paired random-chooser control on the identical oversampled stream and a verified-identical baseline. | `search.optimize_control_family(surrogate=…)`, `closed_loop_summary.py` |
 | **Module C** (Challenge 3) | A measured scale ladder rather than an assumed one: GPU throughput to 20 physical qubits, entanglement growth to bound MPS, SVMC closed by measurement. | `throughput_2026-09-18/`, `entanglement_2026-09-18/`, `svmc_2026-09-18/` |
-| **Contribution 1** | **The erosion result.** Within a record, a candidate's closed-system quality predicts its degradation at ρ = −0.79 after removing the ceiling, negative in 198/200; the noiseless-best ranks 7.12 of 8 in normalised degradation against a chance value of 4.5. The ordering nonetheless largely survives (ρ = +0.83, noiseless-best still best in 78.5%), so this is erosion, not inversion. | §4 |
+| **Contribution 1** | **The erosion result.** Within a record, a candidate's closed-system quality predicts its degradation at **ρ = −0.63 after removing both the [0,1] ceiling and the shared bank's candidate fixed effect**, negative in 192/200; the noiseless-best ranks 7.12 of 8 in normalised degradation against chance 4.5. It is not dephasing-specific — amplitude relaxation gives ρ ≈ −0.39 in 78/100 — though it is half as strong there and does not grow with rate. The ordering largely survives (ρ = +0.83, noiseless-best still best in 78.5%), so this is erosion, not inversion. | §4 |
 | **Contribution 2** | **A learned selector is more robust than exact noiseless optimisation.** Retention of the noiseless advantage at dephasing 0.1: noise-aware oracle 82.5%, learned 69.5–74.5%, exact noiseless argmax 61.5%. Paired retention contrast excludes zero for all three seeds. | §5 |
 | **Contribution 3** | **Filtering a search with the critic improves a fixed simulator budget** by +0.00485 across five configurations, every interval excluding zero, after subtracting the random-chooser control — replicated on real Pegasus connectivity at +0.00530. Online overhead 0.91%. | §6 |
 | **Contribution 4** | **A measured scale ceiling**, including three routes closed or bounded by measurement rather than by argument. | §7 |
@@ -59,7 +59,7 @@ the same instrument applied to different selectors.
 
 ## 4. Severity summary
 
-**0 CRITICAL, 2 MAJOR, 2 MINOR** (a third major was resolved by measurement; the row is kept struck through rather than deleted).
+**0 CRITICAL, 2 MAJOR, 3 MINOR** (a third major was resolved by measurement; the row is kept struck through rather than deleted).
 
 | | Issue | Why it matters |
 |---|---|---|
@@ -67,6 +67,7 @@ the same instrument applied to different selectors.
 | MAJOR | **No QPU.** Every claim is simulation. | A reviewer can discount the whole robustness story as model-dependent. |
 | ~~MAJOR~~ **RESOLVED** | The fine ranking fails on Pegasus (ρ = +0.16 among the best 10%, positive in 28/42) yet the in-loop gain survives. | Tested with a third arm that keeps the critic's better half and then chooses at random. Tail-avoidance is **75%** of what the model buys (+0.00334 [+0.00219, +0.00459]) and fine ranking **25%** (+0.00111 [+0.00050, +0.00182]), both excluding zero. The explanation is now measured, not offered. |
 | MINOR | Closed-loop evidence is `sobol_local` only, one instance family per dataset, ≤8 qubits synthetic / ≤14 Pegasus. | Narrows the scope statement, does not threaten it. |
+| MINOR | **The erosion result cannot be replicated on Pegasus.** Its smallest records are 10 physical qubits and the density solver caps at 8 (measured: 1.16 s/solve at 6 qubits, 5.12 at 7, 30.4 at 8). | The Pegasus bank has 64 candidates across two distinct banks and would have been the strongest available independent control. Stated as a gap. |
 | MINOR | L3 (cost classes) is addressed by infrastructure, not by the Key Idea, so it reads as a methods contribution rather than part of the chain. | Consider demoting it from Limitations to Methods. |
 
 **Top three fixes, in order:**
@@ -75,8 +76,11 @@ the same instrument applied to different selectors.
    attributes 75% of the gain to tail-avoidance and 25% to fine ranking, both
    intervals excluding zero. A critic does not have to be a good regressor to
    be a useful filter; it has to be right about which proposals are bad.
-2. Broaden the erosion result beyond one channel and one rate, so Contribution 1
-   is a property of noise rather than of dephasing at 0.1. **In progress.**
+2. ~~Broaden the erosion result beyond one channel and one rate.~~ **Done.**
+   Three rates and two channels: the effect holds under amplitude relaxation at
+   about half the strength, and unlike dephasing it does not grow with rate.
+   Whether the effect is a small-system artefact is still open — runs at 7 and
+   8 qubits are the last reachable sizes.
 3. Obtain QPU access (author-supplied).
 
 ## 5. Next step
