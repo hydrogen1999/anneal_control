@@ -122,13 +122,23 @@ Tx-NQDT (Lu et al. 2026), "the strongest overlap in spectrum-guided hardware
 scheduling", which uses transition matrix elements, normalised time density and
 inverse cumulative reconstruction.
 
-We implemented **Finžgar et al.** instead — and validated it properly
-(80 seeds, GP-UCB − uniform = +0.1068 [+0.0809, +0.1323], 64/80). But the
-document lists Bayesian schedule search and the closest spectral-learning method
-as *two separate requirements*. Tx-NQDT is not implemented, and it is the
-comparison a reviewer of this paper will ask for first, because its published
-D-Wave result (44 of 60 cases beating the default linear schedule) is the direct
-competitor.
+We implemented **Finžgar et al.** and validated it properly (80 seeds,
+GP-UCB − uniform = +0.1068 [+0.0809, +0.1323], 64/80).
+
+**Tx-NQDT's information path is now measured too** (2026-09-19). Its
+construction is what `physics_baselines` already builds, so the faithful test
+is that machinery fed the *logical* spectrum and asked to control the embedded
+system. Result: logical − physical = +0.00268 [−0.00148, +0.00668] at the
+programmed scale and −0.00115 [−0.00616, +0.00376] raw — a null on both
+conventions, **because neither teacher beats linear on this population**
+(0.77298 and 0.77566 against linear's 0.77436).
+[Report](../reports/logical_spectrum_2026-09-19/LOGICAL_SPECTRUM.md).
+
+That is a *stronger* related-work position than the document anticipated: the
+spectrum choice is not what separates methods, the whole spectrum-guided
+construction is. What remains missing is a neural-quantum-state implementation
+with an *approximate* logical spectrum, which could behave differently in
+either direction.
 
 ---
 
