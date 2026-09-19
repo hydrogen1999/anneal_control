@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "data": "/home/nguyencongt/runs/g2_data",
+  "split": "test",
+  "rate": 0.1,
+  "n_records": 200,
+  "n_candidates": 8,
+  "n_distinct_banks_in_pool": 1,
+  "correlations": {
+    "raw": {
+      "mean": -0.9080952380952383,
+      "median": -0.9285714285714286,
+      "negative": 200,
+      "n": 200
+    },
+    "headroom_normalised": {
+      "mean": -0.7925,
+      "median": -0.8452380952380952,
+      "negative": 198,
+      "n": 200
+    },
+    "candidate_demeaned": {
+      "mean": -0.9320238095238096,
+      "median": -0.9523809523809523,
+      "negative": 200,
+      "n": 200
+    },
+    "candidate_demeaned_headroom": {
+      "mean": -0.6311904761904762,
+      "median": -0.7142857142857143,
+      "negative": 192,
+      "n": 200
+    }
+  },
+  "per_candidate": {
+    "0": {
+      "mean_noiseless_loss": 0.641232717425494,
+      "mean_degradation": 0.1426631512683379,
+      "won_noiseless": 10
+    },
+    "1": {
+      "mean_noiseless_loss": 0.7084957911142163,
+      "mean_degradation": 0.09496657646321444,
+      "won_noiseless": 0
+    },
+    "2": {
+      "mean_noiseless_loss": 0.6354039704380101,
+      "mean_degradation": 0.14062064053960266,
+      "won_noiseless": 99
+    },
+    "3": {
+      "mean_noiseless_loss": 0.6075966615318029,
+      "mean_degradation": 0.1472668418089656,
+      "won_noiseless": 76
+    },
+    "4": {
+      "mean_noiseless_loss": 0.6420810671071392,
+      "mean_degradation": 0.1406246839213202,
+      "won_noiseless": 1
+    },
+    "5": {
+      "mean_noiseless_loss": 0.6504477505468971,
+      "mean_degradation": 0.12503321916508447,
+      "won_noiseless": 3
+    },
+    "6": {
+      "mean_noiseless_loss": 0.6448892491995878,
+      "mean_degradation": 0.13976622077240766,
+      "won_noiseless": 2
+    },
+    "7": {
+      "mean_noiseless_loss": 0.6237218786306635,
+      "mean_degradation": 0.14828060370878635,
+      "won_noiseless": 9
+    }
+  },
+  "scope": "candidate_demeaned removes each waveform's own mean across records, leaving only instance-specific variation; the shared bank makes that control necessary rather than optional"
+}

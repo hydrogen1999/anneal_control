@@ -1,0 +1,12 @@
+100 records x 8 candidates
+
+channel        rate   rho raw  rho /headroom      neg  best-rank
+dephasing      0.02   -0.8024        -0.6824   96/100       6.83
+dephasing      0.05   -0.8452        -0.7248   99/100       7.01
+dephasing      0.10   -0.9000        -0.7826   99/100       7.27
+relaxation     0.02   -0.5424        -0.4064   76/100       6.37
+relaxation     0.05   -0.5255        -0.3898   75/100       6.37
+relaxation     0.10   -0.5136        -0.3781   78/100       6.40
+
+(best-rank: where the noiseless-best candidate sits in headroom-normalised
+ degradation, out of 8; chance is 4.5, higher means it degrades more)
