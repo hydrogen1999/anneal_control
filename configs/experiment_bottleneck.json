@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "dataset": "data_research.json",
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "methods": [
+    {
+      "name": "unconstrained",
+      "model": {
+        "encoder_variant": "hierarchical",
+        "width": 64
+      },
+      "training": {
+        "response_weight": 0.0
+      }
+    },
+    {
+      "name": "bottleneck_1",
+      "model": {
+        "encoder_variant": "hierarchical",
+        "width": 64,
+        "bottleneck_dim": 1
+      },
+      "training": {
+        "response_weight": 0.0
+      }
+    },
+    {
+      "name": "bottleneck_8",
+      "model": {
+        "encoder_variant": "hierarchical",
+        "width": 64,
+        "bottleneck_dim": 8
+      },
+      "training": {
+        "response_weight": 0.0
+      }
+    }
+  ],
+  "training": {
+    "epochs": 200,
+    "patience": 25,
+    "learning_rate": 0.001,
+    "batch_size": 8,
+    "accumulation_steps": 2,
+    "weight_decay": 0.0001,
+    "policy_weight": 0.2,
+    "ranking_weight": 0.1
+  },
+  "execution": {
+    "device": "cpu",
+    "backend": "numpy",
+    "threads": 1,
+    "workers": 12
+  },
+  "evaluation": {
+    "direct": true,
+    "tolerance": 0.0002,
+    "initial_steps": 128,
+    "max_steps": 16384,
+    "n_resamples": 10000
+  },
+  "report": {
+    "plots": true,
+    "bootstrap_resamples": 10000
+  },
+  "_execution_note": "Mandatory-bottleneck ablation from the design document's factorial table: 'Force G->D2->rho versus direct residual branch with identical encoder ... Loss caused by scalar compression, not merely model size.' All three methods share the hierarchical encoder, width 64 and response_weight 0.0, so the only difference is the constriction. bottleneck_1 is the literal scalar chain; bottleneck_8 is a coarse profile. Both ADD parameters (230176 and 231079 against 225823), so a loss cannot be attributed to a smaller model. The unconstrained arm is re-trained inside this experiment rather than borrowed from research_v1, so the comparison shares data, splits and seeds."
+}

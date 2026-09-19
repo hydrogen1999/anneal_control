@@ -164,7 +164,8 @@ class AnnealController(nn.Module):
                  physical_layers: int = 3, logical_layers: int = 2,
                  proposals: int = 3, schedule_points: int = 9,
                  response_dim: int = 3, max_ds_dtau: float = 4.0,
-                 encoder_variant: str = "hierarchical"):
+                 encoder_variant: str = "hierarchical",
+                 bottleneck_dim: int | None = None):
         super().__init__()
         dimensions = (node_dim, edge_dim, logical_node_dim, logical_edge_dim, context_dim,
                       query_dim, width, proposals, schedule_points, response_dim)
@@ -180,14 +181,20 @@ class AnnealController(nn.Module):
             raise ValueError("max_ds_dtau must be finite and at least one")
         if encoder_variant == "logical" and context_dim != 2:
             raise ValueError("Logical baseline expects context=[runtime, programmed_scale]")
+        if bottleneck_dim is not None and (isinstance(bottleneck_dim, bool)
+                                           or not isinstance(bottleneck_dim, int)
+                                           or bottleneck_dim < 1):
+            raise ValueError("bottleneck_dim must be None or a positive integer")
         self.config = dict(node_dim=node_dim, edge_dim=edge_dim, logical_node_dim=logical_node_dim,
                            logical_edge_dim=logical_edge_dim, context_dim=context_dim,
                            query_dim=query_dim, width=width, physical_layers=physical_layers,
                            logical_layers=logical_layers, proposals=proposals,
                            schedule_points=schedule_points, response_dim=response_dim,
-                           max_ds_dtau=max_ds_dtau, encoder_variant=encoder_variant)
+                           max_ds_dtau=max_ds_dtau, encoder_variant=encoder_variant,
+                           bottleneck_dim=bottleneck_dim)
         self.width, self.proposals, self.schedule_points = width, proposals, schedule_points
         self.max_ds_dtau, self.encoder_variant = max_ds_dtau, encoder_variant
+        self.bottleneck_dim = bottleneck_dim
         if encoder_variant in {"hierarchical", "physical"}:
             self.node_encoder = _mlp(node_dim, width, width)
             self.physical_layers = nn.ModuleList([SignedMessageLayer(width, edge_dim) for _ in range(physical_layers)])
@@ -217,8 +224,24 @@ class AnnealController(nn.Module):
         # Actual waveform values and slopes, not fitted window parameters or oracles.
         self.schedule_encoder = _mlp(2 * schedule_points - 1, width, width)
         self.critic_head = _mlp(3 * width, width, 1)
+        if bottleneck_dim is not None:
+            # The design document's G -> D2 -> rho chain, made mandatory. Every
+            # route from the graph to a control must pass through `bottleneck_dim`
+            # nonnegative numbers -- a coarse difficulty profile -- and the token
+            # bank is collapsed to one token so attention cannot smuggle per-node
+            # information around it. The encoder and every head are unchanged, and
+            # these two layers ADD parameters, so a loss here cannot be blamed on
+            # a smaller model. That is what the factorial table asks to isolate.
+            self.bottleneck_in = nn.Linear(width, bottleneck_dim)
+            self.bottleneck_out = _mlp(bottleneck_dim, width, width)
 
     def encode(self, graph: GraphInput) -> tuple[Tensor, Tensor]:
+        tokens, summary = self._encode_unconstricted(graph)
+        if self.bottleneck_dim is None:
+            return tokens, summary
+        return self._constrict(tokens, summary)
+
+    def _encode_unconstricted(self, graph: GraphInput) -> tuple[Tensor, Tensor]:
         graph.validate()
         if self.encoder_variant == "logical":
             # No chain cardinalities, physical graph, compiled coefficients, or
@@ -277,6 +300,13 @@ class AnnealController(nn.Module):
         action = self.schedule_encoder(features)
         attended = self._attend(action + summary, tokens)
         return self.critic_head(torch.cat((action, attended, summary.expand(len(action), -1)), dim=-1)).squeeze(-1)
+
+    def _constrict(self, tokens: Tensor, summary: Tensor) -> tuple[Tensor, Tensor]:
+        """Force everything through the profile, and report it for inspection."""
+        profile = F.softplus(self.bottleneck_in(summary))
+        squeezed = self.bottleneck_out(profile)
+        self._last_profile = profile
+        return squeezed.reshape(1, -1), squeezed
 
     def forward(self, graph: GraphInput, schedules: Tensor | None = None) -> dict[str, Tensor]:
         tokens, summary = self.encode(graph)
