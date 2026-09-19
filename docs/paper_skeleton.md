@@ -59,21 +59,22 @@ the same instrument applied to different selectors.
 
 ## 4. Severity summary
 
-**0 CRITICAL, 3 MAJOR, 2 MINOR.**
+**0 CRITICAL, 2 MAJOR, 2 MINOR** (a third major was resolved by measurement; the row is kept struck through rather than deleted).
 
 | | Issue | Why it matters |
 |---|---|---|
 | MAJOR | **Effect sizes are small.** +0.00485 on a loss near 0.70 is 0.7%. | This is the main obstacle to an oral, not to acceptance. |
 | MAJOR | **No QPU.** Every claim is simulation. | A reviewer can discount the whole robustness story as model-dependent. |
-| MAJOR | **The fine ranking fails on Pegasus** (ρ = +0.16 among the best 10%, positive in 28/42), even though the in-loop gain survives. | The explanation offered — filtering needs only to avoid bad proposals — is plausible and *not separately tested*. |
+| ~~MAJOR~~ **RESOLVED** | The fine ranking fails on Pegasus (ρ = +0.16 among the best 10%, positive in 28/42) yet the in-loop gain survives. | Tested with a third arm that keeps the critic's better half and then chooses at random. Tail-avoidance is **75%** of what the model buys (+0.00334 [+0.00219, +0.00459]) and fine ranking **25%** (+0.00111 [+0.00050, +0.00182]), both excluding zero. The explanation is now measured, not offered. |
 | MINOR | Closed-loop evidence is `sobol_local` only, one instance family per dataset, ≤8 qubits synthetic / ≤14 Pegasus. | Narrows the scope statement, does not threaten it. |
 | MINOR | L3 (cost classes) is addressed by infrastructure, not by the Key Idea, so it reads as a methods contribution rather than part of the chain. | Consider demoting it from Limitations to Methods. |
 
 **Top three fixes, in order:**
 
-1. Test the Pegasus explanation directly — does in-loop performance depend on
-   top-10% ranking quality, or only on avoiding the bad tail? A filter
-   restricted to "reject the worst k" would separate them.
+1. ~~Test the Pegasus explanation directly.~~ **Done.** The reject-worst arm
+   attributes 75% of the gain to tail-avoidance and 25% to fine ranking, both
+   intervals excluding zero. A critic does not have to be a good regressor to
+   be a useful filter; it has to be right about which proposals are bad.
 2. Broaden the erosion result beyond one channel and one rate, so Contribution 1
    is a property of noise rather than of dephasing at 0.1. **In progress.**
 3. Obtain QPU access (author-supplied).
