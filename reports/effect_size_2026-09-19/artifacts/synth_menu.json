@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "n_records": 864,
+  "n_parents": 48,
+  "bank_size": 64,
+  "sizes": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32,
+    64
+  ],
+  "curve": {
+    "1": 0.010648405855573083,
+    "2": 0.01887793758797063,
+    "4": 0.03206769612167358,
+    "8": 0.04430930951456324,
+    "16": 0.05661726191670571,
+    "32": 0.06366099997778045,
+    "64": 0.06911790022517998
+  },
+  "across_draw_std": {
+    "1": 0.011392828261408163,
+    "2": 0.014337450566314134,
+    "4": 0.012998717157314892,
+    "8": 0.00955944143132654,
+    "16": 0.0056038361016783125,
+    "32": 0.0028370756189069713,
+    "64": 0.0
+  },
+  "draws": 200,
+  "last_doubling_gain": 0.005456900247399532,
+  "scope": "one fixed menu shared by every record, subsets drawn at random; below the full bank this understates a purpose-designed menu of the same size, so the saturation is a conservative reading",
+  "search_headroom": 0.09357775502465143,
+  "search_parents": 48
+}
