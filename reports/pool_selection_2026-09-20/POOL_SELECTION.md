@@ -46,6 +46,34 @@ parent-seed cells. The critic's fallback decisions are precise, not merely
 frequent — it fires on 2.4–9.2 % of records and is right essentially every
 time it does.
 
+## It is not a Pegasus effect
+
+Five `hierarchy_outcome` checkpoints on the synthetic set, same instrument,
+48 held-out parents.
+
+| seed | proposal only − linear | **pool − linear** | pool − proposal only | fallback | rescued / harmed |
+|---|---|---|---|---:|---:|
+| 0 | −0.00579 [−0.01305, +0.00191] | **−0.01242 [−0.01927, −0.00502]** | −0.00662 [−0.01094, −0.00309] | 10.9 % | 5 / **0** |
+| 1 | −0.01422 [−0.02237, −0.00660] | **−0.01742 [−0.02482, −0.01089]** | −0.00320 [−0.00608, −0.00088] | 4.6 % | 3 / **0** |
+| 2 | −0.01224 [−0.02175, −0.00266] | **−0.02075 [−0.02805, −0.01337]** | −0.00851 [−0.01558, −0.00170] | 16.1 % | 8 / **0** |
+| 3 | **+0.00026** [−0.00978, +0.01025] | −0.00386 [−0.01153, +0.00431] | −0.00412 [−0.00792, +0.00062] | 10.6 % | 2 / **0** |
+| 4 | −0.01934 [−0.02857, −0.00983] | **−0.02492 [−0.03286, −0.01679]** | −0.00558 [−0.01123, −0.00064] | 17.9 % | 4 / **0** |
+
+The same three properties hold. The pool is negative on **5 of 5** seeds where
+proposal-only was negative on 4 and one seed sat at +0.00026; it separates
+from linear on **4 of 5** against proposal-only's 3; and `pool − proposal
+only` is negative on every seed.
+
+Taken with the Pegasus arm, the no-harm property now covers **384
+parent-seed cells across two topologies with zero parents made worse**. The
+fallback rate varies widely (2.4 – 17.9 %) without ever costing anything,
+which is the signature of a decision that is being made on evidence rather
+than fired at a fixed rate.
+
+The synthetic set is also the easier case for the policy — it already cleared
+the ramp on most seeds — so the gain is smaller in relative terms than on
+Pegasus. The repair is worth most exactly where the policy is weakest.
+
 ## Where this sits on the pool-size axis
 
 The repaired method is still far from bank selection over 64 candidates
