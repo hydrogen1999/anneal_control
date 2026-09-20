@@ -90,6 +90,43 @@ a matched linear ramp, pooling to −0.00119 [−0.01380, +0.01202] and beating
 the ramp on 26 of 48 parents. Bank selection on the identical records and
 seeds is −0.08761 / −0.08541 / −0.08590, winning **48 of 48 in every seed**.
 
+## The matched frontier reference
+
+The 257-call, 5-family search had never been run on Pegasus test parents. It
+has now been, with settings copied verbatim from the synthetic sweep, over the
+same 48 parents: **576 records, every row `ok`**, zero audit failures.
+
+| | synthetic | Pegasus |
+|---|---:|---:|
+| frontier headroom | 0.09358 | **0.13729** |
+| selector efficiency | 81.4 % | **84.8 %** |
+| bank coverage | 73.9 % | **74.1 %** |
+| share of findable | 60.1 % | **62.9 %** |
+
+This closes the question the effect-size report opened. The previously
+published "60 % synthetic against 83 % Pegasus" was two different
+denominators; measured against the same one, the topologies differ by **2.8
+points**. Bank coverage agreeing to within 0.2 points across two topologies,
+two instance populations and a different difficulty scale suggests the menu's
+share of what is findable is a property of *using 64 fixed controls*, not of
+the problem.
+
+Priced in calls, per parent, over the 48:
+
+| | beats linear on | equivalent calls where it wins |
+|---|---:|---|
+| direct policy | **26 / 48** | 13.5 [10.4, 17.3] |
+| bank selection, one forward pass | **48 / 48** | **23.8** [21.5, 26.2] |
+| a perfect ranker on the same bank | 48 / 48 | 35.5 [32.7, 38.2] |
+
+One forward pass buys more on real connectivity than on synthetic (23.8
+against 17.9 calls), and direct generation buys less while failing outright on
+nearly half the parents against a quarter.
+
+The frontier is a **privileged reference**: it searches the test split, every
+row carries `online_adaptation: true`, and it is used only as a denominator.
+No learned method sees it.
+
 ## Provenance
 
 Dataset reused by verification rather than regeneration: the probe tree that

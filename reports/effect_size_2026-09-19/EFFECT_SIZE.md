@@ -87,19 +87,36 @@ Measured with the reference held fixed:
 | synthetic (48 parents) | bank oracle | 0.06912 | +0.05627 | **81.4 %** |
 | Pegasus (48 parents) | bank oracle | 0.10176 | +0.08631 | **84.8 %** |
 | synthetic (48 parents) | 257-call frontier | 0.09358 | +0.05627 | **60.1 %** |
-| Pegasus (48 parents) | 257-call frontier | *running* | +0.08631 | *running* |
+| Pegasus (48 parents) | 257-call frontier | 0.13729 | +0.08631 | **62.9 %** |
 
 **The apparent 60 % vs 83 % gap between the two topologies was an artifact of
-the two denominators, and is withdrawn.** Against a matched reference the two
-are within a few points (81.4 % vs 84.8 % on the bank oracle). Nothing in the data
+the two denominators, and is withdrawn.** Both references are now measured on
+both topologies, and under either one the two agree: 81.4 % against 84.8 % on
+the bank oracle, **60.1 % against 62.9 %** on the 257-call frontier. A
+2.8-point difference, not a 23-point one.
+
+The factorisation says why they agree, and it is not because nothing differs:
+
+| | synthetic | Pegasus |
+|---|---:|---:|
+| selector efficiency (critic against its own menu) | 81.4 % | **84.8 %** |
+| bank coverage (menu against the search) | 73.9 % | **74.1 %** |
+| share of findable | 60.1 % | 62.9 % |
+
+The critic is *better* on real connectivity and the menu covers almost exactly
+as much, so the product lands in the same place. Bank coverage agreeing to
+within 0.2 points across two topologies, instance families and difficulty
+scales is the more interesting number: **the menu's share of what is findable
+looks like a property of using 64 fixed controls, not of the problem**. Nothing in the data
 supports "the effect is sharper on real connectivity" stated in this unit; the
 reads unit in section 3 is where the topologies genuinely differ, and it uses
 one reference throughout.
 
-The Pegasus frontier cell is blank because the 257-call search had never been
-run on Pegasus test parents — only a 97-call, 4-family search on *validation*
-parents exists (headroom 0.14410, different parents, not substitutable). That
-sweep is running; this row will be filled from measurement, not inferred.
+The Pegasus frontier cell was blank until 2026-09-20 because the 257-call
+search had never been run on Pegasus test parents — only a 97-call, 4-family
+search on *validation* parents existed (headroom 0.14410, different parents,
+not substitutable). It has now been run over the same 48 test parents with
+settings copied from the synthetic sweep: 576 records, every row `ok`.
 
 Against the frontier reference the share does not depend on how much there is
 to get:
@@ -133,12 +150,21 @@ synthetic set:
 
 | | parents it beats linear on | equivalent calls, where it wins |
 |---|---:|---|
-| direct policy — **generates** a control | **35 / 48** | 10.0 [9.2, 11.1], median 9 |
+| **synthetic** | | |
+| direct policy — **generates** a control | 35 / 48 | 10.0 [9.2, 11.1], median 9 |
 | bank selection — **picks** from 64 | **48 / 48** | **17.9** [16.2, 19.8], median 17 |
 | a *perfect* ranker on that same bank | 48 / 48 | 25.2 [22.7, 27.9], median 25 |
+| **Pegasus** | | |
+| direct policy — **generates** a control | **26 / 48** | 13.5 [10.4, 17.3], median 9 |
+| bank selection — **picks** from 64 | **48 / 48** | **23.8** [21.5, 26.2], median 25 |
+| a *perfect* ranker on that same bank | 48 / 48 | 35.5 [32.7, 38.2], median 29 |
 
-No parent is censored: the search reaches every method's gain inside 257
-calls. The middle column matters as much as the right one — a parent the
+One forward pass is worth **more** on real connectivity, 23.8 calls against
+17.9, while direct generation is worth less there and fails outright on
+**nearly half** the parents rather than a quarter.
+
+No parent is censored on either topology: the search reaches every method's
+gain inside 257 calls. The middle column matters as much as the right one — a parent the
 method does not beat has **no** call equivalent, because every curve starts at
 zero headroom and a non-positive gain would otherwise be "matched" by the
 smallest budget on the grid and priced as if the search had needed it. That is
@@ -207,7 +233,7 @@ one fixed subset applied everywhere:
 | menu size | 1 | 2 | 4 | 8 | 16 | 32 | 64 | search |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
 | synthetic | 0.01065 | 0.01888 | 0.03207 | 0.04431 | 0.05662 | 0.06366 | **0.06912** | **0.09358** |
-| Pegasus (48) | 0.01467 | 0.02253 | 0.04211 | 0.06032 | 0.07919 | 0.09162 | **0.10176** | *running* |
+| Pegasus (48) | 0.01467 | 0.02253 | 0.04211 | 0.06032 | 0.07919 | 0.09162 | **0.10176** | **0.13729** |
 
 Each curve's endpoint reproduces that topology's bank-oracle headroom exactly
 — 0.06912 and 0.10176 — which is the arithmetic identity the construction
@@ -300,13 +326,20 @@ to the Pegasus clause if and when the Pegasus frontier sweep supports it.
 
 ## Limits
 
-- Pegasus: **48 held-out parents** as of 2026-09-20. The matched 257-call
-  5-family frontier over those same 48 test parents is still running, so
-  **every number in section 2b is synthetic-only** and the Pegasus frontier
-  cell in section 2 stays open. The runtime-4 half of that sweep is complete
-  (288/288 records) and gives 0.11139 mean parent headroom against synthetic's
-  0.09358, so the Pegasus share against a matched frontier will land well
-  below its 84.8 % against the bank oracle.
+- Pegasus: **48 held-out parents** as of 2026-09-20, with the matched
+  257-call 5-family frontier over those same test parents complete (576
+  records, every row `ok`). Both topologies are therefore measured against
+  both references, and section 2b covers both.
+- The frontier is a **privileged reference**, not a baseline the method
+  competes with on equal terms: it searches the test split, every row records
+  `online_adaptation: true`, and it is used only as a denominator. No learned
+  method ever sees it. Reporting it as a comparator would be a leakage claim;
+  reporting it as a ceiling is what it is.
+- The auxiliary-physics arm is **vacuous on Pegasus**: `resolved_response_
+  fraction` is 0.0 on both Pegasus datasets, so `hierarchy_physics` and
+  `hierarchy_outcome` are the same model there and the document's Factor 5 is
+  untested on real connectivity. Only the synthetic set, at 0.799, has tested
+  it. See [the 48-parent report](../pegasus240_2026-09-20/PEGASUS240.md).
 - The call equivalent prices the **online** cost only. One forward pass is one
   forward pass because the bank is fixed and the critic predicts its losses
   without simulating; building the bank and training the model are offline and

@@ -32,5 +32,7 @@
   },
   "draws": 200,
   "last_doubling_gain": 0.01013847531366241,
-  "scope": "one fixed menu shared by every record, subsets drawn at random; below the full bank this understates a purpose-designed menu of the same size, so the saturation is a conservative reading"
+  "scope": "one fixed menu shared by every record, subsets drawn at random; below the full bank this understates a purpose-designed menu of the same size, so the saturation is a conservative reading",
+  "search_headroom": 0.13728970546048022,
+  "search_parents": 48
 }
