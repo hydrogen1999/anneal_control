@@ -75,6 +75,32 @@ and the answer contradicts a choice already baked into the model.
 
 ---
 
+## 1a. The document's method had never been evaluated (closed 2026-09-20)
+
+**§Learning, "Three cooperating branches".** The document's third branch
+evaluates *"proposed schedules ... alongside the direct proposal and **simple
+baselines**"* (`main.tex:572`). The project built the branches and a critic,
+but the critic only ever ranked the policy's **own proposals** — the baseline
+half of the pool was absent, so the specified method had never been run.
+
+It mattered. Proposal-only on 48 Pegasus parents changes sign across training
+seeds (−0.00890, +0.00230, +0.00302) and loses to a linear ramp on 22 of 48.
+Adding the one missing pool member removes that: [−0.016, −0.017, −0.001], all
+negative, two of three separating from linear, `pool − proposal` excluding
+zero on every seed, and **zero parents harmed** across all three. The critic
+fires the fallback on only 2.4–9.2 % of records and is right essentially every
+time.
+
+The repaired method still sits far below bank selection over 64 candidates
+(−0.086), and that is the point: one mechanism, one pool-size axis, agreeing
+with the independently measured menu-size curve. [Report](../reports/pool_selection_2026-09-20/POOL_SELECTION.md)
+
+**A tension in the document, for the record.** `main.tex:572` puts normalized
+D₂ in the pool; `main.tex:637` forbids recomputing the spectral teacher at
+deployment unless charged as a separate solver-assisted method. The pool as
+written therefore mixes `amortised` and `privileged_spectrum`, which this
+project does not rank across. Only the deployable half is measured above.
+
 ## 2. Factorial ablations: five of eight are incomplete
 
 **§Evaluation, Table "Controlled tests and the conclusions they can support".**
