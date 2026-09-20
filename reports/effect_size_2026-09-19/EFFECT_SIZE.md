@@ -19,12 +19,25 @@ parent-level bootstrap.
 |---|---|---:|---:|
 | synthetic, linear − learned | +0.05627 [+0.04943, +0.06356] | **2.24** | **48 / 48** |
 | synthetic, tuned global − learned | +0.02077 [+0.01417, +0.02773] | 0.87 | 43 / 48 |
-| **Pegasus**, linear − learned | **+0.07885** [+0.05301, +0.10581] | **1.62** | **12 / 12** |
-| Pegasus, tuned global − learned | +0.02291 [+0.01057, +0.03836] | 0.89 | 12 / 12 |
+| **Pegasus**, linear − learned | **+0.08631** [+0.07216, +0.10086] | **1.68** | **48 / 48** |
+| Pegasus, tuned global − learned | +0.03246 [+0.02570, +0.03967] | **1.30** | 47 / 48 |
 
 *d* = 2.24 over logical parents, with every parent won, is not a small effect
 by any conventional standard — 0.8 is the usual threshold for "large". The
-against-global figures, *d* ≈ 0.88 on both topologies, clear it too.
+against-global figures clear it too, and on Pegasus comfortably.
+
+The Pegasus rows are the **48-parent** arm (2026-09-20), which supersedes the
+12-parent one on the same topology and instance families. Quadrupling the
+held-out set moved the effect slightly up and the interval sharply in:
+
+| | 12 parents | 48 parents |
+|---|---|---|
+| linear − learned | +0.07885 [+0.05301, +0.10581], *d* 1.62, 12/12 | +0.08631 [+0.07216, +0.10086], *d* **1.68**, **48/48** |
+| tuned global − learned | +0.02291 [+0.01057, +0.03836], *d* 0.89, 12/12 | +0.03246 [+0.02570, +0.03967], *d* **1.30**, 47/48 |
+
+The linear interval is **37 % narrower** and the against-global interval
+**half** the width. The 48/48 holds in every training seed individually, not
+only pooled.
 
 ## 2. Share of what is achievable
 
@@ -49,13 +62,13 @@ Measured with the reference held fixed:
 | | reference | headroom | learned gain | share |
 |---|---|---:|---:|---:|
 | synthetic (48 parents) | bank oracle | 0.06912 | +0.05627 | **81.4 %** |
-| Pegasus (12 parents) | bank oracle | 0.09547 | +0.07885 | **82.6 %** |
+| Pegasus (48 parents) | bank oracle | 0.10176 | +0.08631 | **84.8 %** |
 | synthetic (48 parents) | 257-call frontier | 0.09358 | +0.05627 | **60.1 %** |
-| Pegasus (12 parents) | 257-call frontier | *pending* | +0.07885 | *pending* |
+| Pegasus (48 parents) | 257-call frontier | *running* | +0.08631 | *running* |
 
 **The apparent 60 % vs 83 % gap between the two topologies was an artifact of
 the two denominators, and is withdrawn.** Against a matched reference the two
-are the same to within a point (81.4 % vs 82.6 %). Nothing in the data
+are within a few points (81.4 % vs 84.8 % on the bank oracle). Nothing in the data
 supports "the effect is sharper on real connectivity" stated in this unit; the
 reads unit in section 3 is where the topologies genuinely differ, and it uses
 one reference throughout.
@@ -160,11 +173,15 @@ measurement; the derivation and its assumptions are in
 | | linear | tuned global | learned | linear / learned |
 |---|---:|---:|---:|---|
 | synthetic | 22.3 | 19.2 | 17.5 | **1.279×** [1.242, 1.319], 47/48 parents |
-| **Pegasus** | 47.8 | 38.2 | 34.0 | **1.509×** [1.390, 1.630], **12/12 parents** |
+| **Pegasus** (48 parents) | 47.1 | 36.0 | 32.9 | **1.589×** [1.513, 1.667], **47/48 parents** |
 
-**On real device connectivity a linear ramp needs half again as many reads**,
-in every held-out parent. That is a 34 % reduction, and it is the sharpest
-honest statement of the result.
+**On real device connectivity a linear ramp needs about 1.6× as many reads** —
+a **37 %** reduction, and the sharpest honest statement of the result. At 12
+parents this read 1.509× [1.390, 1.630] in 12/12; the 48-parent arm moves the
+ratio up and cuts the interval width by **37 %**, at the cost of one parent
+where the learned selector needs *more* reads than the ramp. That parent is
+reported rather than rounded away: "every parent" is no longer the claim,
+47 of 48 is.
 
 ## The framing that is NOT available
 
