@@ -43,6 +43,18 @@ def load_frontier(dirs):
                         rows.append(entry["result"])
     if not rows:
         raise ValueError("no successful frontier rows found")
+    # Sweep directories are merged by the caller, and nothing downstream dedupes:
+    # aggregate_frontier averages a plain list. One record present twice -- from
+    # overlapping --record-ids runs, or a shard rerun into a new directory --
+    # would silently reweight the denominator. Refuse rather than average it.
+    seen = {}
+    for row in rows:
+        key = str(row["record_id"])
+        if key in seen:
+            raise ValueError(
+                f"record {key} appears in more than one sweep directory. Merged shards must "
+                "be disjoint; a repeated record would be counted twice in the headroom mean.")
+        seen[key] = row
     return rows
 
 

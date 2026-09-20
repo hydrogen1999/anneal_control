@@ -29,6 +29,15 @@ specific mistake impossible to repeat.
    Using validation-parent headroom against test-parent gain is the error this
    catches; a frontier over a superset is fine, and the surplus is dropped
    rather than averaged in.
+
+Three further functions exist because fixing the swapped denominator raised a
+better question than it answered. ``decompose_share`` shows the two references
+compose rather than compete, splitting the share into a critic factor and a
+menu factor that point at different work. ``search_call_equivalent`` drops the
+denominator altogether and prices one forward pass in simulator calls, which
+needs no reference budget to be meaningful. ``menu_size_curve`` answers the
+reply that follows -- "use a bigger menu" -- from candidate losses already on
+disk, at no simulation cost.
 """
 from __future__ import annotations
 
