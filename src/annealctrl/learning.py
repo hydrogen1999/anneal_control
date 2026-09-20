@@ -82,6 +82,13 @@ def proposal_bank_logits(proposals: Tensor, mixture_logits: Tensor, bank: Tensor
                            - distance / (2 * bandwidth**2), dim=-1)
 
 
+# The design document's spectral-target ladder asks which spectral summary is
+# worth supervising a network with, not only which predicts best. The datasets
+# carry two: three moments per s-point, and eight frequency bins. The loop used
+# to hard-code the moments, which left the third rung of that ladder untested.
+RESPONSE_TARGETS = {"moments": "response_moments", "bins": "response_bins"}
+
+
 def masked_response_loss(prediction: Tensor, labels: Tensor, mask: Tensor | None = None) -> Tensor:
     if labels.shape != prediction.shape:
         raise ValueError("Response label and prediction shapes must match")
@@ -366,6 +373,7 @@ def fit_records(train_records: Sequence[Mapping[str, Any]],
                 seed: int = 0, device: str = "cpu", checkpoint: str | Path | None = None,
                 label_temperature: float = 0.05, policy_weight: float = 0.2,
                 ranking_weight: float = 0.1, response_weight: float = 0.05,
+                response_target: str = "moments",
                 model_config: Mapping[str, Any] | None = None,
                 resume_from: str | Path | None = None, latest_checkpoint: str | Path | None = None,
                 batch_size: int = 1, accumulation_steps: int = 1, weight_decay: float = 1e-4,
@@ -399,6 +407,9 @@ def fit_records(train_records: Sequence[Mapping[str, Any]],
         raise ValueError("Positive integer epochs, patience, batch_size and accumulation_steps required")
     if any(not math.isfinite(v) or v <= 0 for v in (learning_rate, label_temperature, max_grad_norm, bandwidth)):
         raise ValueError("Finite positive learning rate, temperature, gradient norm and bandwidth required")
+    if response_target not in RESPONSE_TARGETS:
+        raise ValueError(f"response_target must be one of {sorted(RESPONSE_TARGETS)}; "
+                         f"got {response_target!r}")
     if any(not math.isfinite(v) or v < 0 for v in (weight_decay, policy_weight, ranking_weight, response_weight, ranking_tolerance)):
         raise ValueError("Weights and ranking tolerance must be finite and nonnegative")
     if model is not None and model_config is not None:
@@ -435,11 +446,26 @@ def fit_records(train_records: Sequence[Mapping[str, Any]],
             raise ValueError("Initialization model configuration mismatch")
         model.load_state_dict(initial["model_state"])
     model = model.to(target_device)
+    # The response head is sized by model_config, the target by training config,
+    # and nothing connected the two: a three-wide head asked to predict eight
+    # bins failed deep in the loss with "shapes must match", naming neither the
+    # head nor the target. Check it once, up front, in the caller's vocabulary.
+    _target_field = RESPONSE_TARGETS[response_target]
+    for _record in list(train_records) + list(validation_records):
+        if _target_field in _record:
+            _width = int(np.asarray(_record[_target_field]).shape[-1])
+            if _width != model.config["response_dim"]:
+                raise ValueError(
+                    f"response_target={response_target!r} supplies {_width} values per "
+                    f"s-point but the model's response_dim is {model.config['response_dim']}; "
+                    f"set response_dim={_width} in the model config")
+            break
     trainable_names = configure_trainable_scope(model, trainable_scope)
     training_config = {"epochs": epochs, "patience": patience, "learning_rate": learning_rate,
                        "weight_decay": weight_decay, "label_temperature": label_temperature,
                        "policy_weight": policy_weight, "ranking_weight": ranking_weight,
-                       "response_weight": response_weight, "batch_size": batch_size,
+                       "response_weight": response_weight, "response_target": response_target,
+                       "batch_size": batch_size,
                        "accumulation_steps": accumulation_steps, "max_grad_norm": max_grad_norm,
                        "deterministic": deterministic, "bandwidth": bandwidth,
                        "ranking_tolerance": ranking_tolerance, "seed": seed,
@@ -533,9 +559,21 @@ def fit_records(train_records: Sequence[Mapping[str, Any]],
                     graph = graphs[index].to(target_device)
                 schedules, losses = _tensor(record, "candidate_schedules", target_device), _tensor(record, "candidate_losses", target_device)
                 output = model(graph, schedules)
-                labels = _tensor(record, "response_moments", target_device) if "response_moments" in record else None
-                mask_key = "response_mask" if "response_mask" in record else "response_moments_mask"
-                mask = _tensor(record, mask_key, target_device) if mask_key in record else None
+                field = RESPONSE_TARGETS[response_target]
+                labels = _tensor(record, field, target_device) if field in record else None
+                if response_target == "moments":
+                    mask_key = "response_mask" if "response_mask" in record else "response_moments_mask"
+                    mask = _tensor(record, mask_key, target_device) if mask_key in record else None
+                else:
+                    # response_mask is (n_s, n_moments) and its columns are identical:
+                    # it is a per-s-point validity flag wearing the moments' width.
+                    # Bins are a different width, so reduce it to one dimension and
+                    # let masked_response_loss broadcast it rather than reshaping the
+                    # flag to a size it never meant.
+                    mask = None
+                    if "response_mask" in record:
+                        flag = _tensor(record, "response_mask", target_device)
+                        mask = flag[:, 0] if flag.ndim == 2 else flag
                 uncertainty = None
                 if "candidate_loss_uncertainty" in record:
                     uncertainty = _tensor(record, "candidate_loss_uncertainty", target_device)

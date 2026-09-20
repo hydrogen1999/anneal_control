@@ -101,7 +101,7 @@ def validate_experiment(cfg: dict) -> None:
     training_allowed = {"epochs", "learning_rate", "patience", "label_temperature", "policy_weight",
                         "ranking_weight", "response_weight", "batch_size", "accumulation_steps",
                         "weight_decay", "max_grad_norm", "deterministic", "bandwidth",
-                        "ranking_tolerance", "gauge_augment"}
+                        "ranking_tolerance", "gauge_augment", "response_target"}
     for train_cfg in [cfg.get("training", {})] + [m.get("training", {}) for m in methods]:
         if set(train_cfg) - training_allowed:
             raise ValueError(f"Unknown training keys: {sorted(set(train_cfg) - training_allowed)}")
