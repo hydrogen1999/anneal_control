@@ -72,17 +72,25 @@ def parent_curves(benchmark_dirs):
             for parent, budgets in grouped.items()}
 
 
-def parent_gains(evaluations, method):
+TARGETS = {
+    # what the learned selector actually achieved, one forward pass
+    "learned_gain": lambda row: float(row["linear_loss"]) - float(row["selected_loss"]),
+    # the ceiling on its own 64-candidate menu: what a perfect ranker would achieve
+    "bank_ceiling": lambda row: float(row["linear_loss"]) - float(row["bank_best_loss"]),
+}
+
+
+def parent_gains(evaluations, method, target="learned_gain"):
     paths = sorted(glob.glob(str(Path(evaluations) / f"{method}__seed_*.json")))
     if not paths:
         raise ValueError(f"no evaluations for {method!r} in {evaluations}")
+    extract = TARGETS[target]
     per_seed = []
     for path in paths:
         rows = json.loads(Path(path).read_text())["records"]
         buckets = defaultdict(list)
         for row in rows:
-            buckets[str(row["parent_id"])].append(
-                float(row["linear_loss"]) - float(row["selected_loss"]))
+            buckets[str(row["parent_id"])].append(extract(row))
         per_seed.append({p: float(np.mean(v)) for p, v in buckets.items()})
     parents = set(per_seed[0])
     if any(set(s) != parents for s in per_seed):
@@ -95,13 +103,16 @@ def main(argv=None) -> int:
     parser.add_argument("--evaluations", required=True)
     parser.add_argument("--frontier-sweep", nargs="+", required=True)
     parser.add_argument("--method", default="summary")
+    parser.add_argument("--target", default="learned_gain", choices=sorted(TARGETS),
+                        help="learned_gain prices what the selector achieved; bank_ceiling "
+                             "prices what a perfect ranker on the same menu would achieve")
     parser.add_argument("--output", required=True)
     parser.add_argument("--bootstrap-resamples", type=int, default=10000)
     parser.add_argument("--seed", type=int, default=0)
     args = parser.parse_args(argv)
 
     curves = parent_curves(args.frontier_sweep)
-    gains = parent_gains(args.evaluations, args.method)
+    gains = parent_gains(args.evaluations, args.method, args.target)
     shared = sorted(set(curves) & set(gains))
     if not shared:
         parser.error("the frontier sweep and the evaluation share no parents")
@@ -117,11 +128,12 @@ def main(argv=None) -> int:
                                     bootstrap_resamples=args.bootstrap_resamples,
                                     seed=args.seed)
     result["method"] = args.method
+    result["target"] = args.target
     result["evaluations"] = str(args.evaluations)
     Path(args.output).write_text(json.dumps(result, indent=2))
 
     ci = result["parent_bootstrap_ci"]
-    print(f"{args.method}: one forward pass against an instance-specific search")
+    print(f"{args.method} / {args.target}: against an instance-specific search")
     print(f"  parents           {result['n_parents']} "
           f"({result['n_resolved']} resolved, {result['n_censored']} censored)")
     print(f"  median equivalent {result['median_calls']} calls")
