@@ -362,3 +362,79 @@ def search_call_equivalent(curves: Mapping[str, Mapping[int, float]],
                   "the online cost only -- training and data generation are offline and "
                   "accounted separately in costs.py"),
     })
+
+
+def menu_size_curve(rows: Sequence[Mapping[str, Any]], *, sizes: Sequence[int],
+                    draws: int = 200, seed: int = 0) -> dict:
+    """Headroom against the size of a FIXED menu of controls.
+
+    The factorisation names ``bank_coverage`` as the binding factor, which
+    invites the obvious question: would a bigger menu close the gap? This
+    answers it by measurement rather than extrapolation, using the candidate
+    losses already stored with every record.
+
+    The bank is **shared across records** -- candidate j is the same schedule
+    everywhere -- so a menu of size k is one subset applied to every record,
+    not an independent draw per record. Drawing per record would let each
+    instance pick its own favourite and would measure instance-specific
+    selection, which is the thing a fixed menu cannot do.
+
+    Subsets are random, so for k below the full bank this **understates** a
+    purpose-designed menu of that size. The endpoint at the full bank is the
+    deployed bank itself. A designed curve would therefore sit above these
+    points and end at the same place, which makes the saturation reported here
+    a conservative reading rather than an optimistic one.
+    """
+    rows = list(rows)
+    if not rows:
+        raise ValueError("menu_size_curve requires a nonempty set of records")
+    widths = {len(row["candidate_losses"]) for row in rows}
+    if len(widths) > 1:
+        raise ValueError(f"records do not share the same bank; candidate counts differ "
+                         f"({sorted(widths)}) and a shared menu index is meaningless")
+    width = widths.pop()
+    sizes = sorted({int(k) for k in sizes})
+    if any(k < 1 for k in sizes):
+        raise ValueError("menu sizes must be positive")
+    if max(sizes) > width:
+        raise ValueError(f"menu size {max(sizes)} is larger than the bank ({width} candidates)")
+    if draws < 1:
+        raise ValueError("draws must be positive")
+
+    losses = np.array([[float(v) for v in row["candidate_losses"]] for row in rows])
+    linear = np.array([float(row["linear_loss"]) for row in rows])
+    parents = sorted({str(row["parent_id"]) for row in rows})
+    index = {p: i for i, p in enumerate(parents)}
+    owner = np.array([index[str(row["parent_id"])] for row in rows])
+
+    def parent_mean(values):
+        return float(np.mean([values[owner == i].mean() for i in range(len(parents))]))
+
+    rng = np.random.default_rng(seed)
+    curve, spread = {}, {}
+    for k in sizes:
+        # The full bank has exactly one subset; sampling it repeatedly says nothing.
+        n_draws = 1 if k == width else draws
+        values = []
+        for _ in range(n_draws):
+            subset = np.arange(width) if k == width else rng.choice(width, size=k, replace=False)
+            best = losses[:, subset].min(axis=1)
+            values.append(parent_mean(np.maximum(linear - best, 0.0)))
+        curve[str(k)] = float(np.mean(values))
+        spread[str(k)] = float(np.std(values, ddof=1)) if len(values) > 1 else 0.0
+
+    ordered = [curve[str(k)] for k in sizes]
+    return _safe({
+        "schema_version": 1,
+        "n_records": len(rows),
+        "n_parents": len(parents),
+        "bank_size": width,
+        "sizes": sizes,
+        "curve": curve,
+        "across_draw_std": spread,
+        "draws": draws,
+        "last_doubling_gain": (float(ordered[-1] - ordered[-2]) if len(ordered) > 1 else None),
+        "scope": ("one fixed menu shared by every record, subsets drawn at random; below "
+                  "the full bank this understates a purpose-designed menu of the same size, "
+                  "so the saturation is a conservative reading"),
+    })

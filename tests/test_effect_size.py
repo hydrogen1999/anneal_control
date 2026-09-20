@@ -11,6 +11,7 @@ without naming its reference, the reference's per-instance cost is READ FROM
 THE ARTIFACTS rather than asserted, and a frontier reference must cover the
 very parents it is the denominator for.
 """
+import numpy as np
 import pytest
 
 from annealctrl.effect_size import effect_size_report
@@ -366,3 +367,68 @@ def test_parents_must_have_both_a_curve_and_a_gain():
     curves = {"p0": budget_curve([(5, 0.0), (9, 0.04)])}
     with pytest.raises(ValueError, match="p1|same parents"):
         search_call_equivalent(curves, {"p0": 0.01, "p1": 0.02}, censor_at=9)
+
+
+# --- menu size --------------------------------------------------------------
+
+def test_a_menu_of_every_candidate_reproduces_the_bank_oracle():
+    from annealctrl.effect_size import menu_size_curve
+
+    rows = [{"parent_id": "p0", "record_id": "r0", "linear_loss": 1.0,
+             "candidate_losses": [0.9, 0.8, 0.7, 0.6]}]
+    curve = menu_size_curve(rows, sizes=[4], draws=1, seed=0)
+    assert curve["curve"]["4"] == pytest.approx(0.4)      # 1.0 - 0.6
+
+
+def test_the_menu_is_one_fixed_subset_shared_by_every_record():
+    """The bank is shared, so a menu of size k is one subset, not a draw per record."""
+    from annealctrl.effect_size import menu_size_curve
+
+    # Candidate 0 is best for r0, candidate 1 for r1. A per-record draw would
+    # let each record pick its own favourite and overstate a size-1 menu.
+    rows = [{"parent_id": "p0", "record_id": "r0", "linear_loss": 1.0,
+             "candidate_losses": [0.0, 1.0]},
+            {"parent_id": "p1", "record_id": "r1", "linear_loss": 1.0,
+             "candidate_losses": [1.0, 0.0]}]
+    curve = menu_size_curve(rows, sizes=[1], draws=200, seed=0)
+    # Either fixed choice gives one record headroom 1.0 and the other 0.0.
+    assert curve["curve"]["1"] == pytest.approx(0.5, abs=0.02)
+
+
+def test_headroom_floors_at_zero_when_no_candidate_beats_linear():
+    from annealctrl.effect_size import menu_size_curve
+
+    rows = [{"parent_id": "p0", "record_id": "r0", "linear_loss": 0.1,
+             "candidate_losses": [0.9, 0.8]}]
+    assert menu_size_curve(rows, sizes=[2], draws=1, seed=0)["curve"]["2"] == pytest.approx(0.0)
+
+
+def test_the_curve_is_non_decreasing_in_menu_size():
+    from annealctrl.effect_size import menu_size_curve
+
+    rng = np.random.default_rng(0)
+    rows = [{"parent_id": f"p{i}", "record_id": f"r{i}", "linear_loss": 1.0,
+             "candidate_losses": list(rng.random(16))} for i in range(12)]
+    curve = menu_size_curve(rows, sizes=[1, 2, 4, 8, 16], draws=64, seed=0)
+    values = [curve["curve"][str(k)] for k in (1, 2, 4, 8, 16)]
+    assert all(b >= a - 1e-9 for a, b in zip(values, values[1:]))
+
+
+def test_a_size_larger_than_the_bank_is_refused():
+    from annealctrl.effect_size import menu_size_curve
+
+    rows = [{"parent_id": "p0", "record_id": "r0", "linear_loss": 1.0,
+             "candidate_losses": [0.9, 0.8]}]
+    with pytest.raises(ValueError, match="larger than the bank|exceeds"):
+        menu_size_curve(rows, sizes=[4], draws=1, seed=0)
+
+
+def test_records_with_different_bank_sizes_are_refused():
+    from annealctrl.effect_size import menu_size_curve
+
+    rows = [{"parent_id": "p0", "record_id": "r0", "linear_loss": 1.0,
+             "candidate_losses": [0.9, 0.8]},
+            {"parent_id": "p1", "record_id": "r1", "linear_loss": 1.0,
+             "candidate_losses": [0.9, 0.8, 0.7]}]
+    with pytest.raises(ValueError, match="same bank|differ"):
+        menu_size_curve(rows, sizes=[2], draws=1, seed=0)
