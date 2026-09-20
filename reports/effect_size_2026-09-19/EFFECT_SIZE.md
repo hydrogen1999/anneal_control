@@ -95,16 +95,25 @@ first informative budget is 9 calls.)
 Priced in calls instead, per parent, bootstrapped over parents, on the
 synthetic set:
 
-| | equivalent instance-specific simulator calls |
-|---|---|
-| direct policy — **generates** a control | **8.7** [7.8, 9.7], median 9 |
-| bank selection — **picks** from 64 | **17.9** [16.2, 19.8], median 17 |
-| a *perfect* ranker on that same bank | 25.2 [22.7, 27.9], median 25 |
+| | parents it beats linear on | equivalent calls, where it wins |
+|---|---:|---|
+| direct policy — **generates** a control | **35 / 48** | 10.0 [9.2, 11.1], median 9 |
+| bank selection — **picks** from 64 | **48 / 48** | **17.9** [16.2, 19.8], median 17 |
+| a *perfect* ranker on that same bank | 48 / 48 | 25.2 [22.7, 27.9], median 25 |
 
-All 48 parents resolved, none censored. Two things follow that the percentage
-did not show. **Selecting is worth about twice generating**, which is the
-project's central design choice stated as a measurement. And the gap from 17.9
-to 25.2 is what better ranking alone would buy — about seven calls.
+No parent is censored: the search reaches every method's gain inside 257
+calls. The middle column matters as much as the right one — a parent the
+method does not beat has **no** call equivalent, because every curve starts at
+zero headroom and a non-positive gain would otherwise be "matched" by the
+smallest budget on the grid and priced as if the search had needed it. That is
+a floor, not a price; excluding those 13 parents moves the direct policy from
+an apparent 8.7 calls to 10.0 over the 35 it actually wins.
+
+Two things follow that the percentage did not show. **Selecting beats
+generating on both axes** — 48/48 parents against 35/48, and 17.9 calls
+against 10.0 — which is the project's central design choice stated as a
+measurement rather than a preference. And the gap from 17.9 to 25.2 is what
+better ranking alone would buy: about seven calls.
 
 This unit does not depend on which search spends the budget, but it is not
 invariant either, so the range is reported rather than a single figure. Over

@@ -432,3 +432,38 @@ def test_records_with_different_bank_sizes_are_refused():
              "candidate_losses": [0.9, 0.8, 0.7]}]
     with pytest.raises(ValueError, match="same bank|differ"):
         menu_size_curve(rows, sizes=[2], draws=1, seed=0)
+
+
+def test_a_parent_the_method_did_not_win_has_no_call_equivalent():
+    """Zero headroom is reached by a zero-call search, which is a floor, not a price."""
+    from annealctrl.effect_size import search_call_equivalent
+
+    curves = {"p0": budget_curve([(5, 0.0), (9, 0.04), (17, 0.08)]),
+              "p1": budget_curve([(5, 0.0), (9, 0.04), (17, 0.08)])}
+    gains = {"p0": 0.05, "p1": -0.01}          # p1 lost to the linear reference
+    result = search_call_equivalent(curves, gains, censor_at=17)
+    assert result["n_no_gain"] == 1
+    assert result["no_gain_parents"] == ["p1"]
+    assert result["per_parent_calls"]["p1"] is None
+    assert result["n_resolved"] == 1
+    assert result["mean_calls"] == pytest.approx(17)     # p1 must not drag it to 11
+
+
+def test_a_zero_gain_parent_is_also_excluded():
+    from annealctrl.effect_size import search_call_equivalent
+
+    curves = {"p0": budget_curve([(5, 0.0), (9, 0.04)])}
+    result = search_call_equivalent(curves, {"p0": 0.0}, censor_at=9)
+    assert result["n_no_gain"] == 1
+    assert result["mean_calls"] is None
+
+
+def test_no_gain_is_counted_separately_from_censoring():
+    """Losing to linear and beating the whole search are opposite outcomes."""
+    from annealctrl.effect_size import search_call_equivalent
+
+    curves = {"lost": budget_curve([(5, 0.0), (9, 0.04)]),
+              "beat": budget_curve([(5, 0.0), (9, 0.04)])}
+    result = search_call_equivalent(curves, {"lost": -0.02, "beat": 0.99}, censor_at=9)
+    assert result["n_no_gain"] == 1 and result["n_censored"] == 1
+    assert result["n_resolved"] == 0

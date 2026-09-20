@@ -326,6 +326,7 @@ def search_call_equivalent(curves: Mapping[str, Mapping[int, float]],
 
     reached: dict[str, int | None] = {}
     lower: dict[str, int | None] = {}
+    no_gain: list[str] = []
     for parent, curve in curves.items():
         budgets = sorted(curve)
         values = [float(curve[b]) for b in budgets]
@@ -334,6 +335,15 @@ def search_call_equivalent(curves: Mapping[str, Mapping[int, float]],
                 f"the headroom curve for {parent} is not monotone; an incumbent trace "
                 "cannot get worse, so this is not one")
         target = float(gains[parent])
+        # A method that did not beat the reference has no call equivalent. Every
+        # curve starts at zero headroom, so a non-positive gain would "resolve"
+        # at the smallest budget on the grid and be priced as if the search had
+        # needed that many calls to match it. That is a floor, not a price, and
+        # averaging it in drags the mean toward the grid's first point.
+        if target <= 0:
+            no_gain.append(parent)
+            reached[parent], lower[parent] = None, None
+            continue
         hit, last_short = None, None
         for budget, value in zip(budgets, values):
             if value >= target:
@@ -344,7 +354,7 @@ def search_call_equivalent(curves: Mapping[str, Mapping[int, float]],
         lower[parent] = last_short
 
     resolved = np.array([v for v in reached.values() if v is not None], dtype=float)
-    censored = [p for p, v in reached.items() if v is None]
+    censored = [p for p, v in reached.items() if v is None and p not in set(no_gain)]
 
     block = _describe(resolved)
     block["parent_bootstrap_ci"] = _bootstrap(resolved, n_resamples=bootstrap_resamples, seed=seed)
@@ -355,6 +365,8 @@ def search_call_equivalent(curves: Mapping[str, Mapping[int, float]],
         "n_resolved": int(resolved.size),
         "n_censored": len(censored),
         "censored_parents": sorted(censored),
+        "n_no_gain": len(no_gain),
+        "no_gain_parents": sorted(no_gain),
         "median_calls": int(np.median(resolved)) if resolved.size else None,
         "mean_calls": float(resolved.mean()) if resolved.size else None,
         "per_parent_calls": reached,
@@ -365,7 +377,9 @@ def search_call_equivalent(curves: Mapping[str, Mapping[int, float]],
         "censoring_note": (
             f"{len(censored)} of {len(curves)} parents are censored: the search never "
             f"reached the learned gain within {censor_at} calls, so the equivalent is "
-            "reported as greater than the budget rather than extrapolated"),
+            "reported as greater than the budget rather than extrapolated. A further "
+            f"{len(no_gain)} have no gain over the reference at all and are excluded "
+            "from the mean; those two outcomes are opposite and are counted apart"),
         "scope": ("the equivalent is the smallest grid budget reaching the gain, an upper "
                   "bound; per_parent_lower_bound is the last budget still short. It prices "
                   "the online cost only -- training and data generation are offline and "

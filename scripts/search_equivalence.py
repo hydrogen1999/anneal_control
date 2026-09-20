@@ -164,10 +164,15 @@ def main(argv=None) -> int:
     print(f"{args.method} / {args.mode} / {args.target}: "
           f"against an instance-specific search")
     print(f"  parents           {result['n_parents']} "
-          f"({result['n_resolved']} resolved, {result['n_censored']} censored)")
+          f"({result['n_resolved']} resolved, {result['n_censored']} censored, "
+          f"{result['n_no_gain']} with no gain over linear)")
+    if result["median_calls"] is None:
+        print("  equivalent        undefined: no parent showed a positive gain")
+        return 0
     print(f"  median equivalent {result['median_calls']} calls")
     print(f"  mean equivalent   {result['mean_calls']:.1f} calls "
-          f"[{ci['low']:.1f}, {ci['high']:.1f}]")
+          f"[{ci['low']:.1f}, {ci['high']:.1f}]  "
+          f"(over the {result['n_resolved']} parents it won)")
     print(f"  search budget     {censor_at} calls (censoring point)")
     return 0
 
