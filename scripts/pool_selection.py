@@ -37,6 +37,11 @@ def main(argv=None) -> int:
     parser.add_argument("--checkpoint", required=True)
     parser.add_argument("--output", required=True)
     parser.add_argument("--split", default="test")
+    parser.add_argument("--pool-prefixes", nargs="+", default=["linear"],
+                        help="bank candidate id prefixes to admit into the pool beside the "
+                             "policy's proposals; 'linear' is the document's simple baseline, "
+                             "'linear one_window two_window pause' is the designed library "
+                             "without the low-discrepancy samples")
     parser.add_argument("--tolerance", type=float, default=2e-4)
     parser.add_argument("--max-steps", type=int, default=16384)
     parser.add_argument("--max-ds-dtau", type=float, default=4.0)
@@ -68,25 +73,38 @@ def main(argv=None) -> int:
     for record in records:
         ids = [str(x) for x in np.asarray(record["candidate_ids"])]
         if "linear" not in ids:
-            raise ValueError(f"{record['record_id']}: bank has no 'linear' entry to fall back to")
-        linear_wave = np.asarray(record["candidate_schedules"])[ids.index("linear")]
-        linear_loss = float(np.asarray(record["candidate_losses"])[ids.index("linear")])
+            raise ValueError(f"{record['record_id']}: bank has no 'linear' entry to compare against")
+        waves = np.asarray(record["candidate_schedules"])
+        stored = np.asarray(record["candidate_losses"], dtype=float)
+        linear_wave = waves[ids.index("linear")]
+        linear_loss = float(stored[ids.index("linear")])
+        admitted = [i for i, name in enumerate(ids)
+                    if any(name == q or name.startswith(q + "_") for q in args.pool_prefixes)]
+        if not admitted:
+            raise ValueError(f"no bank candidate matches {args.pool_prefixes}; ids look like "
+                             f"{ids[:6]}")
 
         graph = normalizer.transform(graph_from_record(record, device="cpu"))
         with torch.no_grad():
             proposals = model(graph)["proposal_schedules"].detach().cpu().double().numpy()
-            pool = np.vstack([proposals, linear_wave[None, :]])
+            pool = np.vstack([proposals, waves[admitted]])
             predicted = model.predict_losses(
                 graph, torch.as_tensor(pool, dtype=torch.float32)).detach().cpu().numpy()
 
-        fallback = len(pool) - 1
+        n_proposals = len(proposals)
         try:
             # The proposal-only choice is what the project reported as "direct".
-            proposal_pick = int(np.argmin(predicted[:fallback]))
+            proposal_pick = int(np.argmin(predicted[:n_proposals]))
             pool_pick = int(np.argmin(predicted))
             proposal_loss = scored(record, pool[proposal_pick])
-            pool_loss = proposal_loss if pool_pick == proposal_pick else (
-                linear_loss if pool_pick == fallback else scored(record, pool[pool_pick]))
+            if pool_pick == proposal_pick:
+                pool_loss = proposal_loss
+            elif pool_pick >= n_proposals:
+                # Admitted bank members already carry a simulator-evaluated loss;
+                # re-propagating them would spend calls to reproduce a stored number.
+                pool_loss = float(stored[admitted[pool_pick - n_proposals]])
+            else:
+                pool_loss = scored(record, pool[pool_pick])
         except ValueError:
             infeasible += 1
             continue
@@ -97,7 +115,9 @@ def main(argv=None) -> int:
                      "linear_loss": linear_loss,
                      "proposal_only_loss": proposal_loss,
                      "pool_loss": pool_loss,
-                     "chose_fallback": bool(pool_pick == fallback)})
+                     "chose_fallback": bool(pool_pick >= n_proposals),
+                     "chosen_bank_id": (ids[admitted[pool_pick - n_proposals]]
+                                        if pool_pick >= n_proposals else None)})
 
     if not rows:
         raise ValueError("no feasible records")
@@ -118,6 +138,7 @@ def main(argv=None) -> int:
     result = {
         "schema_version": 1, "checkpoint": str(args.checkpoint), "split": args.split,
         "cost_class": "amortised",
+        "pool_prefixes": list(args.pool_prefixes),
         "n_records": len(rows), "n_parents": int(linear.size), "n_infeasible": infeasible,
         "fallback_rate_records": float(np.mean([r["chose_fallback"] for r in rows])),
         "proposal_only_vs_linear": {"mean": float((proposal - linear).mean()),
@@ -145,6 +166,13 @@ def main(argv=None) -> int:
     print(f"  {'pool_vs_proposal_only':26s} {d['mean']:+.5f} [{d['ci'][0]:+.5f}, {d['ci'][1]:+.5f}]")
     print(f"  fallback chosen in {result['fallback_rate_records']*100:.1f}% of records; "
           f"rescued {result['parents_rescued']} parents, harmed {result['parents_harmed']}")
+    picked = defaultdict(int)
+    for row in rows:
+        if row["chosen_bank_id"]:
+            picked[row["chosen_bank_id"]] += 1
+    if picked:
+        top = sorted(picked.items(), key=lambda kv: -kv[1])[:5]
+        print("  bank members chosen: " + ", ".join(f"{k}x{v}" for k, v in top))
     return 0
 
 

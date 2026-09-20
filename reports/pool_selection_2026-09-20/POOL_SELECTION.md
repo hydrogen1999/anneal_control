@@ -74,23 +74,42 @@ The synthetic set is also the easier case for the policy — it already cleared
 the ramp on most seeds — so the gain is smaller in relative terms than on
 Pegasus. The repair is worth most exactly where the policy is weakest.
 
-## Where this sits on the pool-size axis
+## The pool-size axis, measured
 
-The repaired method is still far from bank selection over 64 candidates
-(−0.086, 48/48 every seed). That is not two different methods; it is one
-mechanism at two pool sizes, and the numbers agree with the independently
-measured menu-size curve:
+The repaired method is still far from bank selection over 64 candidates. That
+is not two different methods but one mechanism at different pool sizes, and
+the axis can be walked directly by choosing which bank members the critic is
+allowed to see. On the synthetic set, five seeds, 48 held-out parents:
 
-| pool | measured gain over linear |
-|---|---:|
-| proposal + linear (2 members) | 0.010 – 0.017 |
-| random menu of 1, from the curve | 0.0147 |
-| random menu of 2, from the curve | 0.0225 |
-| the full 64-candidate library | 0.1018 |
+| what the critic may choose from | mean gain over linear | seeds separating |
+|---|---:|---:|
+| its own proposals only | −0.01027 | 3 / 5 |
+| + the linear ramp — *the document's "simple baseline"* | −0.01587 | 4 / 5 |
+| + the designed library: linear, windows, pauses (8) | **−0.03787** | **5 / 5** |
+| the full 64-candidate bank | −0.05627 | — |
 
-A two-element pool achieves roughly what a one-to-two element menu achieves.
-The critic's value scales with what it is given to choose between, and that
-axis is measurable end to end.
+Monotone across four points spanning a factor of thirty in pool size. **The
+critic's value is set by what it is given to choose between**, and roughly
+two thirds of the full library's advantage is already reached by its eight
+*designed* members — the 56 low-discrepancy samples supply the rest.
+
+That decomposition matters for the bank-coverage result. The library is not
+an undifferentiated blob of 64: a small designed core does most of the work,
+which is why a fixed menu is worth so much less than an instance-specific
+search of comparable size.
+
+### The no-harm property is structural, and only for the smallest pool
+
+Linear-only harmed **zero** parents in 384 parent-seed cells. The designed
+pool harmed **3 in 240**. That is not noise and not a regression — it follows
+from what the pools contain. When the only alternative is the reference
+itself, choosing it yields exactly the reference and cannot lose; once the
+pool holds windows and pauses, the critic can prefer one that is worse than
+linear, and occasionally does.
+
+So the graceful-degradation claim belongs to the two-element pool
+specifically, and the paper should say so rather than extend it to the
+library. Bought against that, the designed pool more than doubles the gain.
 
 ## Cost class, stated rather than assumed
 
