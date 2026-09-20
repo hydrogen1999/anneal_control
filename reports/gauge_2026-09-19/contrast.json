@@ -1,0 +1,154 @@
+{
+  "schema_version": 1,
+  "source": "/home/nguyencongt/runs/gauge_run/paper/results.json",
+  "modes": {
+    "bank": {
+      "contrast_matrix": {
+        "schema_version": 2,
+        "mode": "bank",
+        "key": "loss",
+        "methods": [
+          "gauge_augmented",
+          "signed_baseline"
+        ],
+        "n_comparisons": 1,
+        "alpha": 0.05,
+        "correction": "holm",
+        "pairs": [
+          {
+            "schema_version": 2,
+            "method_a": "gauge_augmented",
+            "method_b": "signed_baseline",
+            "mode": "bank",
+            "key": "loss",
+            "n_parents": 48,
+            "mean_a": 0.5521722332860471,
+            "mean_b": 0.5453468962533674,
+            "mean_difference": -0.00682533703267976,
+            "std_difference": 0.02170930206106107,
+            "parents_favouring_b": 27,
+            "ci_low": -0.01328545614759495,
+            "ci_high": -0.00115362197345567,
+            "p_value": 0.028198590070496476,
+            "p_value_method": "centered_null_bootstrap_absolute_mean",
+            "p_value_scope": "approximate; conditional on observed training seeds",
+            "status": "ok",
+            "confidence": 0.95,
+            "resamples": 20000,
+            "separated": true,
+            "better": "signed_baseline",
+            "unit_of_independence": "logical_parent",
+            "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+            "correction": "none",
+            "scope": "paired on the parent, conditional on observed training seeds; CI is pointwise and uncorrected for multiplicity; see contrast_matrix for the family-corrected decision; failure to separate is not equivalence",
+            "p_value_holm": 0.028198590070496476,
+            "separated_after_correction": true
+          }
+        ],
+        "ranked_by_mean": [
+          "signed_baseline",
+          "gauge_augmented"
+        ],
+        "nonseparated_maximal_sets": [
+          [
+            "gauge_augmented"
+          ],
+          [
+            "signed_baseline"
+          ]
+        ],
+        "indistinguishable_groups": [
+          [
+            "gauge_augmented"
+          ],
+          [
+            "signed_baseline"
+          ]
+        ],
+        "deprecated_fields": {
+          "indistinguishable_groups": "use nonseparated_maximal_sets; not equivalence"
+        },
+        "n_separated_after_correction": 1,
+        "scope": "a pair is called separated only after Holm correction of approximate centered-null bootstrap p-values over these 1 comparisons and a pointwise CI excluding zero; CIs are not simultaneous; conditional on observed training seeds; failing to separate is not evidence of equality; the pooled embedding-information contrast is outside this correction family"
+      },
+      "embedding_information": {
+        "status": "unavailable",
+        "reason": "none of the blind encoders ('logical',) appear in mode 'bank'"
+      }
+    },
+    "direct": {
+      "contrast_matrix": {
+        "schema_version": 2,
+        "mode": "direct",
+        "key": "loss",
+        "methods": [
+          "gauge_augmented",
+          "signed_baseline"
+        ],
+        "n_comparisons": 1,
+        "alpha": 0.05,
+        "correction": "holm",
+        "pairs": [
+          {
+            "schema_version": 2,
+            "method_a": "gauge_augmented",
+            "method_b": "signed_baseline",
+            "mode": "direct",
+            "key": "loss",
+            "n_parents": 48,
+            "mean_a": 0.5976790673094122,
+            "mean_b": 0.5901755966179918,
+            "mean_difference": -0.00750347069142047,
+            "std_difference": 0.023627901027187762,
+            "parents_favouring_b": 31,
+            "ci_low": -0.014175125408120846,
+            "ci_high": -0.0008251995735935634,
+            "p_value": 0.027898605069746514,
+            "p_value_method": "centered_null_bootstrap_absolute_mean",
+            "p_value_scope": "approximate; conditional on observed training seeds",
+            "status": "ok",
+            "confidence": 0.95,
+            "resamples": 20000,
+            "separated": true,
+            "better": "signed_baseline",
+            "unit_of_independence": "logical_parent",
+            "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+            "correction": "none",
+            "scope": "paired on the parent, conditional on observed training seeds; CI is pointwise and uncorrected for multiplicity; see contrast_matrix for the family-corrected decision; failure to separate is not equivalence",
+            "p_value_holm": 0.027898605069746514,
+            "separated_after_correction": true
+          }
+        ],
+        "ranked_by_mean": [
+          "signed_baseline",
+          "gauge_augmented"
+        ],
+        "nonseparated_maximal_sets": [
+          [
+            "gauge_augmented"
+          ],
+          [
+            "signed_baseline"
+          ]
+        ],
+        "indistinguishable_groups": [
+          [
+            "gauge_augmented"
+          ],
+          [
+            "signed_baseline"
+          ]
+        ],
+        "deprecated_fields": {
+          "indistinguishable_groups": "use nonseparated_maximal_sets; not equivalence"
+        },
+        "n_separated_after_correction": 1,
+        "scope": "a pair is called separated only after Holm correction of approximate centered-null bootstrap p-values over these 1 comparisons and a pointwise CI excluding zero; CIs are not simultaneous; conditional on observed training seeds; failing to separate is not evidence of equality; the pooled embedding-information contrast is outside this correction family"
+      },
+      "embedding_information": {
+        "status": "unavailable",
+        "reason": "none of the blind encoders ('logical',) appear in mode 'direct'"
+      }
+    }
+  }
+}
