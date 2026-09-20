@@ -98,6 +98,34 @@ an undifferentiated blob of 64: a small designed core does most of the work,
 which is why a fixed menu is worth so much less than an instance-specific
 search of comparable size.
 
+### The same axis on real connectivity
+
+Three `summary` checkpoints, 48 held-out Pegasus parents:
+
+| what the critic may choose from | mean gain over linear | seeds separating |
+|---|---:|---:|
+| its own proposals only | −0.00119 | **0 / 3** |
+| + the linear ramp | −0.01139 | 2 / 3 |
+| + the designed library (8) | **−0.03132** | **3 / 3** |
+| the full 64-candidate bank | −0.08631 | 3 / 3 (48/48 each) |
+
+Monotone again, and starker: proposal-only separates from a linear ramp on
+**none** of the three seeds, the designed pool on **all three**.
+
+Seed 1 is the clearest single case in the study. Its policy was the worst of
+the three — proposal-only **+0.00230**, i.e. losing to the ramp. The critic
+fired the fallback on **55.4 %** of records, rescued **24 parents**, and the
+pool finished at **−0.05080 [−0.06289, −0.03906] on 46 of 48**. The fallback
+rate is not a constant being tuned: it ranges 16 – 55 % across three seeds of
+the same configuration, tracking how bad that seed's generator is. When the
+proposal is good the critic keeps it; when it is bad the critic routes around
+it.
+
+That is the property worth putting in the paper. It is not "the policy works"
+— on Pegasus, alone, it does not. It is that **a critic good enough to rank a
+library is also good enough to know when its own generator should be
+overruled**, and the two capabilities come from the same trained model.
+
 ### The no-harm property is structural, and only for the smallest pool
 
 Linear-only harmed **zero** parents in 384 parent-seed cells. The designed

@@ -1,0 +1,5804 @@
+{
+  "schema_version": 1,
+  "checkpoint": "/home/nguyencongt/runs/pegasus240_exp/models/summary/seed_2/best.pt",
+  "split": "test",
+  "cost_class": "amortised",
+  "pool_prefixes": [
+    "linear",
+    "one_window",
+    "two_window",
+    "pause"
+  ],
+  "n_records": 576,
+  "n_parents": 48,
+  "n_infeasible": 0,
+  "fallback_rate_records": 0.1597222222222222,
+  "proposal_only_vs_linear": {
+    "mean": 0.0030165461984943023,
+    "ci": [
+      -0.01004351890893224,
+      0.016548960725776902
+    ],
+    "parents_beaten": 22
+  },
+  "pool_vs_linear": {
+    "mean": -0.015770810592059967,
+    "ci": [
+      -0.027817599266536253,
+      -0.0033969792672872887
+    ],
+    "parents_beaten": 29
+  },
+  "pool_vs_proposal_only": {
+    "mean": -0.018787356790554266,
+    "ci": [
+      -0.032398260990246126,
+      -0.007371252734818556
+    ]
+  },
+  "parents_rescued": 7,
+  "parents_harmed": 0,
+  "rows": [
+    {
+      "record_id": "parent_0000_e0_k0_t0",
+      "parent_id": "parent_0000",
+      "runtime": 4.0,
+      "linear_loss": 0.921120486460896,
+      "proposal_only_loss": 0.912403861158493,
+      "pool_loss": 0.912403861158493,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0000_e0_k0_t1",
+      "parent_id": "parent_0000",
+      "runtime": 12.0,
+      "linear_loss": 0.8047950232112346,
+      "proposal_only_loss": 0.8349801739693415,
+      "pool_loss": 0.8349801739693415,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0000_e0_k1_t0",
+      "parent_id": "parent_0000",
+      "runtime": 4.0,
+      "linear_loss": 0.9356741490589005,
+      "proposal_only_loss": 0.9217823923908656,
+      "pool_loss": 0.9202341854949654,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0000_e0_k1_t1",
+      "parent_id": "parent_0000",
+      "runtime": 12.0,
+      "linear_loss": 0.8552766727910208,
+      "proposal_only_loss": 0.8833025034525597,
+      "pool_loss": 0.8833025034525597,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0000_e0_k2_t0",
+      "parent_id": "parent_0000",
+      "runtime": 4.0,
+      "linear_loss": 0.9536345499056915,
+      "proposal_only_loss": 0.9465407312141585,
+      "pool_loss": 0.9465407312141585,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0000_e0_k2_t1",
+      "parent_id": "parent_0000",
+      "runtime": 12.0,
+      "linear_loss": 0.9093112720699019,
+      "proposal_only_loss": 0.9243096421880235,
+      "pool_loss": 0.9243096421880235,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0000_e1_k0_t0",
+      "parent_id": "parent_0000",
+      "runtime": 4.0,
+      "linear_loss": 0.9234925461717316,
+      "proposal_only_loss": 0.9122950408042858,
+      "pool_loss": 0.9122950408042858,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0000_e1_k0_t1",
+      "parent_id": "parent_0000",
+      "runtime": 12.0,
+      "linear_loss": 0.8043781657003954,
+      "proposal_only_loss": 0.860796128737567,
+      "pool_loss": 0.860796128737567,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0000_e1_k1_t0",
+      "parent_id": "parent_0000",
+      "runtime": 4.0,
+      "linear_loss": 0.9361966809865921,
+      "proposal_only_loss": 0.9229960211734579,
+      "pool_loss": 0.921132130519006,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0000_e1_k1_t1",
+      "parent_id": "parent_0000",
+      "runtime": 12.0,
+      "linear_loss": 0.8554944272242351,
+      "proposal_only_loss": 0.8819339753742753,
+      "pool_loss": 0.8819339753742753,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0000_e1_k2_t0",
+      "parent_id": "parent_0000",
+      "runtime": 4.0,
+      "linear_loss": 0.9537485663920006,
+      "proposal_only_loss": 0.9466997302508449,
+      "pool_loss": 0.9466997302508449,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0000_e1_k2_t1",
+      "parent_id": "parent_0000",
+      "runtime": 12.0,
+      "linear_loss": 0.909513482030753,
+      "proposal_only_loss": 0.9244236524474291,
+      "pool_loss": 0.9244236524474291,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0004_e0_k0_t0",
+      "parent_id": "parent_0004",
+      "runtime": 4.0,
+      "linear_loss": 0.9637317742031047,
+      "proposal_only_loss": 0.953103388251141,
+      "pool_loss": 0.953103388251141,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0004_e0_k0_t1",
+      "parent_id": "parent_0004",
+      "runtime": 12.0,
+      "linear_loss": 0.88709458831337,
+      "proposal_only_loss": 0.9066892131606357,
+      "pool_loss": 0.9066892131606357,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0004_e0_k1_t0",
+      "parent_id": "parent_0004",
+      "runtime": 4.0,
+      "linear_loss": 0.9709732994202986,
+      "proposal_only_loss": 0.9627158978917157,
+      "pool_loss": 0.9627158978917157,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0004_e0_k1_t1",
+      "parent_id": "parent_0004",
+      "runtime": 12.0,
+      "linear_loss": 0.9261499810323988,
+      "proposal_only_loss": 0.9518656646011322,
+      "pool_loss": 0.9518656646011322,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0004_e0_k2_t0",
+      "parent_id": "parent_0004",
+      "runtime": 4.0,
+      "linear_loss": 0.978359740988394,
+      "proposal_only_loss": 0.9759235365817915,
+      "pool_loss": 0.9771389331995725,
+      "chose_fallback": true,
+      "chosen_bank_id": "pause_1"
+    },
+    {
+      "record_id": "parent_0004_e0_k2_t1",
+      "parent_id": "parent_0004",
+      "runtime": 12.0,
+      "linear_loss": 0.9605314233576883,
+      "proposal_only_loss": 0.8911352567604891,
+      "pool_loss": 0.8911352567604891,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0004_e1_k0_t0",
+      "parent_id": "parent_0004",
+      "runtime": 4.0,
+      "linear_loss": 0.9636027960085756,
+      "proposal_only_loss": 0.9535392637040885,
+      "pool_loss": 0.9535392637040885,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0004_e1_k0_t1",
+      "parent_id": "parent_0004",
+      "runtime": 12.0,
+      "linear_loss": 0.8835675076380132,
+      "proposal_only_loss": 0.9059378197444753,
+      "pool_loss": 0.9059378197444753,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0004_e1_k1_t0",
+      "parent_id": "parent_0004",
+      "runtime": 4.0,
+      "linear_loss": 0.9707957294907522,
+      "proposal_only_loss": 0.9626569443141485,
+      "pool_loss": 0.9626569443141485,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0004_e1_k1_t1",
+      "parent_id": "parent_0004",
+      "runtime": 12.0,
+      "linear_loss": 0.9255086571939823,
+      "proposal_only_loss": 0.9527318794408214,
+      "pool_loss": 0.9527318794408214,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0004_e1_k2_t0",
+      "parent_id": "parent_0004",
+      "runtime": 4.0,
+      "linear_loss": 0.9783174741096409,
+      "proposal_only_loss": 0.9759471823218329,
+      "pool_loss": 0.9770791977105039,
+      "chose_fallback": true,
+      "chosen_bank_id": "pause_1"
+    },
+    {
+      "record_id": "parent_0004_e1_k2_t1",
+      "parent_id": "parent_0004",
+      "runtime": 12.0,
+      "linear_loss": 0.9604270985943176,
+      "proposal_only_loss": 0.8916581986830898,
+      "pool_loss": 0.8916581986830898,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0009_e0_k0_t0",
+      "parent_id": "parent_0009",
+      "runtime": 4.0,
+      "linear_loss": 0.9291308886733126,
+      "proposal_only_loss": 0.8888959054751404,
+      "pool_loss": 0.8888959054751404,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0009_e0_k0_t1",
+      "parent_id": "parent_0009",
+      "runtime": 12.0,
+      "linear_loss": 0.6814242795318515,
+      "proposal_only_loss": 0.6314578114715251,
+      "pool_loss": 0.5812369875675905,
+      "chose_fallback": true,
+      "chosen_bank_id": "pause_1"
+    },
+    {
+      "record_id": "parent_0009_e0_k1_t0",
+      "parent_id": "parent_0009",
+      "runtime": 4.0,
+      "linear_loss": 0.9317348210789265,
+      "proposal_only_loss": 0.8864962493729791,
+      "pool_loss": 0.8864962493729791,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0009_e0_k1_t1",
+      "parent_id": "parent_0009",
+      "runtime": 12.0,
+      "linear_loss": 0.7576105625929891,
+      "proposal_only_loss": 0.6941042706577943,
+      "pool_loss": 0.6941042706577943,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0009_e0_k2_t0",
+      "parent_id": "parent_0009",
+      "runtime": 4.0,
+      "linear_loss": 0.9621749485683129,
+      "proposal_only_loss": 0.9425824830837058,
+      "pool_loss": 0.9425824830837058,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0009_e0_k2_t1",
+      "parent_id": "parent_0009",
+      "runtime": 12.0,
+      "linear_loss": 0.8923505966466123,
+      "proposal_only_loss": 0.9456939227125823,
+      "pool_loss": 0.9456939227125823,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0009_e1_k0_t0",
+      "parent_id": "parent_0009",
+      "runtime": 4.0,
+      "linear_loss": 0.9284468844345173,
+      "proposal_only_loss": 0.8872690924183975,
+      "pool_loss": 0.8872690924183975,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0009_e1_k0_t1",
+      "parent_id": "parent_0009",
+      "runtime": 12.0,
+      "linear_loss": 0.6805157719473609,
+      "proposal_only_loss": 0.6374571274415964,
+      "pool_loss": 0.5835996588992705,
+      "chose_fallback": true,
+      "chosen_bank_id": "pause_1"
+    },
+    {
+      "record_id": "parent_0009_e1_k1_t0",
+      "parent_id": "parent_0009",
+      "runtime": 4.0,
+      "linear_loss": 0.9319113074135801,
+      "proposal_only_loss": 0.8867949261996468,
+      "pool_loss": 0.8867949261996468,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0009_e1_k1_t1",
+      "parent_id": "parent_0009",
+      "runtime": 12.0,
+      "linear_loss": 0.7610097125893148,
+      "proposal_only_loss": 0.6984395478097406,
+      "pool_loss": 0.6984395478097406,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0009_e1_k2_t0",
+      "parent_id": "parent_0009",
+      "runtime": 4.0,
+      "linear_loss": 0.9622512449630414,
+      "proposal_only_loss": 0.942745950765363,
+      "pool_loss": 0.942745950765363,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0009_e1_k2_t1",
+      "parent_id": "parent_0009",
+      "runtime": 12.0,
+      "linear_loss": 0.8926958487463478,
+      "proposal_only_loss": 0.9457727183786101,
+      "pool_loss": 0.9457727183786101,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0012_e0_k0_t0",
+      "parent_id": "parent_0012",
+      "runtime": 4.0,
+      "linear_loss": 0.9269424122722723,
+      "proposal_only_loss": 0.9015289240612172,
+      "pool_loss": 0.9015289240612172,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0012_e0_k0_t1",
+      "parent_id": "parent_0012",
+      "runtime": 12.0,
+      "linear_loss": 0.8179560451634,
+      "proposal_only_loss": 0.8413002866031147,
+      "pool_loss": 0.8413002866031147,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0012_e0_k1_t0",
+      "parent_id": "parent_0012",
+      "runtime": 4.0,
+      "linear_loss": 0.9203083775225808,
+      "proposal_only_loss": 0.88147700539156,
+      "pool_loss": 0.88147700539156,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0012_e0_k1_t1",
+      "parent_id": "parent_0012",
+      "runtime": 12.0,
+      "linear_loss": 0.810177821601797,
+      "proposal_only_loss": 0.8219351056069577,
+      "pool_loss": 0.8219351056069577,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0012_e0_k2_t0",
+      "parent_id": "parent_0012",
+      "runtime": 4.0,
+      "linear_loss": 0.9412919997490068,
+      "proposal_only_loss": 0.9249285805489441,
+      "pool_loss": 0.9249285805489441,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0012_e0_k2_t1",
+      "parent_id": "parent_0012",
+      "runtime": 12.0,
+      "linear_loss": 0.8794243375869673,
+      "proposal_only_loss": 0.8875616778143849,
+      "pool_loss": 0.8875616778143849,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0012_e1_k0_t0",
+      "parent_id": "parent_0012",
+      "runtime": 4.0,
+      "linear_loss": 0.9263025962462468,
+      "proposal_only_loss": 0.8989504113216913,
+      "pool_loss": 0.8989504113216913,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0012_e1_k0_t1",
+      "parent_id": "parent_0012",
+      "runtime": 12.0,
+      "linear_loss": 0.8174116792808652,
+      "proposal_only_loss": 0.8428200536976445,
+      "pool_loss": 0.8428200536976445,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0012_e1_k1_t0",
+      "parent_id": "parent_0012",
+      "runtime": 4.0,
+      "linear_loss": 0.9201190415473761,
+      "proposal_only_loss": 0.8782121008069553,
+      "pool_loss": 0.8782121008069553,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0012_e1_k1_t1",
+      "parent_id": "parent_0012",
+      "runtime": 12.0,
+      "linear_loss": 0.8098042494568436,
+      "proposal_only_loss": 0.8200406915471796,
+      "pool_loss": 0.8200406915471796,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0012_e1_k2_t0",
+      "parent_id": "parent_0012",
+      "runtime": 4.0,
+      "linear_loss": 0.9412160845332237,
+      "proposal_only_loss": 0.915484016003413,
+      "pool_loss": 0.915484016003413,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0012_e1_k2_t1",
+      "parent_id": "parent_0012",
+      "runtime": 12.0,
+      "linear_loss": 0.879210882815191,
+      "proposal_only_loss": 0.8891707632279031,
+      "pool_loss": 0.8891707632279031,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0017_e0_k0_t0",
+      "parent_id": "parent_0017",
+      "runtime": 4.0,
+      "linear_loss": 0.8765828097849301,
+      "proposal_only_loss": 0.7937843782427245,
+      "pool_loss": 0.7937843782427245,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0017_e0_k0_t1",
+      "parent_id": "parent_0017",
+      "runtime": 12.0,
+      "linear_loss": 0.6665570650595155,
+      "proposal_only_loss": 0.668082283546922,
+      "pool_loss": 0.668082283546922,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0017_e0_k1_t0",
+      "parent_id": "parent_0017",
+      "runtime": 4.0,
+      "linear_loss": 0.8997802613795085,
+      "proposal_only_loss": 0.8375478658931741,
+      "pool_loss": 0.8375478658931741,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0017_e0_k1_t1",
+      "parent_id": "parent_0017",
+      "runtime": 12.0,
+      "linear_loss": 0.7178356940427592,
+      "proposal_only_loss": 0.6812519246127977,
+      "pool_loss": 0.6812519246127977,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0017_e0_k2_t0",
+      "parent_id": "parent_0017",
+      "runtime": 4.0,
+      "linear_loss": 0.9359390344583098,
+      "proposal_only_loss": 0.9004012680841853,
+      "pool_loss": 0.9004012680841853,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0017_e0_k2_t1",
+      "parent_id": "parent_0017",
+      "runtime": 12.0,
+      "linear_loss": 0.8457003912665613,
+      "proposal_only_loss": 0.8371906800863751,
+      "pool_loss": 0.8371906800863751,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0017_e1_k0_t0",
+      "parent_id": "parent_0017",
+      "runtime": 4.0,
+      "linear_loss": 0.877876448477587,
+      "proposal_only_loss": 0.7875452734913071,
+      "pool_loss": 0.7875452734913071,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0017_e1_k0_t1",
+      "parent_id": "parent_0017",
+      "runtime": 12.0,
+      "linear_loss": 0.6532100195462512,
+      "proposal_only_loss": 0.6755159942992892,
+      "pool_loss": 0.6755159942992892,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0017_e1_k1_t0",
+      "parent_id": "parent_0017",
+      "runtime": 4.0,
+      "linear_loss": 0.8993132896064546,
+      "proposal_only_loss": 0.838508990014601,
+      "pool_loss": 0.838508990014601,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0017_e1_k1_t1",
+      "parent_id": "parent_0017",
+      "runtime": 12.0,
+      "linear_loss": 0.7116156800846867,
+      "proposal_only_loss": 0.6833757345637914,
+      "pool_loss": 0.6833757345637914,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0017_e1_k2_t0",
+      "parent_id": "parent_0017",
+      "runtime": 4.0,
+      "linear_loss": 0.9358182020787167,
+      "proposal_only_loss": 0.900778818336063,
+      "pool_loss": 0.900778818336063,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0017_e1_k2_t1",
+      "parent_id": "parent_0017",
+      "runtime": 12.0,
+      "linear_loss": 0.8449393248972226,
+      "proposal_only_loss": 0.8375251406549167,
+      "pool_loss": 0.8375251406549167,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0019_e0_k0_t0",
+      "parent_id": "parent_0019",
+      "runtime": 4.0,
+      "linear_loss": 0.8838506241687147,
+      "proposal_only_loss": 0.7528863631258872,
+      "pool_loss": 0.7528863631258872,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0019_e0_k0_t1",
+      "parent_id": "parent_0019",
+      "runtime": 12.0,
+      "linear_loss": 0.5886832213468268,
+      "proposal_only_loss": 0.6553453873736527,
+      "pool_loss": 0.6553453873736527,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0019_e0_k1_t0",
+      "parent_id": "parent_0019",
+      "runtime": 4.0,
+      "linear_loss": 0.90516920361593,
+      "proposal_only_loss": 0.8690244556703622,
+      "pool_loss": 0.8690244556703622,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0019_e0_k1_t1",
+      "parent_id": "parent_0019",
+      "runtime": 12.0,
+      "linear_loss": 0.6830157976094368,
+      "proposal_only_loss": 0.6751788441282485,
+      "pool_loss": 0.6751788441282485,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0019_e0_k2_t0",
+      "parent_id": "parent_0019",
+      "runtime": 4.0,
+      "linear_loss": 0.94496393339911,
+      "proposal_only_loss": 0.9362311324576453,
+      "pool_loss": 0.9362311324576453,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0019_e0_k2_t1",
+      "parent_id": "parent_0019",
+      "runtime": 12.0,
+      "linear_loss": 0.8334589207689842,
+      "proposal_only_loss": 0.8766267964860557,
+      "pool_loss": 0.8766267964860557,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0019_e1_k0_t0",
+      "parent_id": "parent_0019",
+      "runtime": 4.0,
+      "linear_loss": 0.8872117336678061,
+      "proposal_only_loss": 0.7279748430633912,
+      "pool_loss": 0.7279748430633912,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0019_e1_k0_t1",
+      "parent_id": "parent_0019",
+      "runtime": 12.0,
+      "linear_loss": 0.5816152943627375,
+      "proposal_only_loss": 0.8764458000847057,
+      "pool_loss": 0.8764458000847057,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0019_e1_k1_t0",
+      "parent_id": "parent_0019",
+      "runtime": 4.0,
+      "linear_loss": 0.9058336224864416,
+      "proposal_only_loss": 0.8664331151833014,
+      "pool_loss": 0.8664331151833014,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0019_e1_k1_t1",
+      "parent_id": "parent_0019",
+      "runtime": 12.0,
+      "linear_loss": 0.6809278427332649,
+      "proposal_only_loss": 0.6763725390376596,
+      "pool_loss": 0.6763725390376596,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0019_e1_k2_t0",
+      "parent_id": "parent_0019",
+      "runtime": 4.0,
+      "linear_loss": 0.9452178930044813,
+      "proposal_only_loss": 0.9364659954135678,
+      "pool_loss": 0.9364659954135678,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0019_e1_k2_t1",
+      "parent_id": "parent_0019",
+      "runtime": 12.0,
+      "linear_loss": 0.8325142614513531,
+      "proposal_only_loss": 0.8725560496952542,
+      "pool_loss": 0.8725560496952542,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0020_e0_k0_t0",
+      "parent_id": "parent_0020",
+      "runtime": 4.0,
+      "linear_loss": 0.9851396425486897,
+      "proposal_only_loss": 0.987966273425757,
+      "pool_loss": 0.987966273425757,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0020_e0_k0_t1",
+      "parent_id": "parent_0020",
+      "runtime": 12.0,
+      "linear_loss": 0.9415740551186673,
+      "proposal_only_loss": 0.91291720180056,
+      "pool_loss": 0.91291720180056,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0020_e0_k1_t0",
+      "parent_id": "parent_0020",
+      "runtime": 4.0,
+      "linear_loss": 0.9867833372469511,
+      "proposal_only_loss": 0.9873037375760823,
+      "pool_loss": 0.9866787953453198,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0020_e0_k1_t1",
+      "parent_id": "parent_0020",
+      "runtime": 12.0,
+      "linear_loss": 0.9622678483485833,
+      "proposal_only_loss": 0.9215664266757377,
+      "pool_loss": 0.9215664266757377,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0020_e0_k2_t0",
+      "parent_id": "parent_0020",
+      "runtime": 4.0,
+      "linear_loss": 0.9904032332869491,
+      "proposal_only_loss": 0.9914641302442715,
+      "pool_loss": 0.9920455126559886,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0020_e0_k2_t1",
+      "parent_id": "parent_0020",
+      "runtime": 12.0,
+      "linear_loss": 0.9797793783962079,
+      "proposal_only_loss": 0.9871209496749102,
+      "pool_loss": 0.9871209496749102,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0020_e1_k0_t0",
+      "parent_id": "parent_0020",
+      "runtime": 4.0,
+      "linear_loss": 0.9860523502057134,
+      "proposal_only_loss": 0.9886946406166081,
+      "pool_loss": 0.9886946406166081,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0020_e1_k0_t1",
+      "parent_id": "parent_0020",
+      "runtime": 12.0,
+      "linear_loss": 0.939505411657511,
+      "proposal_only_loss": 0.9132256895316596,
+      "pool_loss": 0.9132256895316596,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0020_e1_k1_t0",
+      "parent_id": "parent_0020",
+      "runtime": 4.0,
+      "linear_loss": 0.9870384089392679,
+      "proposal_only_loss": 0.9874827554203494,
+      "pool_loss": 0.9866757331192161,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0020_e1_k1_t1",
+      "parent_id": "parent_0020",
+      "runtime": 12.0,
+      "linear_loss": 0.9616641256361427,
+      "proposal_only_loss": 0.9259536300068896,
+      "pool_loss": 0.9259536300068896,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0020_e1_k2_t0",
+      "parent_id": "parent_0020",
+      "runtime": 4.0,
+      "linear_loss": 0.9904663917504437,
+      "proposal_only_loss": 0.9915581665561435,
+      "pool_loss": 0.9920465218189946,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0020_e1_k2_t1",
+      "parent_id": "parent_0020",
+      "runtime": 12.0,
+      "linear_loss": 0.9796820360611138,
+      "proposal_only_loss": 0.9872602995167734,
+      "pool_loss": 0.9872602995167734,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0039_e0_k0_t0",
+      "parent_id": "parent_0039",
+      "runtime": 4.0,
+      "linear_loss": 0.936701960155937,
+      "proposal_only_loss": 0.9634739066418353,
+      "pool_loss": 0.9634739066418353,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0039_e0_k0_t1",
+      "parent_id": "parent_0039",
+      "runtime": 12.0,
+      "linear_loss": 0.889785747439094,
+      "proposal_only_loss": 0.9378366258330472,
+      "pool_loss": 0.9378366258330472,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0039_e0_k1_t0",
+      "parent_id": "parent_0039",
+      "runtime": 4.0,
+      "linear_loss": 0.9418926045005278,
+      "proposal_only_loss": 0.9541362543653824,
+      "pool_loss": 0.9541362543653824,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0039_e0_k1_t1",
+      "parent_id": "parent_0039",
+      "runtime": 12.0,
+      "linear_loss": 0.8998671546489578,
+      "proposal_only_loss": 0.9389750171652861,
+      "pool_loss": 0.9389750171652861,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0039_e0_k2_t0",
+      "parent_id": "parent_0039",
+      "runtime": 4.0,
+      "linear_loss": 0.9540300846517046,
+      "proposal_only_loss": 0.9457204733124014,
+      "pool_loss": 0.9457204733124014,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0039_e0_k2_t1",
+      "parent_id": "parent_0039",
+      "runtime": 12.0,
+      "linear_loss": 0.9269585401910824,
+      "proposal_only_loss": 0.921498677458376,
+      "pool_loss": 0.921498677458376,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0039_e1_k0_t0",
+      "parent_id": "parent_0039",
+      "runtime": 4.0,
+      "linear_loss": 0.936053117340942,
+      "proposal_only_loss": 0.9660938100808628,
+      "pool_loss": 0.9660938100808628,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0039_e1_k0_t1",
+      "parent_id": "parent_0039",
+      "runtime": 12.0,
+      "linear_loss": 0.8905158803159439,
+      "proposal_only_loss": 0.9423952673342626,
+      "pool_loss": 0.9423952673342626,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0039_e1_k1_t0",
+      "parent_id": "parent_0039",
+      "runtime": 4.0,
+      "linear_loss": 0.9417224554202227,
+      "proposal_only_loss": 0.9555924266937743,
+      "pool_loss": 0.9555924266937743,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0039_e1_k1_t1",
+      "parent_id": "parent_0039",
+      "runtime": 12.0,
+      "linear_loss": 0.9008971399257113,
+      "proposal_only_loss": 0.948408240376032,
+      "pool_loss": 0.948408240376032,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0039_e1_k2_t0",
+      "parent_id": "parent_0039",
+      "runtime": 4.0,
+      "linear_loss": 0.9539826829530593,
+      "proposal_only_loss": 0.945959790381904,
+      "pool_loss": 0.945959790381904,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0039_e1_k2_t1",
+      "parent_id": "parent_0039",
+      "runtime": 12.0,
+      "linear_loss": 0.9274255837346932,
+      "proposal_only_loss": 0.9227100866518866,
+      "pool_loss": 0.9227100866518866,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0043_e0_k0_t0",
+      "parent_id": "parent_0043",
+      "runtime": 4.0,
+      "linear_loss": 0.9453924031260135,
+      "proposal_only_loss": 0.9123162570819598,
+      "pool_loss": 0.9123162570819598,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0043_e0_k0_t1",
+      "parent_id": "parent_0043",
+      "runtime": 12.0,
+      "linear_loss": 0.8099324120752343,
+      "proposal_only_loss": 0.9184599773498338,
+      "pool_loss": 0.9184599773498338,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0043_e0_k1_t0",
+      "parent_id": "parent_0043",
+      "runtime": 4.0,
+      "linear_loss": 0.9462321632441538,
+      "proposal_only_loss": 0.936890839662754,
+      "pool_loss": 0.936890839662754,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0043_e0_k1_t1",
+      "parent_id": "parent_0043",
+      "runtime": 12.0,
+      "linear_loss": 0.8544202857800685,
+      "proposal_only_loss": 0.9109999061798371,
+      "pool_loss": 0.9109999061798371,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0043_e0_k2_t0",
+      "parent_id": "parent_0043",
+      "runtime": 4.0,
+      "linear_loss": 0.9615142227789006,
+      "proposal_only_loss": 0.9567463500006019,
+      "pool_loss": 0.9567463500006019,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0043_e0_k2_t1",
+      "parent_id": "parent_0043",
+      "runtime": 12.0,
+      "linear_loss": 0.9156730378681621,
+      "proposal_only_loss": 0.9402999859921815,
+      "pool_loss": 0.9402999859921815,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0043_e1_k0_t0",
+      "parent_id": "parent_0043",
+      "runtime": 4.0,
+      "linear_loss": 0.9453629355874692,
+      "proposal_only_loss": 0.9124403599998522,
+      "pool_loss": 0.9124403599998522,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0043_e1_k0_t1",
+      "parent_id": "parent_0043",
+      "runtime": 12.0,
+      "linear_loss": 0.8100574243199576,
+      "proposal_only_loss": 0.9186222184380544,
+      "pool_loss": 0.9186222184380544,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0043_e1_k1_t0",
+      "parent_id": "parent_0043",
+      "runtime": 4.0,
+      "linear_loss": 0.9462235563251247,
+      "proposal_only_loss": 0.9369610865561726,
+      "pool_loss": 0.9369610865561726,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0043_e1_k1_t1",
+      "parent_id": "parent_0043",
+      "runtime": 12.0,
+      "linear_loss": 0.8544579454796368,
+      "proposal_only_loss": 0.9110442440631479,
+      "pool_loss": 0.9110442440631479,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0043_e1_k2_t0",
+      "parent_id": "parent_0043",
+      "runtime": 4.0,
+      "linear_loss": 0.9615123567088973,
+      "proposal_only_loss": 0.9567556914225737,
+      "pool_loss": 0.9567556914225737,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0043_e1_k2_t1",
+      "parent_id": "parent_0043",
+      "runtime": 12.0,
+      "linear_loss": 0.9156795122574063,
+      "proposal_only_loss": 0.940336354061215,
+      "pool_loss": 0.940336354061215,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0046_e0_k0_t0",
+      "parent_id": "parent_0046",
+      "runtime": 4.0,
+      "linear_loss": 0.6772629515554264,
+      "proposal_only_loss": 0.5206161445266915,
+      "pool_loss": 0.5206161445266915,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0046_e0_k0_t1",
+      "parent_id": "parent_0046",
+      "runtime": 12.0,
+      "linear_loss": 0.29545394909329015,
+      "proposal_only_loss": 0.6340182373752203,
+      "pool_loss": 0.6340182373752203,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0046_e0_k1_t0",
+      "parent_id": "parent_0046",
+      "runtime": 4.0,
+      "linear_loss": 0.6096269380073946,
+      "proposal_only_loss": 0.4317360676054893,
+      "pool_loss": 0.4317360676054893,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0046_e0_k1_t1",
+      "parent_id": "parent_0046",
+      "runtime": 12.0,
+      "linear_loss": 0.14782891614323668,
+      "proposal_only_loss": 0.7610833821020813,
+      "pool_loss": 0.1507754136689543,
+      "chose_fallback": true,
+      "chosen_bank_id": "pause_1"
+    },
+    {
+      "record_id": "parent_0046_e0_k2_t0",
+      "parent_id": "parent_0046",
+      "runtime": 4.0,
+      "linear_loss": 0.6089508251026399,
+      "proposal_only_loss": 0.502424355615006,
+      "pool_loss": 0.4401363679847302,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0046_e0_k2_t1",
+      "parent_id": "parent_0046",
+      "runtime": 12.0,
+      "linear_loss": 0.2461413347021234,
+      "proposal_only_loss": 0.5888826124427705,
+      "pool_loss": 0.07862097115141098,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0046_e1_k0_t0",
+      "parent_id": "parent_0046",
+      "runtime": 4.0,
+      "linear_loss": 0.6767842600108824,
+      "proposal_only_loss": 0.5067626225095997,
+      "pool_loss": 0.5067626225095997,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0046_e1_k0_t1",
+      "parent_id": "parent_0046",
+      "runtime": 12.0,
+      "linear_loss": 0.2820358725212908,
+      "proposal_only_loss": 0.6620154010590489,
+      "pool_loss": 0.6620154010590489,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0046_e1_k1_t0",
+      "parent_id": "parent_0046",
+      "runtime": 4.0,
+      "linear_loss": 0.6092615827159887,
+      "proposal_only_loss": 0.4277435340625546,
+      "pool_loss": 0.4277435340625546,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0046_e1_k1_t1",
+      "parent_id": "parent_0046",
+      "runtime": 12.0,
+      "linear_loss": 0.14344948858233542,
+      "proposal_only_loss": 0.7672062451444975,
+      "pool_loss": 0.157959522552495,
+      "chose_fallback": true,
+      "chosen_bank_id": "pause_1"
+    },
+    {
+      "record_id": "parent_0046_e1_k2_t0",
+      "parent_id": "parent_0046",
+      "runtime": 4.0,
+      "linear_loss": 0.6082716983960124,
+      "proposal_only_loss": 0.49927666371150214,
+      "pool_loss": 0.43806958078558256,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0046_e1_k2_t1",
+      "parent_id": "parent_0046",
+      "runtime": 12.0,
+      "linear_loss": 0.24377758511016134,
+      "proposal_only_loss": 0.5975163407461608,
+      "pool_loss": 0.07683371936580308,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0051_e0_k0_t0",
+      "parent_id": "parent_0051",
+      "runtime": 4.0,
+      "linear_loss": 0.7594069552821272,
+      "proposal_only_loss": 0.6213388125474282,
+      "pool_loss": 0.6213388125474282,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0051_e0_k0_t1",
+      "parent_id": "parent_0051",
+      "runtime": 12.0,
+      "linear_loss": 0.6065107298589058,
+      "proposal_only_loss": 0.7471813586077607,
+      "pool_loss": 0.7471813586077607,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0051_e0_k1_t0",
+      "parent_id": "parent_0051",
+      "runtime": 4.0,
+      "linear_loss": 0.8203754219319914,
+      "proposal_only_loss": 0.6568199222435758,
+      "pool_loss": 0.6568199222435758,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0051_e0_k1_t1",
+      "parent_id": "parent_0051",
+      "runtime": 12.0,
+      "linear_loss": 0.660375896973853,
+      "proposal_only_loss": 0.7489628202487906,
+      "pool_loss": 0.7489628202487906,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0051_e0_k2_t0",
+      "parent_id": "parent_0051",
+      "runtime": 4.0,
+      "linear_loss": 0.8782510271134776,
+      "proposal_only_loss": 0.7427283764313128,
+      "pool_loss": 0.7427283764313128,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0051_e0_k2_t1",
+      "parent_id": "parent_0051",
+      "runtime": 12.0,
+      "linear_loss": 0.7680800055383519,
+      "proposal_only_loss": 0.7026452359978453,
+      "pool_loss": 0.7026452359978453,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0051_e1_k0_t0",
+      "parent_id": "parent_0051",
+      "runtime": 4.0,
+      "linear_loss": 0.759529142233627,
+      "proposal_only_loss": 0.6211234885521889,
+      "pool_loss": 0.6211234885521889,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0051_e1_k0_t1",
+      "parent_id": "parent_0051",
+      "runtime": 12.0,
+      "linear_loss": 0.6082509589533378,
+      "proposal_only_loss": 0.7533337327761995,
+      "pool_loss": 0.7533337327761995,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0051_e1_k1_t0",
+      "parent_id": "parent_0051",
+      "runtime": 4.0,
+      "linear_loss": 0.8205674791950376,
+      "proposal_only_loss": 0.6562245780817059,
+      "pool_loss": 0.6562245780817059,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0051_e1_k1_t1",
+      "parent_id": "parent_0051",
+      "runtime": 12.0,
+      "linear_loss": 0.6611429583162942,
+      "proposal_only_loss": 0.7490760950711638,
+      "pool_loss": 0.7490760950711638,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0051_e1_k2_t0",
+      "parent_id": "parent_0051",
+      "runtime": 4.0,
+      "linear_loss": 0.8782923342527252,
+      "proposal_only_loss": 0.7429233659353272,
+      "pool_loss": 0.7429233659353272,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0051_e1_k2_t1",
+      "parent_id": "parent_0051",
+      "runtime": 12.0,
+      "linear_loss": 0.7682399537200884,
+      "proposal_only_loss": 0.702760957129886,
+      "pool_loss": 0.702760957129886,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0062_e0_k0_t0",
+      "parent_id": "parent_0062",
+      "runtime": 4.0,
+      "linear_loss": 0.37574223578676436,
+      "proposal_only_loss": 0.24839933111927726,
+      "pool_loss": 0.24839933111927726,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0062_e0_k0_t1",
+      "parent_id": "parent_0062",
+      "runtime": 12.0,
+      "linear_loss": 0.1082840688438711,
+      "proposal_only_loss": 0.33877542488833035,
+      "pool_loss": 0.33877542488833035,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0062_e0_k1_t0",
+      "parent_id": "parent_0062",
+      "runtime": 4.0,
+      "linear_loss": 0.26525471369196896,
+      "proposal_only_loss": 0.18917913273188836,
+      "pool_loss": 0.18917913273188836,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0062_e0_k1_t1",
+      "parent_id": "parent_0062",
+      "runtime": 12.0,
+      "linear_loss": 0.010172183169507298,
+      "proposal_only_loss": 0.2378610213481972,
+      "pool_loss": 0.2378610213481972,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0062_e0_k2_t0",
+      "parent_id": "parent_0062",
+      "runtime": 4.0,
+      "linear_loss": 0.2720766942454589,
+      "proposal_only_loss": 0.27063091540941175,
+      "pool_loss": 0.27063091540941175,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0062_e0_k2_t1",
+      "parent_id": "parent_0062",
+      "runtime": 12.0,
+      "linear_loss": 0.03214278255017322,
+      "proposal_only_loss": 0.19448925112146842,
+      "pool_loss": 0.19448925112146842,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0062_e1_k0_t0",
+      "parent_id": "parent_0062",
+      "runtime": 4.0,
+      "linear_loss": 0.3739022480588552,
+      "proposal_only_loss": 0.24652546301196154,
+      "pool_loss": 0.24652546301196154,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0062_e1_k0_t1",
+      "parent_id": "parent_0062",
+      "runtime": 12.0,
+      "linear_loss": 0.10972141370547706,
+      "proposal_only_loss": 0.34077412480775904,
+      "pool_loss": 0.34077412480775904,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0062_e1_k1_t0",
+      "parent_id": "parent_0062",
+      "runtime": 4.0,
+      "linear_loss": 0.2623737183781427,
+      "proposal_only_loss": 0.18686789602736098,
+      "pool_loss": 0.18686789602736098,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0062_e1_k1_t1",
+      "parent_id": "parent_0062",
+      "runtime": 12.0,
+      "linear_loss": 0.008713547713596559,
+      "proposal_only_loss": 0.23686737455587337,
+      "pool_loss": 0.23686737455587337,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0062_e1_k2_t0",
+      "parent_id": "parent_0062",
+      "runtime": 4.0,
+      "linear_loss": 0.26958338567158224,
+      "proposal_only_loss": 0.2697653210685915,
+      "pool_loss": 0.2697653210685915,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0062_e1_k2_t1",
+      "parent_id": "parent_0062",
+      "runtime": 12.0,
+      "linear_loss": 0.030937202039623912,
+      "proposal_only_loss": 0.19136316711872836,
+      "pool_loss": 0.19136316711872836,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0065_e0_k0_t0",
+      "parent_id": "parent_0065",
+      "runtime": 4.0,
+      "linear_loss": 0.6747843697177882,
+      "proposal_only_loss": 0.5319015919479487,
+      "pool_loss": 0.5319015919479487,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0065_e0_k0_t1",
+      "parent_id": "parent_0065",
+      "runtime": 12.0,
+      "linear_loss": 0.2161741037751198,
+      "proposal_only_loss": 0.28719654827449115,
+      "pool_loss": 0.28719654827449115,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0065_e0_k1_t0",
+      "parent_id": "parent_0065",
+      "runtime": 4.0,
+      "linear_loss": 0.7382942078723599,
+      "proposal_only_loss": 0.6433676476217236,
+      "pool_loss": 0.6433676476217236,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0065_e0_k1_t1",
+      "parent_id": "parent_0065",
+      "runtime": 12.0,
+      "linear_loss": 0.385221614036825,
+      "proposal_only_loss": 0.17035202946718286,
+      "pool_loss": 0.17035202946718286,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0065_e0_k2_t0",
+      "parent_id": "parent_0065",
+      "runtime": 4.0,
+      "linear_loss": 0.8138951948588478,
+      "proposal_only_loss": 0.7357083882572103,
+      "pool_loss": 0.7357083882572103,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0065_e0_k2_t1",
+      "parent_id": "parent_0065",
+      "runtime": 12.0,
+      "linear_loss": 0.6522100646207873,
+      "proposal_only_loss": 0.5065477469740304,
+      "pool_loss": 0.5065477469740304,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0065_e1_k0_t0",
+      "parent_id": "parent_0065",
+      "runtime": 4.0,
+      "linear_loss": 0.677007316909239,
+      "proposal_only_loss": 0.5373567741402041,
+      "pool_loss": 0.5373567741402041,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0065_e1_k0_t1",
+      "parent_id": "parent_0065",
+      "runtime": 12.0,
+      "linear_loss": 0.21374333692933223,
+      "proposal_only_loss": 0.26552243725770786,
+      "pool_loss": 0.26552243725770786,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0065_e1_k1_t0",
+      "parent_id": "parent_0065",
+      "runtime": 4.0,
+      "linear_loss": 0.7384600709478487,
+      "proposal_only_loss": 0.6533618422253478,
+      "pool_loss": 0.6533618422253478,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0065_e1_k1_t1",
+      "parent_id": "parent_0065",
+      "runtime": 12.0,
+      "linear_loss": 0.38518069341805017,
+      "proposal_only_loss": 0.17973821078892938,
+      "pool_loss": 0.17973821078892938,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0065_e1_k2_t0",
+      "parent_id": "parent_0065",
+      "runtime": 4.0,
+      "linear_loss": 0.813922010165541,
+      "proposal_only_loss": 0.7367257898976789,
+      "pool_loss": 0.7367257898976789,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0065_e1_k2_t1",
+      "parent_id": "parent_0065",
+      "runtime": 12.0,
+      "linear_loss": 0.6522297975395565,
+      "proposal_only_loss": 0.5134634451838059,
+      "pool_loss": 0.5134634451838059,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0066_e0_k0_t0",
+      "parent_id": "parent_0066",
+      "runtime": 4.0,
+      "linear_loss": 0.20661545790048508,
+      "proposal_only_loss": 0.23070782942462809,
+      "pool_loss": 0.07013680186069593,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0066_e0_k0_t1",
+      "parent_id": "parent_0066",
+      "runtime": 12.0,
+      "linear_loss": 0.013881040942327338,
+      "proposal_only_loss": 0.14077394375338437,
+      "pool_loss": 0.013881040942327338,
+      "chose_fallback": true,
+      "chosen_bank_id": "linear"
+    },
+    {
+      "record_id": "parent_0066_e0_k1_t0",
+      "parent_id": "parent_0066",
+      "runtime": 4.0,
+      "linear_loss": 0.2223646372839303,
+      "proposal_only_loss": 0.5624023651948301,
+      "pool_loss": 0.19416833406837308,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0066_e0_k1_t1",
+      "parent_id": "parent_0066",
+      "runtime": 12.0,
+      "linear_loss": 0.017401705831633807,
+      "proposal_only_loss": 0.2834878768176854,
+      "pool_loss": 0.0213296276727315,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0066_e0_k2_t0",
+      "parent_id": "parent_0066",
+      "runtime": 4.0,
+      "linear_loss": 0.3725391019928921,
+      "proposal_only_loss": 0.23586739782857258,
+      "pool_loss": 0.23586739782857258,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0066_e0_k2_t1",
+      "parent_id": "parent_0066",
+      "runtime": 12.0,
+      "linear_loss": 0.07097944015267055,
+      "proposal_only_loss": 0.2877279128145174,
+      "pool_loss": 0.011430865734462947,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0066_e1_k0_t0",
+      "parent_id": "parent_0066",
+      "runtime": 4.0,
+      "linear_loss": 0.5339563419034004,
+      "proposal_only_loss": 0.29233107234850064,
+      "pool_loss": 0.29233107234850064,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0066_e1_k0_t1",
+      "parent_id": "parent_0066",
+      "runtime": 12.0,
+      "linear_loss": 0.16724375488155951,
+      "proposal_only_loss": 0.27461579499675737,
+      "pool_loss": 0.0854770266888748,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_2"
+    },
+    {
+      "record_id": "parent_0066_e1_k1_t0",
+      "parent_id": "parent_0066",
+      "runtime": 4.0,
+      "linear_loss": 0.4519855112299589,
+      "proposal_only_loss": 0.2070040972863968,
+      "pool_loss": 0.2070040972863968,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0066_e1_k1_t1",
+      "parent_id": "parent_0066",
+      "runtime": 12.0,
+      "linear_loss": 0.038422348062664646,
+      "proposal_only_loss": 0.26188031422274505,
+      "pool_loss": 0.09176862889198434,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_2"
+    },
+    {
+      "record_id": "parent_0066_e1_k2_t0",
+      "parent_id": "parent_0066",
+      "runtime": 4.0,
+      "linear_loss": 0.3772394128182297,
+      "proposal_only_loss": 0.2050322801391422,
+      "pool_loss": 0.2050322801391422,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0066_e1_k2_t1",
+      "parent_id": "parent_0066",
+      "runtime": 12.0,
+      "linear_loss": 0.058687597328230146,
+      "proposal_only_loss": 0.21354307058425992,
+      "pool_loss": 0.02295771223726617,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0083_e0_k0_t0",
+      "parent_id": "parent_0083",
+      "runtime": 4.0,
+      "linear_loss": 0.9266962301826386,
+      "proposal_only_loss": 0.8481356371677694,
+      "pool_loss": 0.8481356371677694,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0083_e0_k0_t1",
+      "parent_id": "parent_0083",
+      "runtime": 12.0,
+      "linear_loss": 0.8994706457427298,
+      "proposal_only_loss": 0.9001353838225375,
+      "pool_loss": 0.9001353838225375,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0083_e0_k1_t0",
+      "parent_id": "parent_0083",
+      "runtime": 4.0,
+      "linear_loss": 0.9568505474505874,
+      "proposal_only_loss": 0.8598926869190737,
+      "pool_loss": 0.8598926869190737,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0083_e0_k1_t1",
+      "parent_id": "parent_0083",
+      "runtime": 12.0,
+      "linear_loss": 0.9167253226574029,
+      "proposal_only_loss": 0.8947381316811507,
+      "pool_loss": 0.8947381316811507,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0083_e0_k2_t0",
+      "parent_id": "parent_0083",
+      "runtime": 4.0,
+      "linear_loss": 0.974559129569062,
+      "proposal_only_loss": 0.9382881278424993,
+      "pool_loss": 0.9382881278424993,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0083_e0_k2_t1",
+      "parent_id": "parent_0083",
+      "runtime": 12.0,
+      "linear_loss": 0.9488364453948457,
+      "proposal_only_loss": 0.9365242929842894,
+      "pool_loss": 0.9365242929842894,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0083_e1_k0_t0",
+      "parent_id": "parent_0083",
+      "runtime": 4.0,
+      "linear_loss": 0.9266937557542166,
+      "proposal_only_loss": 0.8481485608488134,
+      "pool_loss": 0.8481485608488134,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0083_e1_k0_t1",
+      "parent_id": "parent_0083",
+      "runtime": 12.0,
+      "linear_loss": 0.8994606164892669,
+      "proposal_only_loss": 0.9003486056934972,
+      "pool_loss": 0.9003486056934972,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0083_e1_k1_t0",
+      "parent_id": "parent_0083",
+      "runtime": 4.0,
+      "linear_loss": 0.9568495662638842,
+      "proposal_only_loss": 0.8598897179454169,
+      "pool_loss": 0.8598897179454169,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0083_e1_k1_t1",
+      "parent_id": "parent_0083",
+      "runtime": 12.0,
+      "linear_loss": 0.9167226283649191,
+      "proposal_only_loss": 0.894690094516027,
+      "pool_loss": 0.894690094516027,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0083_e1_k2_t0",
+      "parent_id": "parent_0083",
+      "runtime": 4.0,
+      "linear_loss": 0.9745588168133414,
+      "proposal_only_loss": 0.9382802824927547,
+      "pool_loss": 0.9382802824927547,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0083_e1_k2_t1",
+      "parent_id": "parent_0083",
+      "runtime": 12.0,
+      "linear_loss": 0.9488358521003676,
+      "proposal_only_loss": 0.9365619317170161,
+      "pool_loss": 0.9365619317170161,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0096_e0_k0_t0",
+      "parent_id": "parent_0096",
+      "runtime": 4.0,
+      "linear_loss": 0.9186428645632435,
+      "proposal_only_loss": 0.8923749593746144,
+      "pool_loss": 0.8923749593746144,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0096_e0_k0_t1",
+      "parent_id": "parent_0096",
+      "runtime": 12.0,
+      "linear_loss": 0.7962800863135311,
+      "proposal_only_loss": 0.843365353454183,
+      "pool_loss": 0.843365353454183,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0096_e0_k1_t0",
+      "parent_id": "parent_0096",
+      "runtime": 4.0,
+      "linear_loss": 0.921934975426242,
+      "proposal_only_loss": 0.9105314122443319,
+      "pool_loss": 0.9105314122443319,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0096_e0_k1_t1",
+      "parent_id": "parent_0096",
+      "runtime": 12.0,
+      "linear_loss": 0.8189900213921795,
+      "proposal_only_loss": 0.8490909038973598,
+      "pool_loss": 0.8490909038973598,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0096_e0_k2_t0",
+      "parent_id": "parent_0096",
+      "runtime": 4.0,
+      "linear_loss": 0.9464405497495517,
+      "proposal_only_loss": 0.9322376470315409,
+      "pool_loss": 0.9322376470315409,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0096_e0_k2_t1",
+      "parent_id": "parent_0096",
+      "runtime": 12.0,
+      "linear_loss": 0.8954616084278779,
+      "proposal_only_loss": 0.9156770890284606,
+      "pool_loss": 0.9156770890284606,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0096_e1_k0_t0",
+      "parent_id": "parent_0096",
+      "runtime": 4.0,
+      "linear_loss": 0.9196285598819305,
+      "proposal_only_loss": 0.8920558571410192,
+      "pool_loss": 0.8920558571410192,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0096_e1_k0_t1",
+      "parent_id": "parent_0096",
+      "runtime": 12.0,
+      "linear_loss": 0.7990259559742875,
+      "proposal_only_loss": 0.8453505520415809,
+      "pool_loss": 0.8453505520415809,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0096_e1_k1_t0",
+      "parent_id": "parent_0096",
+      "runtime": 4.0,
+      "linear_loss": 0.9226791857250166,
+      "proposal_only_loss": 0.9100704019060901,
+      "pool_loss": 0.9100704019060901,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0096_e1_k1_t1",
+      "parent_id": "parent_0096",
+      "runtime": 12.0,
+      "linear_loss": 0.8199698239045661,
+      "proposal_only_loss": 0.849926210348783,
+      "pool_loss": 0.849926210348783,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0096_e1_k2_t0",
+      "parent_id": "parent_0096",
+      "runtime": 4.0,
+      "linear_loss": 0.9466315817136199,
+      "proposal_only_loss": 0.93235255662753,
+      "pool_loss": 0.93235255662753,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0096_e1_k2_t1",
+      "parent_id": "parent_0096",
+      "runtime": 12.0,
+      "linear_loss": 0.8957128657541183,
+      "proposal_only_loss": 0.9196886927175644,
+      "pool_loss": 0.9196886927175644,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0102_e0_k0_t0",
+      "parent_id": "parent_0102",
+      "runtime": 4.0,
+      "linear_loss": 0.3744243548207896,
+      "proposal_only_loss": 0.20395904437527768,
+      "pool_loss": 0.20395904437527768,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0102_e0_k0_t1",
+      "parent_id": "parent_0102",
+      "runtime": 12.0,
+      "linear_loss": 0.03761563779339583,
+      "proposal_only_loss": 0.4240270253541605,
+      "pool_loss": 0.07101804172276904,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_2"
+    },
+    {
+      "record_id": "parent_0102_e0_k1_t0",
+      "parent_id": "parent_0102",
+      "runtime": 4.0,
+      "linear_loss": 0.2699984052020332,
+      "proposal_only_loss": 0.1574298495440396,
+      "pool_loss": 0.1574298495440396,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0102_e0_k1_t1",
+      "parent_id": "parent_0102",
+      "runtime": 12.0,
+      "linear_loss": 0.016323978223755864,
+      "proposal_only_loss": 0.12333758409500817,
+      "pool_loss": 0.08484833388627555,
+      "chose_fallback": true,
+      "chosen_bank_id": "pause_1"
+    },
+    {
+      "record_id": "parent_0102_e0_k2_t0",
+      "parent_id": "parent_0102",
+      "runtime": 4.0,
+      "linear_loss": 0.3605847426067077,
+      "proposal_only_loss": 0.13271292929877987,
+      "pool_loss": 0.13271292929877987,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0102_e0_k2_t1",
+      "parent_id": "parent_0102",
+      "runtime": 12.0,
+      "linear_loss": 0.055719139198940226,
+      "proposal_only_loss": 0.2722254675235287,
+      "pool_loss": 0.2722254675235287,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0102_e1_k0_t0",
+      "parent_id": "parent_0102",
+      "runtime": 4.0,
+      "linear_loss": 0.3774318987702977,
+      "proposal_only_loss": 0.20826752378475066,
+      "pool_loss": 0.20826752378475066,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0102_e1_k0_t1",
+      "parent_id": "parent_0102",
+      "runtime": 12.0,
+      "linear_loss": 0.03727368380913931,
+      "proposal_only_loss": 0.4149981779502889,
+      "pool_loss": 0.0760465026090189,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_2"
+    },
+    {
+      "record_id": "parent_0102_e1_k1_t0",
+      "parent_id": "parent_0102",
+      "runtime": 4.0,
+      "linear_loss": 0.2714341561640381,
+      "proposal_only_loss": 0.15917727928052283,
+      "pool_loss": 0.15917727928052283,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0102_e1_k1_t1",
+      "parent_id": "parent_0102",
+      "runtime": 12.0,
+      "linear_loss": 0.016562381220276978,
+      "proposal_only_loss": 0.11050290502823734,
+      "pool_loss": 0.08583852038706208,
+      "chose_fallback": true,
+      "chosen_bank_id": "pause_1"
+    },
+    {
+      "record_id": "parent_0102_e1_k2_t0",
+      "parent_id": "parent_0102",
+      "runtime": 4.0,
+      "linear_loss": 0.36095016922033796,
+      "proposal_only_loss": 0.13325921990512524,
+      "pool_loss": 0.13325921990512524,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0102_e1_k2_t1",
+      "parent_id": "parent_0102",
+      "runtime": 12.0,
+      "linear_loss": 0.05570164019899704,
+      "proposal_only_loss": 0.2742258447643595,
+      "pool_loss": 0.2742258447643595,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0105_e0_k0_t0",
+      "parent_id": "parent_0105",
+      "runtime": 4.0,
+      "linear_loss": 0.8380547572615674,
+      "proposal_only_loss": 0.7697278006113346,
+      "pool_loss": 0.7697278006113346,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0105_e0_k0_t1",
+      "parent_id": "parent_0105",
+      "runtime": 12.0,
+      "linear_loss": 0.5822604267946608,
+      "proposal_only_loss": 0.6420784243429676,
+      "pool_loss": 0.6420784243429676,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0105_e0_k1_t0",
+      "parent_id": "parent_0105",
+      "runtime": 4.0,
+      "linear_loss": 0.8608089602267845,
+      "proposal_only_loss": 0.7811818535361352,
+      "pool_loss": 0.7811818535361352,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0105_e0_k1_t1",
+      "parent_id": "parent_0105",
+      "runtime": 12.0,
+      "linear_loss": 0.6960577580041386,
+      "proposal_only_loss": 0.7208740152504256,
+      "pool_loss": 0.7208740152504256,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0105_e0_k2_t0",
+      "parent_id": "parent_0105",
+      "runtime": 4.0,
+      "linear_loss": 0.9003329376764476,
+      "proposal_only_loss": 0.8713493950175882,
+      "pool_loss": 0.8713493950175882,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0105_e0_k2_t1",
+      "parent_id": "parent_0105",
+      "runtime": 12.0,
+      "linear_loss": 0.8135908816082232,
+      "proposal_only_loss": 0.77716630703711,
+      "pool_loss": 0.77716630703711,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0105_e1_k0_t0",
+      "parent_id": "parent_0105",
+      "runtime": 4.0,
+      "linear_loss": 0.8380547572615674,
+      "proposal_only_loss": 0.7697278006113346,
+      "pool_loss": 0.7697278006113346,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0105_e1_k0_t1",
+      "parent_id": "parent_0105",
+      "runtime": 12.0,
+      "linear_loss": 0.5822604267946608,
+      "proposal_only_loss": 0.6420784243429676,
+      "pool_loss": 0.6420784243429676,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0105_e1_k1_t0",
+      "parent_id": "parent_0105",
+      "runtime": 4.0,
+      "linear_loss": 0.8608089602267845,
+      "proposal_only_loss": 0.7811818535361352,
+      "pool_loss": 0.7811818535361352,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0105_e1_k1_t1",
+      "parent_id": "parent_0105",
+      "runtime": 12.0,
+      "linear_loss": 0.6960577580041386,
+      "proposal_only_loss": 0.7208740152504256,
+      "pool_loss": 0.7208740152504256,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0105_e1_k2_t0",
+      "parent_id": "parent_0105",
+      "runtime": 4.0,
+      "linear_loss": 0.9003329376764476,
+      "proposal_only_loss": 0.8713493950175882,
+      "pool_loss": 0.8713493950175882,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0105_e1_k2_t1",
+      "parent_id": "parent_0105",
+      "runtime": 12.0,
+      "linear_loss": 0.8135908816082232,
+      "proposal_only_loss": 0.77716630703711,
+      "pool_loss": 0.77716630703711,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0119_e0_k0_t0",
+      "parent_id": "parent_0119",
+      "runtime": 4.0,
+      "linear_loss": 0.8912388339318581,
+      "proposal_only_loss": 0.870085141060371,
+      "pool_loss": 0.8372017541888515,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0119_e0_k0_t1",
+      "parent_id": "parent_0119",
+      "runtime": 12.0,
+      "linear_loss": 0.6802653928481845,
+      "proposal_only_loss": 0.8260087117298247,
+      "pool_loss": 0.8260087117298247,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0119_e0_k1_t0",
+      "parent_id": "parent_0119",
+      "runtime": 4.0,
+      "linear_loss": 0.9236581220113462,
+      "proposal_only_loss": 0.8762751935749978,
+      "pool_loss": 0.8677251011330338,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0119_e0_k1_t1",
+      "parent_id": "parent_0119",
+      "runtime": 12.0,
+      "linear_loss": 0.7635939820092205,
+      "proposal_only_loss": 0.6795943406511091,
+      "pool_loss": 0.6795943406511091,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0119_e0_k2_t0",
+      "parent_id": "parent_0119",
+      "runtime": 4.0,
+      "linear_loss": 0.9594621431924364,
+      "proposal_only_loss": 0.9214694868836764,
+      "pool_loss": 0.9214694868836764,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0119_e0_k2_t1",
+      "parent_id": "parent_0119",
+      "runtime": 12.0,
+      "linear_loss": 0.8759138534008916,
+      "proposal_only_loss": 0.891465545846116,
+      "pool_loss": 0.891465545846116,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0119_e1_k0_t0",
+      "parent_id": "parent_0119",
+      "runtime": 4.0,
+      "linear_loss": 0.8914507702906589,
+      "proposal_only_loss": 0.8684641134801863,
+      "pool_loss": 0.8363816097062972,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0119_e1_k0_t1",
+      "parent_id": "parent_0119",
+      "runtime": 12.0,
+      "linear_loss": 0.6758468373115311,
+      "proposal_only_loss": 0.8251022670382264,
+      "pool_loss": 0.8251022670382264,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0119_e1_k1_t0",
+      "parent_id": "parent_0119",
+      "runtime": 4.0,
+      "linear_loss": 0.9232483208302601,
+      "proposal_only_loss": 0.8756603436218552,
+      "pool_loss": 0.8674198789023679,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0119_e1_k1_t1",
+      "parent_id": "parent_0119",
+      "runtime": 12.0,
+      "linear_loss": 0.7609886334641855,
+      "proposal_only_loss": 0.6811810509621186,
+      "pool_loss": 0.6811810509621186,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0119_e1_k2_t0",
+      "parent_id": "parent_0119",
+      "runtime": 4.0,
+      "linear_loss": 0.9593711901858999,
+      "proposal_only_loss": 0.9214749176296895,
+      "pool_loss": 0.9214749176296895,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0119_e1_k2_t1",
+      "parent_id": "parent_0119",
+      "runtime": 12.0,
+      "linear_loss": 0.8752959070900554,
+      "proposal_only_loss": 0.8890909297799718,
+      "pool_loss": 0.8890909297799718,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0120_e0_k0_t0",
+      "parent_id": "parent_0120",
+      "runtime": 4.0,
+      "linear_loss": 0.9153860049360726,
+      "proposal_only_loss": 0.9116593256255631,
+      "pool_loss": 0.9116593256255631,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0120_e0_k0_t1",
+      "parent_id": "parent_0120",
+      "runtime": 12.0,
+      "linear_loss": 0.8033991135854406,
+      "proposal_only_loss": 0.8420826170191364,
+      "pool_loss": 0.8420826170191364,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0120_e0_k1_t0",
+      "parent_id": "parent_0120",
+      "runtime": 4.0,
+      "linear_loss": 0.934716123086181,
+      "proposal_only_loss": 0.9147782190236682,
+      "pool_loss": 0.9147782190236682,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0120_e0_k1_t1",
+      "parent_id": "parent_0120",
+      "runtime": 12.0,
+      "linear_loss": 0.854446479247476,
+      "proposal_only_loss": 0.8789543874186269,
+      "pool_loss": 0.8789543874186269,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0120_e0_k2_t0",
+      "parent_id": "parent_0120",
+      "runtime": 4.0,
+      "linear_loss": 0.9518401587340001,
+      "proposal_only_loss": 0.9397600775444594,
+      "pool_loss": 0.9387808211288353,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0120_e0_k2_t1",
+      "parent_id": "parent_0120",
+      "runtime": 12.0,
+      "linear_loss": 0.9142708256133067,
+      "proposal_only_loss": 0.9247982261065116,
+      "pool_loss": 0.9247982261065116,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0120_e1_k0_t0",
+      "parent_id": "parent_0120",
+      "runtime": 4.0,
+      "linear_loss": 0.9144601378565094,
+      "proposal_only_loss": 0.9031854215070478,
+      "pool_loss": 0.9031854215070478,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0120_e1_k0_t1",
+      "parent_id": "parent_0120",
+      "runtime": 12.0,
+      "linear_loss": 0.8057422705580581,
+      "proposal_only_loss": 0.8509827184233425,
+      "pool_loss": 0.8509827184233425,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0120_e1_k1_t0",
+      "parent_id": "parent_0120",
+      "runtime": 4.0,
+      "linear_loss": 0.9339192487219227,
+      "proposal_only_loss": 0.9120791856226622,
+      "pool_loss": 0.9120791856226622,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0120_e1_k1_t1",
+      "parent_id": "parent_0120",
+      "runtime": 12.0,
+      "linear_loss": 0.8545247198783612,
+      "proposal_only_loss": 0.8731035842151681,
+      "pool_loss": 0.8731035842151681,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0120_e1_k2_t0",
+      "parent_id": "parent_0120",
+      "runtime": 4.0,
+      "linear_loss": 0.9516298186379548,
+      "proposal_only_loss": 0.9395700196837897,
+      "pool_loss": 0.9387456585438321,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0120_e1_k2_t1",
+      "parent_id": "parent_0120",
+      "runtime": 12.0,
+      "linear_loss": 0.9141833320052271,
+      "proposal_only_loss": 0.925221480611226,
+      "pool_loss": 0.925221480611226,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0121_e0_k0_t0",
+      "parent_id": "parent_0121",
+      "runtime": 4.0,
+      "linear_loss": 0.5716114456279945,
+      "proposal_only_loss": 0.4771675736691605,
+      "pool_loss": 0.4771675736691605,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0121_e0_k0_t1",
+      "parent_id": "parent_0121",
+      "runtime": 12.0,
+      "linear_loss": 0.1467395464854988,
+      "proposal_only_loss": 0.6727710475608062,
+      "pool_loss": 0.6727710475608062,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0121_e0_k1_t0",
+      "parent_id": "parent_0121",
+      "runtime": 4.0,
+      "linear_loss": 0.6636612110603934,
+      "proposal_only_loss": 0.5077768903871553,
+      "pool_loss": 0.5077768903871553,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0121_e0_k1_t1",
+      "parent_id": "parent_0121",
+      "runtime": 12.0,
+      "linear_loss": 0.2636836606560786,
+      "proposal_only_loss": 0.6020588648004989,
+      "pool_loss": 0.6020588648004989,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0121_e0_k2_t0",
+      "parent_id": "parent_0121",
+      "runtime": 4.0,
+      "linear_loss": 0.7779405431111931,
+      "proposal_only_loss": 0.7111588400906204,
+      "pool_loss": 0.7111588400906204,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0121_e0_k2_t1",
+      "parent_id": "parent_0121",
+      "runtime": 12.0,
+      "linear_loss": 0.5380454866192796,
+      "proposal_only_loss": 0.4259416030150409,
+      "pool_loss": 0.4259416030150409,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0121_e1_k0_t0",
+      "parent_id": "parent_0121",
+      "runtime": 4.0,
+      "linear_loss": 0.61313275046818,
+      "proposal_only_loss": 0.42748233490935594,
+      "pool_loss": 0.42748233490935594,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0121_e1_k0_t1",
+      "parent_id": "parent_0121",
+      "runtime": 12.0,
+      "linear_loss": 0.13202943956267754,
+      "proposal_only_loss": 0.22537504197843095,
+      "pool_loss": 0.22537504197843095,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0121_e1_k1_t0",
+      "parent_id": "parent_0121",
+      "runtime": 4.0,
+      "linear_loss": 0.6602622268340176,
+      "proposal_only_loss": 0.4828741009383235,
+      "pool_loss": 0.4828741009383235,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0121_e1_k1_t1",
+      "parent_id": "parent_0121",
+      "runtime": 12.0,
+      "linear_loss": 0.24944067456100538,
+      "proposal_only_loss": 0.592150941503198,
+      "pool_loss": 0.592150941503198,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0121_e1_k2_t0",
+      "parent_id": "parent_0121",
+      "runtime": 4.0,
+      "linear_loss": 0.7773078798222645,
+      "proposal_only_loss": 0.7169020666439416,
+      "pool_loss": 0.7169020666439416,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0121_e1_k2_t1",
+      "parent_id": "parent_0121",
+      "runtime": 12.0,
+      "linear_loss": 0.5347882996474607,
+      "proposal_only_loss": 0.4458326140422735,
+      "pool_loss": 0.4458326140422735,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0124_e0_k0_t0",
+      "parent_id": "parent_0124",
+      "runtime": 4.0,
+      "linear_loss": 0.9217129076568685,
+      "proposal_only_loss": 0.8868222199541271,
+      "pool_loss": 0.8868222199541271,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0124_e0_k0_t1",
+      "parent_id": "parent_0124",
+      "runtime": 12.0,
+      "linear_loss": 0.8704837618657735,
+      "proposal_only_loss": 0.826176946706039,
+      "pool_loss": 0.826176946706039,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0124_e0_k1_t0",
+      "parent_id": "parent_0124",
+      "runtime": 4.0,
+      "linear_loss": 0.9484421899941077,
+      "proposal_only_loss": 0.8655663183965636,
+      "pool_loss": 0.8904929052630982,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0124_e0_k1_t1",
+      "parent_id": "parent_0124",
+      "runtime": 12.0,
+      "linear_loss": 0.8843764857619482,
+      "proposal_only_loss": 0.8585373985093971,
+      "pool_loss": 0.8585373985093971,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0124_e0_k2_t0",
+      "parent_id": "parent_0124",
+      "runtime": 4.0,
+      "linear_loss": 0.9664751792264177,
+      "proposal_only_loss": 0.9406437242060761,
+      "pool_loss": 0.9406437242060761,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0124_e0_k2_t1",
+      "parent_id": "parent_0124",
+      "runtime": 12.0,
+      "linear_loss": 0.94076476983409,
+      "proposal_only_loss": 0.9325926442351763,
+      "pool_loss": 0.9325926442351763,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0124_e1_k0_t0",
+      "parent_id": "parent_0124",
+      "runtime": 4.0,
+      "linear_loss": 0.9186677287481662,
+      "proposal_only_loss": 0.8841917611446299,
+      "pool_loss": 0.8841917611446299,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0124_e1_k0_t1",
+      "parent_id": "parent_0124",
+      "runtime": 12.0,
+      "linear_loss": 0.8528056084781364,
+      "proposal_only_loss": 0.751291909028298,
+      "pool_loss": 0.751291909028298,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0124_e1_k1_t0",
+      "parent_id": "parent_0124",
+      "runtime": 4.0,
+      "linear_loss": 0.9464870628910461,
+      "proposal_only_loss": 0.8651399636127199,
+      "pool_loss": 0.8876026448097484,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0124_e1_k1_t1",
+      "parent_id": "parent_0124",
+      "runtime": 12.0,
+      "linear_loss": 0.8772872318128411,
+      "proposal_only_loss": 0.8551401609732048,
+      "pool_loss": 0.8551401609732048,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0124_e1_k2_t0",
+      "parent_id": "parent_0124",
+      "runtime": 4.0,
+      "linear_loss": 0.9660802416124501,
+      "proposal_only_loss": 0.9407909296538177,
+      "pool_loss": 0.9407909296538177,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0124_e1_k2_t1",
+      "parent_id": "parent_0124",
+      "runtime": 12.0,
+      "linear_loss": 0.9396052253770023,
+      "proposal_only_loss": 0.9328738605391724,
+      "pool_loss": 0.9328738605391724,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0125_e0_k0_t0",
+      "parent_id": "parent_0125",
+      "runtime": 4.0,
+      "linear_loss": 0.7953948729581021,
+      "proposal_only_loss": 0.7256397188133681,
+      "pool_loss": 0.7256397188133681,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0125_e0_k0_t1",
+      "parent_id": "parent_0125",
+      "runtime": 12.0,
+      "linear_loss": 0.3954388629419885,
+      "proposal_only_loss": 0.485138711795981,
+      "pool_loss": 0.485138711795981,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0125_e0_k1_t0",
+      "parent_id": "parent_0125",
+      "runtime": 4.0,
+      "linear_loss": 0.8260847366419395,
+      "proposal_only_loss": 0.7319532461695362,
+      "pool_loss": 0.7319532461695362,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0125_e0_k1_t1",
+      "parent_id": "parent_0125",
+      "runtime": 12.0,
+      "linear_loss": 0.5267668245947514,
+      "proposal_only_loss": 0.5192347710479438,
+      "pool_loss": 0.5192347710479438,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0125_e0_k2_t0",
+      "parent_id": "parent_0125",
+      "runtime": 4.0,
+      "linear_loss": 0.8850564597201604,
+      "proposal_only_loss": 0.8156421675772123,
+      "pool_loss": 0.8156421675772123,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0125_e0_k2_t1",
+      "parent_id": "parent_0125",
+      "runtime": 12.0,
+      "linear_loss": 0.7395564039517233,
+      "proposal_only_loss": 0.6486523031312079,
+      "pool_loss": 0.6486523031312079,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0125_e1_k0_t0",
+      "parent_id": "parent_0125",
+      "runtime": 4.0,
+      "linear_loss": 0.7953948729581021,
+      "proposal_only_loss": 0.7256397188133681,
+      "pool_loss": 0.7256397188133681,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0125_e1_k0_t1",
+      "parent_id": "parent_0125",
+      "runtime": 12.0,
+      "linear_loss": 0.3954388629419885,
+      "proposal_only_loss": 0.485138711795981,
+      "pool_loss": 0.485138711795981,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0125_e1_k1_t0",
+      "parent_id": "parent_0125",
+      "runtime": 4.0,
+      "linear_loss": 0.8260847366419395,
+      "proposal_only_loss": 0.7319532461695362,
+      "pool_loss": 0.7319532461695362,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0125_e1_k1_t1",
+      "parent_id": "parent_0125",
+      "runtime": 12.0,
+      "linear_loss": 0.5267668245947514,
+      "proposal_only_loss": 0.5192347710479438,
+      "pool_loss": 0.5192347710479438,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0125_e1_k2_t0",
+      "parent_id": "parent_0125",
+      "runtime": 4.0,
+      "linear_loss": 0.8850564597201604,
+      "proposal_only_loss": 0.8156421675772123,
+      "pool_loss": 0.8156421675772123,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0125_e1_k2_t1",
+      "parent_id": "parent_0125",
+      "runtime": 12.0,
+      "linear_loss": 0.7395564039517233,
+      "proposal_only_loss": 0.6486523031312079,
+      "pool_loss": 0.6486523031312079,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0135_e0_k0_t0",
+      "parent_id": "parent_0135",
+      "runtime": 4.0,
+      "linear_loss": 0.9064059710160888,
+      "proposal_only_loss": 0.9001979342578779,
+      "pool_loss": 0.9001979342578779,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0135_e0_k0_t1",
+      "parent_id": "parent_0135",
+      "runtime": 12.0,
+      "linear_loss": 0.8788303843505892,
+      "proposal_only_loss": 0.9000252459246202,
+      "pool_loss": 0.9000252459246202,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0135_e0_k1_t0",
+      "parent_id": "parent_0135",
+      "runtime": 4.0,
+      "linear_loss": 0.9266790343288752,
+      "proposal_only_loss": 0.8919484309576211,
+      "pool_loss": 0.8919484309576211,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0135_e0_k1_t1",
+      "parent_id": "parent_0135",
+      "runtime": 12.0,
+      "linear_loss": 0.8887657711836374,
+      "proposal_only_loss": 0.8914492569459556,
+      "pool_loss": 0.8914492569459556,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0135_e0_k2_t0",
+      "parent_id": "parent_0135",
+      "runtime": 4.0,
+      "linear_loss": 0.9451730915893105,
+      "proposal_only_loss": 0.9118667193698635,
+      "pool_loss": 0.9118667193698635,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0135_e0_k2_t1",
+      "parent_id": "parent_0135",
+      "runtime": 12.0,
+      "linear_loss": 0.9148133673041648,
+      "proposal_only_loss": 0.9021172212649997,
+      "pool_loss": 0.9021172212649997,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0135_e1_k0_t0",
+      "parent_id": "parent_0135",
+      "runtime": 4.0,
+      "linear_loss": 0.9092816724857464,
+      "proposal_only_loss": 0.9002974545326655,
+      "pool_loss": 0.9002974545326655,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0135_e1_k0_t1",
+      "parent_id": "parent_0135",
+      "runtime": 12.0,
+      "linear_loss": 0.8813873466931224,
+      "proposal_only_loss": 0.9030021919305937,
+      "pool_loss": 0.9030021919305937,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0135_e1_k1_t0",
+      "parent_id": "parent_0135",
+      "runtime": 4.0,
+      "linear_loss": 0.9283493983172758,
+      "proposal_only_loss": 0.8925817670281856,
+      "pool_loss": 0.8925817670281856,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0135_e1_k1_t1",
+      "parent_id": "parent_0135",
+      "runtime": 12.0,
+      "linear_loss": 0.8905645775627462,
+      "proposal_only_loss": 0.8910667431667856,
+      "pool_loss": 0.8910667431667856,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0135_e1_k2_t0",
+      "parent_id": "parent_0135",
+      "runtime": 4.0,
+      "linear_loss": 0.94561597694521,
+      "proposal_only_loss": 0.9125389108512131,
+      "pool_loss": 0.9125389108512131,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0135_e1_k2_t1",
+      "parent_id": "parent_0135",
+      "runtime": 12.0,
+      "linear_loss": 0.9157081473511994,
+      "proposal_only_loss": 0.9034730132990455,
+      "pool_loss": 0.9034730132990455,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0142_e0_k0_t0",
+      "parent_id": "parent_0142",
+      "runtime": 4.0,
+      "linear_loss": 0.7633515836966458,
+      "proposal_only_loss": 0.655624276011441,
+      "pool_loss": 0.655624276011441,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0142_e0_k0_t1",
+      "parent_id": "parent_0142",
+      "runtime": 12.0,
+      "linear_loss": 0.5501539099631514,
+      "proposal_only_loss": 0.32010547535064604,
+      "pool_loss": 0.32010547535064604,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0142_e0_k1_t0",
+      "parent_id": "parent_0142",
+      "runtime": 4.0,
+      "linear_loss": 0.7283183933104463,
+      "proposal_only_loss": 0.5850825000278185,
+      "pool_loss": 0.5850825000278185,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0142_e0_k1_t1",
+      "parent_id": "parent_0142",
+      "runtime": 12.0,
+      "linear_loss": 0.3901688489581576,
+      "proposal_only_loss": 0.34378642209410915,
+      "pool_loss": 0.34378642209410915,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0142_e0_k2_t0",
+      "parent_id": "parent_0142",
+      "runtime": 4.0,
+      "linear_loss": 0.6805668176374067,
+      "proposal_only_loss": 0.5368519127138607,
+      "pool_loss": 0.5368519127138607,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0142_e0_k2_t1",
+      "parent_id": "parent_0142",
+      "runtime": 12.0,
+      "linear_loss": 0.32365188378560994,
+      "proposal_only_loss": 0.36219264364498105,
+      "pool_loss": 0.36219264364498105,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0142_e1_k0_t0",
+      "parent_id": "parent_0142",
+      "runtime": 4.0,
+      "linear_loss": 0.7682936316102028,
+      "proposal_only_loss": 0.672334562061383,
+      "pool_loss": 0.672334562061383,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0142_e1_k0_t1",
+      "parent_id": "parent_0142",
+      "runtime": 12.0,
+      "linear_loss": 0.5769831156932417,
+      "proposal_only_loss": 0.38053393247985845,
+      "pool_loss": 0.38053393247985845,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0142_e1_k1_t0",
+      "parent_id": "parent_0142",
+      "runtime": 4.0,
+      "linear_loss": 0.7332533599667903,
+      "proposal_only_loss": 0.6046898537008691,
+      "pool_loss": 0.6046898537008691,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0142_e1_k1_t1",
+      "parent_id": "parent_0142",
+      "runtime": 12.0,
+      "linear_loss": 0.4187001032765819,
+      "proposal_only_loss": 0.3867054574173546,
+      "pool_loss": 0.3867054574173546,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0142_e1_k2_t0",
+      "parent_id": "parent_0142",
+      "runtime": 4.0,
+      "linear_loss": 0.6849911858880431,
+      "proposal_only_loss": 0.5509543109678272,
+      "pool_loss": 0.5509543109678272,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0142_e1_k2_t1",
+      "parent_id": "parent_0142",
+      "runtime": 12.0,
+      "linear_loss": 0.3397219794499372,
+      "proposal_only_loss": 0.37457738506789107,
+      "pool_loss": 0.37457738506789107,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0146_e0_k0_t0",
+      "parent_id": "parent_0146",
+      "runtime": 4.0,
+      "linear_loss": 0.4506019589230281,
+      "proposal_only_loss": 0.49706765984469237,
+      "pool_loss": 0.49706765984469237,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0146_e0_k0_t1",
+      "parent_id": "parent_0146",
+      "runtime": 12.0,
+      "linear_loss": 0.39284614177933963,
+      "proposal_only_loss": 0.47501050075703755,
+      "pool_loss": 0.47501050075703755,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0146_e0_k1_t0",
+      "parent_id": "parent_0146",
+      "runtime": 4.0,
+      "linear_loss": 0.37651771884523944,
+      "proposal_only_loss": 0.34892061758483095,
+      "pool_loss": 0.34892061758483095,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0146_e0_k1_t1",
+      "parent_id": "parent_0146",
+      "runtime": 12.0,
+      "linear_loss": 0.24266018033961445,
+      "proposal_only_loss": 0.3327018667842476,
+      "pool_loss": 0.3327018667842476,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0146_e0_k2_t0",
+      "parent_id": "parent_0146",
+      "runtime": 4.0,
+      "linear_loss": 0.27421723228532224,
+      "proposal_only_loss": 0.2459783985657451,
+      "pool_loss": 0.2459783985657451,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0146_e0_k2_t1",
+      "parent_id": "parent_0146",
+      "runtime": 12.0,
+      "linear_loss": 0.08187830658883866,
+      "proposal_only_loss": 0.17709703583973813,
+      "pool_loss": 0.03756602183759927,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_2"
+    },
+    {
+      "record_id": "parent_0146_e1_k0_t0",
+      "parent_id": "parent_0146",
+      "runtime": 4.0,
+      "linear_loss": 0.44093851704050024,
+      "proposal_only_loss": 0.5113202072507159,
+      "pool_loss": 0.5113202072507159,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0146_e1_k0_t1",
+      "parent_id": "parent_0146",
+      "runtime": 12.0,
+      "linear_loss": 0.36209842792198854,
+      "proposal_only_loss": 0.4579007600535274,
+      "pool_loss": 0.4579007600535274,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0146_e1_k1_t0",
+      "parent_id": "parent_0146",
+      "runtime": 4.0,
+      "linear_loss": 0.36852173496292373,
+      "proposal_only_loss": 0.3783018890953468,
+      "pool_loss": 0.3783018890953468,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0146_e1_k1_t1",
+      "parent_id": "parent_0146",
+      "runtime": 12.0,
+      "linear_loss": 0.2333200296035336,
+      "proposal_only_loss": 0.27075479303487504,
+      "pool_loss": 0.27075479303487504,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0146_e1_k2_t0",
+      "parent_id": "parent_0146",
+      "runtime": 4.0,
+      "linear_loss": 0.27027065052355925,
+      "proposal_only_loss": 0.27955967539584614,
+      "pool_loss": 0.27955967539584614,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0146_e1_k2_t1",
+      "parent_id": "parent_0146",
+      "runtime": 12.0,
+      "linear_loss": 0.08322324813031212,
+      "proposal_only_loss": 0.14120063753268908,
+      "pool_loss": 0.03754933984712916,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_2"
+    },
+    {
+      "record_id": "parent_0153_e0_k0_t0",
+      "parent_id": "parent_0153",
+      "runtime": 4.0,
+      "linear_loss": 0.7140822949878948,
+      "proposal_only_loss": 0.5954770083416554,
+      "pool_loss": 0.5954770083416554,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0153_e0_k0_t1",
+      "parent_id": "parent_0153",
+      "runtime": 12.0,
+      "linear_loss": 0.337131956671488,
+      "proposal_only_loss": 0.6149396770458484,
+      "pool_loss": 0.6149396770458484,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0153_e0_k1_t0",
+      "parent_id": "parent_0153",
+      "runtime": 4.0,
+      "linear_loss": 0.7616803185159255,
+      "proposal_only_loss": 0.6909877813396588,
+      "pool_loss": 0.6909877813396588,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0153_e0_k1_t1",
+      "parent_id": "parent_0153",
+      "runtime": 12.0,
+      "linear_loss": 0.4856879607560345,
+      "proposal_only_loss": 0.5218117612228105,
+      "pool_loss": 0.5218117612228105,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0153_e0_k2_t0",
+      "parent_id": "parent_0153",
+      "runtime": 4.0,
+      "linear_loss": 0.8231961361922809,
+      "proposal_only_loss": 0.773717924914811,
+      "pool_loss": 0.773717924914811,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0153_e0_k2_t1",
+      "parent_id": "parent_0153",
+      "runtime": 12.0,
+      "linear_loss": 0.6935496801864284,
+      "proposal_only_loss": 0.3385405861774514,
+      "pool_loss": 0.3385405861774514,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0153_e1_k0_t0",
+      "parent_id": "parent_0153",
+      "runtime": 4.0,
+      "linear_loss": 0.7171512262990013,
+      "proposal_only_loss": 0.578678206133109,
+      "pool_loss": 0.578678206133109,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0153_e1_k0_t1",
+      "parent_id": "parent_0153",
+      "runtime": 12.0,
+      "linear_loss": 0.3361711457930555,
+      "proposal_only_loss": 0.6161465132237056,
+      "pool_loss": 0.6161465132237056,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0153_e1_k1_t0",
+      "parent_id": "parent_0153",
+      "runtime": 4.0,
+      "linear_loss": 0.7620164241926326,
+      "proposal_only_loss": 0.6933259502670943,
+      "pool_loss": 0.6933259502670943,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0153_e1_k1_t1",
+      "parent_id": "parent_0153",
+      "runtime": 12.0,
+      "linear_loss": 0.48579283888196034,
+      "proposal_only_loss": 0.5360281919299198,
+      "pool_loss": 0.5360281919299198,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0153_e1_k2_t0",
+      "parent_id": "parent_0153",
+      "runtime": 4.0,
+      "linear_loss": 0.8232592080207555,
+      "proposal_only_loss": 0.7755376364549498,
+      "pool_loss": 0.7755376364549498,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0153_e1_k2_t1",
+      "parent_id": "parent_0153",
+      "runtime": 12.0,
+      "linear_loss": 0.6935897485772119,
+      "proposal_only_loss": 0.3496336497702133,
+      "pool_loss": 0.3496336497702133,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0154_e0_k0_t0",
+      "parent_id": "parent_0154",
+      "runtime": 4.0,
+      "linear_loss": 0.6885572219600508,
+      "proposal_only_loss": 0.5851037126770574,
+      "pool_loss": 0.5851037126770574,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0154_e0_k0_t1",
+      "parent_id": "parent_0154",
+      "runtime": 12.0,
+      "linear_loss": 0.36140902715942635,
+      "proposal_only_loss": 0.4028242102662556,
+      "pool_loss": 0.4028242102662556,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0154_e0_k1_t0",
+      "parent_id": "parent_0154",
+      "runtime": 4.0,
+      "linear_loss": 0.6938472459729832,
+      "proposal_only_loss": 0.5036256478175983,
+      "pool_loss": 0.5209968587897714,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0154_e0_k1_t1",
+      "parent_id": "parent_0154",
+      "runtime": 12.0,
+      "linear_loss": 0.28247104136527423,
+      "proposal_only_loss": 0.6837452868472244,
+      "pool_loss": 0.6837452868472244,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0154_e0_k2_t0",
+      "parent_id": "parent_0154",
+      "runtime": 4.0,
+      "linear_loss": 0.7752196197511408,
+      "proposal_only_loss": 0.575286120438703,
+      "pool_loss": 0.6105337137544069,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0154_e0_k2_t1",
+      "parent_id": "parent_0154",
+      "runtime": 12.0,
+      "linear_loss": 0.4301379605374347,
+      "proposal_only_loss": 0.6264044945937102,
+      "pool_loss": 0.6264044945937102,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0154_e1_k0_t0",
+      "parent_id": "parent_0154",
+      "runtime": 4.0,
+      "linear_loss": 0.6904288414472874,
+      "proposal_only_loss": 0.587959959397737,
+      "pool_loss": 0.587959959397737,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0154_e1_k0_t1",
+      "parent_id": "parent_0154",
+      "runtime": 12.0,
+      "linear_loss": 0.3656386022286202,
+      "proposal_only_loss": 0.39608130394880536,
+      "pool_loss": 0.39608130394880536,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0154_e1_k1_t0",
+      "parent_id": "parent_0154",
+      "runtime": 4.0,
+      "linear_loss": 0.6962462429972744,
+      "proposal_only_loss": 0.5053454675754534,
+      "pool_loss": 0.5235721829254125,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0154_e1_k1_t1",
+      "parent_id": "parent_0154",
+      "runtime": 12.0,
+      "linear_loss": 0.29186412814166474,
+      "proposal_only_loss": 0.6942011471584022,
+      "pool_loss": 0.6942011471584022,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0154_e1_k2_t0",
+      "parent_id": "parent_0154",
+      "runtime": 4.0,
+      "linear_loss": 0.7763892014314967,
+      "proposal_only_loss": 0.5760875791891319,
+      "pool_loss": 0.6118879915077333,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0154_e1_k2_t1",
+      "parent_id": "parent_0154",
+      "runtime": 12.0,
+      "linear_loss": 0.43375718174644873,
+      "proposal_only_loss": 0.6236940460116794,
+      "pool_loss": 0.6236940460116794,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0167_e0_k0_t0",
+      "parent_id": "parent_0167",
+      "runtime": 4.0,
+      "linear_loss": 0.9176487762462308,
+      "proposal_only_loss": 0.8929675204647081,
+      "pool_loss": 0.8789654948862233,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0167_e0_k0_t1",
+      "parent_id": "parent_0167",
+      "runtime": 12.0,
+      "linear_loss": 0.791161241230833,
+      "proposal_only_loss": 0.8528283849669982,
+      "pool_loss": 0.8528283849669982,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0167_e0_k1_t0",
+      "parent_id": "parent_0167",
+      "runtime": 4.0,
+      "linear_loss": 0.9495668308483971,
+      "proposal_only_loss": 0.8935053227917683,
+      "pool_loss": 0.9021451918378423,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0167_e0_k1_t1",
+      "parent_id": "parent_0167",
+      "runtime": 12.0,
+      "linear_loss": 0.8502679416002585,
+      "proposal_only_loss": 0.9300367556149639,
+      "pool_loss": 0.9300367556149639,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0167_e0_k2_t0",
+      "parent_id": "parent_0167",
+      "runtime": 4.0,
+      "linear_loss": 0.9733455437622437,
+      "proposal_only_loss": 0.930888678741679,
+      "pool_loss": 0.930888678741679,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0167_e0_k2_t1",
+      "parent_id": "parent_0167",
+      "runtime": 12.0,
+      "linear_loss": 0.9269209447533646,
+      "proposal_only_loss": 0.9165793594198273,
+      "pool_loss": 0.9165793594198273,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0167_e1_k0_t0",
+      "parent_id": "parent_0167",
+      "runtime": 4.0,
+      "linear_loss": 0.9176593783510121,
+      "proposal_only_loss": 0.8930133955915227,
+      "pool_loss": 0.8789763333432372,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0167_e1_k0_t1",
+      "parent_id": "parent_0167",
+      "runtime": 12.0,
+      "linear_loss": 0.7911955458175164,
+      "proposal_only_loss": 0.8526730390480137,
+      "pool_loss": 0.8526730390480137,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0167_e1_k1_t0",
+      "parent_id": "parent_0167",
+      "runtime": 4.0,
+      "linear_loss": 0.9495720622499053,
+      "proposal_only_loss": 0.8935227109068901,
+      "pool_loss": 0.902150040439709,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0167_e1_k1_t1",
+      "parent_id": "parent_0167",
+      "runtime": 12.0,
+      "linear_loss": 0.8502911125451584,
+      "proposal_only_loss": 0.9298779670134324,
+      "pool_loss": 0.9298779670134324,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0167_e1_k2_t0",
+      "parent_id": "parent_0167",
+      "runtime": 4.0,
+      "linear_loss": 0.9733465720502009,
+      "proposal_only_loss": 0.9308757430372764,
+      "pool_loss": 0.9308757430372764,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0167_e1_k2_t1",
+      "parent_id": "parent_0167",
+      "runtime": 12.0,
+      "linear_loss": 0.9269243053807638,
+      "proposal_only_loss": 0.916642143028149,
+      "pool_loss": 0.916642143028149,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0169_e0_k0_t0",
+      "parent_id": "parent_0169",
+      "runtime": 4.0,
+      "linear_loss": 0.3110864809672238,
+      "proposal_only_loss": 0.20139944498843343,
+      "pool_loss": 0.20139944498843343,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0169_e0_k0_t1",
+      "parent_id": "parent_0169",
+      "runtime": 12.0,
+      "linear_loss": 0.06449550376556434,
+      "proposal_only_loss": 0.2851910166063921,
+      "pool_loss": 0.03623618174648835,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_2"
+    },
+    {
+      "record_id": "parent_0169_e0_k1_t0",
+      "parent_id": "parent_0169",
+      "runtime": 4.0,
+      "linear_loss": 0.3584115129871247,
+      "proposal_only_loss": 0.2982714048620443,
+      "pool_loss": 0.2982714048620443,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0169_e0_k1_t1",
+      "parent_id": "parent_0169",
+      "runtime": 12.0,
+      "linear_loss": 0.13806047640271324,
+      "proposal_only_loss": 0.38788895782123056,
+      "pool_loss": 0.01568722597806249,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_2"
+    },
+    {
+      "record_id": "parent_0169_e0_k2_t0",
+      "parent_id": "parent_0169",
+      "runtime": 4.0,
+      "linear_loss": 0.42822255452853875,
+      "proposal_only_loss": 0.39940625806662555,
+      "pool_loss": 0.39940625806662555,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0169_e0_k2_t1",
+      "parent_id": "parent_0169",
+      "runtime": 12.0,
+      "linear_loss": 0.2922783580476054,
+      "proposal_only_loss": 0.12414678415885305,
+      "pool_loss": 0.12414678415885305,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0169_e1_k0_t0",
+      "parent_id": "parent_0169",
+      "runtime": 4.0,
+      "linear_loss": 0.31206508122584364,
+      "proposal_only_loss": 0.18884699158809592,
+      "pool_loss": 0.18884699158809592,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0169_e1_k0_t1",
+      "parent_id": "parent_0169",
+      "runtime": 12.0,
+      "linear_loss": 0.061360904113137105,
+      "proposal_only_loss": 0.3118864863211914,
+      "pool_loss": 0.03535206972098992,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_2"
+    },
+    {
+      "record_id": "parent_0169_e1_k1_t0",
+      "parent_id": "parent_0169",
+      "runtime": 4.0,
+      "linear_loss": 0.35832263539790377,
+      "proposal_only_loss": 0.29301277822625327,
+      "pool_loss": 0.29301277822625327,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0169_e1_k1_t1",
+      "parent_id": "parent_0169",
+      "runtime": 12.0,
+      "linear_loss": 0.13797203521416557,
+      "proposal_only_loss": 0.4052124322795183,
+      "pool_loss": 0.01568682123093046,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_2"
+    },
+    {
+      "record_id": "parent_0169_e1_k2_t0",
+      "parent_id": "parent_0169",
+      "runtime": 4.0,
+      "linear_loss": 0.4282011444978189,
+      "proposal_only_loss": 0.40085133550737306,
+      "pool_loss": 0.40085133550737306,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0169_e1_k2_t1",
+      "parent_id": "parent_0169",
+      "runtime": 12.0,
+      "linear_loss": 0.29228256081908177,
+      "proposal_only_loss": 0.12063316147006575,
+      "pool_loss": 0.12063316147006575,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0170_e0_k0_t0",
+      "parent_id": "parent_0170",
+      "runtime": 4.0,
+      "linear_loss": 0.2717420311447908,
+      "proposal_only_loss": 0.3324900830552653,
+      "pool_loss": 0.3324900830552653,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0170_e0_k0_t1",
+      "parent_id": "parent_0170",
+      "runtime": 12.0,
+      "linear_loss": 0.24688400990725134,
+      "proposal_only_loss": 0.3247508961835779,
+      "pool_loss": 0.23168398441411442,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_2"
+    },
+    {
+      "record_id": "parent_0170_e0_k1_t0",
+      "parent_id": "parent_0170",
+      "runtime": 4.0,
+      "linear_loss": 0.2624110630866625,
+      "proposal_only_loss": 0.23563178487630343,
+      "pool_loss": 0.23563178487630343,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0170_e0_k1_t1",
+      "parent_id": "parent_0170",
+      "runtime": 12.0,
+      "linear_loss": 0.15818574027498933,
+      "proposal_only_loss": 0.14717286736805468,
+      "pool_loss": 0.10466986196310568,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_2"
+    },
+    {
+      "record_id": "parent_0170_e0_k2_t0",
+      "parent_id": "parent_0170",
+      "runtime": 4.0,
+      "linear_loss": 0.22653684062815294,
+      "proposal_only_loss": 0.08234089238588505,
+      "pool_loss": 0.08234089238588505,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0170_e0_k2_t1",
+      "parent_id": "parent_0170",
+      "runtime": 12.0,
+      "linear_loss": 0.029110575939395034,
+      "proposal_only_loss": 0.1938530654929268,
+      "pool_loss": 0.0375370157725734,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_2"
+    },
+    {
+      "record_id": "parent_0170_e1_k0_t0",
+      "parent_id": "parent_0170",
+      "runtime": 4.0,
+      "linear_loss": 0.2723952830117704,
+      "proposal_only_loss": 0.3345645010343926,
+      "pool_loss": 0.3345645010343926,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0170_e1_k0_t1",
+      "parent_id": "parent_0170",
+      "runtime": 12.0,
+      "linear_loss": 0.2491358977929251,
+      "proposal_only_loss": 0.3257765432563011,
+      "pool_loss": 0.23540348518313214,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_2"
+    },
+    {
+      "record_id": "parent_0170_e1_k1_t0",
+      "parent_id": "parent_0170",
+      "runtime": 4.0,
+      "linear_loss": 0.26295496402407337,
+      "proposal_only_loss": 0.23639040873750283,
+      "pool_loss": 0.23639040873750283,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0170_e1_k1_t1",
+      "parent_id": "parent_0170",
+      "runtime": 12.0,
+      "linear_loss": 0.15941977076485703,
+      "proposal_only_loss": 0.14824809506353076,
+      "pool_loss": 0.10649387707934665,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_2"
+    },
+    {
+      "record_id": "parent_0170_e1_k2_t0",
+      "parent_id": "parent_0170",
+      "runtime": 4.0,
+      "linear_loss": 0.22688201010979592,
+      "proposal_only_loss": 0.0825359472972691,
+      "pool_loss": 0.0825359472972691,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0170_e1_k2_t1",
+      "parent_id": "parent_0170",
+      "runtime": 12.0,
+      "linear_loss": 0.029327471103039238,
+      "proposal_only_loss": 0.19413648644398296,
+      "pool_loss": 0.03742497020528135,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_2"
+    },
+    {
+      "record_id": "parent_0172_e0_k0_t0",
+      "parent_id": "parent_0172",
+      "runtime": 4.0,
+      "linear_loss": 0.9501110240805407,
+      "proposal_only_loss": 0.9057324537204096,
+      "pool_loss": 0.9116274902291214,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0172_e0_k0_t1",
+      "parent_id": "parent_0172",
+      "runtime": 12.0,
+      "linear_loss": 0.8532943557212099,
+      "proposal_only_loss": 0.8374843130116709,
+      "pool_loss": 0.8374843130116709,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0172_e0_k1_t0",
+      "parent_id": "parent_0172",
+      "runtime": 4.0,
+      "linear_loss": 0.9672065268821759,
+      "proposal_only_loss": 0.9431816428769122,
+      "pool_loss": 0.9431422765653475,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0172_e0_k1_t1",
+      "parent_id": "parent_0172",
+      "runtime": 12.0,
+      "linear_loss": 0.9154162000592708,
+      "proposal_only_loss": 0.9096252002234424,
+      "pool_loss": 0.9096252002234424,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0172_e0_k2_t0",
+      "parent_id": "parent_0172",
+      "runtime": 4.0,
+      "linear_loss": 0.9758744738639548,
+      "proposal_only_loss": 0.9684356399753357,
+      "pool_loss": 0.9645558414519747,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0172_e0_k2_t1",
+      "parent_id": "parent_0172",
+      "runtime": 12.0,
+      "linear_loss": 0.9588540910405627,
+      "proposal_only_loss": 0.8759660064748704,
+      "pool_loss": 0.8759660064748704,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0172_e1_k0_t0",
+      "parent_id": "parent_0172",
+      "runtime": 4.0,
+      "linear_loss": 0.9504104483319099,
+      "proposal_only_loss": 0.9055837376169982,
+      "pool_loss": 0.9128789825739551,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0172_e1_k0_t1",
+      "parent_id": "parent_0172",
+      "runtime": 12.0,
+      "linear_loss": 0.8551432596354805,
+      "proposal_only_loss": 0.8328381582053627,
+      "pool_loss": 0.8328381582053627,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0172_e1_k1_t0",
+      "parent_id": "parent_0172",
+      "runtime": 4.0,
+      "linear_loss": 0.9672272439931925,
+      "proposal_only_loss": 0.9428033509186496,
+      "pool_loss": 0.943334983348129,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0172_e1_k1_t1",
+      "parent_id": "parent_0172",
+      "runtime": 12.0,
+      "linear_loss": 0.9159076156744116,
+      "proposal_only_loss": 0.9095783622607662,
+      "pool_loss": 0.9095783622607662,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0172_e1_k2_t0",
+      "parent_id": "parent_0172",
+      "runtime": 4.0,
+      "linear_loss": 0.9758842236571768,
+      "proposal_only_loss": 0.9683677675974133,
+      "pool_loss": 0.9645980847492154,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0172_e1_k2_t1",
+      "parent_id": "parent_0172",
+      "runtime": 12.0,
+      "linear_loss": 0.9589326106858556,
+      "proposal_only_loss": 0.877495339836001,
+      "pool_loss": 0.877495339836001,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0177_e0_k0_t0",
+      "parent_id": "parent_0177",
+      "runtime": 4.0,
+      "linear_loss": 0.6981157787891292,
+      "proposal_only_loss": 0.5542898263817155,
+      "pool_loss": 0.5542898263817155,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0177_e0_k0_t1",
+      "parent_id": "parent_0177",
+      "runtime": 12.0,
+      "linear_loss": 0.1731373154978988,
+      "proposal_only_loss": 0.7295802662379319,
+      "pool_loss": 0.7295802662379319,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0177_e0_k1_t0",
+      "parent_id": "parent_0177",
+      "runtime": 4.0,
+      "linear_loss": 0.746555111717346,
+      "proposal_only_loss": 0.6256467072612422,
+      "pool_loss": 0.6256467072612422,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0177_e0_k1_t1",
+      "parent_id": "parent_0177",
+      "runtime": 12.0,
+      "linear_loss": 0.3173848874569931,
+      "proposal_only_loss": 0.7749162787219958,
+      "pool_loss": 0.7749162787219958,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0177_e0_k2_t0",
+      "parent_id": "parent_0177",
+      "runtime": 4.0,
+      "linear_loss": 0.8564288560743682,
+      "proposal_only_loss": 0.7773192897115841,
+      "pool_loss": 0.7773192897115841,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0177_e0_k2_t1",
+      "parent_id": "parent_0177",
+      "runtime": 12.0,
+      "linear_loss": 0.617470621302087,
+      "proposal_only_loss": 0.5972892787039557,
+      "pool_loss": 0.5972892787039557,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0177_e1_k0_t0",
+      "parent_id": "parent_0177",
+      "runtime": 4.0,
+      "linear_loss": 0.7083080761276008,
+      "proposal_only_loss": 0.5932057451300217,
+      "pool_loss": 0.5932057451300217,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0177_e1_k0_t1",
+      "parent_id": "parent_0177",
+      "runtime": 12.0,
+      "linear_loss": 0.19789548767717513,
+      "proposal_only_loss": 0.7588227383988535,
+      "pool_loss": 0.7588227383988535,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0177_e1_k1_t0",
+      "parent_id": "parent_0177",
+      "runtime": 4.0,
+      "linear_loss": 0.7509620054756909,
+      "proposal_only_loss": 0.6365399902911424,
+      "pool_loss": 0.6365399902911424,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0177_e1_k1_t1",
+      "parent_id": "parent_0177",
+      "runtime": 12.0,
+      "linear_loss": 0.32902511600323203,
+      "proposal_only_loss": 0.7583360223885369,
+      "pool_loss": 0.7583360223885369,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0177_e1_k2_t0",
+      "parent_id": "parent_0177",
+      "runtime": 4.0,
+      "linear_loss": 0.8571662172675625,
+      "proposal_only_loss": 0.7786787111810671,
+      "pool_loss": 0.7786787111810671,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0177_e1_k2_t1",
+      "parent_id": "parent_0177",
+      "runtime": 12.0,
+      "linear_loss": 0.6207087448038299,
+      "proposal_only_loss": 0.5977049447503575,
+      "pool_loss": 0.5977049447503575,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0182_e0_k0_t0",
+      "parent_id": "parent_0182",
+      "runtime": 4.0,
+      "linear_loss": 0.26358413764508715,
+      "proposal_only_loss": 0.3105669205354623,
+      "pool_loss": 0.3105669205354623,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0182_e0_k0_t1",
+      "parent_id": "parent_0182",
+      "runtime": 12.0,
+      "linear_loss": 0.20095291637006785,
+      "proposal_only_loss": 0.17625068364976815,
+      "pool_loss": 0.15482133809876486,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_2"
+    },
+    {
+      "record_id": "parent_0182_e0_k1_t0",
+      "parent_id": "parent_0182",
+      "runtime": 4.0,
+      "linear_loss": 0.2514603218736462,
+      "proposal_only_loss": 0.18674353915270714,
+      "pool_loss": 0.18674353915270714,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0182_e0_k1_t1",
+      "parent_id": "parent_0182",
+      "runtime": 12.0,
+      "linear_loss": 0.1014869318767806,
+      "proposal_only_loss": 0.1874409208426897,
+      "pool_loss": 0.05423876222478996,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_2"
+    },
+    {
+      "record_id": "parent_0182_e0_k2_t0",
+      "parent_id": "parent_0182",
+      "runtime": 4.0,
+      "linear_loss": 0.21090162454418016,
+      "proposal_only_loss": 0.020090944608447736,
+      "pool_loss": 0.020090944608447736,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0182_e0_k2_t1",
+      "parent_id": "parent_0182",
+      "runtime": 12.0,
+      "linear_loss": 0.005810778465960564,
+      "proposal_only_loss": 0.11241773616835382,
+      "pool_loss": 0.11241773616835382,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0182_e1_k0_t0",
+      "parent_id": "parent_0182",
+      "runtime": 4.0,
+      "linear_loss": 0.26358539128329506,
+      "proposal_only_loss": 0.31056759088212704,
+      "pool_loss": 0.31056759088212704,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0182_e1_k0_t1",
+      "parent_id": "parent_0182",
+      "runtime": 12.0,
+      "linear_loss": 0.20095915735241454,
+      "proposal_only_loss": 0.17626438001185896,
+      "pool_loss": 0.15483334756937173,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_2"
+    },
+    {
+      "record_id": "parent_0182_e1_k1_t0",
+      "parent_id": "parent_0182",
+      "runtime": 4.0,
+      "linear_loss": 0.2514619960093385,
+      "proposal_only_loss": 0.18674893505724444,
+      "pool_loss": 0.18674893505724444,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0182_e1_k1_t1",
+      "parent_id": "parent_0182",
+      "runtime": 12.0,
+      "linear_loss": 0.1014916986525718,
+      "proposal_only_loss": 0.18744063296240565,
+      "pool_loss": 0.054240003451917485,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_2"
+    },
+    {
+      "record_id": "parent_0182_e1_k2_t0",
+      "parent_id": "parent_0182",
+      "runtime": 4.0,
+      "linear_loss": 0.21090337584214525,
+      "proposal_only_loss": 0.020092847798074187,
+      "pool_loss": 0.020092847798074187,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0182_e1_k2_t1",
+      "parent_id": "parent_0182",
+      "runtime": 12.0,
+      "linear_loss": 0.005811198361475478,
+      "proposal_only_loss": 0.1124183617929515,
+      "pool_loss": 0.1124183617929515,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0186_e0_k0_t0",
+      "parent_id": "parent_0186",
+      "runtime": 4.0,
+      "linear_loss": 0.22873404453724566,
+      "proposal_only_loss": 0.3270247288514647,
+      "pool_loss": 0.3270247288514647,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0186_e0_k0_t1",
+      "parent_id": "parent_0186",
+      "runtime": 12.0,
+      "linear_loss": 0.2118246795149532,
+      "proposal_only_loss": 0.2661633561253648,
+      "pool_loss": 0.2661633561253648,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0186_e0_k1_t0",
+      "parent_id": "parent_0186",
+      "runtime": 4.0,
+      "linear_loss": 0.144632328996119,
+      "proposal_only_loss": 0.29787255828330794,
+      "pool_loss": 0.13031466390853796,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0186_e0_k1_t1",
+      "parent_id": "parent_0186",
+      "runtime": 12.0,
+      "linear_loss": 0.024144177226953056,
+      "proposal_only_loss": 0.0824379079700408,
+      "pool_loss": 0.04579889930944714,
+      "chose_fallback": true,
+      "chosen_bank_id": "pause_1"
+    },
+    {
+      "record_id": "parent_0186_e0_k2_t0",
+      "parent_id": "parent_0186",
+      "runtime": 4.0,
+      "linear_loss": 0.13921074576839465,
+      "proposal_only_loss": 0.2928055918825856,
+      "pool_loss": 0.07592386439258725,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0186_e0_k2_t1",
+      "parent_id": "parent_0186",
+      "runtime": 12.0,
+      "linear_loss": 0.0018875625226618675,
+      "proposal_only_loss": 0.029911590764684415,
+      "pool_loss": 0.029911590764684415,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0186_e1_k0_t0",
+      "parent_id": "parent_0186",
+      "runtime": 4.0,
+      "linear_loss": 0.3381851120512507,
+      "proposal_only_loss": 0.36915040529209664,
+      "pool_loss": 0.36915040529209664,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0186_e1_k0_t1",
+      "parent_id": "parent_0186",
+      "runtime": 12.0,
+      "linear_loss": 0.26213671544768835,
+      "proposal_only_loss": 0.36238427210740753,
+      "pool_loss": 0.36238427210740753,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0186_e1_k1_t0",
+      "parent_id": "parent_0186",
+      "runtime": 4.0,
+      "linear_loss": 0.25972410842017046,
+      "proposal_only_loss": 0.2893980459271548,
+      "pool_loss": 0.2893980459271548,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0186_e1_k1_t1",
+      "parent_id": "parent_0186",
+      "runtime": 12.0,
+      "linear_loss": 0.11688607665990736,
+      "proposal_only_loss": 0.17278428040195948,
+      "pool_loss": 0.17278428040195948,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0186_e1_k2_t0",
+      "parent_id": "parent_0186",
+      "runtime": 4.0,
+      "linear_loss": 0.17329169692951796,
+      "proposal_only_loss": 0.33864928314207976,
+      "pool_loss": 0.12818495552536757,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0186_e1_k2_t1",
+      "parent_id": "parent_0186",
+      "runtime": 12.0,
+      "linear_loss": 0.0046018223373429645,
+      "proposal_only_loss": 0.08800349158257337,
+      "pool_loss": 0.08800349158257337,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0198_e0_k0_t0",
+      "parent_id": "parent_0198",
+      "runtime": 4.0,
+      "linear_loss": 0.17918333510163797,
+      "proposal_only_loss": 0.26475588837574493,
+      "pool_loss": 0.1301203285646192,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0198_e0_k0_t1",
+      "parent_id": "parent_0198",
+      "runtime": 12.0,
+      "linear_loss": 0.013739006511586771,
+      "proposal_only_loss": 0.22019832189949973,
+      "pool_loss": 0.013739006511586771,
+      "chose_fallback": true,
+      "chosen_bank_id": "linear"
+    },
+    {
+      "record_id": "parent_0198_e0_k1_t0",
+      "parent_id": "parent_0198",
+      "runtime": 4.0,
+      "linear_loss": 0.24971499961428623,
+      "proposal_only_loss": 0.24942698737252433,
+      "pool_loss": 0.12280955249340708,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0198_e0_k1_t1",
+      "parent_id": "parent_0198",
+      "runtime": 12.0,
+      "linear_loss": 0.028840288885821908,
+      "proposal_only_loss": 0.21154871005805953,
+      "pool_loss": 0.010284174847720373,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0198_e0_k2_t0",
+      "parent_id": "parent_0198",
+      "runtime": 4.0,
+      "linear_loss": 0.4284684684734721,
+      "proposal_only_loss": 0.2695976380804983,
+      "pool_loss": 0.2695976380804983,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0198_e0_k2_t1",
+      "parent_id": "parent_0198",
+      "runtime": 12.0,
+      "linear_loss": 0.10178093084257478,
+      "proposal_only_loss": 0.2686432088078401,
+      "pool_loss": 0.2686432088078401,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0198_e1_k0_t0",
+      "parent_id": "parent_0198",
+      "runtime": 4.0,
+      "linear_loss": 0.45049008362284737,
+      "proposal_only_loss": 0.20930060316160382,
+      "pool_loss": 0.20930060316160382,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0198_e1_k0_t1",
+      "parent_id": "parent_0198",
+      "runtime": 12.0,
+      "linear_loss": 0.048032997821245926,
+      "proposal_only_loss": 0.3980108055313929,
+      "pool_loss": 0.09487818263693004,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_2"
+    },
+    {
+      "record_id": "parent_0198_e1_k1_t0",
+      "parent_id": "parent_0198",
+      "runtime": 4.0,
+      "linear_loss": 0.3570377873679039,
+      "proposal_only_loss": 0.16233634353714343,
+      "pool_loss": 0.16233634353714343,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0198_e1_k1_t1",
+      "parent_id": "parent_0198",
+      "runtime": 12.0,
+      "linear_loss": 0.024684215022611866,
+      "proposal_only_loss": 0.20628859525531018,
+      "pool_loss": 0.13033901277598536,
+      "chose_fallback": true,
+      "chosen_bank_id": "pause_1"
+    },
+    {
+      "record_id": "parent_0198_e1_k2_t0",
+      "parent_id": "parent_0198",
+      "runtime": 4.0,
+      "linear_loss": 0.4199943915554054,
+      "proposal_only_loss": 0.23342770197899498,
+      "pool_loss": 0.23342770197899498,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0198_e1_k2_t1",
+      "parent_id": "parent_0198",
+      "runtime": 12.0,
+      "linear_loss": 0.08746518255880553,
+      "proposal_only_loss": 0.22436646639375002,
+      "pool_loss": 0.22436646639375002,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0199_e0_k0_t0",
+      "parent_id": "parent_0199",
+      "runtime": 4.0,
+      "linear_loss": 0.9511139048449019,
+      "proposal_only_loss": 0.9459961083906819,
+      "pool_loss": 0.9459961083906819,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0199_e0_k0_t1",
+      "parent_id": "parent_0199",
+      "runtime": 12.0,
+      "linear_loss": 0.8361173441771904,
+      "proposal_only_loss": 0.9047754156977585,
+      "pool_loss": 0.9047754156977585,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0199_e0_k1_t0",
+      "parent_id": "parent_0199",
+      "runtime": 4.0,
+      "linear_loss": 0.9542236658850588,
+      "proposal_only_loss": 0.9259182633837879,
+      "pool_loss": 0.9259182633837879,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0199_e0_k1_t1",
+      "parent_id": "parent_0199",
+      "runtime": 12.0,
+      "linear_loss": 0.8596347068023209,
+      "proposal_only_loss": 0.8798689937720477,
+      "pool_loss": 0.8798689937720477,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0199_e0_k2_t0",
+      "parent_id": "parent_0199",
+      "runtime": 4.0,
+      "linear_loss": 0.972879499748661,
+      "proposal_only_loss": 0.9772510999044446,
+      "pool_loss": 0.9772510999044446,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0199_e0_k2_t1",
+      "parent_id": "parent_0199",
+      "runtime": 12.0,
+      "linear_loss": 0.9128151890735046,
+      "proposal_only_loss": 0.9213074107234316,
+      "pool_loss": 0.9213074107234316,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0199_e1_k0_t0",
+      "parent_id": "parent_0199",
+      "runtime": 4.0,
+      "linear_loss": 0.9513299712143631,
+      "proposal_only_loss": 0.9473699152971717,
+      "pool_loss": 0.9473699152971717,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0199_e1_k0_t1",
+      "parent_id": "parent_0199",
+      "runtime": 12.0,
+      "linear_loss": 0.8354182288056329,
+      "proposal_only_loss": 0.9069256736294721,
+      "pool_loss": 0.9069256736294721,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0199_e1_k1_t0",
+      "parent_id": "parent_0199",
+      "runtime": 4.0,
+      "linear_loss": 0.9542600213218465,
+      "proposal_only_loss": 0.9266617738916336,
+      "pool_loss": 0.9266617738916336,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0199_e1_k1_t1",
+      "parent_id": "parent_0199",
+      "runtime": 12.0,
+      "linear_loss": 0.8591630727000339,
+      "proposal_only_loss": 0.8798087095719926,
+      "pool_loss": 0.8798087095719926,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0199_e1_k2_t0",
+      "parent_id": "parent_0199",
+      "runtime": 4.0,
+      "linear_loss": 0.9728869858050542,
+      "proposal_only_loss": 0.9772846120359321,
+      "pool_loss": 0.9772846120359321,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0199_e1_k2_t1",
+      "parent_id": "parent_0199",
+      "runtime": 12.0,
+      "linear_loss": 0.9126387271343437,
+      "proposal_only_loss": 0.9211198181248219,
+      "pool_loss": 0.9211198181248219,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0200_e0_k0_t0",
+      "parent_id": "parent_0200",
+      "runtime": 4.0,
+      "linear_loss": 0.9399054345412351,
+      "proposal_only_loss": 0.8895033659735512,
+      "pool_loss": 0.8895033659735512,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0200_e0_k0_t1",
+      "parent_id": "parent_0200",
+      "runtime": 12.0,
+      "linear_loss": 0.8149734827004377,
+      "proposal_only_loss": 0.5789856812488177,
+      "pool_loss": 0.5649318923707383,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0200_e0_k1_t0",
+      "parent_id": "parent_0200",
+      "runtime": 4.0,
+      "linear_loss": 0.9588126435874672,
+      "proposal_only_loss": 0.9315408222204515,
+      "pool_loss": 0.9234135753786226,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0200_e0_k1_t1",
+      "parent_id": "parent_0200",
+      "runtime": 12.0,
+      "linear_loss": 0.8729284294203056,
+      "proposal_only_loss": 0.7507124238711709,
+      "pool_loss": 0.7507124238711709,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0200_e0_k2_t0",
+      "parent_id": "parent_0200",
+      "runtime": 4.0,
+      "linear_loss": 0.979074581493123,
+      "proposal_only_loss": 0.9678771686190853,
+      "pool_loss": 0.9678771686190853,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0200_e0_k2_t1",
+      "parent_id": "parent_0200",
+      "runtime": 12.0,
+      "linear_loss": 0.929564090816388,
+      "proposal_only_loss": 0.9291126482742552,
+      "pool_loss": 0.9291126482742552,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0200_e1_k0_t0",
+      "parent_id": "parent_0200",
+      "runtime": 4.0,
+      "linear_loss": 0.9432119231190021,
+      "proposal_only_loss": 0.8747667687350965,
+      "pool_loss": 0.8747667687350965,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0200_e1_k0_t1",
+      "parent_id": "parent_0200",
+      "runtime": 12.0,
+      "linear_loss": 0.8001265352704464,
+      "proposal_only_loss": 0.6269660862423794,
+      "pool_loss": 0.6269660862423794,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0200_e1_k1_t0",
+      "parent_id": "parent_0200",
+      "runtime": 4.0,
+      "linear_loss": 0.9573581964764738,
+      "proposal_only_loss": 0.9366515165064417,
+      "pool_loss": 0.9245355352716921,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0200_e1_k1_t1",
+      "parent_id": "parent_0200",
+      "runtime": 12.0,
+      "linear_loss": 0.872610260023206,
+      "proposal_only_loss": 0.7536364051222773,
+      "pool_loss": 0.7536364051222773,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0200_e1_k2_t0",
+      "parent_id": "parent_0200",
+      "runtime": 4.0,
+      "linear_loss": 0.9788486945479866,
+      "proposal_only_loss": 0.9689702255291199,
+      "pool_loss": 0.9689702255291199,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0200_e1_k2_t1",
+      "parent_id": "parent_0200",
+      "runtime": 12.0,
+      "linear_loss": 0.9299867342242745,
+      "proposal_only_loss": 0.9300625042438662,
+      "pool_loss": 0.9300625042438662,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0202_e0_k0_t0",
+      "parent_id": "parent_0202",
+      "runtime": 4.0,
+      "linear_loss": 0.6268367581077992,
+      "proposal_only_loss": 0.45221076771309765,
+      "pool_loss": 0.45221076771309765,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0202_e0_k0_t1",
+      "parent_id": "parent_0202",
+      "runtime": 12.0,
+      "linear_loss": 0.17368690615078974,
+      "proposal_only_loss": 0.5651834462368928,
+      "pool_loss": 0.17368690615078974,
+      "chose_fallback": true,
+      "chosen_bank_id": "linear"
+    },
+    {
+      "record_id": "parent_0202_e0_k1_t0",
+      "parent_id": "parent_0202",
+      "runtime": 4.0,
+      "linear_loss": 0.5851200429237542,
+      "proposal_only_loss": 0.4022881017127593,
+      "pool_loss": 0.3849201881277261,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0202_e0_k1_t1",
+      "parent_id": "parent_0202",
+      "runtime": 12.0,
+      "linear_loss": 0.1432380727203708,
+      "proposal_only_loss": 0.27099087652462606,
+      "pool_loss": 0.06996224464612188,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0202_e0_k2_t0",
+      "parent_id": "parent_0202",
+      "runtime": 4.0,
+      "linear_loss": 0.6820583316491586,
+      "proposal_only_loss": 0.5895393197635281,
+      "pool_loss": 0.5453327218515593,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0202_e0_k2_t1",
+      "parent_id": "parent_0202",
+      "runtime": 12.0,
+      "linear_loss": 0.3331444783356541,
+      "proposal_only_loss": 0.5795254185853249,
+      "pool_loss": 0.5795254185853249,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0202_e1_k0_t0",
+      "parent_id": "parent_0202",
+      "runtime": 4.0,
+      "linear_loss": 0.6915012535795086,
+      "proposal_only_loss": 0.5461056382022956,
+      "pool_loss": 0.5461056382022956,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0202_e1_k0_t1",
+      "parent_id": "parent_0202",
+      "runtime": 12.0,
+      "linear_loss": 0.3041716683653206,
+      "proposal_only_loss": 0.5908292523941898,
+      "pool_loss": 0.13077481224761156,
+      "chose_fallback": true,
+      "chosen_bank_id": "pause_1"
+    },
+    {
+      "record_id": "parent_0202_e1_k1_t0",
+      "parent_id": "parent_0202",
+      "runtime": 4.0,
+      "linear_loss": 0.6462906953982721,
+      "proposal_only_loss": 0.5225409825346646,
+      "pool_loss": 0.5239712433076729,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0202_e1_k1_t1",
+      "parent_id": "parent_0202",
+      "runtime": 12.0,
+      "linear_loss": 0.24341319526804228,
+      "proposal_only_loss": 0.5906451435980079,
+      "pool_loss": 0.2156426031783618,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0202_e1_k2_t0",
+      "parent_id": "parent_0202",
+      "runtime": 4.0,
+      "linear_loss": 0.6814203986074603,
+      "proposal_only_loss": 0.6078488094604639,
+      "pool_loss": 0.5533284548484118,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0202_e1_k2_t1",
+      "parent_id": "parent_0202",
+      "runtime": 12.0,
+      "linear_loss": 0.34520542369915175,
+      "proposal_only_loss": 0.48638147535638554,
+      "pool_loss": 0.23183535589122295,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0203_e0_k0_t0",
+      "parent_id": "parent_0203",
+      "runtime": 4.0,
+      "linear_loss": 0.9758468094171493,
+      "proposal_only_loss": 0.9667311631596287,
+      "pool_loss": 0.9667311631596287,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0203_e0_k0_t1",
+      "parent_id": "parent_0203",
+      "runtime": 12.0,
+      "linear_loss": 0.8499797930520364,
+      "proposal_only_loss": 0.8883823619519969,
+      "pool_loss": 0.8883823619519969,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0203_e0_k1_t0",
+      "parent_id": "parent_0203",
+      "runtime": 4.0,
+      "linear_loss": 0.9791515388820828,
+      "proposal_only_loss": 0.9775336151703755,
+      "pool_loss": 0.9775336151703755,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0203_e0_k1_t1",
+      "parent_id": "parent_0203",
+      "runtime": 12.0,
+      "linear_loss": 0.897968863268592,
+      "proposal_only_loss": 0.9014085380986531,
+      "pool_loss": 0.9014085380986531,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0203_e0_k2_t0",
+      "parent_id": "parent_0203",
+      "runtime": 4.0,
+      "linear_loss": 0.9881217096878007,
+      "proposal_only_loss": 0.9896954867532087,
+      "pool_loss": 0.9896954867532087,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0203_e0_k2_t1",
+      "parent_id": "parent_0203",
+      "runtime": 12.0,
+      "linear_loss": 0.9571676407948617,
+      "proposal_only_loss": 0.9800419627216758,
+      "pool_loss": 0.9800419627216758,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0203_e1_k0_t0",
+      "parent_id": "parent_0203",
+      "runtime": 4.0,
+      "linear_loss": 0.9773880480084122,
+      "proposal_only_loss": 0.9657075456242824,
+      "pool_loss": 0.9657075456242824,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0203_e1_k0_t1",
+      "parent_id": "parent_0203",
+      "runtime": 12.0,
+      "linear_loss": 0.8459574741044098,
+      "proposal_only_loss": 0.883335155911363,
+      "pool_loss": 0.883335155911363,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0203_e1_k1_t0",
+      "parent_id": "parent_0203",
+      "runtime": 4.0,
+      "linear_loss": 0.9795307519326432,
+      "proposal_only_loss": 0.9776361380066573,
+      "pool_loss": 0.9776361380066573,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0203_e1_k1_t1",
+      "parent_id": "parent_0203",
+      "runtime": 12.0,
+      "linear_loss": 0.896992856021937,
+      "proposal_only_loss": 0.9010055095665515,
+      "pool_loss": 0.9010055095665515,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0203_e1_k2_t0",
+      "parent_id": "parent_0203",
+      "runtime": 4.0,
+      "linear_loss": 0.9881972029909651,
+      "proposal_only_loss": 0.9898217048066547,
+      "pool_loss": 0.9898217048066547,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0203_e1_k2_t1",
+      "parent_id": "parent_0203",
+      "runtime": 12.0,
+      "linear_loss": 0.9570100501220118,
+      "proposal_only_loss": 0.9794901539920865,
+      "pool_loss": 0.9794901539920865,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0205_e0_k0_t0",
+      "parent_id": "parent_0205",
+      "runtime": 4.0,
+      "linear_loss": 0.8304431433068022,
+      "proposal_only_loss": 0.8099289415674846,
+      "pool_loss": 0.8099289415674846,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0205_e0_k0_t1",
+      "parent_id": "parent_0205",
+      "runtime": 12.0,
+      "linear_loss": 0.6682973011772708,
+      "proposal_only_loss": 0.7011722763005097,
+      "pool_loss": 0.7011722763005097,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0205_e0_k1_t0",
+      "parent_id": "parent_0205",
+      "runtime": 4.0,
+      "linear_loss": 0.8326200453808057,
+      "proposal_only_loss": 0.7906214800996332,
+      "pool_loss": 0.7906214800996332,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0205_e0_k1_t1",
+      "parent_id": "parent_0205",
+      "runtime": 12.0,
+      "linear_loss": 0.662128284642909,
+      "proposal_only_loss": 0.4913584694337616,
+      "pool_loss": 0.4913584694337616,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0205_e0_k2_t0",
+      "parent_id": "parent_0205",
+      "runtime": 4.0,
+      "linear_loss": 0.8839642636035389,
+      "proposal_only_loss": 0.8346681243556049,
+      "pool_loss": 0.8346681243556049,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0205_e0_k2_t1",
+      "parent_id": "parent_0205",
+      "runtime": 12.0,
+      "linear_loss": 0.7710285868233132,
+      "proposal_only_loss": 0.7427967311088964,
+      "pool_loss": 0.7427967311088964,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0205_e1_k0_t0",
+      "parent_id": "parent_0205",
+      "runtime": 4.0,
+      "linear_loss": 0.8305991266672286,
+      "proposal_only_loss": 0.8104177091178502,
+      "pool_loss": 0.8104177091178502,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0205_e1_k0_t1",
+      "parent_id": "parent_0205",
+      "runtime": 12.0,
+      "linear_loss": 0.6653468884242659,
+      "proposal_only_loss": 0.7010511904279186,
+      "pool_loss": 0.7010511904279186,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0205_e1_k1_t0",
+      "parent_id": "parent_0205",
+      "runtime": 4.0,
+      "linear_loss": 0.8325971847730784,
+      "proposal_only_loss": 0.7911826694166301,
+      "pool_loss": 0.7911826694166301,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0205_e1_k1_t1",
+      "parent_id": "parent_0205",
+      "runtime": 12.0,
+      "linear_loss": 0.6613537290998526,
+      "proposal_only_loss": 0.4890937304125679,
+      "pool_loss": 0.4890937304125679,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0205_e1_k2_t0",
+      "parent_id": "parent_0205",
+      "runtime": 4.0,
+      "linear_loss": 0.8839614687063461,
+      "proposal_only_loss": 0.8349697591180565,
+      "pool_loss": 0.8349697591180565,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0205_e1_k2_t1",
+      "parent_id": "parent_0205",
+      "runtime": 12.0,
+      "linear_loss": 0.7709464294136759,
+      "proposal_only_loss": 0.7428703872487747,
+      "pool_loss": 0.7428703872487747,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0211_e0_k0_t0",
+      "parent_id": "parent_0211",
+      "runtime": 4.0,
+      "linear_loss": 0.906778859271809,
+      "proposal_only_loss": 0.8853064540124541,
+      "pool_loss": 0.8853064540124541,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0211_e0_k0_t1",
+      "parent_id": "parent_0211",
+      "runtime": 12.0,
+      "linear_loss": 0.714519729865757,
+      "proposal_only_loss": 0.7779213585259921,
+      "pool_loss": 0.7779213585259921,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0211_e0_k1_t0",
+      "parent_id": "parent_0211",
+      "runtime": 4.0,
+      "linear_loss": 0.923586842282111,
+      "proposal_only_loss": 0.9057814901565583,
+      "pool_loss": 0.9057814901565583,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0211_e0_k1_t1",
+      "parent_id": "parent_0211",
+      "runtime": 12.0,
+      "linear_loss": 0.7869357952097409,
+      "proposal_only_loss": 0.7689450355035092,
+      "pool_loss": 0.7689450355035092,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0211_e0_k2_t0",
+      "parent_id": "parent_0211",
+      "runtime": 4.0,
+      "linear_loss": 0.9497173156512614,
+      "proposal_only_loss": 0.9397006515289958,
+      "pool_loss": 0.9397006515289958,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0211_e0_k2_t1",
+      "parent_id": "parent_0211",
+      "runtime": 12.0,
+      "linear_loss": 0.8825087819631691,
+      "proposal_only_loss": 0.9058981422058595,
+      "pool_loss": 0.9058981422058595,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0211_e1_k0_t0",
+      "parent_id": "parent_0211",
+      "runtime": 4.0,
+      "linear_loss": 0.9066569211877112,
+      "proposal_only_loss": 0.8857212158064176,
+      "pool_loss": 0.8857212158064176,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0211_e1_k0_t1",
+      "parent_id": "parent_0211",
+      "runtime": 12.0,
+      "linear_loss": 0.7179491039030049,
+      "proposal_only_loss": 0.7821607530636798,
+      "pool_loss": 0.7821607530636798,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0211_e1_k1_t0",
+      "parent_id": "parent_0211",
+      "runtime": 4.0,
+      "linear_loss": 0.9233916864560563,
+      "proposal_only_loss": 0.9061108528270713,
+      "pool_loss": 0.9061108528270713,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0211_e1_k1_t1",
+      "parent_id": "parent_0211",
+      "runtime": 12.0,
+      "linear_loss": 0.7875278261628016,
+      "proposal_only_loss": 0.7707858746817318,
+      "pool_loss": 0.7707858746817318,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0211_e1_k2_t0",
+      "parent_id": "parent_0211",
+      "runtime": 4.0,
+      "linear_loss": 0.949672619923585,
+      "proposal_only_loss": 0.9397314094368125,
+      "pool_loss": 0.9397314094368125,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0211_e1_k2_t1",
+      "parent_id": "parent_0211",
+      "runtime": 12.0,
+      "linear_loss": 0.8824395621506278,
+      "proposal_only_loss": 0.9050235954033929,
+      "pool_loss": 0.9050235954033929,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0212_e0_k0_t0",
+      "parent_id": "parent_0212",
+      "runtime": 4.0,
+      "linear_loss": 0.9646389975108114,
+      "proposal_only_loss": 0.9328675710497747,
+      "pool_loss": 0.9328675710497747,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0212_e0_k0_t1",
+      "parent_id": "parent_0212",
+      "runtime": 12.0,
+      "linear_loss": 0.9275980490882805,
+      "proposal_only_loss": 0.9842702573876001,
+      "pool_loss": 0.9842702573876001,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0212_e0_k1_t0",
+      "parent_id": "parent_0212",
+      "runtime": 4.0,
+      "linear_loss": 0.9757226814340231,
+      "proposal_only_loss": 0.9527687325579487,
+      "pool_loss": 0.9540324267487255,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0212_e0_k1_t1",
+      "parent_id": "parent_0212",
+      "runtime": 12.0,
+      "linear_loss": 0.9415660453677969,
+      "proposal_only_loss": 0.981750193005135,
+      "pool_loss": 0.981750193005135,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0212_e0_k2_t0",
+      "parent_id": "parent_0212",
+      "runtime": 4.0,
+      "linear_loss": 0.9844920575284184,
+      "proposal_only_loss": 0.9714029625022553,
+      "pool_loss": 0.9714029625022553,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0212_e0_k2_t1",
+      "parent_id": "parent_0212",
+      "runtime": 12.0,
+      "linear_loss": 0.9668455635796159,
+      "proposal_only_loss": 0.9628238339185611,
+      "pool_loss": 0.9628238339185611,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0212_e1_k0_t0",
+      "parent_id": "parent_0212",
+      "runtime": 4.0,
+      "linear_loss": 0.9659499830796744,
+      "proposal_only_loss": 0.9217942511560628,
+      "pool_loss": 0.9217942511560628,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0212_e1_k0_t1",
+      "parent_id": "parent_0212",
+      "runtime": 12.0,
+      "linear_loss": 0.9214968466632294,
+      "proposal_only_loss": 0.9788192614528303,
+      "pool_loss": 0.9788192614528303,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0212_e1_k1_t0",
+      "parent_id": "parent_0212",
+      "runtime": 4.0,
+      "linear_loss": 0.975462995695346,
+      "proposal_only_loss": 0.9545245207197914,
+      "pool_loss": 0.9540365627942237,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0212_e1_k1_t1",
+      "parent_id": "parent_0212",
+      "runtime": 12.0,
+      "linear_loss": 0.9392962763371216,
+      "proposal_only_loss": 0.9789361981350152,
+      "pool_loss": 0.9789361981350152,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0212_e1_k2_t0",
+      "parent_id": "parent_0212",
+      "runtime": 4.0,
+      "linear_loss": 0.9844740292803171,
+      "proposal_only_loss": 0.9719177409860107,
+      "pool_loss": 0.9719177409860107,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0212_e1_k2_t1",
+      "parent_id": "parent_0212",
+      "runtime": 12.0,
+      "linear_loss": 0.9663659744323243,
+      "proposal_only_loss": 0.9631531835942952,
+      "pool_loss": 0.9631531835942952,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0219_e0_k0_t0",
+      "parent_id": "parent_0219",
+      "runtime": 4.0,
+      "linear_loss": 0.8789351311877501,
+      "proposal_only_loss": 0.8111089882570837,
+      "pool_loss": 0.8111089882570837,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0219_e0_k0_t1",
+      "parent_id": "parent_0219",
+      "runtime": 12.0,
+      "linear_loss": 0.8749540227536139,
+      "proposal_only_loss": 0.858509159043974,
+      "pool_loss": 0.858509159043974,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0219_e0_k1_t0",
+      "parent_id": "parent_0219",
+      "runtime": 4.0,
+      "linear_loss": 0.9174780020772392,
+      "proposal_only_loss": 0.8269960216531151,
+      "pool_loss": 0.8269960216531151,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0219_e0_k1_t1",
+      "parent_id": "parent_0219",
+      "runtime": 12.0,
+      "linear_loss": 0.8871931608866606,
+      "proposal_only_loss": 0.870778050529407,
+      "pool_loss": 0.870778050529407,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0219_e0_k2_t0",
+      "parent_id": "parent_0219",
+      "runtime": 4.0,
+      "linear_loss": 0.9390116534661872,
+      "proposal_only_loss": 0.8299607100961869,
+      "pool_loss": 0.8299607100961869,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0219_e0_k2_t1",
+      "parent_id": "parent_0219",
+      "runtime": 12.0,
+      "linear_loss": 0.9144518819579668,
+      "proposal_only_loss": 0.8938599330875571,
+      "pool_loss": 0.8938599330875571,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0219_e1_k0_t0",
+      "parent_id": "parent_0219",
+      "runtime": 4.0,
+      "linear_loss": 0.871092859338608,
+      "proposal_only_loss": 0.7728897540322752,
+      "pool_loss": 0.7728897540322752,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0219_e1_k0_t1",
+      "parent_id": "parent_0219",
+      "runtime": 12.0,
+      "linear_loss": 0.8728885465344207,
+      "proposal_only_loss": 0.8471772439146164,
+      "pool_loss": 0.8471772439146164,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0219_e1_k1_t0",
+      "parent_id": "parent_0219",
+      "runtime": 4.0,
+      "linear_loss": 0.913805626894303,
+      "proposal_only_loss": 0.8052114009478102,
+      "pool_loss": 0.8052114009478102,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0219_e1_k1_t1",
+      "parent_id": "parent_0219",
+      "runtime": 12.0,
+      "linear_loss": 0.8848904548389224,
+      "proposal_only_loss": 0.8749209583673697,
+      "pool_loss": 0.8749209583673697,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0219_e1_k2_t0",
+      "parent_id": "parent_0219",
+      "runtime": 4.0,
+      "linear_loss": 0.9380548820199585,
+      "proposal_only_loss": 0.8264478387300591,
+      "pool_loss": 0.8264478387300591,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0219_e1_k2_t1",
+      "parent_id": "parent_0219",
+      "runtime": 12.0,
+      "linear_loss": 0.9136580943002414,
+      "proposal_only_loss": 0.8906494856128881,
+      "pool_loss": 0.8906494856128881,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0220_e0_k0_t0",
+      "parent_id": "parent_0220",
+      "runtime": 4.0,
+      "linear_loss": 0.9048523131489082,
+      "proposal_only_loss": 0.855007740293936,
+      "pool_loss": 0.855007740293936,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0220_e0_k0_t1",
+      "parent_id": "parent_0220",
+      "runtime": 12.0,
+      "linear_loss": 0.6772322261422928,
+      "proposal_only_loss": 0.7270723804907099,
+      "pool_loss": 0.7270723804907099,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0220_e0_k1_t0",
+      "parent_id": "parent_0220",
+      "runtime": 4.0,
+      "linear_loss": 0.9326504539273655,
+      "proposal_only_loss": 0.8627946369830894,
+      "pool_loss": 0.8736216568795283,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0220_e0_k1_t1",
+      "parent_id": "parent_0220",
+      "runtime": 12.0,
+      "linear_loss": 0.7814381019906673,
+      "proposal_only_loss": 0.8321735273969967,
+      "pool_loss": 0.8321735273969967,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0220_e0_k2_t0",
+      "parent_id": "parent_0220",
+      "runtime": 4.0,
+      "linear_loss": 0.9618902006790354,
+      "proposal_only_loss": 0.9394673000406075,
+      "pool_loss": 0.9394673000406075,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0220_e0_k2_t1",
+      "parent_id": "parent_0220",
+      "runtime": 12.0,
+      "linear_loss": 0.8915756783126242,
+      "proposal_only_loss": 0.8795969281537587,
+      "pool_loss": 0.8795969281537587,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0220_e1_k0_t0",
+      "parent_id": "parent_0220",
+      "runtime": 4.0,
+      "linear_loss": 0.9075459103351874,
+      "proposal_only_loss": 0.8585440128494692,
+      "pool_loss": 0.8585440128494692,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0220_e1_k0_t1",
+      "parent_id": "parent_0220",
+      "runtime": 12.0,
+      "linear_loss": 0.6942217458473265,
+      "proposal_only_loss": 0.72760345983098,
+      "pool_loss": 0.72760345983098,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0220_e1_k1_t0",
+      "parent_id": "parent_0220",
+      "runtime": 4.0,
+      "linear_loss": 0.9337571354618039,
+      "proposal_only_loss": 0.8647661159700551,
+      "pool_loss": 0.8755908639059571,
+      "chose_fallback": true,
+      "chosen_bank_id": "one_window_1"
+    },
+    {
+      "record_id": "parent_0220_e1_k1_t1",
+      "parent_id": "parent_0220",
+      "runtime": 12.0,
+      "linear_loss": 0.7872441263580974,
+      "proposal_only_loss": 0.8273169558666623,
+      "pool_loss": 0.8273169558666623,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0220_e1_k2_t0",
+      "parent_id": "parent_0220",
+      "runtime": 4.0,
+      "linear_loss": 0.9620499703030416,
+      "proposal_only_loss": 0.9398517885282083,
+      "pool_loss": 0.9398517885282083,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0220_e1_k2_t1",
+      "parent_id": "parent_0220",
+      "runtime": 12.0,
+      "linear_loss": 0.8927768827660173,
+      "proposal_only_loss": 0.8838441855042105,
+      "pool_loss": 0.8838441855042105,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0221_e0_k0_t0",
+      "parent_id": "parent_0221",
+      "runtime": 4.0,
+      "linear_loss": 0.7602442925626268,
+      "proposal_only_loss": 0.714516227502493,
+      "pool_loss": 0.714516227502493,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0221_e0_k0_t1",
+      "parent_id": "parent_0221",
+      "runtime": 12.0,
+      "linear_loss": 0.3853872365901363,
+      "proposal_only_loss": 0.5674755210868156,
+      "pool_loss": 0.5674755210868156,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0221_e0_k1_t0",
+      "parent_id": "parent_0221",
+      "runtime": 4.0,
+      "linear_loss": 0.807633240615667,
+      "proposal_only_loss": 0.6778328829772527,
+      "pool_loss": 0.6778328829772527,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0221_e0_k1_t1",
+      "parent_id": "parent_0221",
+      "runtime": 12.0,
+      "linear_loss": 0.5321203791999696,
+      "proposal_only_loss": 0.6003901968511238,
+      "pool_loss": 0.6003901968511238,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0221_e0_k2_t0",
+      "parent_id": "parent_0221",
+      "runtime": 4.0,
+      "linear_loss": 0.8750417152934684,
+      "proposal_only_loss": 0.8034108212989837,
+      "pool_loss": 0.8034108212989837,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0221_e0_k2_t1",
+      "parent_id": "parent_0221",
+      "runtime": 12.0,
+      "linear_loss": 0.7179087135448021,
+      "proposal_only_loss": 0.6719186972232762,
+      "pool_loss": 0.6719186972232762,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0221_e1_k0_t0",
+      "parent_id": "parent_0221",
+      "runtime": 4.0,
+      "linear_loss": 0.7747969875733579,
+      "proposal_only_loss": 0.7200783819777821,
+      "pool_loss": 0.7200783819777821,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0221_e1_k0_t1",
+      "parent_id": "parent_0221",
+      "runtime": 12.0,
+      "linear_loss": 0.41134211620570815,
+      "proposal_only_loss": 0.562955031107601,
+      "pool_loss": 0.562955031107601,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0221_e1_k1_t0",
+      "parent_id": "parent_0221",
+      "runtime": 4.0,
+      "linear_loss": 0.812797120590774,
+      "proposal_only_loss": 0.6893369652098815,
+      "pool_loss": 0.6893369652098815,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0221_e1_k1_t1",
+      "parent_id": "parent_0221",
+      "runtime": 12.0,
+      "linear_loss": 0.5427953055500994,
+      "proposal_only_loss": 0.5957705929006225,
+      "pool_loss": 0.5957705929006225,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0221_e1_k2_t0",
+      "parent_id": "parent_0221",
+      "runtime": 4.0,
+      "linear_loss": 0.8761287517914067,
+      "proposal_only_loss": 0.8095983637315349,
+      "pool_loss": 0.8095983637315349,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0221_e1_k2_t1",
+      "parent_id": "parent_0221",
+      "runtime": 12.0,
+      "linear_loss": 0.7211962223446096,
+      "proposal_only_loss": 0.6693323426499124,
+      "pool_loss": 0.6693323426499124,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0229_e0_k0_t0",
+      "parent_id": "parent_0229",
+      "runtime": 4.0,
+      "linear_loss": 0.6208265669833435,
+      "proposal_only_loss": 0.5830049989638177,
+      "pool_loss": 0.5830049989638177,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0229_e0_k0_t1",
+      "parent_id": "parent_0229",
+      "runtime": 12.0,
+      "linear_loss": 0.26764582478957655,
+      "proposal_only_loss": 0.6913541656660576,
+      "pool_loss": 0.6913541656660576,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0229_e0_k1_t0",
+      "parent_id": "parent_0229",
+      "runtime": 4.0,
+      "linear_loss": 0.6902975881638436,
+      "proposal_only_loss": 0.5941153009402866,
+      "pool_loss": 0.5941153009402866,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0229_e0_k1_t1",
+      "parent_id": "parent_0229",
+      "runtime": 12.0,
+      "linear_loss": 0.38414706178262226,
+      "proposal_only_loss": 0.6288618065730888,
+      "pool_loss": 0.6288618065730888,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0229_e0_k2_t0",
+      "parent_id": "parent_0229",
+      "runtime": 4.0,
+      "linear_loss": 0.7855731966951616,
+      "proposal_only_loss": 0.7151053812748348,
+      "pool_loss": 0.7151053812748348,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0229_e0_k2_t1",
+      "parent_id": "parent_0229",
+      "runtime": 12.0,
+      "linear_loss": 0.5847110664688502,
+      "proposal_only_loss": 0.530177104030636,
+      "pool_loss": 0.530177104030636,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0229_e1_k0_t0",
+      "parent_id": "parent_0229",
+      "runtime": 4.0,
+      "linear_loss": 0.6384306091210004,
+      "proposal_only_loss": 0.6215070349816549,
+      "pool_loss": 0.6215070349816549,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0229_e1_k0_t1",
+      "parent_id": "parent_0229",
+      "runtime": 12.0,
+      "linear_loss": 0.31407020593601653,
+      "proposal_only_loss": 0.7161530934497646,
+      "pool_loss": 0.7161530934497646,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0229_e1_k1_t0",
+      "parent_id": "parent_0229",
+      "runtime": 4.0,
+      "linear_loss": 0.6964136784678543,
+      "proposal_only_loss": 0.6035785086313575,
+      "pool_loss": 0.6035785086313575,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0229_e1_k1_t1",
+      "parent_id": "parent_0229",
+      "runtime": 12.0,
+      "linear_loss": 0.40121775315948205,
+      "proposal_only_loss": 0.5982796805569306,
+      "pool_loss": 0.5982796805569306,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0229_e1_k2_t0",
+      "parent_id": "parent_0229",
+      "runtime": 4.0,
+      "linear_loss": 0.7868897645839364,
+      "proposal_only_loss": 0.7173682250895459,
+      "pool_loss": 0.7173682250895459,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0229_e1_k2_t1",
+      "parent_id": "parent_0229",
+      "runtime": 12.0,
+      "linear_loss": 0.5893165620976523,
+      "proposal_only_loss": 0.5319647210273715,
+      "pool_loss": 0.5319647210273715,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0236_e0_k0_t0",
+      "parent_id": "parent_0236",
+      "runtime": 4.0,
+      "linear_loss": 0.9734816496805799,
+      "proposal_only_loss": 0.9688396459044041,
+      "pool_loss": 0.9688396459044041,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0236_e0_k0_t1",
+      "parent_id": "parent_0236",
+      "runtime": 12.0,
+      "linear_loss": 0.8467292707797395,
+      "proposal_only_loss": 0.8943802634370105,
+      "pool_loss": 0.8943802634370105,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0236_e0_k1_t0",
+      "parent_id": "parent_0236",
+      "runtime": 4.0,
+      "linear_loss": 0.9776424165760823,
+      "proposal_only_loss": 0.9729279673050067,
+      "pool_loss": 0.9729279673050067,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0236_e0_k1_t1",
+      "parent_id": "parent_0236",
+      "runtime": 12.0,
+      "linear_loss": 0.909381132144856,
+      "proposal_only_loss": 0.9227388708212416,
+      "pool_loss": 0.9227388708212416,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0236_e0_k2_t0",
+      "parent_id": "parent_0236",
+      "runtime": 4.0,
+      "linear_loss": 0.9859791189810007,
+      "proposal_only_loss": 0.9847611745724415,
+      "pool_loss": 0.9847611745724415,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0236_e0_k2_t1",
+      "parent_id": "parent_0236",
+      "runtime": 12.0,
+      "linear_loss": 0.9606836393450103,
+      "proposal_only_loss": 0.9812272504383783,
+      "pool_loss": 0.9812272504383783,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0236_e1_k0_t0",
+      "parent_id": "parent_0236",
+      "runtime": 4.0,
+      "linear_loss": 0.9744788529696281,
+      "proposal_only_loss": 0.9710794157695083,
+      "pool_loss": 0.9710794157695083,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0236_e1_k0_t1",
+      "parent_id": "parent_0236",
+      "runtime": 12.0,
+      "linear_loss": 0.8582984481612587,
+      "proposal_only_loss": 0.8765484477836699,
+      "pool_loss": 0.8765484477836699,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0236_e1_k1_t0",
+      "parent_id": "parent_0236",
+      "runtime": 4.0,
+      "linear_loss": 0.9778715114812105,
+      "proposal_only_loss": 0.9733810128210559,
+      "pool_loss": 0.9733810128210559,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0236_e1_k1_t1",
+      "parent_id": "parent_0236",
+      "runtime": 12.0,
+      "linear_loss": 0.9115610813837347,
+      "proposal_only_loss": 0.9269364448015744,
+      "pool_loss": 0.9269364448015744,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0236_e1_k2_t0",
+      "parent_id": "parent_0236",
+      "runtime": 4.0,
+      "linear_loss": 0.9860179279053538,
+      "proposal_only_loss": 0.9849731088760327,
+      "pool_loss": 0.9849731088760327,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    },
+    {
+      "record_id": "parent_0236_e1_k2_t1",
+      "parent_id": "parent_0236",
+      "runtime": 12.0,
+      "linear_loss": 0.9608964898112851,
+      "proposal_only_loss": 0.9814053999619585,
+      "pool_loss": 0.9814053999619585,
+      "chose_fallback": false,
+      "chosen_bank_id": null
+    }
+  ],
+  "scope": "negative favours the first named method; the pool is the policy's own proposals plus the fixed linear ramp, ranked by the critic in one forward pass with no simulation. Physics-derived pool members would be privileged_spectrum and are excluded, not forgotten."
+}
