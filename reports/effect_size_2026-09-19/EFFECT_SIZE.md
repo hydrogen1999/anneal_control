@@ -44,6 +44,24 @@ The linear interval is **37 % narrower** and the against-global interval
 **half** the width. The 48/48 holds in every training seed individually, not
 only pooled.
 
+Because the arms are independent, they can be checked against each other, and
+the check is not uniformly flattering:
+
+| quantity | 12 parents | 48 parents | agreement |
+|---|---|---|---|
+| linear − learned | +0.07885 [+0.05301, +0.10581] | +0.08631 [+0.07216, +0.10086] | overlap; each point inside the other's interval |
+| tuned global − learned | +0.02291 [+0.01057, +0.03836] | +0.03246 [+0.02570, +0.03967] | overlap; **12-parent point sits just outside** |
+| reads ratio vs linear | 1.509 [1.390, 1.630] | 1.589 [1.513, 1.667] | overlap; **12-parent point sits just outside** (1.509 against a 1.513 bound) |
+
+All three intervals overlap, and the effect reproduces in direction and rough
+magnitude on disjoint instances. But the 48-parent estimates are **uniformly
+larger**, and in two of three the earlier point estimate falls marginally
+outside the new, narrower interval. That is what an independent draw plus a
+tighter interval tends to look like and it is not a contradiction — the
+overlap is substantial in both cases — but it is not a clean reproduction of
+the same number either, and the honest reading is that the 12-parent arm was
+at the low end of what this generator produces.
+
 ## 2. Share of what is achievable
 
 The learned selector consumes **one forward pass**. What it should be compared
