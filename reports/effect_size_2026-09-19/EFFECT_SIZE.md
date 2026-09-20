@@ -5,8 +5,10 @@
 Bank selection beats a matched linear ramp by **0.056** on the synthetic set.
 Read alone, that is a small number on a base of 0.60, and it is the number
 this project has led with. It understates the result, because the whole
-achievable range is also small: an exhaustive 257-call search only finds
-**0.094**.
+achievable range is also small: a 257-call search only finds **0.094**. That
+search is budgeted Sobol-local, not exhaustive — its own scope note reads
+"best found under a declared budget; not a global control optimum" — so 0.094
+is a floor on what is achievable, not a ceiling.
 
 Three units say it better, and all three are measured on held-out parents with
 parent-level bootstrap.
@@ -26,15 +28,45 @@ against-global figures, *d* ≈ 0.88 on both topologies, clear it too.
 
 ## 2. Share of what is achievable
 
-The learned selector consumes **one forward pass**. The reference it is
-measured against consumes **257 simulator calls per instance**.
+The learned selector consumes **one forward pass**. What it should be compared
+against is a search that pays for every instance. There are two such references
+in this project, and **they are not interchangeable** — an earlier version of
+this table put one of each in the same column under a single "257-call" header,
+which is corrected here.
 
-| | headroom a 257-call search finds | learned captures |
-|---|---:|---:|
-| synthetic | 0.0936 | **60.1 %** |
-| Pegasus | 0.0955 | **82.6 %** |
+| reference | what it costs per instance | what it is |
+|---|---|---|
+| bank oracle | 64 propagations, scored once at dataset build | best of the **same 64-candidate menu the selector chooses from** |
+| frontier search | 257 propagations, adaptive, 5 control families | best found by an instance-specific Sobol-local search |
 
-And the share does not depend on how much there is to get:
+The bank oracle is the weaker reference by construction: it is the ceiling on
+the selector's own menu, so a high share against it says the critic is ranking
+well, **not** that the control is near optimal. The frontier search is the one
+that answers "how much of what is findable did we get?".
+
+Measured with the reference held fixed:
+
+| | reference | headroom | learned gain | share |
+|---|---|---:|---:|---:|
+| synthetic (48 parents) | bank oracle | 0.06912 | +0.05627 | **81.4 %** |
+| Pegasus (12 parents) | bank oracle | 0.09547 | +0.07885 | **82.6 %** |
+| synthetic (48 parents) | 257-call frontier | 0.09358 | +0.05627 | **60.1 %** |
+| Pegasus (12 parents) | 257-call frontier | *pending* | +0.07885 | *pending* |
+
+**The apparent 60 % vs 83 % gap between the two topologies was an artifact of
+the two denominators, and is withdrawn.** Against a matched reference the two
+are the same to within a point (81.4 % vs 82.6 %). Nothing in the data
+supports "the effect is sharper on real connectivity" stated in this unit; the
+reads unit in section 3 is where the topologies genuinely differ, and it uses
+one reference throughout.
+
+The Pegasus frontier cell is blank because the 257-call search had never been
+run on Pegasus test parents — only a 97-call, 4-family search on *validation*
+parents exists (headroom 0.14410, different parents, not substitutable). That
+sweep is running; this row will be filled from measurement, not inferred.
+
+Against the frontier reference the share does not depend on how much there is
+to get:
 
 | synthetic parents | headroom | gain | share |
 |---|---:|---:|---:|
@@ -77,16 +109,23 @@ size. Claiming a scaling trend here would be unsupported.
 ## What to lead with
 
 > On real device connectivity, a learned selector consuming one forward pass
-> captures **83 %** of the improvement that a 257-call instance-specific search
-> finds, and cuts the reads needed for 99 % confidence by **34 %** against a
-> matched linear ramp — in **every one of 12 held-out parents**.
-> On the synthetic set the same selector wins **48 of 48** parents at
-> *d* = 2.24, capturing a **constant 60 %** of available headroom whether that
-> headroom is large or small.
+> cuts the reads needed for 99 % confidence by **34 %** against a matched
+> linear ramp — in **every one of 12 held-out parents**. On the synthetic set
+> the same selector wins **48 of 48** parents at *d* = 2.24, capturing a
+> **constant 60 %** of the headroom a 257-call instance-specific search finds,
+> whether that headroom is large or small.
 
 Both sentences are paired, parent-bootstrapped, held-out, and carry their
 sample sizes. The Pegasus arm rests on **12 parents**, which is the number to
 watch.
+
+The earlier version of this lead put "captures 83 % of what a 257-call search
+finds" on the *Pegasus* clause. That was wrong on both counts — the Pegasus
+denominator was the 64-candidate bank oracle, not a 257-call search — and the
+83 % is not a device-connectivity result at all, since the synthetic set scores
+81.4 % against the same reference. The share claim is therefore made only where
+it is measured against the frontier, which today is the synthetic set. It moves
+to the Pegasus clause if and when the Pegasus frontier sweep supports it.
 
 ## Limits
 
