@@ -188,8 +188,18 @@ ceiling, so there is no integer room left. No parent is worse.
 It is tempting to add "and the advantage grows with problem size". **It does
 not**, and this was tested rather than assumed:
 
-    rank correlation, physical qubits against gain      -0.1231
-    rank correlation, physical qubits against headroom  -0.1812
+    unit      rank correlation of physical qubits against
+              gain       headroom
+    record    -0.1231    -0.1812     (n = 864)
+    parent    -0.2493    -0.3597     (n = 48)
+
+Both units are shown because the rest of this document treats the **logical
+parent** as the unit of independence, and records within a parent are not
+independent — a record-level Spearman quietly claims n = 864 where there are
+48 independent units. It does not change the conclusion here: both are
+negative, and the parent-level figure is the more negative of the two, so
+the "grows with size" hypothesis fares worse under the stricter unit, not
+better.
 
 Across 3 to 9 physical qubits the per-size gain is flat within noise (+0.087,
 +0.063, +0.055, +0.054, +0.049, +0.063, +0.033) and so is the headroom. The
