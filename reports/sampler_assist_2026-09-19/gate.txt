@@ -1,0 +1,9 @@
+40 records
+
+tier 1 -- does SVMC know the instance at all?
+  rho(SVMC linear loss, true linear loss)      = +0.6618
+  rho(SVMC linear loss, true best-in-bank loss)= +0.6685
+
+tier 2 -- does it know something the model does not?
+  rho(SVMC linear loss, model bank regret)     = -0.1969
+  model regret: mean 0.00073, zero in 39/40 records

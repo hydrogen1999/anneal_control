@@ -81,7 +81,7 @@ and the answer contradicts a choice already baked into the model.
 `docs/paper_protocol.md:157` already concedes three of these as "optional
 extensions beyond this completed baseline workflow".
 
-**Status after 2026-09-19:** 1 confirmatory · 2 half (two rungs of four) · 3 done · 4 done · 5 auxiliary-physics arm done · 6 two of three arms done · 7 done except the device adapter, which needs a QPU · 8 not started.
+**Status after 2026-09-19:** 1 confirmatory · 2 half (two rungs of four) · 3 done · 4 done · 5 auxiliary-physics arm done · 6 two of three arms done · 7 done except the device adapter, which needs a QPU · 8 closed for bank selection, open for the direct policy.
 
 | # | Factor | Status |
 |---|---|---|
@@ -92,7 +92,7 @@ extensions beyond this completed baseline workflow".
 | 5 | Learning objective (imitation vs outcome, ± auxiliary physics) | **Auxiliary-physics arm done** (2026-09-19). `hierarchy_physics` and `hierarchy_outcome` have identical model blocks and differ in exactly one training key, `response_weight` 0.05 against 0.0, so their Holm-corrected contrast **is** this arm: **−0.00055 [−0.00166, +0.00050], Holm p = 1.0000**. A tight null — it bounds any effect of the auxiliary spectral-response loss below ±0.0017, in either direction, so there is no measurable benefit and no measurable negative transfer either. One weight value, not a sweep. The imitation-versus-outcome half is covered by the existing bank/direct modes. [Report](../reports/encoder_contrast_2026-09-19/ENCODER_CONTRAST.md) |
 | 6 | Symmetry (signed baseline / gauge augmentation / covariant model) | **DONE for two of three arms** (2026-09-19). Augmentation costs **−0.00683 [−0.01329, −0.00115]** (Holm 0.028) in the stored gauge and removes the gauge penalty entirely: baseline pays +0.0109 under random gauges and changes its selection in 40 % of them, augmented pays ≈0 and changes in 8 %; penalty difference **+0.01100 [+0.00598, +0.01667]**. Net under a random gauge, +0.00417 [−0.00093, +0.00955] — **crosses zero**, so the crossover is suggested, not demonstrated. Frustration preserved, by test. The **covariant model** arm is not implemented. [Report](../reports/gauge_2026-09-19/GAUGE.md) |
 | 7 | Transfer (zero-shot / equal-budget refinement / device adapter) | **Mostly done.** Zero-shot transfer archived; equal-budget refinement is the closed-loop filter (+0.00485). Device adapter needs a QPU. |
-| 8 | Classical assistance (no-sampling / sample-assisted / sampler alone) | **Missing.** SVMC was tested as a *ranker* and ruled out (ρ ≈ −0.09). "Sampler alone" is therefore covered; **"sample-assisted model" was never built or tested.** |
+| 8 | Classical assistance (no-sampling / sample-assisted / sampler alone) | **Closed for bank selection by a gate** (2026-09-19). SVMC does carry instance-level signal — ρ = +0.6618 against true linear loss, correcting an over-broad reading of the "SVMC is useless" report, which was about ranking *within* an instance. But the learned selector already picks the exact best bank candidate in **39/40** records (mean regret 0.00073), so there is no residual for sampler features to reduce and the cost side cannot come out favourable. **Open** for the direct policy, whose regret is real, and for harder instances. [Report](../reports/sampler_assist_2026-09-19/SAMPLER_ASSIST.md) |
 
 ---
 
