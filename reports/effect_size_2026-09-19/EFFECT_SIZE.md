@@ -86,8 +86,11 @@ incumbent curve shows how much: it reaches **96.7 %** of its final headroom by
 |---|---:|---:|---:|---:|---:|---:|---:|
 | mean parent headroom | 0.00000 | 0.03947 | 0.06478 | 0.07708 | 0.08669 | 0.09046 | 0.09358 |
 
-(The 5-call point is the linear reference alone, before any tunable family has
-been evaluated twice — it is zero by construction, not a finding.)
+(The 5-call point is zero by construction, not a finding: every tunable
+family's *first* trial is exactly the linear control — checked on 200 records,
+where the first-evaluation best equals the linear loss to 0.000000 in all
+200 — so the first call of each family re-scores the reference. The search's
+first informative budget is 9 calls.)
 
 Priced in calls instead, per parent, bootstrapped over parents, on the
 synthetic set:
