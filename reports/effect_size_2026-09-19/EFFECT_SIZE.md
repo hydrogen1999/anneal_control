@@ -158,11 +158,14 @@ ramp to convert into calls. Paired at parent level, per training seed
 | 2 | **+0.00302** | 22 / 48 | −0.08590, **48 / 48** |
 
 **The direct policy changes sign across training seeds** — it beats the ramp
-on one and loses on two — and pooled over seeds its interval against linear
-crosses zero, −0.00890 [−0.02204, +0.00447]. Against the tuned global
-schedule it is clearly worse, +0.04495 [+0.03062, +0.05929]. Bank selection,
-on the same records and the same seeds, wins every parent in every seed at
-roughly ten times the magnitude.
+on one and loses on two. Pooled over the three seeds the mean is **−0.00119
+[−0.01380, +0.01202]**, beating the ramp on 26 of 48 parents: an interval
+straddling zero and centred almost exactly on it. (Seed 0's own stored
+interval, −0.00890 [−0.02204, +0.00447], already crossed zero on its own; the
+pooled figure is the one to quote, and it is ten times smaller.) Against the
+tuned global schedule the policy is clearly worse, +0.04495 [+0.03062,
++0.05929]. Bank selection, on the same records and the same seeds, wins every
+parent in every seed at roughly seventy times the pooled magnitude.
 
 This is the strongest available form of the project's design choice: on real
 device connectivity, **generating a control is not reliably better than not
