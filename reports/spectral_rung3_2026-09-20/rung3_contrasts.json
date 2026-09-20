@@ -1,0 +1,254 @@
+{
+ "bank": {
+  "schema_version": 2,
+  "mode": "bank",
+  "key": "loss",
+  "methods": [
+   "hierarchy_bins",
+   "hierarchy_moments",
+   "hierarchy_outcome"
+  ],
+  "n_comparisons": 3,
+  "alpha": 0.05,
+  "correction": "holm",
+  "pairs": [
+   {
+    "schema_version": 2,
+    "method_a": "hierarchy_bins",
+    "method_b": "hierarchy_moments",
+    "mode": "bank",
+    "key": "loss",
+    "n_parents": 48,
+    "mean_a": 0.5450196511330905,
+    "mean_b": 0.5450248479287781,
+    "mean_difference": 5.196795687737767e-06,
+    "std_difference": 0.003952125222880873,
+    "parents_favouring_b": 26,
+    "ci_low": -0.0010379194925039265,
+    "ci_high": 0.0011810664441045846,
+    "p_value": 0.9936503174841258,
+    "p_value_method": "centered_null_bootstrap_absolute_mean",
+    "p_value_scope": "approximate; conditional on observed training seeds",
+    "status": "ok",
+    "confidence": 0.95,
+    "resamples": 20000,
+    "separated": false,
+    "better": null,
+    "unit_of_independence": "logical_parent",
+    "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+    "correction": "none",
+    "scope": "paired on the parent, conditional on observed training seeds; CI is pointwise and uncorrected for multiplicity; see contrast_matrix for the family-corrected decision; failure to separate is not equivalence",
+    "p_value_holm": 0.9936503174841258,
+    "separated_after_correction": false
+   },
+   {
+    "schema_version": 2,
+    "method_a": "hierarchy_bins",
+    "method_b": "hierarchy_outcome",
+    "mode": "bank",
+    "key": "loss",
+    "n_parents": 48,
+    "mean_a": 0.5450196511330905,
+    "mean_b": 0.5455740686790304,
+    "mean_difference": 0.0005544175459398937,
+    "std_difference": 0.00379681143992923,
+    "parents_favouring_b": 25,
+    "ci_low": -0.0004859693961360843,
+    "ci_high": 0.0016488890457458613,
+    "p_value": 0.30843457827108645,
+    "p_value_method": "centered_null_bootstrap_absolute_mean",
+    "p_value_scope": "approximate; conditional on observed training seeds",
+    "status": "ok",
+    "confidence": 0.95,
+    "resamples": 20000,
+    "separated": false,
+    "better": null,
+    "unit_of_independence": "logical_parent",
+    "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+    "correction": "none",
+    "scope": "paired on the parent, conditional on observed training seeds; CI is pointwise and uncorrected for multiplicity; see contrast_matrix for the family-corrected decision; failure to separate is not equivalence",
+    "p_value_holm": 0.9253037348132593,
+    "separated_after_correction": false
+   },
+   {
+    "schema_version": 2,
+    "method_a": "hierarchy_moments",
+    "method_b": "hierarchy_outcome",
+    "mode": "bank",
+    "key": "loss",
+    "n_parents": 48,
+    "mean_a": 0.5450248479287781,
+    "mean_b": 0.5455740686790304,
+    "mean_difference": 0.000549220750252156,
+    "std_difference": 0.0038504694270198436,
+    "parents_favouring_b": 24,
+    "ci_low": -0.00048811080510349737,
+    "ci_high": 0.0016639512413098646,
+    "p_value": 0.32043397830108494,
+    "p_value_method": "centered_null_bootstrap_absolute_mean",
+    "p_value_scope": "approximate; conditional on observed training seeds",
+    "status": "ok",
+    "confidence": 0.95,
+    "resamples": 20000,
+    "separated": false,
+    "better": null,
+    "unit_of_independence": "logical_parent",
+    "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+    "correction": "none",
+    "scope": "paired on the parent, conditional on observed training seeds; CI is pointwise and uncorrected for multiplicity; see contrast_matrix for the family-corrected decision; failure to separate is not equivalence",
+    "p_value_holm": 0.9253037348132593,
+    "separated_after_correction": false
+   }
+  ],
+  "ranked_by_mean": [
+   "hierarchy_bins",
+   "hierarchy_moments",
+   "hierarchy_outcome"
+  ],
+  "nonseparated_maximal_sets": [
+   [
+    "hierarchy_bins",
+    "hierarchy_moments",
+    "hierarchy_outcome"
+   ]
+  ],
+  "indistinguishable_groups": [
+   [
+    "hierarchy_bins",
+    "hierarchy_moments",
+    "hierarchy_outcome"
+   ]
+  ],
+  "deprecated_fields": {
+   "indistinguishable_groups": "use nonseparated_maximal_sets; not equivalence"
+  },
+  "n_separated_after_correction": 0,
+  "scope": "a pair is called separated only after Holm correction of approximate centered-null bootstrap p-values over these 3 comparisons and a pointwise CI excluding zero; CIs are not simultaneous; conditional on observed training seeds; failing to separate is not evidence of equality; the pooled embedding-information contrast is outside this correction family"
+ },
+ "direct": {
+  "schema_version": 2,
+  "mode": "direct",
+  "key": "loss",
+  "methods": [
+   "hierarchy_bins",
+   "hierarchy_moments",
+   "hierarchy_outcome"
+  ],
+  "n_comparisons": 3,
+  "alpha": 0.05,
+  "correction": "holm",
+  "pairs": [
+   {
+    "schema_version": 2,
+    "method_a": "hierarchy_bins",
+    "method_b": "hierarchy_moments",
+    "mode": "direct",
+    "key": "loss",
+    "n_parents": 48,
+    "mean_a": 0.5909654504343523,
+    "mean_b": 0.5906486723138928,
+    "mean_difference": -0.0003167781204595089,
+    "std_difference": 0.011608906776036427,
+    "parents_favouring_b": 22,
+    "ci_low": -0.0035945413299227976,
+    "ci_high": 0.0029432796476107446,
+    "p_value": 0.8505074746262686,
+    "p_value_method": "centered_null_bootstrap_absolute_mean",
+    "p_value_scope": "approximate; conditional on observed training seeds",
+    "status": "ok",
+    "confidence": 0.95,
+    "resamples": 20000,
+    "separated": false,
+    "better": null,
+    "unit_of_independence": "logical_parent",
+    "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+    "correction": "none",
+    "scope": "paired on the parent, conditional on observed training seeds; CI is pointwise and uncorrected for multiplicity; see contrast_matrix for the family-corrected decision; failure to separate is not equivalence",
+    "p_value_holm": 1.0,
+    "separated_after_correction": false
+   },
+   {
+    "schema_version": 2,
+    "method_a": "hierarchy_bins",
+    "method_b": "hierarchy_outcome",
+    "mode": "direct",
+    "key": "loss",
+    "n_parents": 48,
+    "mean_a": 0.5909654504343523,
+    "mean_b": 0.5906598324267772,
+    "mean_difference": -0.0003056180075751769,
+    "std_difference": 0.010458513680352003,
+    "parents_favouring_b": 23,
+    "ci_low": -0.0033351409613959888,
+    "ci_high": 0.0025306096487835083,
+    "p_value": 0.8424578771061447,
+    "p_value_method": "centered_null_bootstrap_absolute_mean",
+    "p_value_scope": "approximate; conditional on observed training seeds",
+    "status": "ok",
+    "confidence": 0.95,
+    "resamples": 20000,
+    "separated": false,
+    "better": null,
+    "unit_of_independence": "logical_parent",
+    "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+    "correction": "none",
+    "scope": "paired on the parent, conditional on observed training seeds; CI is pointwise and uncorrected for multiplicity; see contrast_matrix for the family-corrected decision; failure to separate is not equivalence",
+    "p_value_holm": 1.0,
+    "separated_after_correction": false
+   },
+   {
+    "schema_version": 2,
+    "method_a": "hierarchy_moments",
+    "method_b": "hierarchy_outcome",
+    "mode": "direct",
+    "key": "loss",
+    "n_parents": 48,
+    "mean_a": 0.5906486723138928,
+    "mean_b": 0.5906598324267772,
+    "mean_difference": 1.1160112884332022e-05,
+    "std_difference": 0.0125668840040554,
+    "parents_favouring_b": 19,
+    "ci_low": -0.0035680111363443658,
+    "ci_high": 0.0034597771863178954,
+    "p_value": 0.9944502774861257,
+    "p_value_method": "centered_null_bootstrap_absolute_mean",
+    "p_value_scope": "approximate; conditional on observed training seeds",
+    "status": "ok",
+    "confidence": 0.95,
+    "resamples": 20000,
+    "separated": false,
+    "better": null,
+    "unit_of_independence": "logical_parent",
+    "difference_definition": "method_b minus method_a; negative favours method_b for loss",
+    "correction": "none",
+    "scope": "paired on the parent, conditional on observed training seeds; CI is pointwise and uncorrected for multiplicity; see contrast_matrix for the family-corrected decision; failure to separate is not equivalence",
+    "p_value_holm": 1.0,
+    "separated_after_correction": false
+   }
+  ],
+  "ranked_by_mean": [
+   "hierarchy_moments",
+   "hierarchy_outcome",
+   "hierarchy_bins"
+  ],
+  "nonseparated_maximal_sets": [
+   [
+    "hierarchy_bins",
+    "hierarchy_moments",
+    "hierarchy_outcome"
+   ]
+  ],
+  "indistinguishable_groups": [
+   [
+    "hierarchy_bins",
+    "hierarchy_moments",
+    "hierarchy_outcome"
+   ]
+  ],
+  "deprecated_fields": {
+   "indistinguishable_groups": "use nonseparated_maximal_sets; not equivalence"
+  },
+  "n_separated_after_correction": 0,
+  "scope": "a pair is called separated only after Holm correction of approximate centered-null bootstrap p-values over these 3 comparisons and a pointwise CI excluding zero; CIs are not simultaneous; conditional on observed training seeds; failing to separate is not evidence of equality; the pooled embedding-information contrast is outside this correction family"
+ }
+}
