@@ -101,3 +101,36 @@ def test_uneven_trace_depths_truncate_to_the_shortest(tmp_path):
     benchmark(tmp_path, "r0", "p0", linear=1.0, traces={"a": [0.9, 0.8, 0.7], "b": [0.95]})
     curves = module.parent_curves([tmp_path])
     assert sorted(curves["p0"]) == [3]
+
+
+# --- the direct-policy join -------------------------------------------------
+
+def evaluation_payload(direct_losses, *, linear=1.0):
+    records = [{"record_id": f"r{i}", "parent_id": f"p{i}", "linear_loss": linear,
+                "selected_loss": 0.5, "bank_best_loss": 0.4, "candidate_count": 64}
+               for i in range(len(direct_losses))]
+    direct = [{"record_id": f"r{i}", "parent_id": f"p{i}", "loss": v}
+              for i, v in enumerate(direct_losses)]
+    return {"records": records, "direct_policy": {"records": direct}}
+
+
+def test_direct_losses_are_joined_to_the_linear_reference_by_record():
+    rows = module.direct_rows(evaluation_payload([0.8, 0.6]))
+    assert [r["selected_loss"] for r in rows] == [0.8, 0.6]
+    assert all(r["linear_loss"] == 1.0 for r in rows)
+
+
+def test_a_direct_record_with_no_linear_counterpart_is_refused():
+    """Dropping it silently would change the population the gain is measured over."""
+    payload = evaluation_payload([0.8, 0.6])
+    payload["direct_policy"]["records"].append(
+        {"record_id": "rX", "parent_id": "pX", "loss": 0.5})
+    with pytest.raises(ValueError, match="no linear reference|different populations"):
+        module.direct_rows(payload)
+
+
+def test_bank_ceiling_is_undefined_for_the_direct_policy(tmp_path):
+    """The direct policy generates a control; it has no candidate bank to top out on."""
+    (tmp_path / "summary__seed_0.json").write_text(json.dumps(evaluation_payload([0.8])))
+    with pytest.raises(ValueError, match="no candidate bank|undefined"):
+        module.parent_gains(tmp_path, "summary", target="bank_ceiling", mode="direct")

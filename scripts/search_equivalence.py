@@ -80,14 +80,38 @@ TARGETS = {
 }
 
 
-def parent_gains(evaluations, method, target="learned_gain"):
+def direct_rows(payload):
+    """Direct-policy losses joined to the linear reference they are measured against.
+
+    The direct block stores its own loss per record but not the matched linear
+    ramp, which lives on the bank-selection rows. The join is by record_id and
+    must be total: a direct record with no linear counterpart cannot be turned
+    into a gain, and silently dropping it would change the population.
+    """
+    linear = {str(r["record_id"]): float(r["linear_loss"]) for r in payload["records"]}
+    rows = []
+    for record in payload["direct_policy"]["records"]:
+        key = str(record["record_id"])
+        if key not in linear:
+            raise ValueError(f"direct record {key} has no linear reference in the same "
+                             "evaluation; the two blocks describe different populations")
+        rows.append({"parent_id": record["parent_id"], "record_id": key,
+                     "linear_loss": linear[key], "selected_loss": float(record["loss"])})
+    return rows
+
+
+def parent_gains(evaluations, method, target="learned_gain", mode="bank"):
     paths = sorted(glob.glob(str(Path(evaluations) / f"{method}__seed_*.json")))
     if not paths:
         raise ValueError(f"no evaluations for {method!r} in {evaluations}")
+    if mode == "direct" and target != "learned_gain":
+        raise ValueError("the direct policy has no candidate bank, so bank_ceiling is "
+                         "undefined for it")
     extract = TARGETS[target]
     per_seed = []
     for path in paths:
-        rows = json.loads(Path(path).read_text())["records"]
+        payload = json.loads(Path(path).read_text())
+        rows = direct_rows(payload) if mode == "direct" else payload["records"]
         buckets = defaultdict(list)
         for row in rows:
             buckets[str(row["parent_id"])].append(extract(row))
@@ -103,6 +127,9 @@ def main(argv=None) -> int:
     parser.add_argument("--evaluations", required=True)
     parser.add_argument("--frontier-sweep", nargs="+", required=True)
     parser.add_argument("--method", default="summary")
+    parser.add_argument("--mode", default="bank", choices=["bank", "direct"],
+                        help="bank selection from the stored candidates, or the policy's "
+                             "own generated control")
     parser.add_argument("--target", default="learned_gain", choices=sorted(TARGETS),
                         help="learned_gain prices what the selector achieved; bank_ceiling "
                              "prices what a perfect ranker on the same menu would achieve")
@@ -112,7 +139,7 @@ def main(argv=None) -> int:
     args = parser.parse_args(argv)
 
     curves = parent_curves(args.frontier_sweep)
-    gains = parent_gains(args.evaluations, args.method, args.target)
+    gains = parent_gains(args.evaluations, args.method, args.target, args.mode)
     shared = sorted(set(curves) & set(gains))
     if not shared:
         parser.error("the frontier sweep and the evaluation share no parents")
@@ -129,11 +156,13 @@ def main(argv=None) -> int:
                                     seed=args.seed)
     result["method"] = args.method
     result["target"] = args.target
+    result["mode"] = args.mode
     result["evaluations"] = str(args.evaluations)
     Path(args.output).write_text(json.dumps(result, indent=2))
 
     ci = result["parent_bootstrap_ci"]
-    print(f"{args.method} / {args.target}: against an instance-specific search")
+    print(f"{args.method} / {args.mode} / {args.target}: "
+          f"against an instance-specific search")
     print(f"  parents           {result['n_parents']} "
           f"({result['n_resolved']} resolved, {result['n_censored']} censored)")
     print(f"  median equivalent {result['median_calls']} calls")
