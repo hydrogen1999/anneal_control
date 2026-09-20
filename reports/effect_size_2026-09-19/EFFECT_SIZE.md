@@ -178,10 +178,10 @@ measurement; the derivation and its assumptions are in
 **On real device connectivity a linear ramp needs about 1.6× as many reads** —
 a **37 %** reduction, and the sharpest honest statement of the result. At 12
 parents this read 1.509× [1.390, 1.630] in 12/12; the 48-parent arm moves the
-ratio up and cuts the interval width by **37 %**, at the cost of one parent
-where the learned selector needs *more* reads than the ramp. That parent is
-reported rather than rounded away: "every parent" is no longer the claim,
-47 of 48 is.
+ratio up and cuts the interval width by **37 %**. The win count falls to
+47/48 because one parent (`parent_0186`) **ties** at 3.00 reads for both
+schedules — it is solved in three reads either way, and *n*<sub>q</sub> is a
+ceiling, so there is no integer room left. No parent is worse.
 
 ## The framing that is NOT available
 
@@ -200,15 +200,21 @@ size. Claiming a scaling trend here would be unsupported.
 ## What to lead with
 
 > On real device connectivity, a learned selector consuming one forward pass
-> cuts the reads needed for 99 % confidence by **34 %** against a matched
-> linear ramp — in **every one of 12 held-out parents**. On the synthetic set
-> the same selector wins **48 of 48** parents at *d* = 2.24, capturing a
-> **constant 60 %** of the headroom a 257-call instance-specific search finds,
-> whether that headroom is large or small.
+> cuts the reads needed for 99 % confidence by **37 %** against a matched
+> linear ramp (1.589× [1.513, 1.667]) in **47 of 48 held-out parents**, and
+> beats that ramp on **48 of 48** at *d* = 1.68. On the synthetic set the same
+> selector wins **48 of 48** at *d* = 2.24, delivering what an instance-specific
+> search needs **about 18 simulator calls** to find, and capturing a
+> **constant 60 %** of that search's headroom whether the headroom is large or
+> small.
 
 Both sentences are paired, parent-bootstrapped, held-out, and carry their
-sample sizes. The Pegasus arm rests on **12 parents**, which is the number to
-watch.
+sample sizes. Both arms now rest on **48 parents**. The two Pegasus counts
+differ on purpose, and the difference is a tie rather than a loss: the
+selector has the lower loss on all 48, but on `parent_0186` both schedules
+need **3.00** reads. *n*<sub>q</sub> is a ceiling, and a parent that is
+already solved in three reads leaves no integer room to improve. The selector
+is never *worse* on reads on any parent.
 
 The earlier version of this lead put "captures 83 % of what a 257-call search
 finds" on the *Pegasus* clause. That was wrong on both counts — the Pegasus
@@ -220,11 +226,13 @@ to the Pegasus clause if and when the Pegasus frontier sweep supports it.
 
 ## Limits
 
-- Pegasus: 12 held-out parents. A 240-parent dataset with 48 held-out parents
-  is training as of 2026-09-20, and a matched 257-call 5-family frontier over
-  those 48 test parents is running beside it. Until both land, **every number
-  in sections 2b is synthetic-only**, and the Pegasus frontier cell in
-  section 2 stays blank.
+- Pegasus: **48 held-out parents** as of 2026-09-20. The matched 257-call
+  5-family frontier over those same 48 test parents is still running, so
+  **every number in section 2b is synthetic-only** and the Pegasus frontier
+  cell in section 2 stays open. The runtime-4 half of that sweep is complete
+  (288/288 records) and gives 0.11139 mean parent headroom against synthetic's
+  0.09358, so the Pegasus share against a matched frontier will land well
+  below its 84.8 % against the bank oracle.
 - The call equivalent prices the **online** cost only. One forward pass is one
   forward pass because the bank is fixed and the critic predicts its losses
   without simulating; building the bank and training the model are offline and
