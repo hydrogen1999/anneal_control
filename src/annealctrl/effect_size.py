@@ -284,3 +284,81 @@ def decompose_share(bank_report: Mapping[str, Any], frontier_report: Mapping[str
                   "result; the binding factor names which one limits the share, not which "
                   "one is cheaper to improve"),
     })
+
+
+def search_call_equivalent(curves: Mapping[str, Mapping[int, float]],
+                           gains: Mapping[str, float], *, censor_at: int,
+                           bootstrap_resamples: int = 10000, seed: int = 0) -> dict:
+    """How many instance-specific simulator calls does one forward pass buy?
+
+    A share of headroom is a ratio against a budget someone chose, and the
+    budget is arbitrary: this project's frontier ran 257 calls, and at 129 it
+    had already found 96.7% of that. Expressing the same result as a call count
+    removes the arbitrary denominator -- "one forward pass is worth about N
+    calls" needs no reference budget to be meaningful, and a reader can price
+    it directly.
+
+    ``curves`` maps each parent to its incumbent headroom by budget; the budget
+    is the total objective calls, so it already accounts for how the search
+    split its budget across families. The equivalent is the **smallest budget
+    whose headroom reaches the gain**, which is an upper bound: the search may
+    have passed the gain between two grid points. ``per_parent_lower_bound``
+    gives the last budget still short, so the pair brackets the truth.
+
+    A parent whose gain the search never reaches is **censored**, never
+    extrapolated. Censoring here means the learned selector beat the search at
+    its full budget on that parent, which is a result, not a missing value.
+    """
+    if set(curves) != set(gains):
+        missing = sorted(set(gains) ^ set(curves))
+        raise ValueError(f"curves and gains must cover the same parents; differ on {missing}")
+    if not curves:
+        raise ValueError("search_call_equivalent requires at least one parent")
+
+    reached: dict[str, int | None] = {}
+    lower: dict[str, int | None] = {}
+    for parent, curve in curves.items():
+        budgets = sorted(curve)
+        values = [float(curve[b]) for b in budgets]
+        if any(b - a < -1e-12 for a, b in zip(values, values[1:])):
+            raise ValueError(
+                f"the headroom curve for {parent} is not monotone; an incumbent trace "
+                "cannot get worse, so this is not one")
+        target = float(gains[parent])
+        hit, last_short = None, None
+        for budget, value in zip(budgets, values):
+            if value >= target:
+                hit = int(budget)
+                break
+            last_short = int(budget)
+        reached[parent] = hit
+        lower[parent] = last_short
+
+    resolved = np.array([v for v in reached.values() if v is not None], dtype=float)
+    censored = [p for p, v in reached.items() if v is None]
+
+    block = _describe(resolved)
+    block["parent_bootstrap_ci"] = _bootstrap(resolved, n_resamples=bootstrap_resamples, seed=seed)
+
+    return _safe({
+        "schema_version": 1,
+        "n_parents": len(curves),
+        "n_resolved": int(resolved.size),
+        "n_censored": len(censored),
+        "censored_parents": sorted(censored),
+        "median_calls": int(np.median(resolved)) if resolved.size else None,
+        "mean_calls": float(resolved.mean()) if resolved.size else None,
+        "per_parent_calls": reached,
+        "per_parent_lower_bound": lower,
+        "distribution": block,
+        "parent_bootstrap_ci": block["parent_bootstrap_ci"],
+        "censor_at": int(censor_at),
+        "censoring_note": (
+            f"{len(censored)} of {len(curves)} parents are censored: the search never "
+            f"reached the learned gain within {censor_at} calls, so the equivalent is "
+            "reported as greater than the budget rather than extrapolated"),
+        "scope": ("the equivalent is the smallest grid budget reaching the gain, an upper "
+                  "bound; per_parent_lower_bound is the last budget still short. It prices "
+                  "the online cost only -- training and data generation are offline and "
+                  "accounted separately in costs.py"),
+    })

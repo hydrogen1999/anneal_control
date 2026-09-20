@@ -309,3 +309,60 @@ def test_pooling_refuses_seeds_whose_headroom_disagrees():
     b = effect_size_report(evaluation_rows(bank_best=0.50), reference="bank_oracle")
     with pytest.raises(ValueError, match="headroom"):
         pooled_across_seeds([a, b])
+
+
+# --- budget equivalence -----------------------------------------------------
+
+def budget_curve(points):
+    """calls -> headroom, monotone non-decreasing, as a search incumbent must be."""
+    return dict(points)
+
+
+def test_the_equivalent_is_the_smallest_budget_that_reaches_the_gain():
+    from annealctrl.effect_size import search_call_equivalent
+
+    curves = {"p0": budget_curve([(5, 0.0), (9, 0.04), (13, 0.05), (17, 0.07)])}
+    result = search_call_equivalent(curves, {"p0": 0.055}, censor_at=17)
+    assert result["per_parent_calls"]["p0"] == 17        # first budget reaching 0.055
+    assert result["per_parent_lower_bound"]["p0"] == 13  # last budget still short
+    assert result["n_censored"] == 0
+
+
+def test_a_gain_the_search_never_reaches_is_censored_not_extrapolated():
+    from annealctrl.effect_size import search_call_equivalent
+
+    curves = {"p0": budget_curve([(5, 0.0), (9, 0.04)])}
+    result = search_call_equivalent(curves, {"p0": 0.99}, censor_at=9)
+    assert result["n_censored"] == 1
+    assert result["per_parent_calls"]["p0"] is None
+    assert "censored" in result["censoring_note"]
+
+
+def test_the_median_is_over_parents_with_a_bootstrap():
+    from annealctrl.effect_size import search_call_equivalent
+
+    curves = {f"p{i}": budget_curve([(5, 0.0), (9, 0.04), (17, 0.08), (33, 0.12)])
+              for i in range(8)}
+    gains = {f"p{i}": 0.05 + 0.001 * i for i in range(8)}
+    result = search_call_equivalent(curves, gains, censor_at=33, bootstrap_resamples=500)
+    assert result["n_parents"] == 8
+    assert result["median_calls"] == 17
+    ci = result["parent_bootstrap_ci"]
+    assert ci["unit_of_independence"] == "logical_parent"
+
+
+def test_a_non_monotone_curve_is_refused():
+    """An incumbent trace cannot get worse; if it does the input is not an incumbent."""
+    from annealctrl.effect_size import search_call_equivalent
+
+    curves = {"p0": budget_curve([(5, 0.05), (9, 0.02)])}
+    with pytest.raises(ValueError, match="monotone|incumbent"):
+        search_call_equivalent(curves, {"p0": 0.01}, censor_at=9)
+
+
+def test_parents_must_have_both_a_curve_and_a_gain():
+    from annealctrl.effect_size import search_call_equivalent
+
+    curves = {"p0": budget_curve([(5, 0.0), (9, 0.04)])}
+    with pytest.raises(ValueError, match="p1|same parents"):
+        search_call_equivalent(curves, {"p0": 0.01, "p1": 0.02}, censor_at=9)
