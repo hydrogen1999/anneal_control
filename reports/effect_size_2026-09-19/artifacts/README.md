@@ -23,6 +23,7 @@ are as invoked there.
 | `tts_synth.json` | `time_to_solution_report.py --evaluations research_v1/evaluations` |
 | `effect_size_bank.json` | `effect_size_report.py --evaluations pegasus240_exp/evaluations --method summary --reference bank_oracle` |
 | `time_to_solution.json` | `time_to_solution_report.py --evaluations pegasus240_exp/evaluations` |
+| `peg240_menu_size.json` | `menu_size_curve.py --evaluations pegasus240_exp/evaluations --data pegasus240_exp/data` |
 | `peg240_policy_seed_stability.json` | `policy_seed_stability.py --evaluations pegasus240_exp/evaluations` |
 
 ## Reading them

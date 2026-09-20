@@ -183,10 +183,21 @@ one fixed subset applied everywhere:
 
 | menu size | 1 | 2 | 4 | 8 | 16 | 32 | 64 | search |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
-| headroom | 0.01065 | 0.01888 | 0.03207 | 0.04431 | 0.05662 | 0.06366 | **0.06912** | **0.09358** |
+| synthetic | 0.01065 | 0.01888 | 0.03207 | 0.04431 | 0.05662 | 0.06366 | **0.06912** | **0.09358** |
+| Pegasus (48) | 0.01467 | 0.02253 | 0.04211 | 0.06032 | 0.07919 | 0.09162 | **0.10176** | *running* |
 
-Strongly saturating: the last doubling bought **+0.00546** while **0.02446** of
-gap remains, and each doubling buys less than the one before. A bigger fixed
+Each curve's endpoint reproduces that topology's bank-oracle headroom exactly
+— 0.06912 and 0.10176 — which is the arithmetic identity the construction
+implies and a check that it is being computed as described.
+
+Strongly saturating on the synthetic set: the last doubling bought **+0.00546**
+while **0.02446** of gap remains, and each doubling buys less than the one
+before. **Pegasus saturates less**: its last doubling bought **+0.01014**,
+10.0 % of the headroom already reached against synthetic's 7.9 %. That is the
+same story the factorisation tells from the other side — Pegasus has the lower
+bank coverage, so more of what is findable is still outside the menu, and a
+larger bank has correspondingly more to capture there. It remains the
+expensive fix, not the cheap one. A bigger fixed
 menu is not the cheap fix — what a search has and a menu cannot have is the
 ability to adapt to the instance. Subsets below 64 are random, so they
 understate a purpose-designed menu of that size; since the endpoint is the
