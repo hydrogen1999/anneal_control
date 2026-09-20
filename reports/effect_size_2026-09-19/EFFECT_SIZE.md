@@ -76,6 +76,68 @@ to get:
 Double the available headroom, double the gain, same fraction. **The effect is
 proportional, not small** — what is modest is the achievable range itself.
 
+## 2b. The same result with no denominator at all: simulator calls
+
+A share depends on a budget someone chose. Measuring the search's own
+incumbent curve shows how much: it reaches **96.7 %** of its final headroom by
+129 calls and 92.6 % by 65, so 257 is a stopping point, not a natural unit.
+
+| total calls | 5 | 9 | 17 | 33 | 65 | 129 | 257 |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| mean parent headroom | 0.00000 | 0.03947 | 0.06478 | 0.07708 | 0.08669 | 0.09046 | 0.09358 |
+
+(The 5-call point is the linear reference alone, before any tunable family has
+been evaluated twice — it is zero by construction, not a finding.)
+
+Priced in calls instead, per parent, bootstrapped over parents, on the
+synthetic set:
+
+| | equivalent instance-specific simulator calls |
+|---|---|
+| direct policy — **generates** a control | **8.7** [7.8, 9.7], median 9 |
+| bank selection — **picks** from 64 | **17.9** [16.2, 19.8], median 17 |
+| a *perfect* ranker on that same bank | 25.2 [22.7, 27.9], median 25 |
+
+All 48 parents resolved, none censored. Two things follow that the percentage
+did not show. **Selecting is worth about twice generating**, which is the
+project's central design choice stated as a measurement. And the gap from 17.9
+to 25.2 is what better ranking alone would buy — about seven calls.
+
+This unit does not depend on which search spends the budget, but it is not
+invariant either, so the range is reported rather than a single figure. Over
+the same 864 records, same five families, same budget, differing only in
+strategy:
+
+| search | equivalent calls | its own final headroom |
+|---|---:|---:|
+| policy gradient | 15.5 [13.2, 18.1] | 0.08954 |
+| Sobol-local | 17.9 [16.2, 19.8] | 0.09358 |
+| Bayesian GP-EI | 23.3 [20.2, 26.8] | 0.09547 |
+
+GP-EI explores early and ends best, so it is slowest to reach the learned
+gain; policy gradient exploits early and plateaus. **The conservative claim
+across all three is "at least 15 calls"**, and the share unit is correspondingly
+stable at 58.9–62.8 %.
+
+### Would a bigger menu close the gap?
+
+`bank_coverage` is the binding factor, so the obvious reply is to enlarge the
+bank. Measured from candidate losses already stored with every record, at no
+simulation cost — the bank is shared across records, so a menu of size *k* is
+one fixed subset applied everywhere:
+
+| menu size | 1 | 2 | 4 | 8 | 16 | 32 | 64 | search |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| headroom | 0.01065 | 0.01888 | 0.03207 | 0.04431 | 0.05662 | 0.06366 | **0.06912** | **0.09358** |
+
+Strongly saturating: the last doubling bought **+0.00546** while **0.02446** of
+gap remains, and each doubling buys less than the one before. A bigger fixed
+menu is not the cheap fix — what a search has and a menu cannot have is the
+ability to adapt to the instance. Subsets below 64 are random, so they
+understate a purpose-designed menu of that size; since the endpoint is the
+deployed bank itself, a designed curve would sit above these and end in the
+same place, making this a conservative reading of the saturation.
+
 ## 3. Reads to 99 % confidence
 
 The unit a practitioner budgets in. Success probability from exact propagation,
@@ -129,8 +191,21 @@ to the Pegasus clause if and when the Pegasus frontier sweep supports it.
 
 ## Limits
 
-- Pegasus: 12 held-out parents. The 240-parent dataset generated on
-  2026-09-19 would quadruple that and has not been trained on.
+- Pegasus: 12 held-out parents. A 240-parent dataset with 48 held-out parents
+  is training as of 2026-09-20, and a matched 257-call 5-family frontier over
+  those 48 test parents is running beside it. Until both land, **every number
+  in sections 2b is synthetic-only**, and the Pegasus frontier cell in
+  section 2 stays blank.
+- The call equivalent prices the **online** cost only. One forward pass is one
+  forward pass because the bank is fixed and the critic predicts its losses
+  without simulating; building the bank and training the model are offline and
+  accounted separately in `costs.py`. "Worth 17.9 calls" is not "cheaper than
+  17.9 calls" until the deployment count is fixed.
+- The call equivalent is the smallest grid budget whose headroom reaches the
+  gain, so it is an upper bound between grid points; the per-parent lower
+  bound is recorded alongside in the artifact. It also depends on the search
+  strategy, which is why the range 15.5–23.3 is reported rather than one
+  figure.
 - Cost class: the learned selector is `amortised` — one forward pass at
   deployment, but `C_data` and `C_training` are real and are accounted for
   separately in `costs.py`. A 34 % read reduction is not a 34 % cost reduction
