@@ -176,18 +176,39 @@ def pooled_across_seeds(reports: Sequence[Mapping[str, Any]]) -> dict:
     if len(parent_sets) > 1:
         raise ValueError("cannot pool reports over different parent sets")
 
+    # Headroom is a property of the records and the reference, never of the training
+    # seed. If it moves between reports they are not seeds of one evaluation, and
+    # pooling them would silently average two different denominators -- the same
+    # class of mistake this module exists to prevent.
+    headrooms = {round(float(r["headroom"]["mean"]), 12) for r in reports}
+    if len(headrooms) > 1:
+        raise ValueError(
+            f"reports disagree on headroom ({sorted(headrooms)}); headroom cannot depend "
+            "on the training seed, so these are not seeds of one evaluation")
+
     parents = sorted(next(iter(parent_sets)))
     matrix = np.array([[float(r["parent_gains"][p]) for p in parents] for r in reports])
     pooled = matrix.mean(axis=0)
     spread = float(pooled.std(ddof=1)) if pooled.size > 1 else 0.0
     per_seed_won = [int((row > 0).sum()) for row in matrix]
 
+    # The returned shape is deliberately decomposable: it carries the same
+    # reference / parent_gains / headroom / gain_vs_linear keys an individual
+    # report does, so decompose_share accepts a pooled result unchanged and the
+    # factorisation is taken on seed-averaged gains rather than on one seed.
+    mean_headroom = float(reports[0]["headroom"]["mean"])
     return _safe({
-        "schema_version": 1,
+        "schema_version": 2,
         "reference": reports[0]["reference"],
         "n_seeds": len(reports),
         "n_parents": len(parents),
         "mean_gain": float(pooled.mean()),
+        "gain_vs_linear": {"mean": float(pooled.mean()),
+                           "cohens_d": float(pooled.mean() / spread) if spread > 0 else None,
+                           "parents_won": int((pooled > 0).sum()),
+                           "n_parents": len(parents)},
+        "parent_gains": {p: float(v) for p, v in zip(parents, pooled)},
+        "headroom": {"mean": mean_headroom, "n_parents": len(parents)},
         "cohens_d": float(pooled.mean() / spread) if spread > 0 else None,
         "parents_won": int((pooled > 0).sum()),
         "per_seed_parents_won": per_seed_won,
@@ -195,4 +216,71 @@ def pooled_across_seeds(reports: Sequence[Mapping[str, Any]]) -> dict:
         "scope": ("gains are averaged over training seeds before the statistics are taken; "
                   "worst_seed_parents_won is what the least favourable single training run "
                   "achieved and is the number to quote when a single run is what ships"),
+    })
+
+
+def decompose_share(bank_report: Mapping[str, Any], frontier_report: Mapping[str, Any]) -> dict:
+    """Split the share of findable improvement into the critic and the menu.
+
+    The two references are not rivals; they compose. Writing ``g`` for the
+    learned gain, ``H_bank`` for the bank oracle's headroom and ``H_front`` for
+    the frontier search's::
+
+        g / H_front  =  (g / H_bank)  x  (H_bank / H_front)
+        share of     =  selector      x  bank
+        findable        efficiency       coverage
+
+    The left factor asks whether the critic picks well from the menu it has.
+    The right asks whether the menu is worth picking from. A table that reports
+    only the first can look excellent while the menu throws away most of what
+    is findable -- which is precisely how a bank-oracle share of 83% was once
+    read as a near-optimal control.
+
+    They point at different work. A low ``selector_efficiency`` is a modelling
+    problem; a low ``bank_coverage`` is a dataset problem, and no encoder can
+    fix it.
+    """
+    reports = {r["reference"]["name"]: r for r in (bank_report, frontier_report)}
+    if set(reports) != {"bank_oracle", "frontier"}:
+        raise ValueError(
+            "decompose_share needs one of each reference, one bank_oracle and one "
+            f"frontier; got {sorted(r['reference']['name'] for r in (bank_report, frontier_report))}")
+    bank, frontier = reports["bank_oracle"], reports["frontier"]
+
+    if set(bank["parent_gains"]) != set(frontier["parent_gains"]):
+        raise ValueError("the two reports cover different parents; they must be the "
+                         "same evaluation scored against two references")
+    gains = [(bank["parent_gains"][p], frontier["parent_gains"][p]) for p in bank["parent_gains"]]
+    if any(abs(a - b) > 1e-12 for a, b in gains):
+        raise ValueError("the two reports disagree on the learned gain; they must be the "
+                         "same evaluation scored against two references")
+
+    h_bank = float(bank["headroom"]["mean"])
+    h_front = float(frontier["headroom"]["mean"])
+    if h_bank <= 0 or h_front <= 0:
+        raise ValueError("both references must find positive headroom to be decomposed")
+    if h_bank > h_front:
+        raise ValueError(
+            f"bank headroom {h_bank:.5f} exceeds frontier headroom {h_front:.5f}. The search "
+            "scored the bank's own families, so it cannot find less; check that both "
+            "references cover the same records.")
+
+    gain = float(bank["gain_vs_linear"]["mean"])
+    selector = gain / h_bank
+    coverage = h_bank / h_front
+    return _safe({
+        "schema_version": 1,
+        "n_parents": bank["n_parents"],
+        "bank_calls_per_instance": bank["reference"]["objective_calls_per_instance"],
+        "frontier_calls_per_instance": frontier["reference"]["objective_calls_per_instance"],
+        "learned_gain": gain,
+        "bank_headroom": h_bank,
+        "frontier_headroom": h_front,
+        "selector_efficiency": selector,
+        "bank_coverage": coverage,
+        "share_of_findable": gain / h_front,
+        "binding_factor": "selector_efficiency" if selector < coverage else "bank_coverage",
+        "scope": ("selector_efficiency is a modelling result and bank_coverage is a dataset "
+                  "result; the binding factor names which one limits the share, not which "
+                  "one is cheaper to improve"),
     })

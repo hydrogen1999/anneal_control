@@ -210,3 +210,102 @@ def test_pooling_refuses_reports_over_different_parent_sets():
     b = effect_size_report(evaluation_rows(4), reference="bank_oracle")
     with pytest.raises(ValueError, match="parent"):
         pooled_across_seeds([a, b])
+
+
+# --- the factorisation ------------------------------------------------------
+
+def test_share_of_findable_factorises_into_critic_and_menu():
+    """share_vs_frontier = selector_efficiency x bank_coverage, exactly."""
+    from annealctrl.effect_size import decompose_share
+
+    rows = evaluation_rows()                       # gain 0.08, bank headroom 0.10
+    bank = effect_size_report(rows, reference="bank_oracle")
+    front = effect_size_report(rows, reference="frontier",
+                               frontier_rows=frontier_rows())   # headroom 0.16
+
+    d = decompose_share(bank, front)
+    assert d["selector_efficiency"] == pytest.approx(0.8)      # 0.08 / 0.10
+    assert d["bank_coverage"] == pytest.approx(0.625)          # 0.10 / 0.16
+    assert d["share_of_findable"] == pytest.approx(0.5)        # 0.08 / 0.16
+    assert d["selector_efficiency"] * d["bank_coverage"] == pytest.approx(d["share_of_findable"])
+
+
+def test_the_factorisation_names_which_factor_binds():
+    from annealctrl.effect_size import decompose_share
+
+    rows = evaluation_rows()
+    bank = effect_size_report(rows, reference="bank_oracle")
+    # a frontier that finds far more than the bank holds: the menu is the limit
+    front = effect_size_report(rows, reference="frontier",
+                               frontier_rows=frontier_rows(headroom=0.40))
+    assert decompose_share(bank, front)["binding_factor"] == "bank_coverage"
+
+    # a frontier barely better than the bank: the critic is the limit
+    tight = effect_size_report(rows, reference="frontier",
+                               frontier_rows=frontier_rows(headroom=0.105))
+    assert decompose_share(bank, tight)["binding_factor"] == "selector_efficiency"
+
+
+def test_the_factorisation_refuses_reports_of_different_evaluations():
+    from annealctrl.effect_size import decompose_share
+
+    bank = effect_size_report(evaluation_rows(3), reference="bank_oracle")
+    front = effect_size_report(evaluation_rows(4), reference="frontier",
+                               frontier_rows=frontier_rows(4))
+    with pytest.raises(ValueError, match="parent|same evaluation"):
+        decompose_share(bank, front)
+
+
+def test_the_factorisation_refuses_two_reports_of_the_same_reference():
+    from annealctrl.effect_size import decompose_share
+
+    a = effect_size_report(evaluation_rows(), reference="bank_oracle")
+    with pytest.raises(ValueError, match="bank_oracle.*frontier|one of each"):
+        decompose_share(a, a)
+
+
+def test_the_factorisation_refuses_a_bank_wider_than_the_frontier():
+    """A 64-candidate menu cannot out-find a search that also scored those controls."""
+    from annealctrl.effect_size import decompose_share
+
+    rows = evaluation_rows()
+    bank = effect_size_report(rows, reference="bank_oracle")          # headroom 0.10
+    front = effect_size_report(rows, reference="frontier",
+                               frontier_rows=frontier_rows(headroom=0.05))
+    with pytest.raises(ValueError, match="exceeds|wider"):
+        decompose_share(bank, front)
+
+
+def test_a_pooled_result_can_itself_be_decomposed():
+    """Headroom is a property of the records, so pooling seeds must not change it."""
+    from annealctrl.effect_size import decompose_share, pooled_across_seeds
+
+    def seeded(selected):
+        rows = evaluation_rows()
+        for row in rows:
+            row["selected_loss"] = selected
+        return rows
+
+    bank = [effect_size_report(seeded(s), reference="bank_oracle") for s in (0.60, 0.64)]
+    front = [effect_size_report(seeded(s), reference="frontier",
+                                frontier_rows=frontier_rows()) for s in (0.60, 0.64)]
+
+    bank_pooled, front_pooled = pooled_across_seeds(bank), pooled_across_seeds(front)
+    assert bank_pooled["headroom"]["mean"] == pytest.approx(0.10)
+    assert front_pooled["headroom"]["mean"] == pytest.approx(0.16)
+
+    d = decompose_share(bank_pooled, front_pooled)
+    # pooled gain = 0.70 - mean(0.60, 0.64) = 0.08
+    assert d["selector_efficiency"] == pytest.approx(0.8)
+    assert d["bank_coverage"] == pytest.approx(0.625)
+    assert d["share_of_findable"] == pytest.approx(0.5)
+
+
+def test_pooling_refuses_seeds_whose_headroom_disagrees():
+    """Headroom cannot depend on the training seed; if it does, the inputs are mismatched."""
+    from annealctrl.effect_size import pooled_across_seeds
+
+    a = effect_size_report(evaluation_rows(), reference="bank_oracle")
+    b = effect_size_report(evaluation_rows(bank_best=0.50), reference="bank_oracle")
+    with pytest.raises(ValueError, match="headroom"):
+        pooled_across_seeds([a, b])
