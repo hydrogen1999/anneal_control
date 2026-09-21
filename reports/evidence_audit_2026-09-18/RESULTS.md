@@ -56,6 +56,9 @@ The ten encoder pairs form a separate Holm family for each dataset and mode. App
 | pegasus | aware − blind (exploratory) | -0.008350 | [-0.020195, +0.001062] | 12 |
 | pegasus | summary bank − global | -0.022905 | [-0.038362, -0.010572] | 12 |
 | pegasus | summary direct − global | +0.055564 | [+0.029779, +0.082394] | 12 |
+| pegasus240 | aware − blind (exploratory) | -0.014030 | [-0.019930, -0.008772] | 48 |
+| pegasus240 | summary bank − global | -0.032458 | [-0.039710, -0.025580] | 48 |
+| pegasus240 | summary direct − global | +0.052654 | [+0.037253, +0.068818] | 48 |
 
 The two Pegasus hierarchy arms have no spectral-response labels in that dataset and are degenerate as an auxiliary-loss ablation. No architecture superiority, cross-topology transfer, equivalence, or minimum required sample size follows from these tables.
 

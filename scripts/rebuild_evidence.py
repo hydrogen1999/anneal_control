@@ -22,6 +22,10 @@ from annealctrl.paper_table import assemble_comparison
 INPUTS = {
     "synthetic": "reports/heldout_2026-09-17/heldout_records.json",
     "pegasus": "reports/pegasus_learned_2026-09-18/heldout_records.json",
+    # The 48-parent arm is an independent draw from an identically configured
+    # generator, sharing no parent with the 12-parent one. Both stay in the
+    # audit: the older arm is the replication target, not superseded data.
+    "pegasus240": "reports/pegasus240_2026-09-20/heldout_records.json",
     "sobol": "reports/comparison_2026-09-17/testref_rows.json",
     "bayesian": "reports/comparison_2026-09-17/bayes_rows.json",
     "policy_gradient": "reports/comparison_2026-09-17/policy_gradient_rows.json",
@@ -132,7 +136,7 @@ def audit_transfer_aggregates(raw: bytes) -> dict[str, str]:
 
 def build(root: Path, *, resamples: int = 20000) -> dict[str, str]:
     data = {name: json.loads((root / path).read_text()) for name, path in INPUTS.items()}
-    learned = {name: data[name]["record_means"] for name in ("synthetic", "pegasus")}
+    learned = {name: data[name]["record_means"] for name in ("synthetic", "pegasus", "pegasus240")}
     for rows in learned.values():
         _balanced(rows)
     source_hashes = {path: hashlib.sha256((root / path).read_bytes()).hexdigest()
