@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "table": "factorisation",
+  "caption_hint": "share of findable = selector efficiency x bank coverage.",
+  "sources": [
+    "reports/effect_size_2026-09-19/artifacts/synth_both.json",
+    "reports/pegasus240_2026-09-20/artifacts/effect_size_both.json"
+  ],
+  "source_sha256": {
+    "reports/effect_size_2026-09-19/artifacts/synth_both.json": "23bd3a9ffbc0ccc5",
+    "reports/pegasus240_2026-09-20/artifacts/effect_size_both.json": "b7cb18c5df3cc571"
+  },
+  "rows": [
+    {
+      "population": "synthetic",
+      "n_parents": 48,
+      "bank_calls_per_instance": 64,
+      "frontier_calls_per_instance": 257,
+      "learned_gain": 0.05626668417972524,
+      "bank_headroom": 0.06911790022517998,
+      "frontier_headroom": 0.09357775502465143,
+      "selector_efficiency": 0.8140681935708894,
+      "bank_coverage": 0.7386146441210528,
+      "share_of_findable": 0.6012826890846309,
+      "binding_factor": "bank_coverage"
+    },
+    {
+      "population": "pegasus240",
+      "n_parents": 48,
+      "bank_calls_per_instance": 64,
+      "frontier_calls_per_instance": 257,
+      "learned_gain": 0.0863065197623349,
+      "bank_headroom": 0.10175782045076605,
+      "frontier_headroom": 0.13728970546048022,
+      "selector_efficiency": 0.8481561356170456,
+      "bank_coverage": 0.7411904636947286,
+      "share_of_findable": 0.6286452394435271,
+      "binding_factor": "bank_coverage"
+    }
+  ],
+  "scope": "A share is comparable only to a share against the SAME reference. The previously published 60 % vs 83 % compared a 257-call frontier headroom against a 64-candidate bank-oracle headroom and is withdrawn."
+}

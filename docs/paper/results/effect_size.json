@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "table": "effect_size",
+  "caption_hint": "Bank selection against a matched linear ramp, held-out parents.",
+  "sources": [
+    "reports/effect_size_2026-09-19/artifacts/synth_both.json",
+    "reports/pegasus240_2026-09-20/artifacts/effect_size_both.json"
+  ],
+  "source_sha256": {
+    "reports/effect_size_2026-09-19/artifacts/synth_both.json": "23bd3a9ffbc0ccc5",
+    "reports/pegasus240_2026-09-20/artifacts/effect_size_both.json": "b7cb18c5df3cc571"
+  },
+  "rows": [
+    {
+      "population": "synthetic",
+      "n_parents": 48,
+      "n_training_seeds": 5,
+      "gain_vs_linear": 0.05626668417972523,
+      "cohens_d_pooled": 2.2414201121331168,
+      "cohens_d_mean_per_seed": 2.187127898788862,
+      "parents_won_pooled": 48,
+      "parents_won_worst_seed": 47
+    },
+    {
+      "population": "pegasus240",
+      "n_parents": 48,
+      "n_training_seeds": 3,
+      "gain_vs_linear": 0.08630651976233489,
+      "cohens_d_pooled": 1.6788380235174976,
+      "cohens_d_mean_per_seed": 1.659626280713421,
+      "parents_won_pooled": 48,
+      "parents_won_worst_seed": 48
+    }
+  ],
+  "scope": "Mean of parent means; d is pooled over training seeds before the statistic. Worst-seed win rate is reported because pooling can exceed it."
+}

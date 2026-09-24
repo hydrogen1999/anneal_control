@@ -1,0 +1,644 @@
+{
+  "schema_version": 1,
+  "table": "pool_axis",
+  "caption_hint": "What the critic may choose between, and what it is worth.",
+  "sources": [
+    "reports/pool_selection_2026-09-20/artifacts/synth_seed0.json",
+    "reports/pool_selection_2026-09-20/artifacts/synth_seed1.json",
+    "reports/pool_selection_2026-09-20/artifacts/synth_seed2.json",
+    "reports/pool_selection_2026-09-20/artifacts/synth_seed3.json",
+    "reports/pool_selection_2026-09-20/artifacts/synth_seed4.json",
+    "reports/pool_selection_2026-09-20/artifacts/synth_designed0.json",
+    "reports/pool_selection_2026-09-20/artifacts/synth_designed1.json",
+    "reports/pool_selection_2026-09-20/artifacts/synth_designed2.json",
+    "reports/pool_selection_2026-09-20/artifacts/synth_designed3.json",
+    "reports/pool_selection_2026-09-20/artifacts/synth_designed4.json",
+    "reports/pool_selection_2026-09-20/artifacts/peg240_seed0.json",
+    "reports/pool_selection_2026-09-20/artifacts/peg240_seed1.json",
+    "reports/pool_selection_2026-09-20/artifacts/peg240_seed2.json",
+    "reports/pool_selection_2026-09-20/artifacts/peg240_designed0.json",
+    "reports/pool_selection_2026-09-20/artifacts/peg240_designed1.json",
+    "reports/pool_selection_2026-09-20/artifacts/peg240_designed2.json"
+  ],
+  "source_sha256": {
+    "reports/pool_selection_2026-09-20/artifacts/synth_seed0.json": "a59b34bd0b91be46",
+    "reports/pool_selection_2026-09-20/artifacts/synth_seed1.json": "f2e9845885190728",
+    "reports/pool_selection_2026-09-20/artifacts/synth_seed2.json": "339a74ddb9602030",
+    "reports/pool_selection_2026-09-20/artifacts/synth_seed3.json": "102edd12ba4b3b9a",
+    "reports/pool_selection_2026-09-20/artifacts/synth_seed4.json": "a8b7b80fcd700227",
+    "reports/pool_selection_2026-09-20/artifacts/synth_designed0.json": "aa8fc1782c65d35a",
+    "reports/pool_selection_2026-09-20/artifacts/synth_designed1.json": "8581935561f819ac",
+    "reports/pool_selection_2026-09-20/artifacts/synth_designed2.json": "371c69ad81132caf",
+    "reports/pool_selection_2026-09-20/artifacts/synth_designed3.json": "ab39c15fa25de933",
+    "reports/pool_selection_2026-09-20/artifacts/synth_designed4.json": "eebe758c40adf3fd",
+    "reports/pool_selection_2026-09-20/artifacts/peg240_seed0.json": "1ffadf8bb71fc862",
+    "reports/pool_selection_2026-09-20/artifacts/peg240_seed1.json": "c7765f56b7382a84",
+    "reports/pool_selection_2026-09-20/artifacts/peg240_seed2.json": "8df05df7b577dba0",
+    "reports/pool_selection_2026-09-20/artifacts/peg240_designed0.json": "7be786fd04077afd",
+    "reports/pool_selection_2026-09-20/artifacts/peg240_designed1.json": "6b299eed484309d0",
+    "reports/pool_selection_2026-09-20/artifacts/peg240_designed2.json": "28774e120fc092a8"
+  },
+  "rows": [
+    {
+      "population": "synthetic",
+      "pool": "proposals+linear",
+      "seed": 0,
+      "n_parents": 48,
+      "cost_class": "amortised",
+      "pool_prefixes": [
+        "linear"
+      ],
+      "proposal_only_vs_linear": {
+        "mean": -0.005794818120850506,
+        "ci": [
+          -0.013045216709166725,
+          0.0019068288215802456
+        ],
+        "parents_beaten": 33
+      },
+      "pool_vs_linear": {
+        "mean": -0.012415771763471861,
+        "ci": [
+          -0.019266759183786782,
+          -0.005016193413134248
+        ],
+        "parents_beaten": 38
+      },
+      "pool_vs_proposal_only": {
+        "mean": -0.006620953642621358,
+        "ci": [
+          -0.010942432011092951,
+          -0.003087836393872166
+        ]
+      },
+      "fallback_rate_records": 0.1087962962962963,
+      "parents_rescued": 5,
+      "parents_harmed": 0
+    },
+    {
+      "population": "synthetic",
+      "pool": "proposals+linear",
+      "seed": 1,
+      "n_parents": 48,
+      "cost_class": "amortised",
+      "pool_prefixes": [
+        "linear"
+      ],
+      "proposal_only_vs_linear": {
+        "mean": -0.014222919016462459,
+        "ci": [
+          -0.022365479738657195,
+          -0.006598826140683624
+        ],
+        "parents_beaten": 37
+      },
+      "pool_vs_linear": {
+        "mean": -0.01742059166036641,
+        "ci": [
+          -0.024816208691399704,
+          -0.010888894949519624
+        ],
+        "parents_beaten": 40
+      },
+      "pool_vs_proposal_only": {
+        "mean": -0.003197672643903952,
+        "ci": [
+          -0.006075374796969288,
+          -0.000884588205868244
+        ]
+      },
+      "fallback_rate_records": 0.046296296296296294,
+      "parents_rescued": 3,
+      "parents_harmed": 0
+    },
+    {
+      "population": "synthetic",
+      "pool": "proposals+linear",
+      "seed": 2,
+      "n_parents": 48,
+      "cost_class": "amortised",
+      "pool_prefixes": [
+        "linear"
+      ],
+      "proposal_only_vs_linear": {
+        "mean": -0.012241704019918287,
+        "ci": [
+          -0.02174793370654548,
+          -0.0026558422709355564
+        ],
+        "parents_beaten": 34
+      },
+      "pool_vs_linear": {
+        "mean": -0.020750682503807964,
+        "ci": [
+          -0.028047046078035272,
+          -0.013374904905900008
+        ],
+        "parents_beaten": 42
+      },
+      "pool_vs_proposal_only": {
+        "mean": -0.008508978483889679,
+        "ci": [
+          -0.015583289479605465,
+          -0.00170283146795007
+        ]
+      },
+      "fallback_rate_records": 0.16087962962962962,
+      "parents_rescued": 8,
+      "parents_harmed": 0
+    },
+    {
+      "population": "synthetic",
+      "pool": "proposals+linear",
+      "seed": 3,
+      "n_parents": 48,
+      "cost_class": "amortised",
+      "pool_prefixes": [
+        "linear"
+      ],
+      "proposal_only_vs_linear": {
+        "mean": 0.00025603727321814985,
+        "ci": [
+          -0.009782193183585176,
+          0.01025194684724803
+        ],
+        "parents_beaten": 32
+      },
+      "pool_vs_linear": {
+        "mean": -0.0038621586183827713,
+        "ci": [
+          -0.011529988592550732,
+          0.004313917163668756
+        ],
+        "parents_beaten": 34
+      },
+      "pool_vs_proposal_only": {
+        "mean": -0.0041181958916009205,
+        "ci": [
+          -0.007924742825391644,
+          0.0006181293438519914
+        ]
+      },
+      "fallback_rate_records": 0.10648148148148148,
+      "parents_rescued": 2,
+      "parents_harmed": 0
+    },
+    {
+      "population": "synthetic",
+      "pool": "proposals+linear",
+      "seed": 4,
+      "n_parents": 48,
+      "cost_class": "amortised",
+      "pool_prefixes": [
+        "linear"
+      ],
+      "proposal_only_vs_linear": {
+        "mean": -0.019341152334112138,
+        "ci": [
+          -0.02856644928686343,
+          -0.009829660366232534
+        ],
+        "parents_beaten": 38
+      },
+      "pool_vs_linear": {
+        "mean": -0.024924690481011574,
+        "ci": [
+          -0.03286497066564456,
+          -0.016786739111448977
+        ],
+        "parents_beaten": 42
+      },
+      "pool_vs_proposal_only": {
+        "mean": -0.005583538146899439,
+        "ci": [
+          -0.011230486849344098,
+          -0.0006416931238373
+        ]
+      },
+      "fallback_rate_records": 0.17939814814814814,
+      "parents_rescued": 4,
+      "parents_harmed": 0
+    },
+    {
+      "population": "synthetic",
+      "pool": "proposals+designed_library",
+      "seed": 0,
+      "n_parents": 48,
+      "cost_class": "amortised",
+      "pool_prefixes": [
+        "linear",
+        "one_window",
+        "two_window",
+        "pause"
+      ],
+      "proposal_only_vs_linear": {
+        "mean": -0.005794818120850506,
+        "ci": [
+          -0.013045216709166725,
+          0.0019068288215802456
+        ],
+        "parents_beaten": 33
+      },
+      "pool_vs_linear": {
+        "mean": -0.02587359326941709,
+        "ci": [
+          -0.033617874187608934,
+          -0.01776641340421322
+        ],
+        "parents_beaten": 41
+      },
+      "pool_vs_proposal_only": {
+        "mean": -0.020078775148566586,
+        "ci": [
+          -0.02675283815343752,
+          -0.01375042030960024
+        ]
+      },
+      "fallback_rate_records": 0.2708333333333333,
+      "parents_rescued": 10,
+      "parents_harmed": 2
+    },
+    {
+      "population": "synthetic",
+      "pool": "proposals+designed_library",
+      "seed": 1,
+      "n_parents": 48,
+      "cost_class": "amortised",
+      "pool_prefixes": [
+        "linear",
+        "one_window",
+        "two_window",
+        "pause"
+      ],
+      "proposal_only_vs_linear": {
+        "mean": -0.014222919016462459,
+        "ci": [
+          -0.022365479738657195,
+          -0.006598826140683624
+        ],
+        "parents_beaten": 37
+      },
+      "pool_vs_linear": {
+        "mean": -0.03940153820452665,
+        "ci": [
+          -0.04742248749116331,
+          -0.032212011053687935
+        ],
+        "parents_beaten": 48
+      },
+      "pool_vs_proposal_only": {
+        "mean": -0.02517861918806419,
+        "ci": [
+          -0.03586860267875405,
+          -0.015974632386132354
+        ]
+      },
+      "fallback_rate_records": 0.24768518518518517,
+      "parents_rescued": 11,
+      "parents_harmed": 0
+    },
+    {
+      "population": "synthetic",
+      "pool": "proposals+designed_library",
+      "seed": 2,
+      "n_parents": 48,
+      "cost_class": "amortised",
+      "pool_prefixes": [
+        "linear",
+        "one_window",
+        "two_window",
+        "pause"
+      ],
+      "proposal_only_vs_linear": {
+        "mean": -0.012241704019918287,
+        "ci": [
+          -0.02174793370654548,
+          -0.0026558422709355564
+        ],
+        "parents_beaten": 34
+      },
+      "pool_vs_linear": {
+        "mean": -0.043685634760714555,
+        "ci": [
+          -0.05167632877836149,
+          -0.035982104395431994
+        ],
+        "parents_beaten": 47
+      },
+      "pool_vs_proposal_only": {
+        "mean": -0.031443930740796266,
+        "ci": [
+          -0.041281247805536186,
+          -0.022656797061644363
+        ]
+      },
+      "fallback_rate_records": 0.3726851851851852,
+      "parents_rescued": 13,
+      "parents_harmed": 0
+    },
+    {
+      "population": "synthetic",
+      "pool": "proposals+designed_library",
+      "seed": 3,
+      "n_parents": 48,
+      "cost_class": "amortised",
+      "pool_prefixes": [
+        "linear",
+        "one_window",
+        "two_window",
+        "pause"
+      ],
+      "proposal_only_vs_linear": {
+        "mean": 0.00025603727321814985,
+        "ci": [
+          -0.009782193183585176,
+          0.01025194684724803
+        ],
+        "parents_beaten": 32
+      },
+      "pool_vs_linear": {
+        "mean": -0.032888931217683465,
+        "ci": [
+          -0.0402164900716153,
+          -0.02510196180600767
+        ],
+        "parents_beaten": 44
+      },
+      "pool_vs_proposal_only": {
+        "mean": -0.033144968490901615,
+        "ci": [
+          -0.04254606772285216,
+          -0.024383054533976777
+        ]
+      },
+      "fallback_rate_records": 0.4409722222222222,
+      "parents_rescued": 13,
+      "parents_harmed": 1
+    },
+    {
+      "population": "synthetic",
+      "pool": "proposals+designed_library",
+      "seed": 4,
+      "n_parents": 48,
+      "cost_class": "amortised",
+      "pool_prefixes": [
+        "linear",
+        "one_window",
+        "two_window",
+        "pause"
+      ],
+      "proposal_only_vs_linear": {
+        "mean": -0.019341152334112138,
+        "ci": [
+          -0.02856644928686343,
+          -0.009829660366232534
+        ],
+        "parents_beaten": 38
+      },
+      "pool_vs_linear": {
+        "mean": -0.04748640239938462,
+        "ci": [
+          -0.05540795328311566,
+          -0.03980545099083682
+        ],
+        "parents_beaten": 47
+      },
+      "pool_vs_proposal_only": {
+        "mean": -0.028145250065272482,
+        "ci": [
+          -0.03727838513237754,
+          -0.01977202346062311
+        ]
+      },
+      "fallback_rate_records": 0.4409722222222222,
+      "parents_rescued": 9,
+      "parents_harmed": 0
+    },
+    {
+      "population": "pegasus240",
+      "pool": "proposals+linear",
+      "seed": 0,
+      "n_parents": 48,
+      "cost_class": "amortised",
+      "pool_prefixes": [
+        "linear"
+      ],
+      "proposal_only_vs_linear": {
+        "mean": -0.0089032750652914,
+        "ci": [
+          -0.022130893994643117,
+          0.004604514468835895
+        ],
+        "parents_beaten": 28
+      },
+      "pool_vs_linear": {
+        "mean": -0.016088925387580028,
+        "ci": [
+          -0.028106146255919513,
+          -0.0041163385506178506
+        ],
+        "parents_beaten": 32
+      },
+      "pool_vs_proposal_only": {
+        "mean": -0.0071856503222886255,
+        "ci": [
+          -0.014133400610988833,
+          -0.0017671875464215202
+        ]
+      },
+      "fallback_rate_records": 0.034722222222222224,
+      "parents_rescued": 4,
+      "parents_harmed": 0
+    },
+    {
+      "population": "pegasus240",
+      "pool": "proposals+linear",
+      "seed": 1,
+      "n_parents": 48,
+      "cost_class": "amortised",
+      "pool_prefixes": [
+        "linear"
+      ],
+      "proposal_only_vs_linear": {
+        "mean": 0.002303874997424987,
+        "ci": [
+          -0.013181107052195822,
+          0.018465474903740342
+        ],
+        "parents_beaten": 22
+      },
+      "pool_vs_linear": {
+        "mean": -0.01706707490360222,
+        "ci": [
+          -0.029029379986761254,
+          -0.005203750878757626
+        ],
+        "parents_beaten": 30
+      },
+      "pool_vs_proposal_only": {
+        "mean": -0.0193709499010272,
+        "ci": [
+          -0.0326705015066695,
+          -0.00854391654611654
+        ]
+      },
+      "fallback_rate_records": 0.0920138888888889,
+      "parents_rescued": 8,
+      "parents_harmed": 0
+    },
+    {
+      "population": "pegasus240",
+      "pool": "proposals+linear",
+      "seed": 2,
+      "n_parents": 48,
+      "cost_class": "amortised",
+      "pool_prefixes": [
+        "linear"
+      ],
+      "proposal_only_vs_linear": {
+        "mean": 0.0030165461984943023,
+        "ci": [
+          -0.01004351890893224,
+          0.016548960725776902
+        ],
+        "parents_beaten": 22
+      },
+      "pool_vs_linear": {
+        "mean": -0.001004985578042885,
+        "ci": [
+          -0.013797277980190786,
+          0.012157687888658456
+        ],
+        "parents_beaten": 24
+      },
+      "pool_vs_proposal_only": {
+        "mean": -0.004021531776537187,
+        "ci": [
+          -0.008940264419976694,
+          -0.00018248354458133206
+        ]
+      },
+      "fallback_rate_records": 0.024305555555555556,
+      "parents_rescued": 2,
+      "parents_harmed": 0
+    },
+    {
+      "population": "pegasus240",
+      "pool": "proposals+designed_library",
+      "seed": 0,
+      "n_parents": 48,
+      "cost_class": "amortised",
+      "pool_prefixes": [
+        "linear",
+        "one_window",
+        "two_window",
+        "pause"
+      ],
+      "proposal_only_vs_linear": {
+        "mean": -0.0089032750652914,
+        "ci": [
+          -0.022130893994643117,
+          0.004604514468835895
+        ],
+        "parents_beaten": 28
+      },
+      "pool_vs_linear": {
+        "mean": -0.02738615576069311,
+        "ci": [
+          -0.03774263538299153,
+          -0.01709969219372492
+        ],
+        "parents_beaten": 35
+      },
+      "pool_vs_proposal_only": {
+        "mean": -0.018482880695401712,
+        "ci": [
+          -0.029080461798418347,
+          -0.009193882574474593
+        ]
+      },
+      "fallback_rate_records": 0.2309027777777778,
+      "parents_rescued": 8,
+      "parents_harmed": 1
+    },
+    {
+      "population": "pegasus240",
+      "pool": "proposals+designed_library",
+      "seed": 1,
+      "n_parents": 48,
+      "cost_class": "amortised",
+      "pool_prefixes": [
+        "linear",
+        "one_window",
+        "two_window",
+        "pause"
+      ],
+      "proposal_only_vs_linear": {
+        "mean": 0.002303874997424987,
+        "ci": [
+          -0.013181107052195822,
+          0.018465474903740342
+        ],
+        "parents_beaten": 22
+      },
+      "pool_vs_linear": {
+        "mean": -0.05079984128644285,
+        "ci": [
+          -0.06288851491918834,
+          -0.03906448055317228
+        ],
+        "parents_beaten": 46
+      },
+      "pool_vs_proposal_only": {
+        "mean": -0.05310371628386782,
+        "ci": [
+          -0.07162429175821554,
+          -0.0364573628241987
+        ]
+      },
+      "fallback_rate_records": 0.5538194444444444,
+      "parents_rescued": 24,
+      "parents_harmed": 0
+    },
+    {
+      "population": "pegasus240",
+      "pool": "proposals+designed_library",
+      "seed": 2,
+      "n_parents": 48,
+      "cost_class": "amortised",
+      "pool_prefixes": [
+        "linear",
+        "one_window",
+        "two_window",
+        "pause"
+      ],
+      "proposal_only_vs_linear": {
+        "mean": 0.0030165461984943023,
+        "ci": [
+          -0.01004351890893224,
+          0.016548960725776902
+        ],
+        "parents_beaten": 22
+      },
+      "pool_vs_linear": {
+        "mean": -0.015770810592059967,
+        "ci": [
+          -0.027817599266536253,
+          -0.0033969792672872887
+        ],
+        "parents_beaten": 29
+      },
+      "pool_vs_proposal_only": {
+        "mean": -0.018787356790554266,
+        "ci": [
+          -0.032398260990246126,
+          -0.007371252734818556
+        ]
+      },
+      "fallback_rate_records": 0.1597222222222222,
+      "parents_rescued": 7,
+      "parents_harmed": 0
+    }
+  ],
+  "scope": "Negative favours the first named. amortised throughout: proposals plus fixed waveforms, one forward pass, no simulation. The no-harm property belongs to the two-element pool and is STRUCTURAL there -- the only alternative is the reference itself -- and does not transfer to the designed library. Physics-derived members are excluded because they would be privileged_spectrum."
+}

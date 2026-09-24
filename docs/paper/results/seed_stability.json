@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "table": "seed_stability",
+  "caption_hint": "Per-training-seed stability of bank selection and direct generation.",
+  "sources": [
+    "reports/pegasus240_2026-09-20/artifacts/policy_seed_stability.json"
+  ],
+  "source_sha256": {
+    "reports/pegasus240_2026-09-20/artifacts/policy_seed_stability.json": "ca53efd4aa22a2af"
+  },
+  "population": "pegasus240",
+  "modes": {
+    "bank": {
+      "per_seed": {
+        "0": {
+          "mean_difference": -0.0876051698643281,
+          "parents_beating_linear": 48,
+          "n_parents": 48
+        },
+        "1": {
+          "mean_difference": -0.08540948018286493,
+          "parents_beating_linear": 48,
+          "n_parents": 48
+        },
+        "2": {
+          "mean_difference": -0.08590490923981164,
+          "parents_beating_linear": 48,
+          "n_parents": 48
+        }
+      },
+      "pooled_mean_difference": -0.0863065197623349,
+      "pooled_parents_beating_linear": 48,
+      "n_parents": 48,
+      "n_seeds": 3,
+      "sign_changes_across_seeds": false
+    },
+    "direct": {
+      "per_seed": {
+        "0": {
+          "mean_difference": -0.008903275065291398,
+          "parents_beating_linear": 28,
+          "n_parents": 48
+        },
+        "1": {
+          "mean_difference": 0.0023038749974249786,
+          "parents_beating_linear": 22,
+          "n_parents": 48
+        },
+        "2": {
+          "mean_difference": 0.0030165461984943014,
+          "parents_beating_linear": 22,
+          "n_parents": 48
+        }
+      },
+      "pooled_mean_difference": -0.0011942846231240394,
+      "pooled_parents_beating_linear": 26,
+      "n_parents": 48,
+      "n_seeds": 3,
+      "sign_changes_across_seeds": true
+    }
+  },
+  "difference_definition": "parent-mean (method loss - linear loss); negative favours the method",
+  "scope": "A sign change between seeds is training instability, not parent disagreement; a pooled interval cannot distinguish the two."
+}

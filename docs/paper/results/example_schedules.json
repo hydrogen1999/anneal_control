@@ -1,0 +1,244 @@
+{
+  "schema_version": 1,
+  "checkpoint": "/home/nguyencongt/runs/pegasus240_exp/models/summary/seed_0/best.pt",
+  "data": "/home/nguyencongt/runs/pegasus240_exp/data",
+  "records": [
+    {
+      "record_id": "parent_0000_e0_k0_t0",
+      "parent_id": "parent_0000",
+      "runtime": 4.0,
+      "logical_n": null,
+      "physical_n": 10,
+      "tau_grid": [
+        0.0,
+        0.125,
+        0.25,
+        0.375,
+        0.5,
+        0.625,
+        0.75,
+        0.875,
+        1.0
+      ],
+      "schedules": {
+        "linear": {
+          "waveform": [
+            0.0,
+            0.125,
+            0.25,
+            0.375,
+            0.5,
+            0.625,
+            0.75,
+            0.875,
+            1.0
+          ],
+          "loss": 0.921120486460896,
+          "source": "fixed reference"
+        },
+        "critic_selected": {
+          "waveform": [
+            0.0,
+            0.2480847951243793,
+            0.4540271391314355,
+            0.5210043468955698,
+            0.5551357503482265,
+            0.5892671538008831,
+            0.6233985572535399,
+            0.7387833705908605,
+            1.0
+          ],
+          "loss": 0.9064583543214231,
+          "candidate_id": "sobol_0048",
+          "source": "critic argmin over the 64-candidate library"
+        },
+        "library_oracle": {
+          "waveform": [
+            0.0,
+            0.2623744412136719,
+            0.3307789939823263,
+            0.46124357288664214,
+            0.6284425775198836,
+            0.6647488915050133,
+            0.7010552054901429,
+            0.7373615194752725,
+            1.0
+          ],
+          "loss": 0.9014129215144372,
+          "candidate_id": "sobol_0025",
+          "source": "ORACLE: best stored loss, not achievable at deployment; shown for scale only"
+        }
+      },
+      "policy_generated": [
+        {
+          "waveform": [
+            0.0,
+            0.13454873859882355,
+            0.4662095904350281,
+            0.660264253616333,
+            0.6603087782859802,
+            0.6730464100837708,
+            0.736469030380249,
+            0.7367997169494629,
+            1.0
+          ],
+          "loss": 0.9302887943115926,
+          "source": "policy head, decoded from structural tokens"
+        },
+        {
+          "waveform": [
+            0.0,
+            0.0003725747228600085,
+            0.0013697580434381962,
+            0.08054306358098984,
+            0.1511748880147934,
+            0.4128352999687195,
+            0.4134627878665924,
+            0.8339211344718933,
+            1.0
+          ],
+          "loss": 0.9585480824650146,
+          "source": "policy head, decoded from structural tokens"
+        },
+        {
+          "waveform": [
+            0.0,
+            0.5,
+            0.5830028057098389,
+            0.5831822156906128,
+            0.5834214091300964,
+            0.5834375619888306,
+            0.5835221409797668,
+            0.5843193531036377,
+            1.0
+          ],
+          "loss": 0.9397826698750295,
+          "source": "policy head, decoded from structural tokens"
+        }
+      ],
+      "notes": {
+        "feasibility": "every waveform satisfies ds/dtau <= 4.0 by construction, not by rejection",
+        "selection": "the critic saw no outcome; losses were attached afterwards"
+      }
+    },
+    {
+      "record_id": "parent_0020_e0_k0_t1",
+      "parent_id": "parent_0020",
+      "runtime": 12.0,
+      "logical_n": null,
+      "physical_n": 14,
+      "tau_grid": [
+        0.0,
+        0.125,
+        0.25,
+        0.375,
+        0.5,
+        0.625,
+        0.75,
+        0.875,
+        1.0
+      ],
+      "schedules": {
+        "linear": {
+          "waveform": [
+            0.0,
+            0.125,
+            0.25,
+            0.375,
+            0.5,
+            0.625,
+            0.75,
+            0.875,
+            1.0
+          ],
+          "loss": 0.9415740551186673,
+          "source": "fixed reference"
+        },
+        "critic_selected": {
+          "waveform": [
+            0.0,
+            0.09604329714234197,
+            0.36183521966771964,
+            0.5069951529679486,
+            0.6178294939540926,
+            0.6629564326830074,
+            0.7035383405878364,
+            0.7441202484926653,
+            1.0
+          ],
+          "loss": 0.9062429496105802,
+          "candidate_id": "sobol_0041",
+          "source": "critic argmin over the 64-candidate library"
+        },
+        "library_oracle": {
+          "waveform": [
+            0.0,
+            0.11774306231622826,
+            0.530296848769555,
+            0.6438940220545448,
+            0.6680233232098328,
+            0.6921526243651209,
+            0.7162819255204089,
+            0.740411226675697,
+            1.0
+          ],
+          "loss": 0.8820987817606875,
+          "candidate_id": "sobol_0034",
+          "source": "ORACLE: best stored loss, not achievable at deployment; shown for scale only"
+        }
+      },
+      "policy_generated": [
+        {
+          "waveform": [
+            0.0,
+            0.06766374409198761,
+            0.5676637291908264,
+            0.673595666885376,
+            0.6736440658569336,
+            0.6737436652183533,
+            0.6741923093795776,
+            0.6742662787437439,
+            1.0
+          ],
+          "loss": 0.909183228564937,
+          "source": "policy head, decoded from structural tokens"
+        },
+        {
+          "waveform": [
+            0.0,
+            0.00027152098482474685,
+            0.0007131480379030108,
+            0.010590612888336182,
+            0.07431038469076157,
+            0.5743103623390198,
+            0.5753521919250488,
+            0.6692033410072327,
+            1.0
+          ],
+          "loss": 0.9568829172862201,
+          "source": "policy head, decoded from structural tokens"
+        },
+        {
+          "waveform": [
+            0.0,
+            0.5,
+            0.6833329200744629,
+            0.6833504438400269,
+            0.6833779811859131,
+            0.6833887100219727,
+            0.6837314963340759,
+            0.6839683055877686,
+            1.0
+          ],
+          "loss": 0.909973215035634,
+          "source": "policy head, decoded from structural tokens"
+        }
+      ],
+      "notes": {
+        "feasibility": "every waveform satisfies ds/dtau <= 4.0 by construction, not by rejection",
+        "selection": "the critic saw no outcome; losses were attached afterwards"
+      }
+    }
+  ],
+  "scope": "illustrative waveforms for one or more instances; the effect size is in docs/paper/results/, not here"
+}

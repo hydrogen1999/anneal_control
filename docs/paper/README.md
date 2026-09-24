@@ -19,12 +19,16 @@ settled.
 | `08_limitations.md` | constraints on what may be concluded |
 | `09_related.md` | **unverified** groupings — see the banner in that file |
 | `FIGURES.md` | four figure briefs, each naming its artifact |
+| `04a_architecture.md` | the model as implemented: features, blocks, variants, heads |
+| `results/` | one JSON per table, exported mechanically; **derived, never hand-edit** |
 
 ## Before touching a number
 
 ```bash
 python scripts/rebuild_evidence.py --check   # artifacts vs analysis code
+python scripts/export_paper_results.py       # regenerate docs/paper/results/
 python scripts/check_paper_numbers.py        # draft vs artifacts
+python scripts/check_paper_numbers.py --self-test
 ```
 
 The second refuses any four- or five-decimal quantity in these sections that

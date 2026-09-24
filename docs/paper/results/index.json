@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "note": "Assemble the experiments section's numbers into one JSON file per table.",
+  "tables": {
+    "populations": {
+      "file": "populations.json",
+      "caption_hint": "Two instance populations and one replication target.",
+      "sources": []
+    },
+    "effect_size": {
+      "file": "effect_size.json",
+      "caption_hint": "Bank selection against a matched linear ramp, held-out parents.",
+      "sources": [
+        "reports/effect_size_2026-09-19/artifacts/synth_both.json",
+        "reports/pegasus240_2026-09-20/artifacts/effect_size_both.json"
+      ]
+    },
+    "encoder_contrast": {
+      "file": "encoder_contrast.json",
+      "caption_hint": "All ten encoder pairs, Holm-corrected as one family, bank selection.",
+      "sources": [
+        "reports/evidence_audit_2026-09-18/contrasts.json"
+      ]
+    },
+    "reads": {
+      "file": "reads.json",
+      "caption_hint": "Reads to 99 % confidence, n_q = ceil(log(1-q)/log(1-p)).",
+      "sources": [
+        "reports/effect_size_2026-09-19/artifacts/tts_synth.json",
+        "reports/pegasus240_2026-09-20/artifacts/time_to_solution.json"
+      ]
+    },
+    "call_equivalent": {
+      "file": "call_equivalent.json",
+      "caption_hint": "One forward pass priced in instance-specific simulator calls.",
+      "sources": [
+        "reports/effect_size_2026-09-19/artifacts/synth_equiv_bank.json",
+        "reports/effect_size_2026-09-19/artifacts/synth_equiv_bank_ceiling.json",
+        "reports/effect_size_2026-09-19/artifacts/synth_equiv_direct.json",
+        "reports/effect_size_2026-09-19/artifacts/equiv_g2_frontier_test_bayes.json",
+        "reports/effect_size_2026-09-19/artifacts/equiv_g2_frontier_test_pg.json",
+        "reports/pegasus240_2026-09-20/artifacts/equiv_bank_learned_gain.json",
+        "reports/pegasus240_2026-09-20/artifacts/equiv_bank_bank_ceiling.json",
+        "reports/pegasus240_2026-09-20/artifacts/equiv_direct_learned_gain.json"
+      ]
+    },
+    "pool_axis": {
+      "file": "pool_axis.json",
+      "caption_hint": "What the critic may choose between, and what it is worth.",
+      "sources": [
+        "reports/pool_selection_2026-09-20/artifacts/synth_seed0.json",
+        "reports/pool_selection_2026-09-20/artifacts/synth_seed1.json",
+        "reports/pool_selection_2026-09-20/artifacts/synth_seed2.json",
+        "reports/pool_selection_2026-09-20/artifacts/synth_seed3.json",
+        "reports/pool_selection_2026-09-20/artifacts/synth_seed4.json",
+        "reports/pool_selection_2026-09-20/artifacts/synth_designed0.json",
+        "reports/pool_selection_2026-09-20/artifacts/synth_designed1.json",
+        "reports/pool_selection_2026-09-20/artifacts/synth_designed2.json",
+        "reports/pool_selection_2026-09-20/artifacts/synth_designed3.json",
+        "reports/pool_selection_2026-09-20/artifacts/synth_designed4.json",
+        "reports/pool_selection_2026-09-20/artifacts/peg240_seed0.json",
+        "reports/pool_selection_2026-09-20/artifacts/peg240_seed1.json",
+        "reports/pool_selection_2026-09-20/artifacts/peg240_seed2.json",
+        "reports/pool_selection_2026-09-20/artifacts/peg240_designed0.json",
+        "reports/pool_selection_2026-09-20/artifacts/peg240_designed1.json",
+        "reports/pool_selection_2026-09-20/artifacts/peg240_designed2.json"
+      ]
+    },
+    "menu_size": {
+      "file": "menu_size.json",
+      "caption_hint": "Headroom against the size of a FIXED menu of controls.",
+      "sources": [
+        "reports/effect_size_2026-09-19/artifacts/synth_menu.json",
+        "reports/pegasus240_2026-09-20/artifacts/menu_size.json"
+      ]
+    },
+    "factorisation": {
+      "file": "factorisation.json",
+      "caption_hint": "share of findable = selector efficiency x bank coverage.",
+      "sources": [
+        "reports/effect_size_2026-09-19/artifacts/synth_both.json",
+        "reports/pegasus240_2026-09-20/artifacts/effect_size_both.json"
+      ]
+    },
+    "seed_stability": {
+      "file": "seed_stability.json",
+      "caption_hint": "Per-training-seed stability of bank selection and direct generation.",
+      "sources": [
+        "reports/pegasus240_2026-09-20/artifacts/policy_seed_stability.json"
+      ]
+    },
+    "negatives_spectral_ladder": {
+      "file": "negatives_spectral_ladder.json",
+      "caption_hint": "Spectral resolution as a supervision target (rung 3).",
+      "sources": [
+        "reports/spectral_rung3_2026-09-20/rung3_contrasts.json"
+      ]
+    }
+  }
+}

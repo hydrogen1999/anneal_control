@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "table": "reads",
+  "caption_hint": "Reads to 99 % confidence, n_q = ceil(log(1-q)/log(1-p)).",
+  "sources": [
+    "reports/effect_size_2026-09-19/artifacts/tts_synth.json",
+    "reports/pegasus240_2026-09-20/artifacts/time_to_solution.json"
+  ],
+  "source_sha256": {
+    "reports/effect_size_2026-09-19/artifacts/tts_synth.json": "70165613c7b2fa15",
+    "reports/pegasus240_2026-09-20/artifacts/time_to_solution.json": "ddcca333029d0377"
+  },
+  "rows": [
+    {
+      "population": "synthetic",
+      "reads_by_method": {
+        "linear": {
+          "parent_mean_reads": 22.269675925925924,
+          "mean_loss": 0.6009287436704022,
+          "record_quantiles": {
+            "p10": 3.0,
+            "p25": 6.0,
+            "p50": 12.0,
+            "p75": 24.0,
+            "p90": 49.0,
+            "p99": 148.0
+          },
+          "n_censored": 0,
+          "n_parents": 48
+        },
+        "global": {
+          "parent_mean_reads": 19.181712962962962,
+          "mean_loss": 0.5654369678493419,
+          "record_quantiles": {
+            "p10": 2.0,
+            "p25": 5.0,
+            "p50": 10.5,
+            "p75": 21.0,
+            "p90": 43.40000000000009,
+            "p99": 124.0
+          },
+          "n_censored": 0,
+          "n_parents": 48
+        },
+        "learned_bank": {
+          "parent_mean_reads": 17.52314814814815,
+          "mean_loss": 0.5446620594906769,
+          "record_quantiles": {
+            "p10": 2.0,
+            "p25": 5.0,
+            "p50": 9.0,
+            "p75": 20.0,
+            "p90": 40.0,
+            "p99": 114.74000000000001
+          },
+          "n_censored": 0,
+          "n_parents": 48
+        },
+        "bank_oracle": {
+          "parent_mean_reads": 16.94560185185185,
+          "mean_loss": 0.5318108434452222,
+          "record_quantiles": {
+            "p10": 2.0,
+            "p25": 4.75,
+            "p50": 9.0,
+            "p75": 20.0,
+            "p90": 39.0,
+            "p99": 114.74000000000001
+          },
+          "n_censored": 0,
+          "n_parents": 48
+        }
+      },
+      "linear_over_learned_parent_mean": 1.278996232756512,
+      "ci_low": 1.2425817924264588,
+      "ci_high": 1.318715650977687,
+      "learned_needs_fewer_in_parents": 47,
+      "n_parents": 48,
+      "record_median_ratio": 1.2265395894428153
+    },
+    {
+      "population": "pegasus240",
+      "reads_by_method": {
+        "linear": {
+          "parent_mean_reads": 47.06597222222223,
+          "mean_loss": 0.6864614721753265,
+          "record_quantiles": {
+            "p10": 3.0,
+            "p25": 6.0,
+            "p50": 23.0,
+            "p75": 58.0,
+            "p90": 115.0,
+            "p99": 332.75
+          },
+          "n_censored": 0,
+          "n_parents": 48
+        },
+        "global": {
+          "parent_mean_reads": 35.99305555555555,
+          "mean_loss": 0.6326130634324313,
+          "record_quantiles": {
+            "p10": 3.0,
+            "p25": 4.0,
+            "p50": 16.0,
+            "p75": 45.0,
+            "p90": 83.0,
+            "p99": 299.75
+          },
+          "n_censored": 0,
+          "n_parents": 48
+        },
+        "learned_bank": {
+          "parent_mean_reads": 32.892361111111114,
+          "mean_loss": 0.6001549524129915,
+          "record_quantiles": {
+            "p10": 2.0,
+            "p25": 4.0,
+            "p50": 14.0,
+            "p75": 38.25,
+            "p90": 73.0,
+            "p99": 318.25
+          },
+          "n_censored": 0,
+          "n_parents": 48
+        },
+        "bank_oracle": {
+          "parent_mean_reads": 28.887152777777782,
+          "mean_loss": 0.5847036517245604,
+          "record_quantiles": {
+            "p10": 2.0,
+            "p25": 4.0,
+            "p50": 13.5,
+            "p75": 36.0,
+            "p90": 66.0,
+            "p99": 249.25
+          },
+          "n_censored": 0,
+          "n_parents": 48
+        }
+      },
+      "linear_over_learned_parent_mean": 1.5888412695870135,
+      "ci_low": 1.5130818123758745,
+      "ci_high": 1.6674920927010655,
+      "learned_needs_fewer_in_parents": 47,
+      "n_parents": 48,
+      "record_median_ratio": 1.5
+    }
+  ],
+  "scope": "p is a SIMULATED success probability from exact propagation, so the binomial interval for hardware counts does not apply and is not used; uncertainty is across parents. On Pegasus the one non-win is a TIE (parent_0186, 3.00 reads either way): n_q is a ceiling."
+}

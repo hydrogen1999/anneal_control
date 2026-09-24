@@ -1,0 +1,411 @@
+{
+  "schema_version": 1,
+  "table": "encoder_contrast",
+  "caption_hint": "All ten encoder pairs, Holm-corrected as one family, bank selection.",
+  "sources": [
+    "reports/evidence_audit_2026-09-18/contrasts.json"
+  ],
+  "source_sha256": {
+    "reports/evidence_audit_2026-09-18/contrasts.json": "9340ff7e291d2ab2"
+  },
+  "populations": {
+    "synthetic": {
+      "n_separated_after_correction": 4,
+      "n_comparisons": 10,
+      "nonseparated_maximal_sets": [
+        [
+          "hierarchy_outcome",
+          "hierarchy_physics",
+          "physical",
+          "summary"
+        ],
+        [
+          "logical"
+        ]
+      ],
+      "pairs": [
+        {
+          "a": "hierarchy_outcome",
+          "b": "hierarchy_physics",
+          "mean_difference_b_minus_a": -0.000549220750252156,
+          "ci_low": -0.001656682548435284,
+          "ci_high": 0.0004979397630532629,
+          "p_value_holm": 1.0,
+          "separated_after_correction": false,
+          "n_parents": 48
+        },
+        {
+          "a": "hierarchy_outcome",
+          "b": "logical",
+          "mean_difference_b_minus_a": 0.0076077058834557315,
+          "ci_low": 0.004611859431291375,
+          "ci_high": 0.010559624544764386,
+          "p_value_holm": 0.0004999750012499375,
+          "separated_after_correction": true,
+          "n_parents": 48
+        },
+        {
+          "a": "hierarchy_outcome",
+          "b": "physical",
+          "mean_difference_b_minus_a": 0.0006221229187397245,
+          "ci_low": -0.0011422662669610354,
+          "ci_high": 0.00253009797231185,
+          "p_value_holm": 1.0,
+          "separated_after_correction": false,
+          "n_parents": 48
+        },
+        {
+          "a": "hierarchy_outcome",
+          "b": "summary",
+          "mean_difference_b_minus_a": -0.0009120091883533552,
+          "ci_low": -0.0026230320574417805,
+          "ci_high": 0.0007994758520367765,
+          "p_value_holm": 1.0,
+          "separated_after_correction": false,
+          "n_parents": 48
+        },
+        {
+          "a": "hierarchy_physics",
+          "b": "logical",
+          "mean_difference_b_minus_a": 0.008156926633707887,
+          "ci_low": 0.004753174541177414,
+          "ci_high": 0.011561483839381059,
+          "p_value_holm": 0.0004999750012499375,
+          "separated_after_correction": true,
+          "n_parents": 48
+        },
+        {
+          "a": "hierarchy_physics",
+          "b": "physical",
+          "mean_difference_b_minus_a": 0.0011713436689918804,
+          "ci_low": -0.00040615001893319624,
+          "ci_high": 0.002854577339150602,
+          "p_value_holm": 0.95935203239838,
+          "separated_after_correction": false,
+          "n_parents": 48
+        },
+        {
+          "a": "hierarchy_physics",
+          "b": "summary",
+          "mean_difference_b_minus_a": -0.0003627884381011993,
+          "ci_low": -0.002359037332880203,
+          "ci_high": 0.0016668821731545638,
+          "p_value_holm": 1.0,
+          "separated_after_correction": false,
+          "n_parents": 48
+        },
+        {
+          "a": "logical",
+          "b": "physical",
+          "mean_difference_b_minus_a": -0.0069855829647160065,
+          "ci_low": -0.010997665310962669,
+          "ci_high": -0.002933851425131309,
+          "p_value_holm": 0.004899755012249388,
+          "separated_after_correction": true,
+          "n_parents": 48
+        },
+        {
+          "a": "logical",
+          "b": "summary",
+          "mean_difference_b_minus_a": -0.008519715071809085,
+          "ci_low": -0.012054949078705237,
+          "ci_high": -0.004972210368743288,
+          "p_value_holm": 0.0007999600019999,
+          "separated_after_correction": true,
+          "n_parents": 48
+        },
+        {
+          "a": "physical",
+          "b": "summary",
+          "mean_difference_b_minus_a": -0.0015341321070930797,
+          "ci_low": -0.004105261516267865,
+          "ci_high": 0.0008217949829443795,
+          "p_value_holm": 1.0,
+          "separated_after_correction": false,
+          "n_parents": 48
+        }
+      ],
+      "pooled_aware_minus_blind": {
+        "mean": -0.00781748263842217,
+        "ci_low": -0.011092822074346382,
+        "ci_high": -0.004471464280148176,
+        "separated": true,
+        "parents_favouring_aware": 36,
+        "aware_methods": [
+          "hierarchy_outcome",
+          "hierarchy_physics",
+          "physical",
+          "summary"
+        ],
+        "blind_methods": [
+          "logical"
+        ]
+      }
+    },
+    "pegasus": {
+      "n_separated_after_correction": 0,
+      "n_comparisons": 10,
+      "nonseparated_maximal_sets": [
+        [
+          "hierarchy_outcome",
+          "hierarchy_physics",
+          "logical",
+          "physical",
+          "summary"
+        ]
+      ],
+      "pairs": [
+        {
+          "a": "hierarchy_outcome",
+          "b": "hierarchy_physics",
+          "mean_difference_b_minus_a": 0.0,
+          "ci_low": 0.0,
+          "ci_high": 0.0,
+          "p_value_holm": 1.0,
+          "separated_after_correction": false,
+          "n_parents": 12
+        },
+        {
+          "a": "hierarchy_outcome",
+          "b": "logical",
+          "mean_difference_b_minus_a": 0.007891184992496192,
+          "ci_low": -0.0024450266495500503,
+          "ci_high": 0.019902373433632912,
+          "p_value_holm": 1.0,
+          "separated_after_correction": false,
+          "n_parents": 12
+        },
+        {
+          "a": "hierarchy_outcome",
+          "b": "physical",
+          "mean_difference_b_minus_a": 0.0019360497958589757,
+          "ci_low": -0.0011916373289989342,
+          "ci_high": 0.005030190970094095,
+          "p_value_holm": 1.0,
+          "separated_after_correction": false,
+          "n_parents": 12
+        },
+        {
+          "a": "hierarchy_outcome",
+          "b": "summary",
+          "mean_difference_b_minus_a": -0.0037724589229593563,
+          "ci_low": -0.009774417524480099,
+          "ci_high": 0.0012330441251512845,
+          "p_value_holm": 1.0,
+          "separated_after_correction": false,
+          "n_parents": 12
+        },
+        {
+          "a": "hierarchy_physics",
+          "b": "logical",
+          "mean_difference_b_minus_a": 0.007891184992496192,
+          "ci_low": -0.0024401183637871686,
+          "ci_high": 0.020006336582674925,
+          "p_value_holm": 1.0,
+          "separated_after_correction": false,
+          "n_parents": 12
+        },
+        {
+          "a": "hierarchy_physics",
+          "b": "physical",
+          "mean_difference_b_minus_a": 0.0019360497958589757,
+          "ci_low": -0.0011603859276111744,
+          "ci_high": 0.005096847730671885,
+          "p_value_holm": 1.0,
+          "separated_after_correction": false,
+          "n_parents": 12
+        },
+        {
+          "a": "hierarchy_physics",
+          "b": "summary",
+          "mean_difference_b_minus_a": -0.0037724589229593563,
+          "ci_low": -0.009873198737787381,
+          "ci_high": 0.0012397086452180708,
+          "p_value_holm": 1.0,
+          "separated_after_correction": false,
+          "n_parents": 12
+        },
+        {
+          "a": "logical",
+          "b": "physical",
+          "mean_difference_b_minus_a": -0.005955135196637216,
+          "ci_low": -0.017326042497564746,
+          "ci_high": 0.0027490663443456988,
+          "p_value_holm": 1.0,
+          "separated_after_correction": false,
+          "n_parents": 12
+        },
+        {
+          "a": "logical",
+          "b": "summary",
+          "mean_difference_b_minus_a": -0.011663643915455548,
+          "ci_low": -0.024372358275538828,
+          "ci_high": -0.0014813251781385633,
+          "p_value_holm": 0.4334783260836958,
+          "separated_after_correction": false,
+          "n_parents": 12
+        },
+        {
+          "a": "physical",
+          "b": "summary",
+          "mean_difference_b_minus_a": -0.005708508718818332,
+          "ci_low": -0.013395691078530276,
+          "ci_high": -9.306755272330161e-05,
+          "p_value_holm": 0.7874606269686516,
+          "separated_after_correction": false,
+          "n_parents": 12
+        }
+      ],
+      "pooled_aware_minus_blind": {
+        "mean": -0.008350287274271284,
+        "ci_low": -0.020194957097022955,
+        "ci_high": 0.0010621653599679876,
+        "separated": false,
+        "parents_favouring_aware": 8,
+        "aware_methods": [
+          "hierarchy_outcome",
+          "hierarchy_physics",
+          "physical",
+          "summary"
+        ],
+        "blind_methods": [
+          "logical"
+        ]
+      }
+    },
+    "pegasus240": {
+      "n_separated_after_correction": 4,
+      "n_comparisons": 10,
+      "nonseparated_maximal_sets": [
+        [
+          "hierarchy_outcome",
+          "hierarchy_physics",
+          "physical",
+          "summary"
+        ],
+        [
+          "logical"
+        ]
+      ],
+      "pairs": [
+        {
+          "a": "hierarchy_outcome",
+          "b": "hierarchy_physics",
+          "mean_difference_b_minus_a": 0.0,
+          "ci_low": 0.0,
+          "ci_high": 0.0,
+          "p_value_holm": 1.0,
+          "separated_after_correction": false,
+          "n_parents": 48
+        },
+        {
+          "a": "hierarchy_outcome",
+          "b": "logical",
+          "mean_difference_b_minus_a": 0.014005460365718253,
+          "ci_low": 0.008611001686171306,
+          "ci_high": 0.02016580626802453,
+          "p_value_holm": 0.0004999750012499375,
+          "separated_after_correction": true,
+          "n_parents": 48
+        },
+        {
+          "a": "hierarchy_outcome",
+          "b": "physical",
+          "mean_difference_b_minus_a": 0.0014865715366330383,
+          "ci_low": -0.00040366696240403684,
+          "ci_high": 0.0035191530710996775,
+          "p_value_holm": 0.6562171891405431,
+          "separated_after_correction": false,
+          "n_parents": 48
+        },
+        {
+          "a": "hierarchy_outcome",
+          "b": "summary",
+          "mean_difference_b_minus_a": -0.0015862580810922088,
+          "ci_low": -0.004632953556459101,
+          "ci_high": 0.0016229654336215593,
+          "p_value_holm": 0.9488525573721314,
+          "separated_after_correction": false,
+          "n_parents": 48
+        },
+        {
+          "a": "hierarchy_physics",
+          "b": "logical",
+          "mean_difference_b_minus_a": 0.014005460365718253,
+          "ci_low": 0.008576940758486758,
+          "ci_high": 0.020206767339167566,
+          "p_value_holm": 0.0007999600019999,
+          "separated_after_correction": true,
+          "n_parents": 48
+        },
+        {
+          "a": "hierarchy_physics",
+          "b": "physical",
+          "mean_difference_b_minus_a": 0.0014865715366330383,
+          "ci_low": -0.0003425611741211963,
+          "ci_high": 0.003485370427948653,
+          "p_value_holm": 0.6562171891405431,
+          "separated_after_correction": false,
+          "n_parents": 48
+        },
+        {
+          "a": "hierarchy_physics",
+          "b": "summary",
+          "mean_difference_b_minus_a": -0.0015862580810922088,
+          "ci_low": -0.004602776390629297,
+          "ci_high": 0.001736263193284758,
+          "p_value_holm": 0.9488525573721314,
+          "separated_after_correction": false,
+          "n_parents": 48
+        },
+        {
+          "a": "logical",
+          "b": "physical",
+          "mean_difference_b_minus_a": -0.012518888829085214,
+          "ci_low": -0.01905565671932404,
+          "ci_high": -0.006784923242942646,
+          "p_value_holm": 0.001399930003499825,
+          "separated_after_correction": true,
+          "n_parents": 48
+        },
+        {
+          "a": "logical",
+          "b": "summary",
+          "mean_difference_b_minus_a": -0.015591718446810463,
+          "ci_low": -0.02179292443249831,
+          "ci_high": -0.010109453329779826,
+          "p_value_holm": 0.0004999750012499375,
+          "separated_after_correction": true,
+          "n_parents": 48
+        },
+        {
+          "a": "physical",
+          "b": "summary",
+          "mean_difference_b_minus_a": -0.0030728296177252473,
+          "ci_low": -0.006715758688212729,
+          "ci_high": 0.0005758989335824528,
+          "p_value_holm": 0.5990700464976751,
+          "separated_after_correction": false,
+          "n_parents": 48
+        }
+      ],
+      "pooled_aware_minus_blind": {
+        "mean": -0.01403038200183304,
+        "ci_low": -0.019930196285927695,
+        "ci_high": -0.008771831412991515,
+        "separated": true,
+        "parents_favouring_aware": 43,
+        "aware_methods": [
+          "hierarchy_outcome",
+          "hierarchy_physics",
+          "physical",
+          "summary"
+        ],
+        "blind_methods": [
+          "logical"
+        ]
+      }
+    }
+  },
+  "scope": "Difference is method_b minus method_a; negative favours method_b for loss. On Pegasus the hierarchy_physics/hierarchy_outcome pair is DEGENERATE (resolved response 0.0, same model), so the family has ten nominal and nine informative members and the correction is conservative. Non-separation is not equivalence."
+}

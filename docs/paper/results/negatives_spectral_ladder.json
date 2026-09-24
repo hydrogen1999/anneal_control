@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "table": "negatives_spectral_ladder",
+  "caption_hint": "Spectral resolution as a supervision target (rung 3).",
+  "sources": [
+    "reports/spectral_rung3_2026-09-20/rung3_contrasts.json"
+  ],
+  "source_sha256": {
+    "reports/spectral_rung3_2026-09-20/rung3_contrasts.json": "28a06e7767fcdb34"
+  },
+  "rung3": {
+    "bank": {
+      "n_separated_after_correction": 0,
+      "n_comparisons": 3,
+      "nonseparated_maximal_sets": [
+        [
+          "hierarchy_bins",
+          "hierarchy_moments",
+          "hierarchy_outcome"
+        ]
+      ],
+      "pairs": [
+        {
+          "a": "hierarchy_bins",
+          "b": "hierarchy_moments",
+          "mean_difference_b_minus_a": 5.196795687737767e-06,
+          "ci_low": -0.0010379194925039265,
+          "ci_high": 0.0011810664441045846,
+          "p_value_holm": 0.9936503174841258,
+          "separated_after_correction": false
+        },
+        {
+          "a": "hierarchy_bins",
+          "b": "hierarchy_outcome",
+          "mean_difference_b_minus_a": 0.0005544175459398937,
+          "ci_low": -0.0004859693961360843,
+          "ci_high": 0.0016488890457458613,
+          "p_value_holm": 0.9253037348132593,
+          "separated_after_correction": false
+        },
+        {
+          "a": "hierarchy_moments",
+          "b": "hierarchy_outcome",
+          "mean_difference_b_minus_a": 0.000549220750252156,
+          "ci_low": -0.00048811080510349737,
+          "ci_high": 0.0016639512413098646,
+          "p_value_holm": 0.9253037348132593,
+          "separated_after_correction": false
+        }
+      ]
+    },
+    "direct": {
+      "n_separated_after_correction": 0,
+      "n_comparisons": 3,
+      "nonseparated_maximal_sets": [
+        [
+          "hierarchy_bins",
+          "hierarchy_moments",
+          "hierarchy_outcome"
+        ]
+      ],
+      "pairs": [
+        {
+          "a": "hierarchy_bins",
+          "b": "hierarchy_moments",
+          "mean_difference_b_minus_a": -0.0003167781204595089,
+          "ci_low": -0.0035945413299227976,
+          "ci_high": 0.0029432796476107446,
+          "p_value_holm": 1.0,
+          "separated_after_correction": false
+        },
+        {
+          "a": "hierarchy_bins",
+          "b": "hierarchy_outcome",
+          "mean_difference_b_minus_a": -0.0003056180075751769,
+          "ci_low": -0.0033351409613959888,
+          "ci_high": 0.0025306096487835083,
+          "p_value_holm": 1.0,
+          "separated_after_correction": false
+        },
+        {
+          "a": "hierarchy_moments",
+          "b": "hierarchy_outcome",
+          "mean_difference_b_minus_a": 1.1160112884332022e-05,
+          "ci_low": -0.0035680111363443658,
+          "ci_high": 0.0034597771863178954,
+          "p_value_holm": 1.0,
+          "separated_after_correction": false
+        }
+      ]
+    }
+  },
+  "scope": "Arms differ in one training key. Zero of three separate in either mode. Bounds any bins-over-moments effect under 2 % of the method's own gain; a non-separation is not equivalence. The teacher-side rungs 1-2 live in reports/spectral_ladder_2026-09-19/ and are not machine-exported."
+}
