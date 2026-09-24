@@ -28,13 +28,23 @@ python scripts/check_paper_numbers.py        # draft vs artifacts
 ```
 
 The second refuses any four- or five-decimal quantity in these sections that
-appears in no committed report. It compares **values at the draft's own
-precision**, not substrings, and excludes record-level dumps from the corpus —
-the full corpus holds ~838k numeric tokens, dense enough that a fabricated
-`0.98765` matched two per-record losses. It is mutation-tested: injecting that
-number fails the check.
+does not appear **verbatim** in a committed report. Run
+`--self-test` for its measured power rather than trusting the description:
 
-What it cannot do is tell you a number means what the sentence claims. That
+| fabricated value | caught |
+|---|---:|
+| 4 decimals | **96 %** |
+| 5 decimals | **64 %** |
+
+The 5-decimal figure is a hard limit. The curated corpus writes ~38.5k distinct
+4–5 decimal tokens against 100k possible 5-decimal values in [0, 1), so a third
+of invented numbers land on one by coincidence. Two weaker designs measured far
+worse and both *looked* fine: substring matching against full-precision
+artifact floats accepted everything, and matching rounded values accepted 97 %
+of fabricated 4-decimal quantities.
+
+So this is a **lint, not a guarantee**. It catches stale numbers, typos and
+inventions; it cannot tell you a number means what its sentence claims. That
 still needs a reader.
 
 ## Order of work

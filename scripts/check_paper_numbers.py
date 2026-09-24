@@ -5,10 +5,23 @@ figure that was computed against one denominator and described as another. It
 survived because prose was the only place it existed: nothing to diff, no
 command to re-run.
 
-So every four- or five-decimal quantity in docs/paper/ must appear in a
-committed report or artifact. This does not check that the number means what
-the sentence says it means -- no script can -- but it does make an invented or
-stale number fail loudly, which is the failure mode that actually occurred.
+So every four- or five-decimal quantity in docs/paper/ must appear **verbatim**
+in a committed report or curated artifact.
+
+How much this is worth, measured rather than assumed (`--self-test`):
+
+    a fabricated 4-decimal value is caught ~96% of the time
+    a fabricated 5-decimal value is caught ~64% of the time
+
+The 5-decimal figure is a hard limit, not a bug: the curated corpus writes
+~38.5k distinct 4-5 decimal tokens, against 100k possible 5-decimal values in
+[0,1), so a third of invented values land on one by coincidence. Two weaker
+designs were tried and both measured far worse -- substring matching against
+full-precision artifact floats accepted everything, and matching rounded values
+accepted 97% of fabricated 4-decimal quantities.
+
+This is a lint, not a guarantee, and it cannot tell you a number means what its
+sentence claims. It catches stale numbers, typos, and inventions.
 """
 from __future__ import annotations
 
@@ -18,29 +31,16 @@ import re
 import sys
 
 NUMBER = re.compile(r"\d\.\d{4,5}")
-# Any number at all, at whatever precision an artifact happens to store it.
-ANY_NUMBER = re.compile(r"\d+\.\d+")
+def _tokens(text: str) -> set[str]:
+    """Four- and five-decimal quantities as the corpus actually writes them.
 
-
-def _rounded(text: str) -> dict[int, set[str]]:
-    """Every number in `text`, indexed by decimal places.
-
-    Two things this must not do. It must not substring-match: artifacts store
-    full-precision floats, so "0.98765" occurs inside 0.9876543... and any
-    fabricated quantity would find a host. And it must not accept a match at a
-    coarser precision than the draft quotes: rounding thousands of stored
-    floats to four places makes that set dense enough to absorb almost
-    anything. A draft number is therefore checked only at its own precision.
+    Verbatim, deliberately. Substring matching lets a fabricated 0.98765 hide
+    inside a stored 0.9876543..., and rounding stored floats to four places
+    builds a set dense enough to accept 97% of invented values. Reports quote
+    numbers at the precision they are claimed at, so requiring the exact token
+    is both tighter and closer to what the check is for.
     """
-    out: dict[int, set[str]] = {4: set(), 5: set()}
-    for raw in ANY_NUMBER.findall(text):
-        try:
-            value = float(raw)
-        except ValueError:
-            continue
-        for places in out:
-            out[places].add(f"{value:.{places}f}")
-    return out
+    return set(NUMBER.findall(text))
 
 
 # Record-level dumps are excluded on purpose. The full corpus holds ~838k
@@ -75,25 +75,51 @@ def corpus(root: pathlib.Path) -> str:
     return "\n".join(parts)
 
 
+def _self_test(known: set[str]) -> int:
+    """Report the false-accept rate instead of asserting the check is sound."""
+    import random
+    rng = random.Random(0)
+    print(f"corpus holds {len(known)} distinct 4-5 decimal tokens")
+    worst = 0.0
+    for places in (4, 5):
+        trials = 20000
+        accepted = sum(1 for _ in range(trials)
+                       if f"{rng.random():.{places}f}" in known)
+        rate = accepted / trials
+        worst = max(worst, rate)
+        print(f"  fabricated {places}-decimal value caught "
+              f"{100 * (1 - rate):.1f}% of the time")
+    # A check that accepts most inventions is worse than none, because it
+    # reassures. Fail loudly if it ever degrades that far.
+    if worst > 0.5:
+        print("\nFAIL: this check now accepts the majority of fabricated values.")
+        return 1
+    return 0
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", default=".")
     parser.add_argument("--paper", default="docs/paper")
+    parser.add_argument("--self-test", action="store_true",
+                        help="measure how often a fabricated value is wrongly accepted, "
+                             "so the docstring's claim about this check stays true")
     args = parser.parse_args(argv)
 
     root = pathlib.Path(args.root).resolve()
-    known = _rounded(corpus(root))
+    known = _tokens(corpus(root))
+    if args.self_test:
+        return _self_test(known)
     failures, total = {}, 0
     for path in sorted((root / args.paper).glob("*.md")):
-        if path.name in {"CLAIMS.md", "FIGURES.md", "OUTLINE.md"}:
-            continue  # plans and the map itself may quote targets and formats
+        # Plans, the claim map, and the index are not draft prose: they quote
+        # targets, formats, and -- in the README's description of this script --
+        # a deliberately fabricated number as an example.
+        if path.name in {"CLAIMS.md", "FIGURES.md", "OUTLINE.md", "README.md"}:
+            continue
         found = sorted(set(NUMBER.findall(path.read_text())))
         total += len(found)
-        unverified = []
-        for n in found:
-            places = len(n.split(".")[1])
-            if f"{float(n):.{places}f}" not in known.get(places, set()):
-                unverified.append(n)
+        unverified = [n for n in found if n not in known]
         if unverified:
             failures[path.name] = unverified
 
